@@ -1,0 +1,33 @@
+{
+  "item.furmutage.thunderium": "Thunderium",
+  "item.furmutage.roselight": "Roselight",
+  "item.furmutage.tsc_fiber": "TSC Fibers",
+  "item.furmutage.rubber": "Rubber",
+  "item.furmutage.tsc_gloves": "TSC Gloves",
+  "item.furmutage.tsc_rubber_shoe_pads": "TSC Shoe Pads",
+  "item.furmutage.tsc_wire": "TSC Wire",
+  "item.furmutage.tsc_advanced_tech": "TSC Advanced Tech",
+  "item.furmutage.tsc_brace_pad": "TSC Brace Pad",
+  "item.furmutage.tsc_elect_pad": "TSC Electical Pads",
+  "item.furmutage.tsc_armor_pad": "TSC Armor Pad",
+  "item.furmutage.tsc_shoulder_pad": "TSC Shoulder Pad",
+  "item.furmutage.tsc_padding": "TSC Padding",
+  "item.furmutage.tsc_gears": "TSC Gears",
+  "item.furmutage.roselight_battery": "Roselight Battery",
+  "item.furmutage.fat_tsc_battery": "Fat TSC Battery",
+  "item.furmutage.tsc_battery": "TSC Battery",
+
+  "item.furmutage.tsc_metal_detector": "TSC Metal Detector",
+
+  "item.furmutage.mugling_spawn_egg": "Mugling Spawn Egg",
+
+  "block.furmutage.raw_thunderium": "Raw Thunderium",
+  "block.furmutage.raw_roselight": "Raw Roselight",
+  "block.furmutage.thunderium_ore": "Thunderium Ore",
+  "block.furmutage.roselight_ore": "Roselight Ore",
+  "block.furmutage.city_portal_block": "City Portal Block",
+
+  "entity.furmutage.mugling": "Mugling",
+
+  "creativetab.furmutage": "FurMutage"
+}

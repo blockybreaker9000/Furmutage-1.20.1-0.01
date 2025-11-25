@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "furmutage:raw_roselight"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "item": "furmutage:roselight"
+  }
+}
