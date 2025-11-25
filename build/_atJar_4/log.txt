@@ -1,7 +1,0 @@
-Java Launcher: C:\Users\User\.jdks\ms-17.0.14\bin\java.exe
-Arguments: '--inJar, E:\Furmutage-1.20.1-0.01\build\fg_cache\net\minecraftforge\forge\1.20.1-47.4.0\forge-1.20.1-47.4.0-injected.jar, --outJar, E:\Furmutage-1.20.1-0.01\build\fg_cache\net\minecraftforge\forge\1.20.1-47.4.0_mapped_parchment_2023.06.26-1.20.1\forge-1.20.1-47.4.0_mapped_parchment_2023.06.26-1.20.1.jar, --logFile, accesstransform.log, --atFile, E:\Furmutage-1.20.1-0.01\src\main\resources\META-INF\accesstransformer.cfg, --atFile, E:\Furmutage-1.20.1-0.01\build\_atJar_4\parent_at.cfg'
-Classpath:
- - C:\Users\User\.gradle\caches\forge_gradle\maven_downloader\net\minecraftforge\accesstransformers\8.2.1\accesstransformers-8.2.1-fatjar.jar
-Working directory: E:\Furmutage-1.20.1-0.01\build\_atJar_4
-Main class: net.minecraftforge.accesstransformer.TransformerProcessor
-====================================
