@@ -1,7 +1,8 @@
 package net.jerika.furmutage.event;
 
+import net.jerika.furmutage.entity.client.MuglingModel;
+import net.jerika.furmutage.entity.client.MutantFamilyModel;
 import net.jerika.furmutage.entity.client.model.ModModelLayers;
-import net.jerika.furmutage.entity.client.model.MuglingModel;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -13,7 +14,7 @@ public class ModEventBusClientEvents {
     @SubscribeEvent
     public static void registerLayer(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(ModModelLayers.MUGLING_LAYER, MuglingModel::createBodyLayer);
-
+        event.registerLayerDefinition(ModModelLayers.MUTANT_FAMILY_LAYER, MutantFamilyModel::createBodyLayer);
 
     }
 

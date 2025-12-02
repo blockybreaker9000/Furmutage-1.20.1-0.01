@@ -1,8 +1,8 @@
 package net.jerika.furmutage.entity.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.jerika.furmutage.entity.client.MuglingModel;
 import net.jerika.furmutage.entity.client.model.ModModelLayers;
-import net.jerika.furmutage.entity.client.model.MuglingModel;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.client.renderer.MultiBufferSource;
