@@ -21,8 +21,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class LatexMutantFamilyEntity extends Animal {
-    public LatexMutantFamilyEntity(EntityType<? extends Animal> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public LatexMutantFamilyEntity(EntityType<? extends Animal> aEntityType, Level pLevel) {
+        super(aEntityType, pLevel);
     }
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
