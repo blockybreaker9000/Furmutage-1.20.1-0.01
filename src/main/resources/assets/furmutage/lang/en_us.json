@@ -1,6 +1,14 @@
 {
   "item.furmutage.thunderium": "Thunderium",
+  "item.furmutage.thunderium_nugget": "Thunderium Nugget",
+  "item.furmutage.thunderium_ingot": "Thunderium Ingot",
+  "item.furmutage.thunderium_raw_nugget": "Raw Thunderium Nugget",
+
   "item.furmutage.roselight": "Roselight",
+  "item.furmutage.roselight_ingot": "Roselight Ingot",
+  "item.furmutage.roselight_nugget": "Roselight Nugget",
+  "item.furmutage.raw_roselight_nugget": "Raw Roselight Nugget",
+
   "item.furmutage.tsc_fiber": "TSC Fibers",
   "item.furmutage.rubber": "Rubber",
   "item.furmutage.tsc_gloves": "TSC Gloves",
@@ -19,15 +27,49 @@
 
   "item.furmutage.tsc_metal_detector": "TSC Metal Detector",
 
+  "item.furmutage.thunderium_helmet": "TSC Admin Thunderium Helmet",
+  "item.furmutage.thunderium_chestplate": "TSC Admin Thunderium Chestplate",
+  "item.furmutage.thunderium_leggings": "TSC Admin Thunderium Leggings",
+  "item.furmutage.thunderium_boots": "TSC Admin Thunderium Boots",
+
+  "item.furmutage.thunderium_doom_saber": "Thunderium Doom Saber",
+  "item.furmutage.thunderium_spear": "Thunderium Spear",
+  "item.furmutage.thunderium_shank_knife": "Thunderium Shank Knife",
+  "item.furmutage.thunderium_mace": "Thunderium Battle Mace",
+  "item.furmutage.thunderium_infused_machete": "Thunderium Infused Machete",
+  "item.furmutage.thunderium_battle_axe": "Thunderium Battle Axe",
+  "item.furmutage.thunderium_saber": "Thunderium Saber",
+  "item.furmutage.thunderium_tazer": "Thunderium Tazer",
+  "item.furmutage.thunderium_long_tazer": "Thunderium Long Tazer",
+  "item.furmutage.thunderium_scythe": "Thunderium Scythe",
+  "item.furmutage.thunderium_war_hammer": "Thunderium War Hammer",
+  "item.furmutage.thunderium_hammer": "Thunderium Hammer",
+  "item.furmutage.thunderium_spike_bat": "Thunderium Spike Bat",
+  "item.furmutage.thunderium_thorn_bat": "Thunderium Thorn Bat",
+  "item.furmutage.thunderium_barb_bat": "Thunderium Barb Bat",
+
+
+  "item.furmutage.roselight_pic": "Roselight Pickaxe",
+  "item.furmutage.roselight_axe": "Roselight Axe",
+  "item.furmutage.roselight_shovel": "Roselight Shovel",
+  "item.furmutage.roselight_hoe": "Roselight Hoe",
+
+
   "item.furmutage.mugling_spawn_egg": "Mugling Spawn Egg",
+  "item.furmutage.darklatex_bottle": "Bottled DarkLatex",
 
   "block.furmutage.raw_thunderium": "Raw Thunderium",
   "block.furmutage.raw_roselight": "Raw Roselight",
   "block.furmutage.thunderium_ore": "Thunderium Ore",
   "block.furmutage.roselight_ore": "Roselight Ore",
   "block.furmutage.city_portal_block": "City Portal Block",
+  "block.furmutage.tainted_white_log": "White Latex Tainted Log",
+  "block.furmutage.thunderium_block": "Thunderium Block",
+  "block.furmutage.roselight_block": "Roselight block",
+  "block.furmutage.tainted_white_leaf": "White Latex Tainted Leaf",
 
   "entity.furmutage.mugling": "Mugling",
+  "entity.furmutage.pure_white_latex_elite": "Pure White Latex Elite",
 
   "creativetab.furmutage": "FurMutage"
 }
