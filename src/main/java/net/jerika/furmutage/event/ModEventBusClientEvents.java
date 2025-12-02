@@ -1,7 +1,7 @@
 package net.jerika.furmutage.event;
 
-import net.jerika.furmutage.entity.client.ModModelLayers;
-import net.jerika.furmutage.entity.client.MuglingModel;
+import net.jerika.furmutage.entity.client.model.ModModelLayers;
+import net.jerika.furmutage.entity.client.model.MuglingModel;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;

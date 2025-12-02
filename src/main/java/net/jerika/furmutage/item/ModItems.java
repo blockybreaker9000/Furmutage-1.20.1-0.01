@@ -2,8 +2,15 @@ package net.jerika.furmutage.item;
 
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.furmutage;
-import net.jerika.furmutage.item.custom.TSCMetalDetectorItem;
-import net.minecraft.world.item.Item;
+import net.jerika.furmutage.item.custom.*;
+import net.jerika.furmutage.item.custom.diamond.*;
+import net.jerika.furmutage.item.custom.iron.*;
+import net.jerika.furmutage.item.custom.post_netherite.ThunderiumDoomSaber;
+import net.jerika.furmutage.item.custom.post_netherite.ThunderiumScythe;
+import net.jerika.furmutage.item.custom.post_netherite.ThunderiumWarHammer;
+import net.jerika.furmutage.item.custom.stone.THUNDERIUMTAZERITEM;
+import net.jerika.furmutage.item.custom.stone.ThunderiumBarbBat;
+import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
@@ -16,7 +23,19 @@ public class ModItems {
 
     public static final RegistryObject<Item> THUNDERIUM = ITEMS.register("thunderium",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_INGOT = ITEMS.register("thunderium_ingot",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_RAW_NUGGET = ITEMS.register("thunderium_raw_nugget",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_NUGGET = ITEMS.register("thunderium_nugget",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROSELIGHT = ITEMS.register("roselight",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_INGOT = ITEMS.register("roselight_ingot",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_NUGGET = ITEMS.register("roselight_nugget",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> RAW_ROSELIGHT_NUGGET = ITEMS.register("raw_roselight_nugget",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_FIBER = ITEMS.register("tsc_fiber",
             () -> new Item(new Item.Properties()));
@@ -48,8 +67,48 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_BATTERY = ITEMS.register("tsc_battery",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DARKLATEXBOTTLED = ITEMS.register("darklatex_bottle",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_METAL_DETECTOR = ITEMS.register("tsc_metal_detector",
             () -> new TSCMetalDetectorItem(new Item.Properties().durability(100)));
+
+
+    public static final RegistryObject<Item> THUNDERIUMTAZER = ITEMS.register("thunderium_tazer", THUNDERIUMTAZERITEM::new);
+    public static final RegistryObject<Item> THUNDERIUMBATTLEAXE = ITEMS.register("thunderium_battle_axe", ThunderiumBattleAxe::new);
+    public static final RegistryObject<Item> THUNDERIUMBATTLEMACE = ITEMS.register("thunderium_mace", ThunderiumBattleMace::new);
+    public static final RegistryObject<Item> THUNDERIUMSHANKKNIFE = ITEMS.register("thunderium_shank_knife", ThunderiumShankKnife::new);
+    public static final RegistryObject<Item> THUNDERIUMINFUSEDMACHETE = ITEMS.register("thunderium_infused_machete", ThunderiumInfusedMachete::new);
+    public static final RegistryObject<Item> THUNDERIUMSPEAR = ITEMS.register("thunderium_spear", ThunderiumSpear::new);
+    public static final RegistryObject<Item> THUNDERIUMDOOMSABER = ITEMS.register("thunderium_doom_saber", ThunderiumDoomSaber::new);
+    public static final RegistryObject<Item> THUNDERIUM_SABER = ITEMS.register("thunderium_saber", ThunderiumSaber::new);
+    public static final RegistryObject<Item> THUNDERIUMLONGTAZER = ITEMS.register("thunderium_long_tazer", ThunderiumLongTazer::new);
+    public static final RegistryObject<Item> THUNDERIUMWARHAMMER = ITEMS.register("thunderium_war_hammer", ThunderiumWarHammer::new);
+    public static final RegistryObject<Item> THUNDERIUMSCYTHE = ITEMS.register("thunderium_scythe", ThunderiumScythe::new);
+    public static final RegistryObject<Item> THUNDERIUMHAMMER = ITEMS.register("thunderium_hammer", ThunderiumHammer::new);
+    public static final RegistryObject<Item> THUNDERIUMSPIKEBAT = ITEMS.register("thunderium_spike_bat", ThunderiumSpikeBat::new);
+    public static final RegistryObject<Item> THUNDERIUMBARBBAT = ITEMS.register("thunderium_barb_bat", ThunderiumBarbBat::new);
+    public static final RegistryObject<Item> THUNDERIUMTHORNBAT = ITEMS.register("thunderium_thorn_bat", ThunderiumThornBat::new);
+
+
+    public static final RegistryObject<Item> ROSELIGHT_PIC = ITEMS.register("roselight_pic",
+            () -> new PickaxeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
+    public static final RegistryObject<Item> ROSELIGHT_AXE = ITEMS.register("roselight_axe",
+            () -> new AxeItem(ModToolTiers.ROSELIGHT, 9, -2, new Item.Properties().durability(800)));
+    public static final RegistryObject<Item> ROSELIGHT_SHOVEL = ITEMS.register("roselight_shovel",
+            () -> new ShovelItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
+    public static final RegistryObject<Item> ROSELIGHT_HOE = ITEMS.register("roselight_hoe",
+            () -> new HoeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
+
+
+    public static final RegistryObject<Item> THUNDERIUM_HELMET = ITEMS.register("thunderium_helmet",
+            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_CHESTPLATE = ITEMS.register("thunderium_chestplate",
+            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_LEGGINGS = ITEMS.register("thunderium_leggings",
+            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_BOOTS = ITEMS.register("thunderium_boots",
+            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.BOOTS, new Item.Properties()));
+
 
     public static final RegistryObject<Item> MUGLING_SPAWN_EGG = ITEMS.register("mugling_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.MUGLING, 0x4D72, 0xc5d,

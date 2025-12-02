@@ -19,7 +19,24 @@ public class modcreativemodetabs {
                     .title(Component.translatable("creativetab.furmutage"))
                     .displayItems((itemDisplayParameters, output) -> {
                         output.accept(ModItems.THUNDERIUM.get());
+                        output.accept(ModItems.THUNDERIUM_INGOT.get());
+                        output.accept(ModItems.THUNDERIUM_NUGGET.get());
+                        output.accept(ModItems.THUNDERIUM_RAW_NUGGET.get());
+
+
+
                         output.accept(ModItems.ROSELIGHT.get());
+                        output.accept(ModItems.RAW_ROSELIGHT_NUGGET.get());
+                        output.accept(ModItems.ROSELIGHT_NUGGET.get());
+                        output.accept(ModItems.ROSELIGHT_INGOT.get());
+
+
+
+                        output.accept(ModItems.THUNDERIUM_HELMET.get());
+                        output.accept(ModItems.THUNDERIUM_CHESTPLATE.get());
+                        output.accept(ModItems.THUNDERIUM_LEGGINGS.get());
+                        output.accept(ModItems.THUNDERIUM_BOOTS.get());
+
                         output.accept(ModItems.TSC_FIBER.get());
                         output.accept(ModItems.RUBBER.get());
                         output.accept(ModItems.TSC_GLOVES.get());
@@ -36,14 +53,40 @@ public class modcreativemodetabs {
                         output.accept(ModItems.FAT_TSC_BATTERY.get());
                         output.accept(ModItems.TSC_BATTERY.get());
                         output.accept(ModItems.TSC_METAL_DETECTOR.get());
+                        output.accept(ModItems.THUNDERIUMTAZER.get());
 
                         output.accept(ModItems.MUGLING_SPAWN_EGG.get());
+                        output.accept(ModItems.DARKLATEXBOTTLED.get());
+
+                        output.accept(ModItems.THUNDERIUM_SABER.get());
+                        output.accept(ModItems.ROSELIGHT_PIC.get());
+                        output.accept(ModItems.ROSELIGHT_AXE.get());
+                        output.accept(ModItems.ROSELIGHT_HOE.get());
+                        output.accept(ModItems.ROSELIGHT_SHOVEL.get());
+                        output.accept(ModItems.THUNDERIUMBATTLEAXE.get());
+                        output.accept(ModItems.THUNDERIUMDOOMSABER.get());
+                        output.accept(ModItems.THUNDERIUMBATTLEMACE.get());
+                        output.accept(ModItems.THUNDERIUMSHANKKNIFE.get());
+                        output.accept(ModItems.THUNDERIUMSPEAR.get());
+                        output.accept(ModItems.THUNDERIUMINFUSEDMACHETE.get());
+                        output.accept(ModItems.THUNDERIUMLONGTAZER.get());
+                        output.accept(ModItems.THUNDERIUMWARHAMMER.get());
+                        output.accept(ModItems.THUNDERIUMHAMMER.get());
+                        output.accept(ModItems.THUNDERIUMBARBBAT.get());
+                        output.accept(ModItems.THUNDERIUMTHORNBAT.get());
+                        output.accept(ModItems.THUNDERIUMSPIKEBAT.get());
+                        output.accept(ModItems.THUNDERIUMSCYTHE.get());
 
                         output.accept(ModBlocks.RAW_THUNDERIUM.get());
                         output.accept(ModBlocks.RAW_ROSELIGHT.get());
                         output.accept(ModBlocks.ROSELIGHT_ORE.get());
                         output.accept(ModBlocks.THUNDERIUM_ORE.get());
                         output.accept(ModBlocks.CITY_PORTAL_BLOCK.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_LEAF.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_LOG.get());
+                        output.accept(ModBlocks.ROSELIGHT_BLOCK.get());
+                        output.accept(ModBlocks.THUNDERIUM_BLOCK.get());
+
 
                     })
                     .build());
