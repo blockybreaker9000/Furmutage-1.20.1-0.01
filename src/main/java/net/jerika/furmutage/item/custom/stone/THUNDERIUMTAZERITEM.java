@@ -23,7 +23,7 @@ public class THUNDERIUMTAZERITEM extends TSCElectriumWeapon {
         itemStack.hurtAndBreak(1, source, (entity) -> {
             entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
             enemy.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), 8, 100, false, false, true));
-            enemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 3000000, 100, true, true, true));
+            enemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 30, 100, true, true, true));
         });
         return true;
     }

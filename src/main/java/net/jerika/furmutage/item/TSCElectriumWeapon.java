@@ -68,8 +68,9 @@ public abstract class TSCElectriumWeapon extends Item implements Vanishable {
 
     public static void applyShock(LivingEntity enemy, int attackStun) {
         ChangedSounds.broadcastSound(enemy, ChangedSounds.TSC_WEAPON_SHOCK, 1, 1);
-        enemy.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), attackStun, 1, false, false, true));
+        enemy.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), attackStun, 100, false, false, true));
         enemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 10, true, true, true));
+        enemy.addEffect(new MobEffectInstance(MobEffects.WITHER, 50, 1, true, true, true));
         ChangedAnimationEvents.broadcastEntityAnimation(enemy, ChangedAnimationEvents.SHOCK_STUN.get(), StunAnimationParameters.INSTANCE);
     }
 
