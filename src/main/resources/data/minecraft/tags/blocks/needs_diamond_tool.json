@@ -4,6 +4,8 @@
     "furmutage:raw_thunderium",
     "furmutage:thunderium_ore",
     "furmutage:roselight_ore",
-    "furmutage:city_portal_block"
+    "furmutage:city_portal_block",
+    "furmutage:roselight_block",
+    "furmutage:thunderium_block"
   ]
 }
