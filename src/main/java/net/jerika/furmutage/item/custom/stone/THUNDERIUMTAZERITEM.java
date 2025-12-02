@@ -1,8 +1,11 @@
 package net.jerika.furmutage.item.custom.stone;
 
 import net.jerika.furmutage.item.TSCElectriumWeapon;
+import net.ltxprogrammer.changed.init.ChangedEffects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -19,6 +22,8 @@ public class THUNDERIUMTAZERITEM extends TSCElectriumWeapon {
         applyShock(enemy, 8);
         itemStack.hurtAndBreak(1, source, (entity) -> {
             entity.broadcastBreakEvent(EquipmentSlot.MAINHAND);
+            enemy.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), 8, 100, false, false, true));
+            enemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 3000000, 100, true, true, true));
         });
         return true;
     }

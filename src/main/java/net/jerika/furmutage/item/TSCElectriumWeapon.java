@@ -12,6 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -68,6 +69,7 @@ public abstract class TSCElectriumWeapon extends Item implements Vanishable {
     public static void applyShock(LivingEntity enemy, int attackStun) {
         ChangedSounds.broadcastSound(enemy, ChangedSounds.TSC_WEAPON_SHOCK, 1, 1);
         enemy.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), attackStun, 1, false, false, true));
+        enemy.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 10, true, true, true));
         ChangedAnimationEvents.broadcastEntityAnimation(enemy, ChangedAnimationEvents.SHOCK_STUN.get(), StunAnimationParameters.INSTANCE);
     }
 
