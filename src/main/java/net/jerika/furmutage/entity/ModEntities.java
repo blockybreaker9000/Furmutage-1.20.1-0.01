@@ -19,7 +19,7 @@ public class ModEntities {
                     .sized(0.5f, 0.5f).build("mugling"));
     public static final RegistryObject<EntityType<LatexMutantFamilyEntity>> LATEX_MUTANT_FAMILY =
                 ENTITY_TYPES.register("latex_mutant_family", () -> EntityType.Builder.of(LatexMutantFamilyEntity::new, MobCategory.CREATURE)
-            .sized(0.5f, 0.5f).build("latex_mutant_family"));
+            .sized(2.0f, 2.0f).build("latex_mutant_family"));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
