@@ -596,6 +596,7 @@ public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends Hierar
 
         this.animateWalk(mutantfamilyAnimation.MUTANT_FAMILY_WALK, limbSwing, limbSwingAmount, 1f, 1f);
         this.animate(((LatexMutantFamilyEntity) entity).idleAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_IDLE, ageInTicks, 1f);
+        this.animate(((LatexMutantFamilyEntity) entity).attackAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_ATTACK, ageInTicks, 1f);
     }
     private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, float pAgeInTicks) {
         pNetHeadYaw = Mth.clamp(pNetHeadYaw, -30.0F, 30.0F);

@@ -1,16 +1,19 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
+import net.jerika.furmutage.ai.MutantFamilyAi;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -21,8 +24,15 @@ public class LatexMutantFamilyEntity extends Monster {
     public LatexMutantFamilyEntity(EntityType<? extends Monster> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
     }
+
+    private static final EntityDataAccessor<Boolean> MUTANT_FAMILY_ATTACK =
+            SynchedEntityData.defineId(LatexMutantFamilyEntity.class, EntityDataSerializers.BOOLEAN);
+
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
+
+    public final AnimationState attackAnimationState = new AnimationState();
+    public int attackAnimationTimeout = 0;
 
     @Override
     public void tick() {
@@ -40,6 +50,17 @@ public class LatexMutantFamilyEntity extends Monster {
         {
             --this.idleAnimationTimeout;
         }
+
+        if(this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
+            attackAnimationTimeout = 80; //animation Length
+            attackAnimationState.start(this.tickCount);
+        } else {
+            --this.attackAnimationTimeout;
+        }
+
+        if(this.ismutantFamilyAttack()) {
+            attackAnimationState.stop();
+        }
     }
     private static final int MOB_FLAG_AGGRESSIVE = 4;
 
@@ -53,36 +74,58 @@ public class LatexMutantFamilyEntity extends Monster {
         }
         this.walkAnimation.update(f, 0.2f);
     }
+
+    public void setMutantFamilyAttack(boolean mutantFamilyAttack) {
+        this.entityData.set(MUTANT_FAMILY_ATTACK, mutantFamilyAttack);
+    }
+
+
+    public boolean ismutantFamilyAttack() {
+        this.entityData.get(MUTANT_FAMILY_ATTACK);
+        return false;
+    }
+
+    @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(MUTANT_FAMILY_ATTACK, false);
+    }
+
     @Override
     protected void registerGoals(){
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
         this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(1, new MutantFamilyAi(this, 1.0D, true));
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
     }
-    public static AttributeSupplier.Builder createAttribute() {
+
+    public static AttributeSupplier.Builder setAttribute() {
         return Monster.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 500)
                 .add(Attributes.MOVEMENT_SPEED, -0.5)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.5)
-                .add(Attributes.ATTACK_DAMAGE, 20);
+                .add(Attributes.ATTACK_DAMAGE, 20)
+                .add(Attributes.FOLLOW_RANGE, 16.0);
     }
 
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.SILVERFISH_AMBIENT;
+        return SoundEvents.ZOGLIN_AMBIENT;
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return SoundEvents.RABBIT_HURT;
+        return SoundEvents.ZOGLIN_HURT;
     }
     @Nullable
-    protected SoundEvent getDeathSound() {
-        return SoundEvents.RABBIT_DEATH;
+    protected SoundEvent getDeathSound() { return SoundEvents.ZOGLIN_DEATH;
+
     }
 
 }
