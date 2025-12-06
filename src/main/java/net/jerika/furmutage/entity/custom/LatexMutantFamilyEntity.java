@@ -59,7 +59,7 @@ public class LatexMutantFamilyEntity extends Monster {
         }
 
         if(this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
-            attackAnimationTimeout = 80; //animation Length
+            attackAnimationTimeout = 20; //animation Length
             attackAnimationState.start(this.tickCount);
         } else {
             --this.attackAnimationTimeout;
@@ -103,20 +103,22 @@ public class LatexMutantFamilyEntity extends Monster {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
         this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
         this.goalSelector.addGoal(1, new MutantFamilyAi(this, 3.0, true));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, true));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
+        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)1.0F, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 500)
-                .add(Attributes.MOVEMENT_SPEED, -3.5)
+                .add(Attributes.MOVEMENT_SPEED, 0.05)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.5)
                 .add(Attributes.ATTACK_DAMAGE, 20)
-                .add(Attributes.FOLLOW_RANGE, 16.0)
+                .add(Attributes.FOLLOW_RANGE, 56.0)
                 .add(Attributes.JUMP_STRENGTH, 4.0);
     }
 

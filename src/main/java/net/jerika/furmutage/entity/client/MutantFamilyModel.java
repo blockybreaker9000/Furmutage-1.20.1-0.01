@@ -17,8 +17,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends HierarchicalModel<T> {
-	// This layer location should be baked with EntityRendererProvider.Context in the entity renderer and passed into this model's constructor
-	public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation("modid", "mutantfamilymodel"), "main");
 	private final ModelPart body;
 	private final ModelPart heads;
 	private final ModelPart Head11;
