@@ -34,16 +34,17 @@ public class MuglingEntity extends Animal {
         super.tick();
 
         if(this.level().isClientSide()) {
-
+            setupAnimationStates();
         }
     }
 
-    private void setupAnimationState() {
+    private void setupAnimationStates() {
     if (this.idleAnimationTimeout <= 0)
         this.idleAnimationTimeout = this.random.nextInt(40) + 80;
         this.idleAnimationState.start(this.tickCount);
         {
         --this.idleAnimationTimeout;
+
         }
     }
 
@@ -70,7 +71,7 @@ public class MuglingEntity extends Animal {
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
     }
 
-    public static AttributeSupplier.Builder createAttribute() {
+    public static AttributeSupplier.Builder createAttributes() {
         return Animal.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 5)
                 .add(Attributes.MOVEMENT_SPEED, 0.5)

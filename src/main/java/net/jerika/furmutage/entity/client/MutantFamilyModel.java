@@ -7,6 +7,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.jerika.furmutage.entity.animations.mutantfamilyAnimation;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
+import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -594,9 +595,9 @@ public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends Hierar
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.applyHeadRotation(netHeadYaw , headPitch, ageInTicks);
 
-        this.animateWalk(mutantfamilyAnimation.MUTANT_FAMILY_WALK, limbSwing, limbSwingAmount, 1f, 1f);
-        this.animate(((LatexMutantFamilyEntity) entity).idleAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_IDLE, ageInTicks, 1f);
-        this.animate(((LatexMutantFamilyEntity) entity).attackAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_ATTACK, ageInTicks, 1f);
+        this.animateWalk(mutantfamilyAnimation.MUTANT_FAMILY_WALK, limbSwing, limbSwingAmount, 2f, 2f);
+        this.animate(((LatexMutantFamilyEntity) entity).idleAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_IDLE, ageInTicks, 3f);
+        this.animate(entity.attackAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_ATTACK, ageInTicks, 2f);
     }
     private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, float pAgeInTicks) {
         pNetHeadYaw = Mth.clamp(pNetHeadYaw, -30.0F, 30.0F);
@@ -614,6 +615,6 @@ public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends Hierar
 
     @Override
     public ModelPart root() {
-        return heads;
+        return Head;
     }
 }

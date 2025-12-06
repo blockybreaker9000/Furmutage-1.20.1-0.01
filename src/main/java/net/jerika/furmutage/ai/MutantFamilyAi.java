@@ -8,8 +8,8 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
 public class MutantFamilyAi extends MeleeAttackGoal {
     private final LatexMutantFamilyEntity entity;
-    private int attackDelay = 40;
-    private int ticksUntilNextAttack = 40;
+    private int attackDelay = 5;
+    private int ticksUntilNextAttack = 5;
     private boolean shouldCountTillNextAttack = false;
 
     public MutantFamilyAi(PathfinderMob pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen) {
@@ -19,8 +19,8 @@ public class MutantFamilyAi extends MeleeAttackGoal {
     @Override
     public void start() {
         super.start();
-        attackDelay = 40;
-        ticksUntilNextAttack = 40;
+        attackDelay = 5;
+        ticksUntilNextAttack = 5;
     }
     @Override
     protected void checkAndPerformAttack(LivingEntity pEnemy, double pDistToEnemySqr) {

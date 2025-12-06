@@ -24,7 +24,7 @@ public class MutantFamilyRenderer extends MobRenderer<LatexMutantFamilyEntity, M
     public void render(LatexMutantFamilyEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pPackedLight) {
         if(pEntity.isBaby()) {
-            pMatrixStack.scale(0.5f, 0.5f, 0.5f);
+            pMatrixStack.scale(1.5f, 1.5f, 1.5f);
         }
 
 

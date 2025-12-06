@@ -17,6 +17,5 @@ public class ModEventBusEvents {
         event.put(ModEntities.LATEX_MUTANT_FAMILY.get(), LatexMutantFamilyEntity.createMobAttributes().build());
 
 
-
         }
 }
