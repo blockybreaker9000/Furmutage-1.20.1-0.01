@@ -113,6 +113,9 @@ public class ModItems {
     public static final RegistryObject<Item> MUGLING_SPAWN_EGG = ITEMS.register("mugling_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.MUGLING, 0x4D72, 0xc5d,
                     new Item.Properties()));
+    public static final RegistryObject<Item> LATEX_MUTANT_FAMILY_SPAWN_EGG = ITEMS.register("latex_mutant_family_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.LATEX_MUTANT_FAMILY, 0x6E6E6E, 0x6E6E6E,
+                    new Item.Properties()));
 
 
 

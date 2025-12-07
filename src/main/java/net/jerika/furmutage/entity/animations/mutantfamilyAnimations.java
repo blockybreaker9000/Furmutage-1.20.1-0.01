@@ -357,7 +357,7 @@ public class mutantfamilyAnimations {
 		))
 		.build();
 
-	public static final AnimationDefinition hurt = AnimationDefinition.Builder.withLength(0.1667F)
+	public static final AnimationDefinition MUTANT_FAMILY_HURT = AnimationDefinition.Builder.withLength(0.1667F)
 		.addAnimation("body", new AnimationChannel(AnimationChannel.Targets.SCALE, 
 			new Keyframe(0.0F, KeyframeAnimations.scaleVec(1.0F, 1.0F, 1.0F), AnimationChannel.Interpolations.LINEAR),
 			new Keyframe(0.0833F, KeyframeAnimations.scaleVec(1.2F, 0.9F, 1.0F), AnimationChannel.Interpolations.LINEAR),

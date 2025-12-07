@@ -77,14 +77,14 @@ public class MuglingEntity extends Animal {
             public void start() {
                 super.start();
                 // Increase speed when fleeing from monsters
-                mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.7);
+                MuglingEntity.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.7);
             }
             
             @Override
             public void stop() {
                 super.stop();
                 // Return to normal speed
-                mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5);
+                MuglingEntity.this.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5);
             }
         });
         
@@ -118,9 +118,7 @@ public class MuglingEntity extends Animal {
         return Animal.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 5)
                 .add(Attributes.MOVEMENT_SPEED, 0.5)
-                .add(Attributes.ARMOR_TOUGHNESS, 1)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.5)
-                .add(Attributes.ATTACK_DAMAGE, 2);
+                .add(Attributes.ARMOR_TOUGHNESS, 1);
     }
     @Nullable
     @Override
