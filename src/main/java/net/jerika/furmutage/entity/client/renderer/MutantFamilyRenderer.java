@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MutantFamilyRenderer extends MobRenderer<LatexMutantFamilyEntity, MutantFamilyModel<LatexMutantFamilyEntity>> {
     public MutantFamilyRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new MutantFamilyModel<>(pContext.bakeLayer(ModModelLayers.MUTANT_FAMILY_LAYER)), 0.02f);
+        super(pContext, new MutantFamilyModel<>(pContext.bakeLayer(ModModelLayers.MUTANT_FAMILY_LAYER)), 0.5f);
     }
 
     @Override

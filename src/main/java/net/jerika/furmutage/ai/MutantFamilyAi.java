@@ -68,6 +68,7 @@ public class MutantFamilyAi extends MeleeAttackGoal {
         this.resetAttackCooldown();
         this.mob.swing(InteractionHand.MAIN_HAND);
         this.mob.doHurtTarget(pEnemy);
+        // Flag will be reset by client-side animation timeout or when enemy moves out of range
     }
 
     @Override

@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -51,13 +52,16 @@ public class LatexMutantFamilyEntity extends Monster {
     }
 
     private void setupAnimationStates() {
-        if (this.idleAnimationTimeout <= 0)
-            this.idleAnimationTimeout = this.random.nextInt(40) + 80;
-        this.idleAnimationState.start(this.tickCount);
-        {
-            --this.idleAnimationTimeout;
+        // Idle animation: play continuously when stationary
+        if (this.getDeltaMovement().horizontalDistanceSqr() < 1.0E-6) {
+            if (!this.idleAnimationState.isStarted()) {
+                this.idleAnimationState.start(this.tickCount);
+            }
+        } else {
+            this.idleAnimationState.stop();
         }
 
+        // Attack animation
         if(this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
             attackAnimationTimeout = 20; //animation Length
             attackAnimationState.start(this.tickCount);
@@ -65,7 +69,7 @@ public class LatexMutantFamilyEntity extends Monster {
             --this.attackAnimationTimeout;
         }
 
-        if(this.ismutantFamilyAttack()) {
+        if(!this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
             attackAnimationState.stop();
         }
     }
@@ -88,8 +92,7 @@ public class LatexMutantFamilyEntity extends Monster {
 
 
     public boolean ismutantFamilyAttack() {
-        this.entityData.get(MUTANT_FAMILY_ATTACK);
-        return false;
+        return this.entityData.get(MUTANT_FAMILY_ATTACK);
     }
 
     @Override
@@ -109,17 +112,18 @@ public class LatexMutantFamilyEntity extends Monster {
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
         this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)1.0F, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 500)
-                .add(Attributes.MOVEMENT_SPEED, 0.05)
+                .add(Attributes.MOVEMENT_SPEED, 0.15)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.5)
                 .add(Attributes.ATTACK_DAMAGE, 20)
                 .add(Attributes.FOLLOW_RANGE, 56.0)
-                .add(Attributes.JUMP_STRENGTH, 4.0);
+                .add(Attributes.JUMP_STRENGTH, 5.0);
     }
 
 

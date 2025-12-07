@@ -5,18 +5,16 @@ package net.jerika.furmutage.entity.client;// Made with Blockbench 5.0.4
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.jerika.furmutage.entity.animations.mutantfamilyAnimation;
+import net.jerika.furmutage.entity.animations.mutantfamilyAnimations;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
-import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.minecraft.client.model.HierarchicalModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends HierarchicalModel<T> {
+	private final ModelPart root;
 	private final ModelPart body;
 	private final ModelPart heads;
 	private final ModelPart Head11;
@@ -123,6 +121,7 @@ public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends Hierar
 	private final ModelPart LeftPad2;
 
 	public MutantFamilyModel(ModelPart root) {
+		this.root = root;
 		this.body = root.getChild("body");
 		this.heads = this.body.getChild("heads");
 		this.Head11 = this.heads.getChild("Head11");
@@ -593,9 +592,9 @@ public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends Hierar
         this.root().getAllParts().forEach(ModelPart::resetPose);
         this.applyHeadRotation(netHeadYaw , headPitch, ageInTicks);
 
-        this.animateWalk(mutantfamilyAnimation.MUTANT_FAMILY_WALK, limbSwing, limbSwingAmount, 2f, 2f);
-        this.animate(((LatexMutantFamilyEntity) entity).idleAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_IDLE, ageInTicks, 3f);
-        this.animate(entity.attackAnimationState, mutantfamilyAnimation.MUTANT_FAMILY_ATTACK, ageInTicks, 2f);
+        this.animateWalk(mutantfamilyAnimations.MUTANT_FAMILY_WALK, limbSwing, limbSwingAmount, 2f, 2f);
+        this.animate(((LatexMutantFamilyEntity) entity).idleAnimationState, mutantfamilyAnimations.MUTANT_FAMILY_IDLE, ageInTicks, 3f);
+        this.animate(entity.attackAnimationState, mutantfamilyAnimations.MUTANT_FAMILY_ATTACK, ageInTicks, 2f);
     }
     private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, float pAgeInTicks) {
         pNetHeadYaw = Mth.clamp(pNetHeadYaw, -30.0F, 30.0F);
@@ -613,6 +612,6 @@ public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends Hierar
 
     @Override
     public ModelPart root() {
-        return Head;
+        return root;
     }
 }

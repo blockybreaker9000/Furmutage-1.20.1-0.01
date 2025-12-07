@@ -7,6 +7,7 @@ import net.jerika.furmutage.entity.client.renderer.MuglingRenderer;
 import net.jerika.furmutage.entity.client.renderer.MutantFamilyRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.jerika.furmutage.item.modcreativemodetabs;
+import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
@@ -35,6 +36,7 @@ public class furmutage {
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
 
+        ModSounds.register(modEventBus);
 
         ModEntities.register(modEventBus);
 

@@ -1,0 +1,27 @@
+{
+  "night_ambient_1": {
+    "sounds": [
+      "furmutage:night_ambient_1"
+    ],
+    "subtitle": "subtitles.furmutage.night_ambient"
+  },
+  "night_ambient_2": {
+    "sounds": [
+      "furmutage:night_ambient_2"
+    ],
+    "subtitle": "subtitles.furmutage.night_ambient"
+  },
+  "night_ambient_3": {
+    "sounds": [
+      "furmutage:night_ambient_3"
+    ],
+    "subtitle": "subtitles.furmutage.night_ambient"
+  },
+  "morning_chime": {
+    "sounds": [
+      "furmutage:morning_chime"
+    ],
+    "subtitle": "subtitles.furmutage.morning_chime"
+  }
+}
+
