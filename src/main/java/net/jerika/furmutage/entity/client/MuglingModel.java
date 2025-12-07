@@ -18,11 +18,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 
 public class MuglingModel<T extends Entity> extends HierarchicalModel<T> {
+	private final ModelPart root;
 	private final ModelPart head;
 	private final ModelPart body;
 	private final ModelPart tail;
 
 	public MuglingModel(ModelPart root) {
+		this.root = root;
 		this.head = root.getChild("head");
 		this.body = root.getChild("body");
 		this.tail = root.getChild("tail");
@@ -65,6 +67,6 @@ public class MuglingModel<T extends Entity> extends HierarchicalModel<T> {
 
     @Override
     public ModelPart root() {
-        return head;
+        return root;
     }
 }

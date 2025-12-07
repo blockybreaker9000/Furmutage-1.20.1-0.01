@@ -17,8 +17,9 @@ import org.jetbrains.annotations.NotNull;
 public class ModClientEvents {
     private static long lastNightSoundTime = -1;
     private static long lastMorningChimeTime = -1;
+    private static long lastMidnightChimeTime = -1;
+    private static long previousDayTime = -1;
     private static final long NIGHT_SOUND_INTERVAL = 12000; // Play every 10 minutes (in ticks)
-    private static final long MORNING_CHIME_COOLDOWN = 24000; // Only play once per day cycle
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -52,20 +53,34 @@ public class ModClientEvents {
                 }
             }
 
-            // Morning chime (between 0 and 1000 ticks, which is 6:00 AM to 6:30 AM)
-            if (dayTime >= 0 && dayTime < 1000) {
+            // Midnight chime (at 18000 ticks, which is 12:00 AM)
+            if (dayTime >= 18000 && dayTime < 18100) {
+                // Only play once per day cycle
+                long dayCycle = level.getDayTime() / 24000;
+                if (lastMidnightChimeTime != dayCycle) {
+                    // Play chime at midnight
+                    level.playSound(player, player.getX(), player.getY(), player.getZ(),
+                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
+                    lastMidnightChimeTime = dayCycle;
+                }
+            }
+
+            // Morning chime (only at exactly 0 ticks, which is 6:00 AM)
+            // Check if we just crossed from night to exactly 0, or if we're at exactly 0
+            boolean justCrossedDawn = previousDayTime > 0 && dayTime == 0;
+            if (dayTime == 0 || justCrossedDawn) {
                 // Only play once per day cycle
                 long dayCycle = level.getDayTime() / 24000;
                 if (lastMorningChimeTime != dayCycle) {
-                    // Play chime at the start of dawn (around 0-100 ticks, with small random delay)
-                    if (dayTime < 100) {
-                        // Play once when we first enter dawn time
-                        level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                                ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
-                        lastMorningChimeTime = dayCycle;
-                    }
+                    // Play chime at exactly dawn (time 0)
+                    level.playSound(player, player.getX(), player.getY(), player.getZ(),
+                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
+                    lastMorningChimeTime = dayCycle;
                 }
             }
+
+            // Update previous day time for wrap-around detection
+            previousDayTime = dayTime;
         }
     }
 

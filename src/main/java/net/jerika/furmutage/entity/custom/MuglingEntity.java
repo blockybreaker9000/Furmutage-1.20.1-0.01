@@ -13,8 +13,12 @@ import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.jerika.furmutage.ai.MuglingGroupGoal;
+import net.jerika.furmutage.ai.MuglingPackAttackGoal;
+import net.jerika.furmutage.ai.MuglingPackRetaliationGoal;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -39,12 +43,13 @@ public class MuglingEntity extends Animal {
     }
 
     private void setupAnimationStates() {
-    if (this.idleAnimationTimeout <= 0)
-        this.idleAnimationTimeout = this.random.nextInt(40) + 80;
-        this.idleAnimationState.start(this.tickCount);
-        {
-        --this.idleAnimationTimeout;
-
+        // Idle animation: play continuously when stationary
+        if (this.getDeltaMovement().horizontalDistanceSqr() < 1.0E-6) {
+            if (!this.idleAnimationState.isStarted()) {
+                this.idleAnimationState.start(this.tickCount);
+            }
+        } else {
+            this.idleAnimationState.stop();
         }
     }
 
@@ -62,13 +67,51 @@ public class MuglingEntity extends Animal {
     @Override
     protected void registerGoals(){
         this.goalSelector.addGoal(0, new FloatGoal(this));
+        
+        // Panic when hurt - highest priority for survival
+        this.goalSelector.addGoal(1, new PanicGoal(this, 1.5D));
+        
+        // Avoid other mobs (but not other Muggings) - smart fleeing
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Monster.class, 10.0F, 1.4D, 1.8D) {
+            @Override
+            public void start() {
+                super.start();
+                // Increase speed when fleeing from monsters
+                mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.7);
+            }
+            
+            @Override
+            public void stop() {
+                super.stop();
+                // Return to normal speed
+                mob.getAttribute(Attributes.MOVEMENT_SPEED).setBaseValue(0.5);
+            }
+        });
+        
+        this.goalSelector.addGoal(2, new AvoidEntityGoal<>(this, Animal.class, 8.0F, 1.3D, 1.6D) {
+            @Override
+            public boolean canUse() {
+                // Only avoid animals that are not Muggings
+                return super.canUse() && !(this.toAvoid instanceof MuglingEntity);
+            }
+        });
 
-        this.goalSelector.addGoal(1, new BreedGoal(this, 1.50));
-        this.goalSelector.addGoal(1, new TemptGoal(this, 1.20, Ingredient.of(ModItems.ROSELIGHT.get()), false));
-        this.goalSelector.addGoal(1, new FollowParentGoal(this, 1.10));
-        this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
-        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
-        this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
+        // Group together with other Muggings for safety
+        this.goalSelector.addGoal(3, new MuglingGroupGoal(this, 1.1D, 3.0F, 12.0F));
+        
+        // Breeding and social behaviors
+        this.goalSelector.addGoal(4, new BreedGoal(this, 1.50));
+        this.goalSelector.addGoal(4, new TemptGoal(this, 1.20, Ingredient.of(ModItems.ROSELIGHT.get()), false));
+        this.goalSelector.addGoal(4, new FollowParentGoal(this, 1.10));
+        
+        // Exploration and awareness
+        this.goalSelector.addGoal(5, new WaterAvoidingRandomStrollGoal(this, 1.10));
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 6f));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
+        
+        // Pack retaliation - only attack when in a large group
+        this.targetSelector.addGoal(1, new MuglingPackRetaliationGoal(this));
+        this.goalSelector.addGoal(2, new MuglingPackAttackGoal(this, 1.2D, true));
     }
 
     public static AttributeSupplier.Builder createAttributes() {
