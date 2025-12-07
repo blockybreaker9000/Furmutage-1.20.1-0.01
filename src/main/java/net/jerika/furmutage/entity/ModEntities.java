@@ -2,6 +2,8 @@ package net.jerika.furmutage.entity;
 
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
+import net.jerika.furmutage.entity.DarkLatexBottleProjectile;
+import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -20,6 +22,22 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexMutantFamilyEntity>> LATEX_MUTANT_FAMILY =
                 ENTITY_TYPES.register("latex_mutant_family", () -> EntityType.Builder.of(LatexMutantFamilyEntity::new, MobCategory.CREATURE)
             .sized(1.0f, 1.0f).build("latex_mutant_family"));
+    
+    public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
+            ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(
+                    DarkLatexBottleProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("dark_latex_bottle_projectile"));
+    
+    public static final RegistryObject<EntityType<TSCShockGrenadeProjectile>> TSC_SHOCK_GRENADE_PROJECTILE =
+            ENTITY_TYPES.register("tsc_shock_grenade_projectile", () -> EntityType.Builder.<TSCShockGrenadeProjectile>of(
+                    TSCShockGrenadeProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("tsc_shock_grenade_projectile"));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);

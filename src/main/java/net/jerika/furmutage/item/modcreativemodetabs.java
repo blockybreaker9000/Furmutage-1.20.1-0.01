@@ -53,6 +53,8 @@ public class modcreativemodetabs {
                         output.accept(ModItems.FAT_TSC_BATTERY.get());
                         output.accept(ModItems.TSC_BATTERY.get());
                         output.accept(ModItems.TSC_METAL_DETECTOR.get());
+                        output.accept(ModItems.TSC_SHOCK_GRENADE.get());
+                        output.accept(ModItems.TSC_EXPLOSIVE_GRENADE.get());
                         output.accept(ModItems.THUNDERIUMTAZER.get());
 
                         output.accept(ModItems.MUGLING_SPAWN_EGG.get());

@@ -1,6 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.MutantFamilyAi;
+import net.jerika.furmutage.ai.TargetDarkLatexGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -111,6 +112,7 @@ public class LatexMutantFamilyEntity extends Monster {
         this.goalSelector.addGoal(1, new MutantFamilyAi(this, 3.0, true));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
+        this.targetSelector.addGoal(1, new TargetDarkLatexGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
         this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)1.0F, true));

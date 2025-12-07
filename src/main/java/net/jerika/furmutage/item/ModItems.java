@@ -3,6 +3,8 @@ package net.jerika.furmutage.item;
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.furmutage;
 import net.jerika.furmutage.item.custom.*;
+import net.jerika.furmutage.item.DarkLatexBottleItem;
+import net.jerika.furmutage.item.TSCShockGrenadeItem;
 import net.jerika.furmutage.item.custom.diamond.*;
 import net.jerika.furmutage.item.custom.iron.*;
 import net.jerika.furmutage.item.custom.post_netherite.ThunderiumDoomSaber;
@@ -67,8 +69,12 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_BATTERY = ITEMS.register("tsc_battery",
             () -> new Item(new Item.Properties()));
-    public static final RegistryObject<Item> DARKLATEXBOTTLED = ITEMS.register("darklatex_bottle",
+    public static final RegistryObject<Item> TSC_SHOCK_GRENADE = ITEMS.register("tsc_shock_grenade",
+            () -> new TSCShockGrenadeItem(new Item.Properties()));
+    public static final RegistryObject<Item> TSC_EXPLOSIVE_GRENADE = ITEMS.register("tsc_explosive_grenade",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DARKLATEXBOTTLED = ITEMS.register("darklatex_bottle",
+            () -> new DarkLatexBottleItem(new Item.Properties()));
     public static final RegistryObject<Item> TSC_METAL_DETECTOR = ITEMS.register("tsc_metal_detector",
             () -> new TSCMetalDetectorItem(new Item.Properties().durability(100)));
 
