@@ -59,8 +59,8 @@ public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
             cloud.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), 50, 0, false, true, true));
             
             // Add slowness 2 effect
-            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 600, 1, false, true, true));
-            cloud.addEffect(new MobEffectInstance(MobEffects.WITHER, 200, 2, false, true, true));
+            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50, 1, false, true, true));
+            cloud.addEffect(new MobEffectInstance(MobEffects.WITHER, 50, 2, false, true, true));
             serverLevel.addFreshEntity(cloud);
             
             // Do explosive damage without breaking blocks
@@ -83,7 +83,7 @@ public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
             
             // Spawn explosion particles and sound (without block damage)
             serverLevel.explode(this, this.owner.getLastDamageSource(), null, impactPos.x, impactPos.y, impactPos.z,
-                    0.0F, false, Level.ExplosionInteraction.NONE);
+                    5.0F, false, Level.ExplosionInteraction.NONE);
             
             this.discard();
         }

@@ -36,6 +36,9 @@ public class TSCShockGrenadeItem extends Item {
         if (!player.getAbilities().instabuild) {
             itemstack.shrink(1);
         }
+        
+        // Add 15 second cooldown (300 ticks)
+        player.getCooldowns().addCooldown(this, 80);
 
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
