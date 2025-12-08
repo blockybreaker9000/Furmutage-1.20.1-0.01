@@ -144,5 +144,27 @@ public class LatexMutantFamilyEntity extends Monster {
 
     }
 
+    @Override
+    public boolean fireImmune() {
+        return true; // Fire resistant
+    }
+
+    @Override
+    protected float getWaterSlowDown() {
+        return 0.0f; // No water slowdown - fast in water
+    }
+
+    @Override
+    public void travel(net.minecraft.world.phys.Vec3 pTravelVector) {
+        if (this.isEffectiveAi() && this.isInWater()) {
+            // Increase movement speed in water
+            this.moveRelative(0.1f, pTravelVector);
+            this.move(net.minecraft.world.entity.MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.3));
+        } else {
+            super.travel(pTravelVector);
+        }
+    }
+
 }
 

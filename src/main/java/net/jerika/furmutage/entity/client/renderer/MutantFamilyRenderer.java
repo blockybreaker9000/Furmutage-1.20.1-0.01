@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MutantFamilyRenderer extends MobRenderer<LatexMutantFamilyEntity, MutantFamilyModel<LatexMutantFamilyEntity>> {
     public MutantFamilyRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new MutantFamilyModel<>(pContext.bakeLayer(ModModelLayers.MUTANT_FAMILY_LAYER)), 0.5f);
+        super(pContext, new MutantFamilyModel<>(pContext.bakeLayer(ModModelLayers.MUTANT_FAMILY_LAYER)), 1.5f);
     }
 
     @Override
@@ -24,14 +24,16 @@ public class MutantFamilyRenderer extends MobRenderer<LatexMutantFamilyEntity, M
     public void render(LatexMutantFamilyEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pPackedLight) {
         // Scale down to fit with latex mutant model proportions
-        // Model is very large, so scale it to match typical latex mutant size (~1.8 blocks tall)
-        pMatrixStack.scale(2.4f, 2.4f, 2.4f);
-        pMatrixStack.translate(0, -0.5, 0); // Adjust vertical position to align with ground
+        // Model geometry is large, scale it down to match entity size (2.4f width, 1.4f height)
+        pMatrixStack.pushPose();
+        pMatrixStack.scale(1.2f, 1.2f, 1.2f);
+        pMatrixStack.translate(0, 0.0, 0); // Adjust vertical position to align with ground
         
         if(pEntity.isBaby()) {
             pMatrixStack.scale(0.5f, 0.5f, 0.5f);
         }
 
         super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+        pMatrixStack.popPose();
     }
 }

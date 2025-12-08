@@ -21,7 +21,7 @@ public class ModEntities {
                     .sized(0.5f, 0.5f).build("mugling"));
     public static final RegistryObject<EntityType<LatexMutantFamilyEntity>> LATEX_MUTANT_FAMILY =
                 ENTITY_TYPES.register("latex_mutant_family", () -> EntityType.Builder.of(LatexMutantFamilyEntity::new, MobCategory.CREATURE)
-            .sized(2.4f, 2.4f).build("latex_mutant_family"));
+            .sized(2.4f, 3.1f).build("latex_mutant_family"));
     
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

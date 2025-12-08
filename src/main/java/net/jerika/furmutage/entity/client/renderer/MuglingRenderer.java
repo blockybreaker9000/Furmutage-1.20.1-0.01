@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class MuglingRenderer extends MobRenderer<MuglingEntity, MuglingModel<MuglingEntity>> {
     public MuglingRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new MuglingModel<>(pContext.bakeLayer(ModModelLayers.MUGLING_LAYER)), 0.02f);
+        super(pContext, new MuglingModel<>(pContext.bakeLayer(ModModelLayers.MUGLING_LAYER)), 0.1f);
     }
 
     @Override

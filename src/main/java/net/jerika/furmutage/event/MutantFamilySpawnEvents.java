@@ -25,7 +25,7 @@ public class MutantFamilySpawnEvents {
         if (event.getLevel().isClientSide()) {
             return;
         }
-        
+
         // Check if entity is a LatexMutantFamilyEntity
         if (event.getEntity() instanceof LatexMutantFamilyEntity mutantFamily) {
             // Skip if we've already processed this entity
@@ -53,7 +53,7 @@ public class MutantFamilySpawnEvents {
                     net.minecraft.resources.ResourceLocation.tryParse("changed:pure_white_latex_pup")
             );
         }
-        
+
         if (pureWhiteLatexType == null) {
             // Try to find any entity with "pure_white" in the name
             for (EntityType<?> entityType : ForgeRegistries.ENTITY_TYPES.getValues()) {
@@ -64,10 +64,10 @@ public class MutantFamilySpawnEvents {
                 }
             }
         }
-        
+
         if (pureWhiteLatexType != null && pureWhiteLatexType.create(level) instanceof PathfinderMob) {
             // Spawn 3 Pure White Latex entities around the Mutant Family
-            for (int i = 0; i < 3; i++) {
+            for (int i = 0; i < 6; i++) {
                 double angle = (i * 120.0) * Math.PI / 180.0; // 120 degrees apart
                 double offsetX = Math.cos(angle) * 2.0; // 2 blocks away
                 double offsetZ = Math.sin(angle) * 2.0;

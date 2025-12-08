@@ -19,7 +19,7 @@ public class ModClientEvents {
     private static long lastMorningChimeTime = -1;
     private static long lastMidnightChimeTime = -1;
     private static long previousDayTime = -1;
-    private static final long NIGHT_SOUND_INTERVAL = 12000; // Play every 10 minutes (in ticks)
+    private static final long NIGHT_SOUND_INTERVAL = 6000; // Play every 5 minutes (in ticks)
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -60,7 +60,7 @@ public class ModClientEvents {
                 if (lastMidnightChimeTime != dayCycle) {
                     // Play chime at midnight
                     level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
+                            ModSounds.NIGHT_AMBIENT_2.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
                     lastMidnightChimeTime = dayCycle;
                 }
             }
