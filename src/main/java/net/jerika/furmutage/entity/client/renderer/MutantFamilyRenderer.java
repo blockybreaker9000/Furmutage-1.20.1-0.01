@@ -24,11 +24,11 @@ public class MutantFamilyRenderer extends MobRenderer<LatexMutantFamilyEntity, M
     public void render(LatexMutantFamilyEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pPackedLight) {
         // Scale down to fit with latex mutant model proportions
-        // Model geometry is large, scale it down to match entity size (2.4f width, 1.4f height)
+        // Model geometry is large, scale it down to match entity size (2.4f width, 1.2f height)
         pMatrixStack.pushPose();
         pMatrixStack.scale(1.2f, 1.2f, 1.2f);
         pMatrixStack.translate(0, 0.0, 0); // Adjust vertical position to align with ground
-        
+
         if(pEntity.isBaby()) {
             pMatrixStack.scale(0.5f, 0.5f, 0.5f);
         }

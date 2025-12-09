@@ -1,6 +1,7 @@
 package net.jerika.furmutage.item;
 
-import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
+import net.jerika.furmutage.entity.DarkLatexBottleProjectile;
+import net.jerika.furmutage.entity.WhiteLatexBottleProjectile;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -11,8 +12,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 
-public class TSCShockGrenadeItem extends Item {
-    public TSCShockGrenadeItem(Item.Properties properties) {
+public class WhiteLatexBottleItem extends Item {
+    public WhiteLatexBottleItem(Properties properties) {
         super(properties);
     }
 
@@ -24,11 +25,10 @@ public class TSCShockGrenadeItem extends Item {
                 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
         
         if (!level.isClientSide) {
-            TSCShockGrenadeProjectile projectile = new TSCShockGrenadeProjectile(level, player);
+            WhiteLatexBottleProjectile projectile = new WhiteLatexBottleProjectile(level, player);
             projectile.setItem(itemstack);
-            // Lower velocity for shorter range (0.8F instead of 1.5F)
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 
-                    0.0F, 0.8F, 0.5F);
+                    0.0F, 1.5F, 1.0F);
             level.addFreshEntity(projectile);
         }
 
@@ -36,9 +36,6 @@ public class TSCShockGrenadeItem extends Item {
         if (!player.getAbilities().instabuild) {
             itemstack.shrink(1);
         }
-        
-        // Add 15 second cooldown (300 ticks)
-        player.getCooldowns().addCooldown(this, 50);
 
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }

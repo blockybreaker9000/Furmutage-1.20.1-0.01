@@ -74,6 +74,8 @@ public class furmutage {
             EntityRenderers.register(ModEntities.LATEX_MUTANT_FAMILY.get(), MutantFamilyRenderer::new);
             EntityRenderers.register(ModEntities.DARK_LATEX_BOTTLE_PROJECTILE.get(), 
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
+            EntityRenderers.register(ModEntities.WHITE_LATEX_BOTTLE_PROJECTILE.get(),
+                    (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
             EntityRenderers.register(ModEntities.TSC_SHOCK_GRENADE_PROJECTILE.get(), 
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
 

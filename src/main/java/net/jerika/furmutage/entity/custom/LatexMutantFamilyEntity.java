@@ -104,7 +104,7 @@ public class LatexMutantFamilyEntity extends Monster {
 
     @Override
     protected void registerGoals(){
-        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new FloatGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
         this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
@@ -119,11 +119,11 @@ public class LatexMutantFamilyEntity extends Monster {
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 500)
+                .add(Attributes.MAX_HEALTH, 250)
                 .add(Attributes.MOVEMENT_SPEED, 0.15)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.5)
-                .add(Attributes.ATTACK_DAMAGE, 20)
+                .add(Attributes.ATTACK_DAMAGE, 5)
                 .add(Attributes.FOLLOW_RANGE, 56.0)
                 .add(Attributes.JUMP_STRENGTH, 5.0);
     }
@@ -158,7 +158,7 @@ public class LatexMutantFamilyEntity extends Monster {
     public void travel(net.minecraft.world.phys.Vec3 pTravelVector) {
         if (this.isEffectiveAi() && this.isInWater()) {
             // Increase movement speed in water
-            this.moveRelative(0.1f, pTravelVector);
+            this.moveRelative(0.5f, pTravelVector);
             this.move(net.minecraft.world.entity.MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.3));
         } else {

@@ -30,6 +30,13 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("dark_latex_bottle_projectile"));
+    public static final RegistryObject<EntityType<WhiteLatexBottleProjectile>> WHITE_LATEX_BOTTLE_PROJECTILE =
+            ENTITY_TYPES.register("white_latex_bottle_projectile", () -> EntityType.Builder.<WhiteLatexBottleProjectile>of(
+                            WhiteLatexBottleProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("white_latex_bottle_projectile"));
     
     public static final RegistryObject<EntityType<TSCShockGrenadeProjectile>> TSC_SHOCK_GRENADE_PROJECTILE =
             ENTITY_TYPES.register("tsc_shock_grenade_projectile", () -> EntityType.Builder.<TSCShockGrenadeProjectile>of(

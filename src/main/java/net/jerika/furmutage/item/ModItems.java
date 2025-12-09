@@ -70,11 +70,13 @@ public class ModItems {
     public static final RegistryObject<Item> TSC_BATTERY = ITEMS.register("tsc_battery",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_SHOCK_GRENADE = ITEMS.register("tsc_shock_grenade",
-            () -> new TSCShockGrenadeItem(new Item.Properties()));
+            () -> new TSCShockGrenadeItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> TSC_EXPLOSIVE_GRENADE = ITEMS.register("tsc_explosive_grenade",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DARKLATEXBOTTLED = ITEMS.register("darklatex_bottle",
-            () -> new DarkLatexBottleItem(new Item.Properties()));
+            () -> new DarkLatexBottleItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> WHITELATEXBOTTLED = ITEMS.register("whitelatex_bottle",
+            () -> new WhiteLatexBottleItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> TSC_METAL_DETECTOR = ITEMS.register("tsc_metal_detector",
             () -> new TSCMetalDetectorItem(new Item.Properties().durability(100)));
 

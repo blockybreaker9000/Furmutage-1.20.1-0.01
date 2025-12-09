@@ -17,6 +17,30 @@
     ],
     "subtitle": "subtitles.furmutage.night_ambient"
   },
+  "night_ambient_4": {
+    "sounds": [
+      "furmutage:night_ambient_4"
+    ],
+    "subtitle": "subtitles.furmutage.night_ambient"
+  },
+  "night_ambient_5": {
+    "sounds": [
+      "furmutage:night_ambient_5"
+    ],
+    "subtitle": "subtitles.furmutage.night_ambient"
+  },
+  "night_ambient_6": {
+    "sounds": [
+      "furmutage:night_ambient_6"
+    ],
+    "subtitle": "subtitles.furmutage.night_ambient"
+  },
+  "night_chime": {
+    "sounds": [
+      "furmutage:night_chime"
+    ],
+    "subtitle": "subtitles.furmutage.night_chime"
+  },
   "morning_chime": {
     "sounds": [
       "furmutage:morning_chime"

@@ -60,6 +60,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.MUGLING_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_MUTANT_FAMILY_SPAWN_EGG.get());
                         output.accept(ModItems.DARKLATEXBOTTLED.get());
+                        output.accept(ModItems.WHITELATEXBOTTLED.get());
 
                         output.accept(ModItems.THUNDERIUM_SABER.get());
                         output.accept(ModItems.ROSELIGHT_PIC.get());

@@ -2,7 +2,10 @@ package net.jerika.furmutage.entity;
 
 import net.jerika.furmutage.item.ModItems;
 import net.ltxprogrammer.changed.init.ChangedEffects;
+import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import org.joml.Vector3f;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -56,11 +59,11 @@ public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
             cloud.setRadiusPerTick(-cloud.getRadius() / (float)cloud.getDuration());
             
             // Add shock effect from Changed mod
-            cloud.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), 50, 0, false, true, true));
+            cloud.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), 60, 0, false, true, true));
             
             // Add slowness 2 effect
-            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 50, 1, false, true, true));
-            cloud.addEffect(new MobEffectInstance(MobEffects.WITHER, 50, 2, false, true, true));
+            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 2, false, true, true));
+            cloud.addEffect(new MobEffectInstance(MobEffects.WITHER, 50, 1, false, true, true));
             serverLevel.addFreshEntity(cloud);
             
             // Do explosive damage without breaking blocks
@@ -82,9 +85,34 @@ public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
             }
             
             // Spawn explosion particles and sound (without block damage)
-            serverLevel.explode(this, this.owner.getLastDamageSource(), null, impactPos.x, impactPos.y, impactPos.z,
-                    5.0F, false, Level.ExplosionInteraction.NONE);
-            
+            serverLevel.explode(this, this.owner != null ? this.owner.getLastDamageSource() : null, null, impactPos.x, impactPos.y, impactPos.z,
+                    2.0F, false, Level.ExplosionInteraction.NONE);
+
+            // Spawn cyan colored explosion particles
+            // Cyan color: RGB(0, 255, 255) normalized to 0-2 range
+            DustParticleOptions cyanParticle = new DustParticleOptions(
+                    new Vector3f(0.0f, 1.0f, 1.0f), // Cyan color (R=0, G=1, B=1)
+                    2.0f // Scale
+            );
+
+            // Spawn multiple cyan particles in a sphere pattern around explosion
+            for (int i = 0; i < 200; i++) {
+                double angleX = serverLevel.random.nextDouble() * Math.PI * 2;
+                double angleY = serverLevel.random.nextDouble() * Math.PI;
+                double distance = serverLevel.random.nextDouble() * radius;
+                double offsetX = Math.sin(angleY) * Math.cos(angleX) * distance;
+                double offsetY = Math.cos(angleY) * distance;
+                double offsetZ = Math.sin(angleY) * Math.sin(angleX) * distance;
+
+                // Spawn cyan dust particles
+                serverLevel.sendParticles(cyanParticle,
+                        impactPos.x + offsetX, impactPos.y + offsetY, impactPos.z + offsetZ,
+                        1, 0, 0, 0, 0);
+            }
+
+            // Also spawn cyan splash particles
+            this.level().levelEvent(6002, this.blockPosition(), 65535);
+
             this.discard();
         }
     }

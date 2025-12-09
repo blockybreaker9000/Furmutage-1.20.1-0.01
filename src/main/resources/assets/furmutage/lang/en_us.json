@@ -58,6 +58,8 @@
   "item.furmutage.mugling_spawn_egg": "Mugling Spawn Egg",
   "item.furmutage.latex_mutant_family_spawn_egg": "Latex Mutant Family Spawn Egg",
   "item.furmutage.darklatex_bottle": "Bottled DarkLatex",
+  "item.furmutage.whitelatex_bottle": "Bottled WhiteLatex",
+  "item.furmutage.tsc_shock_grenade": "TSC Shock Grenade",
 
   "block.furmutage.raw_thunderium": "Raw Thunderium",
   "block.furmutage.raw_roselight": "Raw Roselight",
@@ -74,6 +76,7 @@
   "entity.furmutage.pure_white_latex_elite": "Pure White Latex Elite",
 
   "subtitles.furmutage.night_ambient": "Night Ambience",
+  "subtitles.furmutage.night_chime": "Night Chime",
   "subtitles.furmutage.morning_chime": "Morning Chime",
 
   "creativetab.furmutage": "FurMutage"

@@ -16,6 +16,10 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> NIGHT_AMBIENT_1 = registerSoundEvent("night_ambient_1");
     public static final RegistryObject<SoundEvent> NIGHT_AMBIENT_2 = registerSoundEvent("night_ambient_2");
     public static final RegistryObject<SoundEvent> NIGHT_AMBIENT_3 = registerSoundEvent("night_ambient_3");
+    public static final RegistryObject<SoundEvent> NIGHT_AMBIENT_4 = registerSoundEvent("night_ambient_4");
+    public static final RegistryObject<SoundEvent> NIGHT_AMBIENT_5 = registerSoundEvent("night_ambient_5");
+    public static final RegistryObject<SoundEvent> NIGHT_AMBIENT_6 = registerSoundEvent("night_ambient_6");
+    public static final RegistryObject<SoundEvent> NIGHT_CHIME = registerSoundEvent("night_chime");
     
     // Morning chime
     public static final RegistryObject<SoundEvent> MORNING_CHIME = registerSoundEvent("morning_chime");

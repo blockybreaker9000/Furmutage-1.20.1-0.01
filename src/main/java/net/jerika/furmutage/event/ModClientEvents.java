@@ -18,8 +18,10 @@ public class ModClientEvents {
     private static long lastNightSoundTime = -1;
     private static long lastMorningChimeTime = -1;
     private static long lastMidnightChimeTime = -1;
+    private static long lastNightChimeTime = -1; // Track when night chime was played
     private static long previousDayTime = -1;
     private static final long NIGHT_SOUND_INTERVAL = 6000; // Play every 5 minutes (in ticks)
+    private static final long NIGHT_START_DELAY = 1000; // Delay before regular ambient sounds can play (after night starts)
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -33,9 +35,21 @@ public class ModClientEvents {
 
         if (level.isClientSide) {
             long dayTime = level.getDayTime() % 24000; // Get time of day (0-24000)
+            long dayCycle = level.getDayTime() / 24000;
+            
+            // Night chime at the start of night (around 13000 ticks, which is 6:30 PM)
+            if (dayTime >= 13000 && dayTime < 13100) {
+                // Only play once per day cycle when night starts
+                if (lastNightChimeTime != dayCycle) {
+                    level.playSound(player, player.getX(), player.getY(), player.getZ(),
+                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
+                    lastNightChimeTime = dayCycle;
+                }
+            }
             
             // Night ambient sounds (between 13000 and 23000 ticks, which is 6:30 PM to 5:30 AM)
-            if (dayTime >= 13000 && dayTime < 23000) {
+            // But only after a delay from night start (to avoid playing at the same time as night chime)
+            if (dayTime >= (13000 + NIGHT_START_DELAY) && dayTime < 23000) {
                 // Check if enough time has passed since last night sound
                 if (lastNightSoundTime == -1 || (dayTime - lastNightSoundTime) >= NIGHT_SOUND_INTERVAL || 
                     (dayTime < lastNightSoundTime && (dayTime + 24000 - lastNightSoundTime) >= NIGHT_SOUND_INTERVAL)) {
@@ -56,7 +70,6 @@ public class ModClientEvents {
             // Midnight chime (at 18000 ticks, which is 12:00 AM)
             if (dayTime >= 18000 && dayTime < 18100) {
                 // Only play once per day cycle
-                long dayCycle = level.getDayTime() / 24000;
                 if (lastMidnightChimeTime != dayCycle) {
                     // Play chime at midnight
                     level.playSound(player, player.getX(), player.getY(), player.getZ(),
@@ -67,14 +80,13 @@ public class ModClientEvents {
 
             // Morning chime (only at exactly 0 ticks, which is 6:00 AM)
             // Check if we just crossed from night to exactly 0, or if we're at exactly 0
-            boolean justCrossedDawn = previousDayTime > 0 && dayTime == 0;
-            if (dayTime == 0 || justCrossedDawn) {
+            boolean justCrossedDawn = previousDayTime > 23000 && dayTime == 23000;
+            if (dayTime == 23000 || justCrossedDawn) {
                 // Only play once per day cycle
-                long dayCycle = level.getDayTime() / 24000;
                 if (lastMorningChimeTime != dayCycle) {
                     // Play chime at exactly dawn (time 0)
                     level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
+                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.4f, 1.0f);
                     lastMorningChimeTime = dayCycle;
                 }
             }
@@ -85,7 +97,7 @@ public class ModClientEvents {
     }
 
     private static void playRandomNightSound(Level level, LocalPlayer player) {
-        int soundChoice = level.random.nextInt(3);
+        int soundChoice = level.random.nextInt(6);
         @NotNull SoundEvent soundToPlay;
         
         switch (soundChoice) {
@@ -95,14 +107,24 @@ public class ModClientEvents {
             case 1:
                 soundToPlay = ModSounds.NIGHT_AMBIENT_2.get();
                 break;
-            default:
+            case 2:
                 soundToPlay = ModSounds.NIGHT_AMBIENT_3.get();
+                break;
+            case 3:
+                soundToPlay = ModSounds.NIGHT_AMBIENT_4.get();
+                break;
+            case 4:
+                soundToPlay = ModSounds.NIGHT_AMBIENT_5.get();
+                break;
+            default:
+                soundToPlay = ModSounds.NIGHT_AMBIENT_6.get();
                 break;
         }
         
         // Play sound at player location with ambient volume
         level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                soundToPlay, SoundSource.AMBIENT, 0.3f, 0.8f + level.random.nextFloat() * 0.4f);
+                soundToPlay, SoundSource.AMBIENT, 0.3f, 1.0f);
     }
 }
+
 
