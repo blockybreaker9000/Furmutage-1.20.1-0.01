@@ -1,20 +1,20 @@
 package net.jerika.furmutage.ai;
 
-import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
+import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
-public class MutantFamilyAi extends MeleeAttackGoal {
-    private final LatexMutantFamilyEntity entity;
+public class LatexTenticleLimbsMutantAi extends MeleeAttackGoal {
+    private final LatexTenticleLimbsMutantEntity entity;
     private int attackDelay = 5;
     private int ticksUntilNextAttack = 5;
     private boolean shouldCountTillNextAttack = false;
 
-    public MutantFamilyAi(PathfinderMob pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen) {
+    public LatexTenticleLimbsMutantAi(PathfinderMob pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen) {
         super(pMob, pSpeedModifier, pFollowingTargetEvenIfNotSeen);
-        entity = ((LatexMutantFamilyEntity) pMob);
+        entity = ((LatexTenticleLimbsMutantEntity) pMob);
     }
     @Override
     public void start() {
@@ -28,7 +28,7 @@ public class MutantFamilyAi extends MeleeAttackGoal {
             shouldCountTillNextAttack = true;
 
             if(isTimeToStartAttackAnimation()) {
-                entity.setMutantFamilyAttack(true);
+                entity.setmutantLimbsAttack(true);
             }
 
             if(isTimeToAttack()) {
@@ -38,7 +38,7 @@ public class MutantFamilyAi extends MeleeAttackGoal {
         } else {
             resetAttackCooldown();
             shouldCountTillNextAttack = false;
-            entity.setMutantFamilyAttack(false);
+            entity.setmutantLimbsAttack(false);
             entity.attackAnimationTimeout = 0;
         }
     }
@@ -83,9 +83,8 @@ public class MutantFamilyAi extends MeleeAttackGoal {
 
     @Override
     public void stop() {
-        entity.setMutantFamilyAttack(false);
+        entity.setmutantLimbsAttack(false);
         super.stop();
     }
 }
-
 

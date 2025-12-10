@@ -3,8 +3,10 @@ package net.jerika.furmutage;
 import com.mojang.logging.LogUtils;
 import net.jerika.furmutage.block.ModBlocks;
 import net.jerika.furmutage.entity.ModEntities;
+import net.jerika.furmutage.entity.client.renderer.LatexTenticleLimbsMutantRenderer;
 import net.jerika.furmutage.entity.client.renderer.MuglingRenderer;
 import net.jerika.furmutage.entity.client.renderer.MutantFamilyRenderer;
+import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.jerika.furmutage.item.modcreativemodetabs;
@@ -72,6 +74,8 @@ public class furmutage {
         public static void onClientSetup(FMLClientSetupEvent event) {
             EntityRenderers.register(ModEntities.MUGLING.get(), MuglingRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_MUTANT_FAMILY.get(), MutantFamilyRenderer::new);
+            EntityRenderers.register(ModEntities.WITHERED_LATEX_PUDDING.get(), WitheredLatexPuddingRenderer::new);
+            EntityRenderers.register(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT.get(), LatexTenticleLimbsMutantRenderer::new);
             EntityRenderers.register(ModEntities.DARK_LATEX_BOTTLE_PROJECTILE.get(), 
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
             EntityRenderers.register(ModEntities.WHITE_LATEX_BOTTLE_PROJECTILE.get(),

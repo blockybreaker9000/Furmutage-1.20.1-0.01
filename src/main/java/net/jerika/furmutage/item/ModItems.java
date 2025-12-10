@@ -122,7 +122,13 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntities.MUGLING, 0x4D72, 0xc5d,
                     new Item.Properties()));
     public static final RegistryObject<Item> LATEX_MUTANT_FAMILY_SPAWN_EGG = ITEMS.register("latex_mutant_family_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.LATEX_MUTANT_FAMILY, 0x6E6E6E, 0x6E6E6E,
+            () -> new ForgeSpawnEggItem(ModEntities.LATEX_MUTANT_FAMILY, 0xDDEAEA, 0xFF0000,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> LATEX_TENTICLE_LIMBS_MUTANT_SPAWN_EGG = ITEMS.register("latex_tenticle_limbs_mutant_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT, 0xDDEAEA, 0xFF0000,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> WITHERED_LATEX_PUDDING_SPAWN_EGG = ITEMS.register("withered_latex_pudding_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WITHERED_LATEX_PUDDING, 0xDDEAEA, 0xFF0000,
                     new Item.Properties()));
 
 

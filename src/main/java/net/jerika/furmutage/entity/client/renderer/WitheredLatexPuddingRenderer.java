@@ -1,27 +1,27 @@
 package net.jerika.furmutage.entity.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.jerika.furmutage.entity.client.model.MutantFamilyModel;
 import net.jerika.furmutage.entity.client.model.ModModelLayers;
-import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
+import net.jerika.furmutage.entity.client.model.WitheredLatexPuddingModel;
+import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-public class MutantFamilyRenderer extends MobRenderer<LatexMutantFamilyEntity, MutantFamilyModel<LatexMutantFamilyEntity>> {
-    public MutantFamilyRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new MutantFamilyModel<>(pContext.bakeLayer(ModModelLayers.MUTANT_FAMILY_LAYER)), 1.5f);
+public class WitheredLatexPuddingRenderer extends MobRenderer<WitheredLatexPuddingEntity, WitheredLatexPuddingModel<WitheredLatexPuddingEntity>> {
+    public WitheredLatexPuddingRenderer(EntityRendererProvider.Context pContext) {
+        super(pContext, new WitheredLatexPuddingModel<>(pContext.bakeLayer(ModModelLayers.WITHERED_LATEX_PUDDING_LAYER)), 0.5f);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(LatexMutantFamilyEntity pEntity) {
-        return new ResourceLocation(furmutage.MOD_ID, "textures/entity/mutantfamily.png");
+    public ResourceLocation getTextureLocation(WitheredLatexPuddingEntity pEntity) {
+        return new ResourceLocation(furmutage.MOD_ID, "textures/entity/withered_latex_pudding.png");
     }
 
     @Override
-    public void render(LatexMutantFamilyEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
+    public void render(WitheredLatexPuddingEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
                        MultiBufferSource pBuffer, int pPackedLight) {
         // Scale down to fit with latex mutant model proportions
         // Model geometry is large, scale it down to match entity size (2.4f width, 1.2f height)

@@ -9,5 +9,9 @@ public class ModModelLayers {
             new ResourceLocation(furmutage.MOD_ID, "mugling_layer"), "main");
     public static final ModelLayerLocation MUTANT_FAMILY_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "latex_mutant_family_layer"), "main");
+    public static final ModelLayerLocation WITHERED_LATEX_PUDDING_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "withered_latex_pudding"), "main");
+    public static final ModelLayerLocation LATEX_TENTICLE_LIMBS_MUTANT_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "latex_tenticle_limbs_mutant_layer"), "main");
 
 }

@@ -57,6 +57,8 @@
 
   "item.furmutage.mugling_spawn_egg": "Mugling Spawn Egg",
   "item.furmutage.latex_mutant_family_spawn_egg": "Latex Mutant Family Spawn Egg",
+  "item.furmutage.withered_latex_pudding_spawn_egg": "Withered Latex Pudding Spawn Egg",
+  "item.furmutage.latex_tenticle_limbs_mutant_spawn_egg": "TSC Tenticle Mutant Spawn Egg",
   "item.furmutage.darklatex_bottle": "Bottled DarkLatex",
   "item.furmutage.whitelatex_bottle": "Bottled WhiteLatex",
   "item.furmutage.tsc_shock_grenade": "TSC Shock Grenade",
@@ -74,6 +76,8 @@
   "entity.furmutage.mugling": "Mugling",
   "entity.furmutage.latex_mutant_family": "White Latex Mutant Family",
   "entity.furmutage.pure_white_latex_elite": "Pure White Latex Elite",
+  "entity.furmutage.latex_tenticle_limbs_mutant": "TSC Modified Limbs Mutant",
+  "entity.furmutage.withered_latex_pudding": "Withered Pudding Mutant",
 
   "subtitles.furmutage.night_ambient": "Night Ambience",
   "subtitles.furmutage.night_chime": "Night Chime",

@@ -1,7 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.MutantFamilyAi;
-import net.jerika.furmutage.ai.TargetDarkLatexGoal;
+import net.jerika.furmutage.ai.LatexTenticleLimbsMutantAi;
+import net.jerika.furmutage.ai.SpookyFollowPlayerGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,17 +25,16 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LatexMutantFamilyEntity extends Monster {
-    public LatexMutantFamilyEntity(EntityType<? extends Monster> p_19870_, Level p_19871_) {
+public class LatexTenticleLimbsMutantEntity extends Monster {
+    public LatexTenticleLimbsMutantEntity(EntityType<? extends Monster> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
-        @Nullable LivingEntity target;
     }
 
 
 
 
-    private static final EntityDataAccessor<Boolean> MUTANT_FAMILY_ATTACK =
-            SynchedEntityData.defineId(LatexMutantFamilyEntity.class, EntityDataSerializers.BOOLEAN);
+    private static final EntityDataAccessor<Boolean> LATEX_TENTICLE_LIMBS_MUTANT_ATTACK =
+            SynchedEntityData.defineId(LatexTenticleLimbsMutantEntity.class, EntityDataSerializers.BOOLEAN);
 
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
@@ -63,14 +62,14 @@ public class LatexMutantFamilyEntity extends Monster {
         }
 
         // Attack animation
-        if(this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
+        if(this.ismutantLimbsAttack() && attackAnimationTimeout <= 0) {
             attackAnimationTimeout = 20; //animation Length
             attackAnimationState.start(this.tickCount);
         } else {
             --this.attackAnimationTimeout;
         }
 
-        if(!this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
+        if(!this.ismutantLimbsAttack() && attackAnimationTimeout <= 0) {
             attackAnimationState.stop();
         }
     }
@@ -87,43 +86,44 @@ public class LatexMutantFamilyEntity extends Monster {
         this.walkAnimation.update(f, 0.2f);
     }
 
-    public void setMutantFamilyAttack(boolean mutantFamilyAttack) {
-        this.entityData.set(MUTANT_FAMILY_ATTACK, mutantFamilyAttack);
+    public void setmutantLimbsAttack(boolean mutantLimbsAttack) {
+        this.entityData.set(LATEX_TENTICLE_LIMBS_MUTANT_ATTACK, mutantLimbsAttack);
     }
 
 
-    public boolean ismutantFamilyAttack() {
-        return this.entityData.get(MUTANT_FAMILY_ATTACK);
+    public boolean ismutantLimbsAttack() {
+        return this.entityData.get(LATEX_TENTICLE_LIMBS_MUTANT_ATTACK);
     }
 
     @Override
     protected void defineSynchedData() {
         super.defineSynchedData();
-        this.entityData.define(MUTANT_FAMILY_ATTACK, false);
+        this.entityData.define(LATEX_TENTICLE_LIMBS_MUTANT_ATTACK, false);
     }
 
     @Override
     protected void registerGoals(){
-        this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(10, new FloatGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
+        // Spooky AI - follow players at a distance
+        this.goalSelector.addGoal(2, new SpookyFollowPlayerGoal(this));
         this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(1, new MutantFamilyAi(this, 3.0, true));
+        this.goalSelector.addGoal(1, new LatexTenticleLimbsMutantAi(this, 1.0, true));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
-        this.targetSelector.addGoal(1, new TargetDarkLatexGoal(this));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
-        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)0.3F, true));
+        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)0.0F, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 250)
+                .add(Attributes.MAX_HEALTH, 90)
                 .add(Attributes.MOVEMENT_SPEED, 0.15)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
-                .add(Attributes.ATTACK_KNOCKBACK, 2.5)
-                .add(Attributes.ATTACK_DAMAGE, 5)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.2)
+                .add(Attributes.ATTACK_DAMAGE, 3)
                 .add(Attributes.FOLLOW_RANGE, 56.0)
                 .add(Attributes.JUMP_STRENGTH, 5.0);
     }

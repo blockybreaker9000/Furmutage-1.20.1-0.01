@@ -1,9 +1,11 @@
 package net.jerika.furmutage.entity;
 
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
+import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.entity.DarkLatexBottleProjectile;
 import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
+import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -22,6 +24,14 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexMutantFamilyEntity>> LATEX_MUTANT_FAMILY =
                 ENTITY_TYPES.register("latex_mutant_family", () -> EntityType.Builder.of(LatexMutantFamilyEntity::new, MobCategory.CREATURE)
             .sized(2.4f, 3.1f).build("latex_mutant_family"));
+
+    public static final RegistryObject<EntityType<WitheredLatexPuddingEntity>> WITHERED_LATEX_PUDDING =
+            ENTITY_TYPES.register("withered_latex_pudding", () -> EntityType.Builder.of(WitheredLatexPuddingEntity::new, MobCategory.CREATURE)
+                    .sized(1.0f, 2.0f).build("withered_latex_pudding"));
+
+    public static final RegistryObject<EntityType<LatexTenticleLimbsMutantEntity>> LATEX_TENTICLE_LIMBS_MUTANT =
+            ENTITY_TYPES.register("latex_tenticle_limbs_mutant", () -> EntityType.Builder.of(LatexTenticleLimbsMutantEntity::new, MobCategory.CREATURE)
+                    .sized(2.4f, 2.5f).build("latex_tenticle_limbs_mutant"));
     
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

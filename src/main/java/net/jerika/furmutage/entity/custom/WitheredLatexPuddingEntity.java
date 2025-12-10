@@ -1,7 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.MutantFamilyAi;
-import net.jerika.furmutage.ai.TargetDarkLatexGoal;
+import net.jerika.furmutage.ai.PuddingSprintAttackGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -25,17 +24,10 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LatexMutantFamilyEntity extends Monster {
-    public LatexMutantFamilyEntity(EntityType<? extends Monster> p_19870_, Level p_19871_) {
+public class WitheredLatexPuddingEntity extends Monster {
+    public WitheredLatexPuddingEntity(EntityType<? extends Monster> p_19870_, Level p_19871_) {
         super(p_19870_, p_19871_);
-        @Nullable LivingEntity target;
     }
-
-
-
-
-    private static final EntityDataAccessor<Boolean> MUTANT_FAMILY_ATTACK =
-            SynchedEntityData.defineId(LatexMutantFamilyEntity.class, EntityDataSerializers.BOOLEAN);
 
     public final AnimationState idleAnimationState = new AnimationState();
     private int idleAnimationTimeout = 0;
@@ -62,17 +54,6 @@ public class LatexMutantFamilyEntity extends Monster {
             this.idleAnimationState.stop();
         }
 
-        // Attack animation
-        if(this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
-            attackAnimationTimeout = 20; //animation Length
-            attackAnimationState.start(this.tickCount);
-        } else {
-            --this.attackAnimationTimeout;
-        }
-
-        if(!this.ismutantFamilyAttack() && attackAnimationTimeout <= 0) {
-            attackAnimationState.stop();
-        }
     }
     private static final int MOB_FLAG_AGGRESSIVE = 4;
 
@@ -87,20 +68,6 @@ public class LatexMutantFamilyEntity extends Monster {
         this.walkAnimation.update(f, 0.2f);
     }
 
-    public void setMutantFamilyAttack(boolean mutantFamilyAttack) {
-        this.entityData.set(MUTANT_FAMILY_ATTACK, mutantFamilyAttack);
-    }
-
-
-    public boolean ismutantFamilyAttack() {
-        return this.entityData.get(MUTANT_FAMILY_ATTACK);
-    }
-
-    @Override
-    protected void defineSynchedData() {
-        super.defineSynchedData();
-        this.entityData.define(MUTANT_FAMILY_ATTACK, false);
-    }
 
     @Override
     protected void registerGoals(){
@@ -109,23 +76,21 @@ public class LatexMutantFamilyEntity extends Monster {
         this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
-        this.goalSelector.addGoal(1, new MutantFamilyAi(this, 3.0, true));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
-        this.targetSelector.addGoal(1, new TargetDarkLatexGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
-        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)0.3F, true));
+        this.goalSelector.addGoal(1, new PuddingSprintAttackGoal(this, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 250)
-                .add(Attributes.MOVEMENT_SPEED, 0.15)
-                .add(Attributes.ARMOR_TOUGHNESS, 10)
-                .add(Attributes.ATTACK_KNOCKBACK, 2.5)
-                .add(Attributes.ATTACK_DAMAGE, 5)
-                .add(Attributes.FOLLOW_RANGE, 56.0)
-                .add(Attributes.JUMP_STRENGTH, 5.0);
+                .add(Attributes.MAX_HEALTH, 10)
+                .add(Attributes.MOVEMENT_SPEED, 1.0)
+                .add(Attributes.ARMOR_TOUGHNESS, 2)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.5)
+                .add(Attributes.ATTACK_DAMAGE, 1)
+                .add(Attributes.FOLLOW_RANGE, 16.0)
+                .add(Attributes.JUMP_STRENGTH, 2.0);
     }
 
 
@@ -144,27 +109,12 @@ public class LatexMutantFamilyEntity extends Monster {
 
     }
 
-    @Override
-    public boolean fireImmune() {
-        return true; // Fire resistant
+    public int getSwingTime() {
+        return swingTime;
     }
 
-    @Override
-    protected float getWaterSlowDown() {
-        return 0.0f; // No water slowdown - fast in water
+    public void setSwingTime(int swingTime) {
+        this.swingTime = swingTime;
     }
-
-    @Override
-    public void travel(net.minecraft.world.phys.Vec3 pTravelVector) {
-        if (this.isEffectiveAi() && this.isInWater()) {
-            // Increase movement speed in water
-            this.moveRelative(1.0f, pTravelVector);
-            this.move(net.minecraft.world.entity.MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(1.0));
-        } else {
-            super.travel(pTravelVector);
-        }
-    }
-
 }
 

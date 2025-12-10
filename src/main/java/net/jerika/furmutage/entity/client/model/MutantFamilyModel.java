@@ -1,4 +1,4 @@
-package net.jerika.furmutage.entity.client;// Made with Blockbench 5.0.4
+package net.jerika.furmutage.entity.client.model;// Made with Blockbench 5.0.4
 // Exported for Minecraft version 1.17 or later with Mojang mappings
 // Paste this class into your mod and generate all required imports
 
