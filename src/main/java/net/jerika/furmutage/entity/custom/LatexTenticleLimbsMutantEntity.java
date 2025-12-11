@@ -115,12 +115,12 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
-        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)0.0F, true));
+        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)2.0F, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 90)
-                .add(Attributes.MOVEMENT_SPEED, 0.15)
+                .add(Attributes.MAX_HEALTH, 150)
+                .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.2)
                 .add(Attributes.ATTACK_DAMAGE, 3)
@@ -128,7 +128,7 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
                 .add(Attributes.JUMP_STRENGTH, 5.0);
     }
 
-
+`
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ZOGLIN_AMBIENT;

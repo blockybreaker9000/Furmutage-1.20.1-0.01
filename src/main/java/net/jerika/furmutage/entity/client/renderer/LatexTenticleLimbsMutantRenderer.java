@@ -12,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class LatexTenticleLimbsMutantRenderer extends MobRenderer<LatexTenticleLimbsMutantEntity, LatexTenticleLimbsMutantModel<LatexTenticleLimbsMutantEntity>> {
     public LatexTenticleLimbsMutantRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new LatexTenticleLimbsMutantModel<>(pContext.bakeLayer(ModModelLayers.LATEX_TENTICLE_LIMBS_MUTANT_LAYER)), 1.0f);
+        super(pContext, new LatexTenticleLimbsMutantModel<>(pContext.bakeLayer(ModModelLayers.LATEX_TENTICLE_LIMBS_MUTANT_LAYER)), 0.7f);
     }
 
     @Override

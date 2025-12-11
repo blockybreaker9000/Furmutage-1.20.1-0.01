@@ -45,7 +45,7 @@ public class LatexTenticleLimbsMutantAi extends MeleeAttackGoal {
 
     private boolean isEnemyWithinAttackDistance(LivingEntity pEnemy, double pDistToEnemySqr) {
         // Shorter attack range - 1.5 blocks instead of default ~2.0 blocks
-        double attackReach = this.mob.getBbWidth() * 2.0F + 1.5D;
+        double attackReach = this.mob.getBbWidth() * 1.0F + 0.5D;
         return pDistToEnemySqr <= attackReach * attackReach;
     }
 

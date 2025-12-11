@@ -115,11 +115,11 @@ public class LatexMutantFamilyEntity extends Monster {
         this.targetSelector.addGoal(1, new TargetDarkLatexGoal(this));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
-        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)0.3F, true));
+        this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)2.0F, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 250)
+                .add(Attributes.MAX_HEALTH, 450)
                 .add(Attributes.MOVEMENT_SPEED, 0.15)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.5)
