@@ -18,6 +18,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -113,6 +114,7 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
         this.goalSelector.addGoal(1, new LatexTenticleLimbsMutantAi(this, 1.0, true));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, IronGolem.class, true, false));
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
         this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)2.0F, true));
@@ -123,12 +125,12 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
                 .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.2)
-                .add(Attributes.ATTACK_DAMAGE, 3)
+                .add(Attributes.ATTACK_DAMAGE, 10)
                 .add(Attributes.FOLLOW_RANGE, 56.0)
                 .add(Attributes.JUMP_STRENGTH, 5.0);
     }
 
-`
+
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.ZOGLIN_AMBIENT;
@@ -146,7 +148,20 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
 
     @Override
     public boolean fireImmune() {
-        return true; // Fire resistant
+        return true; // Fire and lava resistant
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        // Cancel fire and lava damage
+        if (pSource == this.level().damageSources().onFire() ||
+            pSource == this.level().damageSources().inFire() ||
+            pSource == this.level().damageSources().lava() ||
+            pSource.getMsgId().contains("fire") ||
+            pSource.getMsgId().contains("lava")) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount);
     }
 
     @Override
@@ -156,11 +171,12 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
 
     @Override
     public void travel(net.minecraft.world.phys.Vec3 pTravelVector) {
-        if (this.isEffectiveAi() && this.isInWater()) {
-            // Increase movement speed in water
-            this.moveRelative(1.0f, pTravelVector);
+        if (this.isEffectiveAi() && (this.isInWater() || this.isInLava())) {
+            // Increase movement speed in water and lava
+            float speedMultiplier = this.isInLava() ? 1.3f : 1.0f; // Slightly faster in lava
+            this.moveRelative(speedMultiplier, pTravelVector);
             this.move(net.minecraft.world.entity.MoverType.SELF, this.getDeltaMovement());
-            this.setDeltaMovement(this.getDeltaMovement().scale(1.0));
+            this.setDeltaMovement(this.getDeltaMovement().scale(this.isInLava() ? 1.2 : 1.0));
         } else {
             super.travel(pTravelVector);
         }

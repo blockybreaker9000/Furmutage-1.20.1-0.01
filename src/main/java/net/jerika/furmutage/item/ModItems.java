@@ -4,6 +4,7 @@ import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.furmutage;
 import net.jerika.furmutage.item.custom.*;
 import net.jerika.furmutage.item.DarkLatexBottleItem;
+import net.jerika.furmutage.item.TSCDroneBulletItem;
 import net.jerika.furmutage.item.TSCShockGrenadeItem;
 import net.jerika.furmutage.item.custom.diamond.*;
 import net.jerika.furmutage.item.custom.iron.*;
@@ -73,6 +74,8 @@ public class ModItems {
             () -> new TSCShockGrenadeItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> TSC_EXPLOSIVE_GRENADE = ITEMS.register("tsc_explosive_grenade",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TSC_DRONE_BULLET = ITEMS.register("tsc_drone_bullet",
+            () -> new TSCDroneBulletItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> DARKLATEXBOTTLED = ITEMS.register("darklatex_bottle",
             () -> new DarkLatexBottleItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> WHITELATEXBOTTLED = ITEMS.register("whitelatex_bottle",
@@ -129,6 +132,9 @@ public class ModItems {
                     new Item.Properties()));
     public static final RegistryObject<Item> WITHERED_LATEX_PUDDING_SPAWN_EGG = ITEMS.register("withered_latex_pudding_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.WITHERED_LATEX_PUDDING, 0xDDEAEA, 0xFF0000,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> TSC_DRONE_SPAWN_EGG = ITEMS.register("tsc_drone_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.TSC_DRONE, 0x2C2C2C, 0x00FF00,
                     new Item.Properties()));
 
 

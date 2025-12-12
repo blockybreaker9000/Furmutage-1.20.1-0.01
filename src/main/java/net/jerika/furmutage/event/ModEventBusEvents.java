@@ -5,6 +5,7 @@ import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
+import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -19,6 +20,7 @@ public class ModEventBusEvents {
         event.put(ModEntities.LATEX_MUTANT_FAMILY.get(), LatexMutantFamilyEntity.createMobAttributes().build());
         event.put(ModEntities.WITHERED_LATEX_PUDDING.get(), WitheredLatexPuddingEntity.createMobAttributes().build());
         event.put(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT.get(), LatexTenticleLimbsMutantEntity.createMobAttributes().build());
+        event.put(ModEntities.TSC_DRONE.get(), TSCDroneEntity.createMobAttributes().build());
 
 
         }

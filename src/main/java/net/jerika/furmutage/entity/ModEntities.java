@@ -3,7 +3,9 @@ package net.jerika.furmutage.entity;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
+import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.jerika.furmutage.entity.DarkLatexBottleProjectile;
+import net.jerika.furmutage.entity.TSCDroneBulletProjectile;
 import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -32,6 +34,10 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexTenticleLimbsMutantEntity>> LATEX_TENTICLE_LIMBS_MUTANT =
             ENTITY_TYPES.register("latex_tenticle_limbs_mutant", () -> EntityType.Builder.of(LatexTenticleLimbsMutantEntity::new, MobCategory.CREATURE)
                     .sized(2.4f, 2.5f).build("latex_tenticle_limbs_mutant"));
+
+    public static final RegistryObject<EntityType<TSCDroneEntity>> TSC_DRONE =
+            ENTITY_TYPES.register("tsc_drone", () -> EntityType.Builder.of(TSCDroneEntity::new, MobCategory.MONSTER)
+                    .sized(0.8f, 0.8f).build("tsc_drone"));
     
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(
@@ -55,6 +61,14 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("tsc_shock_grenade_projectile"));
+    
+    public static final RegistryObject<EntityType<TSCDroneBulletProjectile>> TSC_DRONE_BULLET_PROJECTILE =
+            ENTITY_TYPES.register("tsc_drone_bullet_projectile", () -> EntityType.Builder.<TSCDroneBulletProjectile>of(
+                    TSCDroneBulletProjectile::new, MobCategory.MISC)
+                    .sized(0.1f, 0.1f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("tsc_drone_bullet_projectile"));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);

@@ -13,5 +13,7 @@ public class ModModelLayers {
             new ResourceLocation(furmutage.MOD_ID, "withered_latex_pudding"), "main");
     public static final ModelLayerLocation LATEX_TENTICLE_LIMBS_MUTANT_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "latex_tenticle_limbs_mutant_layer"), "main");
+    public static final ModelLayerLocation TSC_DRONE_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "tsc_drone_layer"), "main");
 
 }

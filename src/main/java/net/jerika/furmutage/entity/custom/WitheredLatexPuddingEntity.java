@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -80,6 +81,7 @@ public class WitheredLatexPuddingEntity extends Monster {
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, IronGolem.class, true, false));
         this.goalSelector.addGoal(1, new PuddingSprintAttackGoal(this, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
@@ -88,7 +90,7 @@ public class WitheredLatexPuddingEntity extends Monster {
                 .add(Attributes.MOVEMENT_SPEED, 1.0)
                 .add(Attributes.ARMOR_TOUGHNESS, 2)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.5)
-                .add(Attributes.ATTACK_DAMAGE, 1)
+                .add(Attributes.ATTACK_DAMAGE, 3)
                 .add(Attributes.FOLLOW_RANGE, 16.0)
                 .add(Attributes.JUMP_STRENGTH, 2.0);
     }
@@ -115,6 +117,37 @@ public class WitheredLatexPuddingEntity extends Monster {
 
     public void setSwingTime(int swingTime) {
         this.swingTime = swingTime;
+    }
+
+    @Override
+    public boolean fireImmune() {
+        return true; // Fire and lava resistant
+    }
+
+    @Override
+    public boolean hurt(DamageSource pSource, float pAmount) {
+        // Cancel fire and lava damage
+        if (pSource == this.level().damageSources().onFire() ||
+            pSource == this.level().damageSources().inFire() ||
+            pSource == this.level().damageSources().lava() ||
+            pSource.getMsgId().contains("fire") ||
+            pSource.getMsgId().contains("lava")) {
+            return false;
+        }
+        return super.hurt(pSource, pAmount);
+    }
+
+    @Override
+    public void travel(net.minecraft.world.phys.Vec3 pTravelVector) {
+        if (this.isEffectiveAi() && (this.isInWater() || this.isInLava())) {
+            // Increase movement speed in water and lava
+            float speedMultiplier = this.isInLava() ? 1.3f : 1.0f; // Slightly faster in lava
+            this.moveRelative(speedMultiplier, pTravelVector);
+            this.move(net.minecraft.world.entity.MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(this.isInLava() ? 1.2 : 1.0));
+        } else {
+            super.travel(pTravelVector);
+        }
     }
 }
 

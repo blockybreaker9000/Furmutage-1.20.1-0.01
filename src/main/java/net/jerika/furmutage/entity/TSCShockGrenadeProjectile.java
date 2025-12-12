@@ -76,6 +76,11 @@ public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
                     (entity) -> entity != this.owner && entity.isAlive());
             
             for (LivingEntity entity : entities) {
+                // Don't damage TSCDroneEntity (immune to shock grenades)
+                if (entity instanceof net.jerika.furmutage.entity.custom.TSCDroneEntity) {
+                    continue;
+                }
+                
                 double distance = entity.distanceToSqr(impactPos.x, impactPos.y, impactPos.z);
                 if (distance <= radius * radius) {
                     // Damage decreases with distance

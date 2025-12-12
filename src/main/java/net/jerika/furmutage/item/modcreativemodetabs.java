@@ -55,12 +55,14 @@ public class modcreativemodetabs {
                         output.accept(ModItems.TSC_METAL_DETECTOR.get());
                         output.accept(ModItems.TSC_SHOCK_GRENADE.get());
                         output.accept(ModItems.TSC_EXPLOSIVE_GRENADE.get());
+                        output.accept(ModItems.TSC_DRONE_BULLET.get());
                         output.accept(ModItems.THUNDERIUMTAZER.get());
 
                         output.accept(ModItems.MUGLING_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_MUTANT_FAMILY_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_TENTICLE_LIMBS_MUTANT_SPAWN_EGG.get());
                         output.accept(ModItems.WITHERED_LATEX_PUDDING_SPAWN_EGG.get());
+                        output.accept(ModItems.TSC_DRONE_SPAWN_EGG.get());
                         output.accept(ModItems.DARKLATEXBOTTLED.get());
                         output.accept(ModItems.WHITELATEXBOTTLED.get());
 
