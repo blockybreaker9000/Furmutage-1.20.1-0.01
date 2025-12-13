@@ -46,6 +46,24 @@
       "furmutage:morning_chime"
     ],
     "subtitle": "subtitles.furmutage.morning_chime"
+  },
+  "tsc_drone_ambient": {
+    "sounds": [
+      "furmutage:tsc_drone_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.tsc_drone_ambient"
+  },
+  "tsc_drone_hurt": {
+    "sounds": [
+      "furmutage:tsc_drone_hurt"
+    ],
+    "subtitle": "subtitles.furmutage.tsc_drone_hurt"
+  },
+  "tsc_drone_death": {
+    "sounds": [
+      "furmutage:tsc_drone_death"
+    ],
+    "subtitle": "subtitles.furmutage.tsc_drone_death"
   }
 }
 

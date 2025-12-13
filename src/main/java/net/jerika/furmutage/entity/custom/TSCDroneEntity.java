@@ -1,5 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,6 +21,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.navigation.FlyingPathNavigation;
 import net.minecraft.world.entity.ai.navigation.PathNavigation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
@@ -172,16 +174,21 @@ public class TSCDroneEntity extends Monster implements RangedAttackMob {
         return SoundEvents.BEE_LOOP;
     }
 
+    @Override
+    protected float getSoundVolume() {
+        return 0.5f; // Higher volume for hurt and death sounds
+    }
+
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return SoundEvents.IRON_GOLEM_HURT;
+        return ModSounds.TSC_DRONE_HURT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.IRON_GOLEM_DEATH;
+        return ModSounds.TSC_DRONE_DEATH.get();
     }
 
     @Override
@@ -229,6 +236,12 @@ public class TSCDroneEntity extends Monster implements RangedAttackMob {
     public void performRangedAttack(LivingEntity target, float velocity) {
         // This is called by RangedAttackGoal, but we handle it in DroneRangedAttackGoal
         // So this can be empty or delegate to the goal
+    }
+
+    @Override
+    public boolean canBeAffected(MobEffectInstance effect) {
+        // Immune to all potion effects
+        return false;
     }
 }
 

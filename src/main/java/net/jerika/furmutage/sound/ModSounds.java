@@ -23,10 +23,20 @@ public class ModSounds {
     
     // Morning chime
     public static final RegistryObject<SoundEvent> MORNING_CHIME = registerSoundEvent("morning_chime");
+    
+    // TSC Drone sounds - using fixed range to limit distance
+    public static final RegistryObject<SoundEvent> TSC_DRONE_AMBIENT = registerFixedRangeSoundEvent("tsc_drone_ambient", 1.0f);
+    public static final RegistryObject<SoundEvent> TSC_DRONE_HURT = registerFixedRangeSoundEvent("tsc_drone_hurt", 8.0f);
+    public static final RegistryObject<SoundEvent> TSC_DRONE_DEATH = registerFixedRangeSoundEvent("tsc_drone_death", 8.0f);
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
+    }
+    
+    private static RegistryObject<SoundEvent> registerFixedRangeSoundEvent(String name, float range) {
+        ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
+        return SOUND_EVENTS.register(name, () -> SoundEvent.createFixedRangeEvent(id, range));
     }
 
     public static void register(IEventBus eventBus) {
