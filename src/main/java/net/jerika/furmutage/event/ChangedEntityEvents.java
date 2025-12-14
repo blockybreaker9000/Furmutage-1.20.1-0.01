@@ -1,5 +1,6 @@
 package net.jerika.furmutage.event;
 
+import net.jerika.furmutage.ai.StalkAndHideGoal;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.damagesource.DamageSource;
@@ -49,6 +50,12 @@ public class ChangedEntityEvents {
                             true,  // mustSeeTarget - only attack if they can see the Mugling
                             true  // mustReachTarget - require pathfinding to Mugling
                     ));
+                    
+                    // Add stalking and hiding behavior (30% chance per entity)
+                    // This goal will stalk players, hide behind blocks, then attack
+                    // The goal itself checks for the chance, so we always add it
+                    pathfinderMob.goalSelector.addGoal(3, new StalkAndHideGoal(pathfinderMob, 1.0D, 2.0F));
+                    
                     processedEntities.add(livingEntity);
                 }
             }

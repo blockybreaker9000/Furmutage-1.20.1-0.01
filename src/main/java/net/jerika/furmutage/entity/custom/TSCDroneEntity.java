@@ -1,9 +1,11 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.item.ModItems;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
@@ -171,7 +173,7 @@ public class TSCDroneEntity extends Monster implements RangedAttackMob {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.BEE_LOOP;
+        return ModSounds.TSC_DRONE_AMBIENT.get();
     }
 
     @Override
@@ -242,6 +244,15 @@ public class TSCDroneEntity extends Monster implements RangedAttackMob {
     public boolean canBeAffected(MobEffectInstance effect) {
         // Immune to all potion effects
         return false;
+    }
+
+    @Override
+    protected void dropCustomDeathLoot(DamageSource pSource, int pLooting, boolean pRecentlyHit) {
+        super.dropCustomDeathLoot(pSource, pLooting, pRecentlyHit);
+        // 50% chance (0-1 random boolean) to drop raw thunderium nugget
+        if (this.random.nextBoolean()) {
+            this.spawnAtLocation(new ItemStack(ModItems.THUNDERIUM_RAW_NUGGET.get()));
+        }
     }
 }
 

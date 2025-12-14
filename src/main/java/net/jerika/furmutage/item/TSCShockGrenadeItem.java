@@ -1,6 +1,7 @@
 package net.jerika.furmutage.item;
 
 import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
+import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -20,7 +21,7 @@ public class TSCShockGrenadeItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
         level.playSound(null, player.getX(), player.getY(), player.getZ(), 
-                SoundEvents.SPLASH_POTION_THROW, SoundSource.NEUTRAL, 
+                ModSounds.TSC_SHOCK_GRENADE_THROW.get(), SoundSource.NEUTRAL, 
                 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
         
         if (!level.isClientSide) {

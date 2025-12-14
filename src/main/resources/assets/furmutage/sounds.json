@@ -64,6 +64,18 @@
       "furmutage:tsc_drone_death"
     ],
     "subtitle": "subtitles.furmutage.tsc_drone_death"
+  },
+  "tsc_drone_bullet_throw": {
+    "sounds": [
+      "furmutage:tsc_drone_bullet_throw"
+    ],
+    "subtitle": "subtitles.furmutage.tsc_drone_bullet_throw"
+  },
+  "tsc_shock_grenade_throw": {
+    "sounds": [
+      "furmutage:tsc_shock_grenade_throw"
+    ],
+    "subtitle": "subtitles.furmutage.tsc_shock_grenade_throw"
   }
 }
 
