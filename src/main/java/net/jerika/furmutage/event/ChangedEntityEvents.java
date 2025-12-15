@@ -1,5 +1,6 @@
 package net.jerika.furmutage.event;
 
+import net.jerika.furmutage.ai.LongRangePlayerTargetGoal;
 import net.jerika.furmutage.ai.StalkAndHideGoal;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.furmutage;
@@ -50,6 +51,10 @@ public class ChangedEntityEvents {
                             true,  // mustSeeTarget - only attack if they can see the Mugling
                             true  // mustReachTarget - require pathfinding to Mugling
                     ));
+                    
+                    // Add long-range player detection (128 blocks) if line of sight
+                    // This allows Changed entities to see players from far away
+                    pathfinderMob.targetSelector.addGoal(1, new LongRangePlayerTargetGoal(pathfinderMob));
                     
                     // Add stalking and hiding behavior (30% chance per entity)
                     // This goal will stalk players, hide behind blocks, then attack

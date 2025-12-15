@@ -21,8 +21,8 @@ public class StalkAndHideGoal extends Goal {
     private int pathRecalcTime;
     private int stalkingTime = 0;
     private int hideTime = 0;
-    private static final int STALK_DURATION = 100; // 5 seconds of stalking
-    private static final int HIDE_DURATION = 60; // 3 seconds of hiding
+    private static final int STALK_DURATION = 1000; //  stalking
+    private static final int HIDE_DURATION = 600; //  hiding
     private boolean isHiding = false;
     private BlockPos hidePosition;
 
@@ -46,8 +46,8 @@ public class StalkAndHideGoal extends Goal {
             return false;
         }
         
-        // Random chance (30% chance to use this behavior)
-        if (this.mob.getRandom().nextInt(100) >= 30) {
+        // Random chance (100% chance to use this behavior)
+        if (this.mob.getRandom().nextInt(100) >= 100) {
             return false;
         }
         
