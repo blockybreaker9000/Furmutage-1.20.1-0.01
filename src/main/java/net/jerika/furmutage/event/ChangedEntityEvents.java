@@ -1,5 +1,6 @@
 package net.jerika.furmutage.event;
 
+import net.jerika.furmutage.ai.ChangedDistantStareGoal;
 import net.jerika.furmutage.ai.LongRangePlayerTargetGoal;
 import net.jerika.furmutage.ai.StalkAndHideGoal;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
@@ -8,6 +9,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.WrappedGoal;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -15,6 +17,7 @@ import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
 
@@ -22,6 +25,9 @@ import java.util.WeakHashMap;
 public class ChangedEntityEvents {
     // Track entities we've already modified to avoid duplicate goals
     private static final Set<LivingEntity> processedEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
+    // Track transfurred players who recently attacked a Changed entity (for retaliation)
+    private static final Map<Player, Long> transfurredAggressors = new WeakHashMap<>();
+    private static final long RETALIATION_DURATION_TICKS = 20L * 20L; // 20 seconds
     
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
@@ -55,11 +61,15 @@ public class ChangedEntityEvents {
                     // Add long-range player detection (128 blocks) if line of sight
                     // This allows Changed entities to see players from far away
                     pathfinderMob.targetSelector.addGoal(1, new LongRangePlayerTargetGoal(pathfinderMob));
-                    
+
                     // Add stalking and hiding behavior (30% chance per entity)
                     // This goal will stalk players, hide behind blocks, then attack
                     // The goal itself checks for the chance, so we always add it
                     pathfinderMob.goalSelector.addGoal(3, new StalkAndHideGoal(pathfinderMob, 1.0D, 2.0F));
+
+                    // Add distant stare behavior (very small chance)
+                    // Changed entities will occasionally stare at players from far away
+                    pathfinderMob.goalSelector.addGoal(7, new ChangedDistantStareGoal(pathfinderMob));
                     
                     processedEntities.add(livingEntity);
                 }
@@ -80,12 +90,38 @@ public class ChangedEntityEvents {
         // Check if damage is from fire or lava using damage type tags (more reliable)
         if (source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE)) {
             String entityClassName = entity.getClass().getName();
-            
+
             // Check if entity is from Changed mod or furmutage mod
-            if (entityClassName.startsWith("net.ltxprogrammer.changed.entity") || 
-                entityClassName.startsWith("net.jerika.furmutage.entity")) {
+            if (entityClassName.startsWith("net.ltxprogrammer.changed.entity") ||
+                    entityClassName.startsWith("net.jerika.furmutage.entity")) {
                 // Cancel fire and lava damage
                 event.setCanceled(true);
+                return;
+            }
+        }
+
+        // If a transfurred player attacks a Changed entity, mark them as an aggressor
+        if (entity != null && source.getEntity() instanceof Player player) {
+            String victimClassName = entity.getClass().getName();
+            if (victimClassName.startsWith("net.ltxprogrammer.changed.entity") && isPlayerTransfurred(player)) {
+                long now = entity.level().getGameTime();
+                transfurredAggressors.put(player, now + RETALIATION_DURATION_TICKS);
+            }
+        }
+
+        // If a Changed entity attacks a transfurred player, normally we cancel the damage,
+        // but if that player recently attacked a Changed entity (marked as aggressor),
+        // then allow the damage as retaliation.
+        if (entity instanceof Player player && source.getEntity() != null) {
+            String attackerClassName = source.getEntity().getClass().getName();
+            if (attackerClassName.startsWith("net.ltxprogrammer.changed.entity") && isPlayerTransfurred(player)) {
+                long now = entity.level().getGameTime();
+                Long allowedUntil = transfurredAggressors.get(player);
+                boolean isAggressor = allowedUntil != null && allowedUntil >= now;
+
+                if (!isAggressor) {
+                    event.setCanceled(true);
+                }
             }
         }
     }
@@ -99,19 +135,18 @@ public class ChangedEntityEvents {
 
         LivingEntity entity = event.getEntity();
         
-        // Check if entity is from Changed mod or furmutage mod
+        // Check if entity is from Changed mod
         String entityClassName = entity.getClass().getName();
-        boolean isChangedOrFurmutage = entityClassName.startsWith("net.ltxprogrammer.changed.entity") || 
-                                       entityClassName.startsWith("net.jerika.furmutage.entity");
+        boolean isChanged = entityClassName.startsWith("net.ltxprogrammer.changed.entity");
         
-        if (isChangedOrFurmutage && entity.isEffectiveAi()) {
+        if (isChanged && entity.isEffectiveAi()) {
             net.minecraft.world.phys.Vec3 currentMovement = entity.getDeltaMovement();
             
             // Handle water speed boost
             if (entity.isInWater()) {
-                if (currentMovement.horizontalDistanceSqr() > 0.1) {
+                if (currentMovement.horizontalDistanceSqr() > 5.5) {
                     // Boost horizontal movement in water
-                    double speedBoost = 1.0; //  speed increase in water
+                    double speedBoost = 100.0; //  speed increase in water
                     entity.setDeltaMovement(
                         currentMovement.x * speedBoost,
                         currentMovement.y,
@@ -123,7 +158,7 @@ public class ChangedEntityEvents {
             // Handle lava speed boost and floating
             if (entity.isInLava()) {
                 // Increase movement speed in lava by boosting delta movement
-                if (currentMovement.horizontalDistanceSqr() > 0.50) {
+                if (currentMovement.horizontalDistanceSqr() > 1.0) {
                     // Boost horizontal movement in lava
                     double speedBoost = 1.0; // speed increase in lava
                     entity.setDeltaMovement(
@@ -146,6 +181,47 @@ public class ChangedEntityEvents {
                     );
                 }
             }
+
+            // If this is a Changed mob and its current target is a transfurred player,
+            // normally we clear the target so it becomes non-aggressive towards that player.
+            // But if the player recently attacked a Changed entity, allow it to keep the target.
+            if (entity instanceof PathfinderMob pathfinderMob && pathfinderMob.getTarget() instanceof Player player) {
+                if (isPlayerTransfurred(player)) {
+                    long now = entity.level().getGameTime();
+                    Long allowedUntil = transfurredAggressors.get(player);
+                    boolean isAggressor = allowedUntil != null && allowedUntil >= now;
+
+                    if (!isAggressor) {
+                        pathfinderMob.setTarget(null);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Best-effort check to see if a player is transfurred using the Changed mod API.
+     * Uses reflection so this code still compiles even if the Changed classes change.
+     *
+     * If the reflection calls fail for any reason, this safely returns false.
+     */
+    private static boolean isPlayerTransfurred(Player player) {
+        try {
+            Class<?> instanceClass = Class.forName("net.ltxprogrammer.changed.entity.LatexVariantInstance");
+            java.lang.reflect.Method getMethod = instanceClass.getMethod("get", Player.class);
+            Object instance = getMethod.invoke(null, player);
+            if (instance == null) {
+                return false;
+            }
+
+            // Try to get the latex variant from the instance
+            java.lang.reflect.Method getVariantMethod = instanceClass.getMethod("getLatexVariant");
+            Object variant = getVariantMethod.invoke(instance);
+            return variant != null;
+        } catch (Throwable t) {
+            // If anything goes wrong (class not found, method missing, etc.),
+            // just treat the player as not transfurred to avoid crashes.
+            return false;
         }
     }
 }

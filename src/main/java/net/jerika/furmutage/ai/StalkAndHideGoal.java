@@ -22,7 +22,7 @@ public class StalkAndHideGoal extends Goal {
     private int stalkingTime = 0;
     private int hideTime = 0;
     private static final int STALK_DURATION = 1000; //  stalking
-    private static final int HIDE_DURATION = 600; //  hiding
+    private static final int HIDE_DURATION = 2000; //  hiding
     private boolean isHiding = false;
     private BlockPos hidePosition;
 
@@ -40,12 +40,18 @@ public class StalkAndHideGoal extends Goal {
         if (target == null || !target.isAlive()) {
             return false;
         }
-        
+
         // Only stalk players
-        if (!(target instanceof Player)) {
+        if (!(target instanceof Player player)) {
             return false;
         }
-        
+
+        // Only start stalking/ambush if the player hasn't seen the mob yet
+        // (no current line of sight from the player to this mob)
+        if (player.hasLineOfSight(this.mob)) {
+            return false;
+        }
+
         // Random chance (100% chance to use this behavior)
         if (this.mob.getRandom().nextInt(100) >= 100) {
             return false;
@@ -60,11 +66,16 @@ public class StalkAndHideGoal extends Goal {
         if (this.target == null || !this.target.isAlive()) {
             return false;
         }
-        
-        if (!(this.target instanceof Player)) {
+
+        if (!(this.target instanceof Player player)) {
             return false;
         }
-        
+
+        // Stop this behavior once the player actually sees the mob
+        if (player.hasLineOfSight(this.mob)) {
+            return false;
+        }
+
         // Continue if we're still stalking or hiding
         return this.stalkingTime < STALK_DURATION + HIDE_DURATION;
     }
@@ -94,7 +105,7 @@ public class StalkAndHideGoal extends Goal {
             return;
         }
         
-        this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+        this.mob.getLookControl().setLookAt(this.target, 80.0F, 80.0F);
         double distanceSqr = this.mob.distanceToSqr(this.target);
         
         this.stalkingTime++;
@@ -111,7 +122,7 @@ public class StalkAndHideGoal extends Goal {
                 }
                 
                 if (this.path != null) {
-                    this.mob.getNavigation().moveTo(this.path, this.speedModifier * 0.7); // Slower stalking speed
+                    this.mob.getNavigation().moveTo(this.path, this.speedModifier * 0.5); // Slower stalking speed
                 }
             } else {
                 // Close enough, stop and wait

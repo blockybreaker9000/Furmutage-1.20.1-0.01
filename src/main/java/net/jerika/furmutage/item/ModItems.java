@@ -134,7 +134,7 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntities.WITHERED_LATEX_PUDDING, 0xDDEAEA, 0xFF0000,
                     new Item.Properties()));
     public static final RegistryObject<Item> TSC_DRONE_SPAWN_EGG = ITEMS.register("tsc_drone_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.TSC_DRONE, 0x2C2C2C, 0x00FF00,
+            () -> new ForgeSpawnEggItem(ModEntities.TSC_DRONE, 0xDDEAEA, 0xFF0000,
                     new Item.Properties()));
 
 
