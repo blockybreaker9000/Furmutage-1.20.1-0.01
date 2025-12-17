@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "minecraft:egg" },
+    { "item": "minecraft:sugar" }
+  ],
+  "result": {
+    "item": "furmutage:orange_pie",
+    "count": 1
+  }
+}
+
+

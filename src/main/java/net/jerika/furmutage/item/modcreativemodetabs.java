@@ -18,6 +18,17 @@ public class modcreativemodetabs {
             () -> CreativeModeTab.builder().icon(() -> new ItemStack(ModItems.THUNDERIUM.get()))
                     .title(Component.translatable("creativetab.furmutage"))
                     .displayItems((itemDisplayParameters, output) -> {
+
+
+                        output.accept(ModItems.PEALED_ORANGES.get());
+                        output.accept(ModItems.ORANGE_PIE.get());
+                        output.accept(ModItems.ORANGE_MUFFIN.get());
+                        output.accept(ModItems.ORANGE_FOXYAS.get());
+                        output.accept(ModItems.ORANGE_SWEETROLL.get());
+                        output.accept(ModItems.ORANGE_ICECREAM.get());
+                        output.accept(ModItems.ORANGE_SMOOTHY.get());
+                        output.accept(ModItems.BOTTLED_ORANGE_JUICE.get());
+
                         output.accept(ModItems.THUNDERIUM.get());
                         output.accept(ModItems.THUNDERIUM_INGOT.get());
                         output.accept(ModItems.THUNDERIUM_NUGGET.get());

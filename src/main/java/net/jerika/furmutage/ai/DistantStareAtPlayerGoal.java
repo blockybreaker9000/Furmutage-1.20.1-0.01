@@ -20,7 +20,7 @@ public class DistantStareAtPlayerGoal extends Goal {
     private static final double MIN_STARE_RANGE = 32.0; // Minimum distance to start staring
     private static final int MIN_STARE_DURATION = 40; // Minimum stare duration (2 seconds)
     private static final int MAX_STARE_DURATION = 200; // Maximum stare duration (10 seconds)
-    private static final double ACTIVATION_CHANCE = 0.002; // 0.2% chance per tick when conditions are met
+    private static final double ACTIVATION_CHANCE = 0.0002; // 0.02% chance per tick when conditions are met
     
     public DistantStareAtPlayerGoal(Animal animal) {
         this.animal = animal;

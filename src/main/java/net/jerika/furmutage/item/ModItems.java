@@ -13,6 +13,7 @@ import net.jerika.furmutage.item.custom.post_netherite.ThunderiumScythe;
 import net.jerika.furmutage.item.custom.post_netherite.ThunderiumWarHammer;
 import net.jerika.furmutage.item.custom.stone.THUNDERIUMTAZERITEM;
 import net.jerika.furmutage.item.custom.stone.ThunderiumBarbBat;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraftforge.common.ForgeSpawnEggItem;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -82,6 +83,47 @@ public class ModItems {
             () -> new WhiteLatexBottleItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> TSC_METAL_DETECTOR = ITEMS.register("tsc_metal_detector",
             () -> new TSCMetalDetectorItem(new Item.Properties().durability(100)));
+    public static final RegistryObject<Item> PEALED_ORANGES = ITEMS.register("pealed_oranges",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(4)
+                    .saturationMod(0.5f)
+                    .build())));
+    public static final RegistryObject<Item> BOTTLED_ORANGE_JUICE = ITEMS.register("bottled_orange_juice",
+            () -> new BottledOrangeJuiceItem(new Item.Properties()
+                    .food(new FoodProperties.Builder()
+                            .nutrition(6)
+                            .saturationMod(0.8f)
+                            .build())));
+    public static final RegistryObject<Item> ORANGE_PIE = ITEMS.register("orange_pie",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(8)
+                    .saturationMod(2.5f)
+                    .build())));
+    public static final RegistryObject<Item> ORANGE_MUFFIN = ITEMS.register("orange_muffin",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(4)
+                    .saturationMod(1.5f)
+                    .build())));
+    public static final RegistryObject<Item> ORANGE_FOXYAS = ITEMS.register("orange_foxyas_cookie",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(6)
+                    .saturationMod(2.5f)
+                    .build())));
+    public static final RegistryObject<Item> ORANGE_SWEETROLL = ITEMS.register("orange_sweetroll",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(6)
+                    .saturationMod(2.5f)
+                    .build())));
+    public static final RegistryObject<Item> ORANGE_ICECREAM = ITEMS.register("orange_icecream",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(6)
+                    .saturationMod(2.5f)
+                    .build())));
+    public static final RegistryObject<Item> ORANGE_SMOOTHY = ITEMS.register("orange_smoothy",
+            () -> new OrangeSmoothy(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(6)
+                    .saturationMod(2.5f)
+                    .build())));
 
 
     public static final RegistryObject<Item> THUNDERIUMTAZER = ITEMS.register("thunderium_tazer", THUNDERIUMTAZERITEM::new);

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "minecraft:wheat" },
+    { "item": "minecraft:wheat" },
+    { "item": "minecraft:wheat" },
+    { "item": "minecraft:egg" },
+    { "item": "minecraft:sugar" }
+  ],
+  "result": {
+    "item": "furmutage:orange_foxyas_cookie",
+    "count": 1
+  }
+}
+
+

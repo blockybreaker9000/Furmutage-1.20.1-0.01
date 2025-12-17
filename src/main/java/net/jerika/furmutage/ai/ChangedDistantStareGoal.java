@@ -19,7 +19,7 @@ public class ChangedDistantStareGoal extends Goal {
     private static final double MIN_STARE_RANGE = 32.0; // Minimum distance to start staring
     private static final int MIN_STARE_DURATION = 400; // Minimum stare duration
     private static final int MAX_STARE_DURATION = 2000; // Maximum stare duration
-    private static final double ACTIVATION_CHANCE = 0.002; // 0.2% chance per tick when conditions are met
+    private static final double ACTIVATION_CHANCE = 0.0002; // 0.02% chance per tick when conditions are met
 
     public ChangedDistantStareGoal(PathfinderMob mob) {
         this.mob = mob;

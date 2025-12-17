@@ -1,6 +1,7 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.ai.ChangedDistantStareGoal;
+import net.jerika.furmutage.ai.ExoFollowBehindGoal;
 import net.jerika.furmutage.ai.LongRangePlayerTargetGoal;
 import net.jerika.furmutage.ai.StalkAndHideGoal;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
@@ -70,6 +71,10 @@ public class ChangedEntityEvents {
                     // Add distant stare behavior (very small chance)
                     // Changed entities will occasionally stare at players from far away
                     pathfinderMob.goalSelector.addGoal(7, new ChangedDistantStareGoal(pathfinderMob));
+
+                    // Add exoskeleton follow-from-behind behavior for exo-type Changed entities.
+                    // Small random chance to activate, cancels as soon as the player looks at it.
+                    pathfinderMob.goalSelector.addGoal(4, new ExoFollowBehindGoal(pathfinderMob, 0.9D));
                     
                     processedEntities.add(livingEntity);
                 }
