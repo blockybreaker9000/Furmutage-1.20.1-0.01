@@ -1,6 +1,6 @@
 package net.jerika.furmutage.item.custom;
 
-import net.minecraft.client.resources.language.I18n;
+import net.jerika.furmutage.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -46,11 +46,12 @@ public class TSCMetalDetectorItem extends Item {
     }
 
     private void outputValuableCoordinates(BlockPos blockPos, Player player, Block block) {
-        player.sendSystemMessage(Component.literal("Found " + I18n.get(block.getDescriptionId()) + " at " +
-                "(" + blockPos.getX() + ", " + blockPos.getY() + "," + blockPos.getZ() + ")"));
+        String blockName = block.getName().getString();
+        player.sendSystemMessage(Component.literal("Found " + blockName + " at " +
+                "(" + blockPos.getX() + ", " + blockPos.getY() + ", " + blockPos.getZ() + ")"));
     }
 
     private boolean isValuableBlock(BlockState state) {
-        return state.is(Blocks.IRON_ORE) || state.is(Blocks.DIAMOND_ORE);
+        return state.is(ModBlocks.THUNDERIUM_ORE.get()) || state.is(ModBlocks.ROSELIGHT_ORE.get());
     }
 }

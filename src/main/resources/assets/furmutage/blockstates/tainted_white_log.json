@@ -1,15 +1,15 @@
 {
   "variants": {
     "axis=x": {
-      "model": "minecraft:block/tainted_white_log_horizontal",
+      "model": "furmutage:block/tainted_white_log_horizontal",
       "x": 90,
       "y": 90
     },
     "axis=y": {
-      "model": "minecraft:block/acacia_log"
+      "model": "furmutage:block/tainted_white_log"
     },
     "axis=z": {
-      "model": "minecraft:block/tainted_white_log_horizontal",
+      "model": "furmutage:block/tainted_white_log_horizontal",
       "x": 90
     }
   }

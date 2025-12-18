@@ -4,6 +4,7 @@ import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.entity.custom.TSCDroneEntity;
+import net.jerika.furmutage.entity.custom.TSCDroneBossEntity;
 import net.jerika.furmutage.entity.DarkLatexBottleProjectile;
 import net.jerika.furmutage.entity.TSCDroneBulletProjectile;
 import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
@@ -39,7 +40,11 @@ public class ModEntities {
     public static final RegistryObject<EntityType<TSCDroneEntity>> TSC_DRONE =
             ENTITY_TYPES.register("tsc_drone", () -> EntityType.Builder.of(TSCDroneEntity::new, MobCategory.MONSTER)
                     .sized(0.8f, 0.8f).build("tsc_drone"));
-    
+
+    public static final RegistryObject<EntityType<TSCDroneBossEntity>> TSC_DRONE_BOSS =
+            ENTITY_TYPES.register("tsc_drone_boss", () -> EntityType.Builder.of(TSCDroneBossEntity::new, MobCategory.MONSTER)
+                    .sized(1.6f, 1.6f).build("tsc_drone_boss"));
+
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(
                     DarkLatexBottleProjectile::new, MobCategory.MISC)

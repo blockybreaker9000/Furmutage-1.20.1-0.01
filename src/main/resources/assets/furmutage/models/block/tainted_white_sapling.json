@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "furmutage:block/tainted_white_sapling"
+  },
+  "render_type": "cutout"
+}

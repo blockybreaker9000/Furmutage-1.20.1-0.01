@@ -146,7 +146,7 @@ public class TSCDroneEntity extends Monster implements RangedAttackMob {
             // Melee-only drone
             this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.2D, false));
         } else if (this.isGrenadeType()) {
-            // Grenade-throwing drone (throws every 20 seconds)
+            // Grenade-throwing drone (throws every 5 seconds)
             this.goalSelector.addGoal(2, new DroneGrenadeAttackGoal(this, 1.0D, 100)); // 100 ticks = 5 seconds
         } else {
             // Default bullet-shooting drone

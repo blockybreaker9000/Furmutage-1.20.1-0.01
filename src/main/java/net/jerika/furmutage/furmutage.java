@@ -3,9 +3,14 @@ package net.jerika.furmutage;
 import com.mojang.logging.LogUtils;
 import net.jerika.furmutage.block.ModBlocks;
 import net.jerika.furmutage.entity.ModEntities;
+import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.level.block.Block;
+import java.util.Map;
+import java.util.HashMap;
 import net.jerika.furmutage.entity.client.renderer.LatexTenticleLimbsMutantRenderer;
 import net.jerika.furmutage.entity.client.renderer.MuglingRenderer;
 import net.jerika.furmutage.entity.client.renderer.MutantFamilyRenderer;
+import net.jerika.furmutage.entity.client.renderer.TSCDroneBossRenderer;
 import net.jerika.furmutage.entity.client.renderer.TSCDroneRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
 import net.jerika.furmutage.item.ModItems;
@@ -51,7 +56,18 @@ public class furmutage {
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
-
+        event.enqueueWork(() -> {
+            // Register axe stripping interaction for tainted white log using reflection
+            try {
+                java.lang.reflect.Field strippablesField = AxeItem.class.getDeclaredField("STRIPPABLES");
+                strippablesField.setAccessible(true);
+                @SuppressWarnings("unchecked")
+                Map<Block, Block> strippables = (Map<Block, Block>) strippablesField.get(null);
+                strippables.put(ModBlocks.TAINTED_WHITE_LOG.get(), ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get());
+            } catch (Exception e) {
+                LOGGER.error("Failed to register stripping interaction for tainted white log", e);
+            }
+        });
     }
 
     // Add the example block item to the building blocks tab
@@ -78,6 +94,7 @@ public class furmutage {
             EntityRenderers.register(ModEntities.WITHERED_LATEX_PUDDING.get(), WitheredLatexPuddingRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT.get(), LatexTenticleLimbsMutantRenderer::new);
             EntityRenderers.register(ModEntities.TSC_DRONE.get(), TSCDroneRenderer::new);
+            EntityRenderers.register(ModEntities.TSC_DRONE_BOSS.get(), TSCDroneBossRenderer::new);
             EntityRenderers.register(ModEntities.TSC_DRONE_BULLET_PROJECTILE.get(),
                     (context) -> new ThrownItemRenderer<>(context, 0.5f, true));
             EntityRenderers.register(ModEntities.DARK_LATEX_BOTTLE_PROJECTILE.get(), 
