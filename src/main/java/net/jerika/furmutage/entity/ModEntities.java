@@ -7,6 +7,7 @@ import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.jerika.furmutage.entity.DarkLatexBottleProjectile;
 import net.jerika.furmutage.entity.TSCDroneBulletProjectile;
 import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
+import net.jerika.furmutage.entity.TSCExplosiveGrenadeProjectile;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.EntityType;
@@ -61,6 +62,14 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("tsc_shock_grenade_projectile"));
+
+    public static final RegistryObject<EntityType<TSCExplosiveGrenadeProjectile>> TSC_EXPLOSIVE_GRENADE_PROJECTILE =
+            ENTITY_TYPES.register("tsc_explosive_grenade_projectile", () -> EntityType.Builder.<TSCExplosiveGrenadeProjectile>of(
+                    TSCExplosiveGrenadeProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("tsc_explosive_grenade_projectile"));
     
     public static final RegistryObject<EntityType<TSCDroneBulletProjectile>> TSC_DRONE_BULLET_PROJECTILE =
             ENTITY_TYPES.register("tsc_drone_bullet_projectile", () -> EntityType.Builder.<TSCDroneBulletProjectile>of(

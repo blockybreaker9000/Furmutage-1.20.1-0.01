@@ -24,10 +24,10 @@ public class ModSounds {
     // Morning chime
     public static final RegistryObject<SoundEvent> MORNING_CHIME = registerSoundEvent("morning_chime");
     
-    // TSC Drone sounds - using fixed range to limit distance
-    public static final RegistryObject<SoundEvent> TSC_DRONE_AMBIENT = registerFixedRangeSoundEvent("tsc_drone_ambient", 8.0f);
-    public static final RegistryObject<SoundEvent> TSC_DRONE_HURT = registerFixedRangeSoundEvent("tsc_drone_hurt", 8.0f);
-    public static final RegistryObject<SoundEvent> TSC_DRONE_DEATH = registerFixedRangeSoundEvent("tsc_drone_death", 8.0f);
+
+    public static final RegistryObject<SoundEvent> TSC_DRONE_AMBIENT = registerSoundEvent("tsc_drone_ambient");
+    public static final RegistryObject<SoundEvent> TSC_DRONE_HURT = registerSoundEvent("tsc_drone_hurt");
+    public static final RegistryObject<SoundEvent> TSC_DRONE_DEATH = registerSoundEvent("tsc_drone_death");
     public static final RegistryObject<SoundEvent> TSC_DRONE_BULLET_THROW = registerSoundEvent("tsc_drone_bullet_throw");
     public static final RegistryObject<SoundEvent> TSC_SHOCK_GRENADE_THROW = registerSoundEvent("tsc_shock_grenade_throw");
 
@@ -36,10 +36,6 @@ public class ModSounds {
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
     }
     
-    private static RegistryObject<SoundEvent> registerFixedRangeSoundEvent(String name, float range) {
-        ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
-        return SOUND_EVENTS.register(name, () -> SoundEvent.createFixedRangeEvent(id, range));
-    }
 
     public static void register(IEventBus eventBus) {
         SOUND_EVENTS.register(eventBus);

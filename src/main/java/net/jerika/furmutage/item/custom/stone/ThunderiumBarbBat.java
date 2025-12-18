@@ -1,6 +1,6 @@
 package net.jerika.furmutage.item.custom.stone;
 
-import net.jerika.furmutage.item.TSCElectriumWeapon;
+import net.jerika.furmutage.item.TSCElectriumWeaponTazers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.Tiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class ThunderiumBarbBat extends TSCElectriumWeapon {
+public class ThunderiumBarbBat extends TSCElectriumWeaponTazers {
     public ThunderiumBarbBat() {
         super(new Properties().durability(300));
     }

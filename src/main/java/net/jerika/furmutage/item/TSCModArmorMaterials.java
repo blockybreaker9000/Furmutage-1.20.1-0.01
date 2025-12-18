@@ -13,7 +13,7 @@ public enum TSCModArmorMaterials implements ArmorMaterial {
     THUNDERIUM_INGOT("thunderium_ingot", 30, new int[]{ 5, 7, 5, 4 }, 25,
             SoundEvents.ARMOR_EQUIP_NETHERITE, 1f, 1f, () -> Ingredient.of(ModItems.THUNDERIUM_INGOT.get())),
     ROSELIGHT_INGOT("roselight_ingot", 30, new int[]{ 5, 7, 5, 4 }, 25,
-    SoundEvents.ARMOR_EQUIP_NETHERITE, 1f, 1f, () -> Ingredient.of(ModItems.THUNDERIUM_INGOT.get()));
+    SoundEvents.ARMOR_EQUIP_NETHERITE, 1f, 1f, () -> Ingredient.of(ModItems.ROSELIGHT_INGOT.get()));
 
     private final String name;
     private final int durabilityMultiplier;

@@ -1,9 +1,9 @@
 package net.jerika.furmutage.item.custom.post_netherite;
 
-import net.jerika.furmutage.item.TSCElectriumWeapon;
+import net.jerika.furmutage.item.TSCElectriumWeaponSwords;
+import net.jerika.furmutage.item.TSCElectriumWeaponTazers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
-public class ThunderiumDoomSaber extends TSCElectriumWeapon {
+public class ThunderiumDoomSaber extends TSCElectriumWeaponSwords {
     public ThunderiumDoomSaber() {
         super(new Properties().durability(1300));
     }
