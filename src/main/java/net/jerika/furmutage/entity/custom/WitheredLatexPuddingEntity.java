@@ -1,16 +1,12 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.PuddingSprintAttackGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.PuddingSprintAttackGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
-import net.minecraft.network.syncher.EntityDataAccessor;
-import net.minecraft.network.syncher.EntityDataSerializers;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;

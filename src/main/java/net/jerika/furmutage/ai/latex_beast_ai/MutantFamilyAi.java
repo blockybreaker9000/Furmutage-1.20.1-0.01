@@ -1,20 +1,20 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.latex_beast_ai;
 
-import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
+import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 
-public class LatexTenticleLimbsMutantAi extends MeleeAttackGoal {
-    private final LatexTenticleLimbsMutantEntity entity;
+public class MutantFamilyAi extends MeleeAttackGoal {
+    private final LatexMutantFamilyEntity entity;
     private int attackDelay = 5;
     private int ticksUntilNextAttack = 5;
     private boolean shouldCountTillNextAttack = false;
 
-    public LatexTenticleLimbsMutantAi(PathfinderMob pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen) {
+    public MutantFamilyAi(PathfinderMob pMob, double pSpeedModifier, boolean pFollowingTargetEvenIfNotSeen) {
         super(pMob, pSpeedModifier, pFollowingTargetEvenIfNotSeen);
-        entity = ((LatexTenticleLimbsMutantEntity) pMob);
+        entity = ((LatexMutantFamilyEntity) pMob);
     }
     @Override
     public void start() {
@@ -28,7 +28,7 @@ public class LatexTenticleLimbsMutantAi extends MeleeAttackGoal {
             shouldCountTillNextAttack = true;
 
             if(isTimeToStartAttackAnimation()) {
-                entity.setmutantLimbsAttack(true);
+                entity.setMutantFamilyAttack(true);
             }
 
             if(isTimeToAttack()) {
@@ -38,14 +38,14 @@ public class LatexTenticleLimbsMutantAi extends MeleeAttackGoal {
         } else {
             resetAttackCooldown();
             shouldCountTillNextAttack = false;
-            entity.setmutantLimbsAttack(false);
+            entity.setMutantFamilyAttack(false);
             entity.attackAnimationTimeout = 0;
         }
     }
 
     private boolean isEnemyWithinAttackDistance(LivingEntity pEnemy, double pDistToEnemySqr) {
         // Shorter attack range - 1.5 blocks instead of default ~2.0 blocks
-        double attackReach = this.mob.getBbWidth() * 1.0F + 0.5D;
+        double attackReach = this.mob.getBbWidth() * 2.0F + 1.5D;
         return pDistToEnemySqr <= attackReach * attackReach;
     }
 
@@ -83,8 +83,9 @@ public class LatexTenticleLimbsMutantAi extends MeleeAttackGoal {
 
     @Override
     public void stop() {
-        entity.setmutantLimbsAttack(false);
+        entity.setMutantFamilyAttack(false);
         super.stop();
     }
 }
+
 

@@ -1,9 +1,10 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.entity.projectiles.TSCDroneBulletProjectile;
+import net.jerika.furmutage.entity.projectiles.TSCShockGrenadeProjectile;
 import net.jerika.furmutage.item.ModItems;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.AnimationState;
@@ -11,10 +12,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.jerika.furmutage.ai.DroneFlyingRandomStrollGoal;
-import net.jerika.furmutage.ai.DroneMoveControl;
-import net.jerika.furmutage.ai.DroneRangedAttackGoal;
-import net.jerika.furmutage.ai.DroneGrenadeAttackGoal;
+import net.jerika.furmutage.ai.tsc_drone_ai.DroneFlyingRandomStrollGoal;
+import net.jerika.furmutage.ai.tsc_drone_ai.DroneMoveControl;
+import net.jerika.furmutage.ai.tsc_drone_ai.DroneRangedAttackGoal;
+import net.jerika.furmutage.ai.tsc_drone_ai.DroneGrenadeAttackGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -210,14 +211,14 @@ public class TSCDroneEntity extends Monster implements RangedAttackMob {
         }
         
         // Cancel damage from TSCDroneBulletProjectile (friendly fire immunity)
-        if (pSource.getDirectEntity() instanceof net.jerika.furmutage.entity.TSCDroneBulletProjectile) {
+        if (pSource.getDirectEntity() instanceof TSCDroneBulletProjectile) {
             return false;
         }
         
         // Cancel damage from TSCShockGrenadeProjectile explosions
-        if (pSource.getDirectEntity() instanceof net.jerika.furmutage.entity.TSCShockGrenadeProjectile ||
-            (pSource.getEntity() instanceof net.jerika.furmutage.entity.TSCShockGrenadeProjectile) ||
-            (pSource.getMsgId().contains("explosion") && pSource.getEntity() instanceof net.jerika.furmutage.entity.TSCShockGrenadeProjectile)) {
+        if (pSource.getDirectEntity() instanceof TSCShockGrenadeProjectile ||
+            (pSource.getEntity() instanceof TSCShockGrenadeProjectile) ||
+            (pSource.getMsgId().contains("explosion") && pSource.getEntity() instanceof TSCShockGrenadeProjectile)) {
             return false;
         }
         

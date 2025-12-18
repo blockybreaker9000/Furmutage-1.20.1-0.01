@@ -1,9 +1,7 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.mugling;
 
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.util.DefaultRandomPos;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.List;
 import java.util.EnumSet;

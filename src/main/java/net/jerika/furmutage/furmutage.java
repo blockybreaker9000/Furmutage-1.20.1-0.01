@@ -1,12 +1,12 @@
 package net.jerika.furmutage;
 
 import com.mojang.logging.LogUtils;
-import net.jerika.furmutage.block.ModBlocks;
+import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.entity.ModEntities;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
 import java.util.Map;
-import java.util.HashMap;
+
 import net.jerika.furmutage.entity.client.renderer.LatexTenticleLimbsMutantRenderer;
 import net.jerika.furmutage.entity.client.renderer.MuglingRenderer;
 import net.jerika.furmutage.entity.client.renderer.MutantFamilyRenderer;

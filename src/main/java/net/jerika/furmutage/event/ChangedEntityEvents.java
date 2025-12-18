@@ -1,15 +1,14 @@
 package net.jerika.furmutage.event;
 
-import net.jerika.furmutage.ai.ChangedDistantStareGoal;
-import net.jerika.furmutage.ai.ExoFollowBehindGoal;
-import net.jerika.furmutage.ai.LongRangePlayerTargetGoal;
-import net.jerika.furmutage.ai.StalkAndHideGoal;
+import net.jerika.furmutage.ai.watching_you.ChangedDistantStareGoal;
+import net.jerika.furmutage.ai.watching_you.ExoFollowBehindGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.LongRangePlayerTargetGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.StalkAndHideGoal;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
-import net.minecraft.world.entity.ai.goal.WrappedGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;

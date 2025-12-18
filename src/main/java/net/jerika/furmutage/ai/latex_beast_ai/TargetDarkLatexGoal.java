@@ -1,4 +1,4 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.latex_beast_ai;
 
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.minecraft.world.entity.LivingEntity;

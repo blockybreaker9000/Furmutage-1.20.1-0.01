@@ -1,5 +1,6 @@
-package net.jerika.furmutage.entity;
+package net.jerika.furmutage.entity.projectiles;
 
+import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;

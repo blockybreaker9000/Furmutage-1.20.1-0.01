@@ -1,7 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.MutantFamilyAi;
-import net.jerika.furmutage.ai.TargetDarkLatexGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.MutantFamilyAi;
+import net.jerika.furmutage.ai.latex_beast_ai.TargetDarkLatexGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

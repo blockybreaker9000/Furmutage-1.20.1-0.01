@@ -1,9 +1,8 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.tsc_drone_ai;
 
 import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.ai.goal.Goal;
-import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.EnumSet;

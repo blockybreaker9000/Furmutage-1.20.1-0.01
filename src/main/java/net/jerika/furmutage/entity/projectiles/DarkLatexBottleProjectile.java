@@ -1,5 +1,6 @@
-package net.jerika.furmutage.entity;
+package net.jerika.furmutage.entity.projectiles;
 
+import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
@@ -8,7 +9,6 @@ import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.registries.ForgeRegistries;

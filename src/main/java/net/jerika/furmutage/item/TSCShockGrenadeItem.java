@@ -1,8 +1,7 @@
 package net.jerika.furmutage.item;
 
-import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
+import net.jerika.furmutage.entity.projectiles.TSCShockGrenadeProjectile;
 import net.jerika.furmutage.sound.ModSounds;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionHand;

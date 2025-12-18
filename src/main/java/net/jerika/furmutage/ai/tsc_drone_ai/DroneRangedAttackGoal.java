@@ -1,14 +1,11 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.tsc_drone_ai;
 
-import net.jerika.furmutage.entity.TSCDroneBulletProjectile;
+import net.jerika.furmutage.entity.projectiles.TSCDroneBulletProjectile;
 import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.jerika.furmutage.sound.ModSounds;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.monster.RangedAttackMob;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 
 public class DroneRangedAttackGoal extends RangedAttackGoal {
     private final TSCDroneEntity drone;

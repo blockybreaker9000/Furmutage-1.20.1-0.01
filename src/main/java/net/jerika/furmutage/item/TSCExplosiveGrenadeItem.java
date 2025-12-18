@@ -1,6 +1,6 @@
 package net.jerika.furmutage.item;
 
-import net.jerika.furmutage.entity.TSCExplosiveGrenadeProjectile;
+import net.jerika.furmutage.entity.projectiles.TSCExplosiveGrenadeProjectile;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;

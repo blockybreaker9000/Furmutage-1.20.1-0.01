@@ -1,7 +1,6 @@
 package net.jerika.furmutage.item;
 
-import net.jerika.furmutage.entity.DarkLatexBottleProjectile;
-import net.jerika.furmutage.entity.WhiteLatexBottleProjectile;
+import net.jerika.furmutage.entity.projectiles.WhiteLatexBottleProjectile;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;

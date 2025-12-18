@@ -1,6 +1,6 @@
 package net.jerika.furmutage.event;
 
-import net.jerika.furmutage.ai.DistantStareAtPlayerGoal;
+import net.jerika.furmutage.ai.watching_you.DistantStareAtPlayerGoal;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;

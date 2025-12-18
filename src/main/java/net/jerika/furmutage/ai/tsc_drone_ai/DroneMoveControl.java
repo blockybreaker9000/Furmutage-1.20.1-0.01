@@ -1,4 +1,4 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.tsc_drone_ai;
 
 import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.minecraft.world.entity.ai.control.MoveControl;

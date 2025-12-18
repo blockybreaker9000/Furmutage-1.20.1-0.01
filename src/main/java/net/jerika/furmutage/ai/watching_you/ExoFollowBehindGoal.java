@@ -1,4 +1,4 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.watching_you;
 
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;

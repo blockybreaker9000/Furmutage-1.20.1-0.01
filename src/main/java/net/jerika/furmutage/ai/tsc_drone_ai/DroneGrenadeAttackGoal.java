@@ -1,6 +1,6 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.tsc_drone_ai;
 
-import net.jerika.furmutage.entity.TSCShockGrenadeProjectile;
+import net.jerika.furmutage.entity.projectiles.TSCShockGrenadeProjectile;
 import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;

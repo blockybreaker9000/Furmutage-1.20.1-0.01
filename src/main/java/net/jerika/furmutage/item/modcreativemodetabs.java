@@ -1,6 +1,6 @@
 package net.jerika.furmutage.item;
 
-import net.jerika.furmutage.block.ModBlocks;
+import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

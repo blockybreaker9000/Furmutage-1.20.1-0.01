@@ -1,9 +1,7 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.latex_beast_ai;
 
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.pathfinder.Path;
