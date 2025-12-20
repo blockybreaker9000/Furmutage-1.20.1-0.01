@@ -1,5 +1,6 @@
 package net.jerika.furmutage.entity;
 
+import net.jerika.furmutage.entity.custom.LatexBacteriaEntity;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
@@ -41,6 +42,10 @@ public class ModEntities {
     public static final RegistryObject<EntityType<TSCDroneBossEntity>> TSC_DRONE_BOSS =
             ENTITY_TYPES.register("tsc_drone_boss", () -> EntityType.Builder.of(TSCDroneBossEntity::new, MobCategory.MONSTER)
                     .sized(1.6f, 1.6f).build("tsc_drone_boss"));
+
+    public static final RegistryObject<EntityType<LatexBacteriaEntity>> LATEX_BACTERIA =
+            ENTITY_TYPES.register("latex_bacteria", () -> EntityType.Builder.of(LatexBacteriaEntity::new, MobCategory.MONSTER)
+                    .sized(0.8f, 0.8f).build("latex_bacteria"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

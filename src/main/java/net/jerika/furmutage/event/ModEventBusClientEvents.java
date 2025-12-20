@@ -16,7 +16,7 @@ public class ModEventBusClientEvents {
         event.registerLayerDefinition(ModModelLayers.MUTANT_FAMILY_LAYER, MutantFamilyModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LATEX_TENTICLE_LIMBS_MUTANT_LAYER, LatexTenticleLimbsMutantModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.TSC_DRONE_LAYER, TSCDroneModel::createBodyLayer);
-
+        event.registerLayerDefinition(ModModelLayers.BACTERIA_LAYER, BacteriaModel::createBodyLayer);
     }
 
 }

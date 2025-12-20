@@ -65,6 +65,7 @@
 
 
   "item.furmutage.mugling_spawn_egg": "Mugling Spawn Egg",
+  "item.furmutage.latex_bacteria_spawn_egg": "Latex Bacteria Spawn Egg",
   "item.furmutage.tsc_drone_spawn_egg": "TSC Drone Spawn Egg",
   "item.furmutage.tsc_drone_boss_spawn_egg": "TSC Drone Boss Spawn Egg",
   "item.furmutage.latex_mutant_family_spawn_egg": "Latex Mutant Family Spawn Egg",
@@ -95,6 +96,7 @@
   "entity.furmutage.withered_latex_pudding": "Withered Pudding Mutant",
   "entity.furmutage.tsc_drone": "TSC Drone",
   "entity.furmutage.tsc_drone_boss": "TSC Drone Boss",
+  "entity.furmutage.latex_bacteria": "Latex Bacteria",
 
   "subtitles.furmutage.night_ambient": "Night Ambience",
   "subtitles.furmutage.night_chime": "Night Chime",

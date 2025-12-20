@@ -2,6 +2,7 @@ package net.jerika.furmutage.event;
 
 
 import net.jerika.furmutage.entity.ModEntities;
+import net.jerika.furmutage.entity.custom.LatexBacteriaEntity;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
@@ -23,7 +24,6 @@ public class ModEventBusEvents {
         event.put(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT.get(), LatexTenticleLimbsMutantEntity.createMobAttributes().build());
         event.put(ModEntities.TSC_DRONE.get(), TSCDroneEntity.createMobAttributes().build());
         event.put(ModEntities.TSC_DRONE_BOSS.get(), TSCDroneBossEntity.createBossAttributes().build());
-
-
-        }
+        event.put(ModEntities.LATEX_BACTERIA.get(), LatexBacteriaEntity.createMobAttributes().build());
+    }
 }

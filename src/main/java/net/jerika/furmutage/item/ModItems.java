@@ -181,6 +181,9 @@ public class ModItems {
     public static final RegistryObject<Item> TSC_DRONE_BOSS_SPAWN_EGG = ITEMS.register("tsc_drone_boss_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.TSC_DRONE_BOSS, 0x222222, 0x00FFFF,
                     new Item.Properties()));
+    public static final RegistryObject<Item> LATEX_BACTERIA_SPAWN_EGG = ITEMS.register("latex_bacteria_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.LATEX_BACTERIA, 0xDDEAEA, 0xDDEAEA,
+                    new Item.Properties()));
 
 
 

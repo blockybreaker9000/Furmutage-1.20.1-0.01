@@ -7,6 +7,7 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
 import java.util.Map;
 
+import net.jerika.furmutage.entity.client.renderer.LatexBacteriaRenderer;
 import net.jerika.furmutage.entity.client.renderer.LatexTenticleLimbsMutantRenderer;
 import net.jerika.furmutage.entity.client.renderer.MuglingRenderer;
 import net.jerika.furmutage.entity.client.renderer.MutantFamilyRenderer;
@@ -95,6 +96,7 @@ public class furmutage {
             EntityRenderers.register(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT.get(), LatexTenticleLimbsMutantRenderer::new);
             EntityRenderers.register(ModEntities.TSC_DRONE.get(), TSCDroneRenderer::new);
             EntityRenderers.register(ModEntities.TSC_DRONE_BOSS.get(), TSCDroneBossRenderer::new);
+            EntityRenderers.register(ModEntities.LATEX_BACTERIA.get(), LatexBacteriaRenderer::new);
             EntityRenderers.register(ModEntities.TSC_DRONE_BULLET_PROJECTILE.get(),
                     (context) -> new ThrownItemRenderer<>(context, 0.5f, true));
             EntityRenderers.register(ModEntities.DARK_LATEX_BOTTLE_PROJECTILE.get(), 
