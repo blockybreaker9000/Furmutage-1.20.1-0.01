@@ -33,9 +33,9 @@ public class TaintedWhiteTreeGrower extends AbstractTreeGrower {
         // Create tree configuration like a crazy acacia tree with multiple branches
         TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.TAINTED_WHITE_LOG.get().defaultBlockState()),
-                new ForkingTrunkPlacer(5, 2, 2), // Height: base, heightRandA, heightRandB (creates branching)
+                new ForkingTrunkPlacer(5, 3, 3), // Height: base, heightRandA, heightRandB (creates branching)
                 BlockStateProvider.simple(ModBlocks.TAINTED_WHITE_LEAF.get().defaultBlockState()),
-                new AcaciaFoliagePlacer(ConstantInt.of(2), ConstantInt.of(2)), // radius, offset
+                new AcaciaFoliagePlacer(ConstantInt.of(3), ConstantInt.of(3)), // radius, offset
                 new TwoLayersFeatureSize(2, 2, 2)
         );
         

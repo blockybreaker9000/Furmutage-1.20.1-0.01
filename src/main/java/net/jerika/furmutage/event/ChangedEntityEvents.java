@@ -4,6 +4,7 @@ import net.jerika.furmutage.ai.watching_you.ChangedDistantStareGoal;
 import net.jerika.furmutage.ai.watching_you.ExoFollowBehindGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.LongRangePlayerTargetGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.StalkAndHideGoal;
+import net.jerika.furmutage.ai.VerticalLungeAttackGoal;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.damagesource.DamageSource;
@@ -74,6 +75,9 @@ public class ChangedEntityEvents {
                     // Add exoskeleton follow-from-behind behavior for exo-type Changed entities.
                     // Small random chance to activate, cancels as soon as the player looks at it.
                     pathfinderMob.goalSelector.addGoal(4, new ExoFollowBehindGoal(pathfinderMob, 0.9D));
+                    
+                    // Add uncommon vertical lunge attack when player is 5 blocks high
+                    pathfinderMob.goalSelector.addGoal(2, new VerticalLungeAttackGoal(pathfinderMob));
                     
                     processedEntities.add(livingEntity);
                 }

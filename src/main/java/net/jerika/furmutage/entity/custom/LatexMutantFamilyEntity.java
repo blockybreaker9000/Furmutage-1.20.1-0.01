@@ -2,6 +2,7 @@ package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.latex_beast_ai.MutantFamilyAi;
 import net.jerika.furmutage.ai.latex_beast_ai.TargetDarkLatexGoal;
+import net.jerika.furmutage.ai.VerticalLungeAttackGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -106,6 +107,7 @@ public class LatexMutantFamilyEntity extends Monster {
     @Override
     protected void registerGoals(){
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new VerticalLungeAttackGoal(this)); // Uncommon vertical lunge when player is 5 blocks high
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
         this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));

@@ -107,6 +107,7 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_WHITE_PLANKS.get());
                         output.accept(ModBlocks.ROSELIGHT_BLOCK.get());
                         output.accept(ModBlocks.THUNDERIUM_BLOCK.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_SAPLING.get());
 
 
                     })

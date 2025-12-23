@@ -1,6 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.BacteriaJumpAttackGoal;
+import net.jerika.furmutage.ai.VerticalLungeAttackGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -111,6 +112,7 @@ public class LatexBacteriaEntity extends Monster {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
+        this.goalSelector.addGoal(2, new VerticalLungeAttackGoal(this)); // Uncommon vertical lunge when player is 5 blocks high
         this.goalSelector.addGoal(2, new BacteriaJumpAttackGoal(this, 1.2D, true)); // Fast movement speed
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));

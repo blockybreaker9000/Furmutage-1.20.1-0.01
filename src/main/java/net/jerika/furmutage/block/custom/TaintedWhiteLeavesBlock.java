@@ -5,6 +5,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LeavesBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -25,11 +26,100 @@ public class TaintedWhiteLeavesBlock extends LeavesBlock {
         // Check if there's a tainted white log within 15 blocks
         if (hasTaintedWhiteLogWithinRange(level, pos, 15)) {
             // Log found nearby, don't decay - just return without calling super
-            return;
+            // But still allow spreading
+        } else {
+            // No log nearby, allow normal decay
+            super.randomTick(state, level, pos, random);
         }
         
-        // No log nearby, allow normal decay
-        super.randomTick(state, level, pos, random);
+        // Spread to nearby sand, dirt, and grass blocks
+        if (random.nextInt(15) == 0) { // ~6.7% chance per random tick
+            spreadToNearbyBlocks(level, pos, random);
+        }
+        
+        // Rarely spawn tainted white saplings below leaves (on ground)
+        if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
+            spawnSaplingBelow(level, pos, random);
+        }
+    }
+    
+    /**
+     * Rarely spawns a tainted white sapling below the leaves (on the ground).
+     */
+    private void spawnSaplingBelow(ServerLevel level, BlockPos pos, RandomSource random) {
+        // Check a few blocks below for a suitable surface
+        for (int y = 1; y <= 3; y++) {
+            BlockPos checkPos = pos.below(y);
+            BlockState checkState = level.getBlockState(checkPos);
+            BlockPos aboveCheckPos = checkPos.above();
+            BlockState aboveCheckState = level.getBlockState(aboveCheckPos);
+            
+            // If we find tainted grass, dirt, or sand with air above, spawn sapling
+            if ((checkState.is(ModBlocks.TAINTED_WHITE_GRASS.get()) || 
+                 checkState.is(ModBlocks.TAINTED_WHITE_DIRT.get()) || 
+                 checkState.is(ModBlocks.TAINTED_WHITE_SAND.get())) &&
+                aboveCheckState.isAir() && 
+                level.getMaxLocalRawBrightness(aboveCheckPos) >= 9) {
+                // Check if there's already a sapling within 5-6 blocks
+                if (!hasSaplingNearby(level, aboveCheckPos, 5)) {
+                    level.setBlock(aboveCheckPos, ModBlocks.TAINTED_WHITE_SAPLING.get().defaultBlockState(), 3);
+                }
+                break; // Only spawn one sapling
+            }
+        }
+    }
+    
+    /**
+     * Checks if there's a tainted white sapling within the specified distance.
+     */
+    private boolean hasSaplingNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        int checkRadius = maxDistance;
+        for (int x = -checkRadius; x <= checkRadius; x++) {
+            for (int y = -checkRadius; y <= checkRadius; y++) {
+                for (int z = -checkRadius; z <= checkRadius; z++) {
+                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
+                    
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    double distance = Math.sqrt(x * x + y * y + z * z);
+                    
+                    // Check if within distance and is a sapling
+                    if (distance < maxDistance && level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_SAPLING.get())) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Spreads taint to nearby sand, dirt, and grass blocks.
+     */
+    private void spreadToNearbyBlocks(ServerLevel level, BlockPos pos, RandomSource random) {
+        // Check blocks below and around the leaves
+        for (int x = -2; x <= 2; x++) {
+            for (int y = -3; y <= 0; y++) { // Only check below and at same level
+                for (int z = -2; z <= 2; z++) {
+                    if (x == 0 && y == 0 && z == 0) continue; // Skip self
+                    
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    BlockState checkState = level.getBlockState(checkPos);
+                    
+                    // Convert grass blocks to tainted white grass
+                    if (checkState.is(Blocks.GRASS_BLOCK)) {
+                        level.setBlock(checkPos, ModBlocks.TAINTED_WHITE_GRASS.get().defaultBlockState(), 3);
+                    }
+                    // Convert dirt to tainted white dirt
+                    else if (checkState.is(Blocks.DIRT) || checkState.is(Blocks.COARSE_DIRT)) {
+                        level.setBlock(checkPos, ModBlocks.TAINTED_WHITE_DIRT.get().defaultBlockState(), 3);
+                    }
+                    // Convert sand to tainted white sand
+                    else if (checkState.is(Blocks.SAND) || checkState.is(Blocks.RED_SAND)) {
+                        level.setBlock(checkPos, ModBlocks.TAINTED_WHITE_SAND.get().defaultBlockState(), 3);
+                    }
+                }
+            }
+        }
     }
 
     /**

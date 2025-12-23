@@ -1,0 +1,11 @@
+{
+  "variants": {
+    "half=lower": {
+      "model": "furmutage:block/tainted_white_tall_grass"
+    },
+    "half=upper": {
+      "model": "furmutage:block/tainted_white_tall_grass_top"
+    }
+  }
+}
+
