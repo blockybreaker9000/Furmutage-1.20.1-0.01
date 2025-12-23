@@ -5,7 +5,7 @@
     "bottom": "furmutage:block/tainted_white_dirt",
     "top": "furmutage:block/tainted_white_grass_top",
     "side": "furmutage:block/tainted_white_grass_side",
-    "overlay": "furmutage:block/tainted_white_grass_side_overlay"
+    "overlay": "furmutage:block/tainted_white_grass_side"
   }
 }
 

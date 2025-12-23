@@ -2,9 +2,14 @@ package net.jerika.furmutage;
 
 import com.mojang.logging.LogUtils;
 import net.jerika.furmutage.block.custom.ModBlocks;
+import net.jerika.furmutage.config.LatexTeamConfig;
 import net.jerika.furmutage.entity.ModEntities;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.AddReloadListenerEvent;
 import java.util.Map;
 
 import net.jerika.furmutage.entity.client.renderer.LatexBacteriaRenderer;
@@ -53,6 +58,7 @@ public class furmutage {
         modEventBus.addListener(this::commonSetup);
 
         MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.addListener(this::onAddReloadListeners);
         modEventBus.addListener(this::addCreative);
     }
 
@@ -77,6 +83,12 @@ public class furmutage {
             event.accept(ModItems.THUNDERIUM);
             event.accept(ModItems.ROSELIGHT);
         }
+    }
+
+    // Register the latex team config reload listener
+    @SubscribeEvent
+    public void onAddReloadListeners(AddReloadListenerEvent event) {
+        event.addListener(new LatexTeamConfig());
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

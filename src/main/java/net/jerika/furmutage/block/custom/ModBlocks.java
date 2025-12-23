@@ -55,6 +55,14 @@ public class ModBlocks {
             () -> new TaintedWhiteGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_WHITE_TALL_GRASS = registerBlock("tainted_white_tall_grass",
             () -> new TaintedWhiteTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_WHITE_SPOTTED_MUSHROOM = registerBlock("tainted_white_spotted_mushroom",
+            () -> new TaintedWhiteSpottedMushroomBlock(BlockBehaviour.Properties.copy(Blocks.RED_MUSHROOM).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_WHITE_DRIP_MUSHROOM = registerBlock("tainted_white_drip_mushroom",
+            () -> new TaintedWhiteDripMushroomBlock(BlockBehaviour.Properties.copy(Blocks.BROWN_MUSHROOM).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_WHITE_ROSELIGHT_FLOWER = registerBlock("tainted_white_roselight_flower",
+            () -> new TaintedWhiteRoselightFlowerBlock(BlockBehaviour.Properties.copy(Blocks.DANDELION).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_WHITE_CRYSTAL_BLUE_FLOWER = registerBlock("tainted_white_crystal_blue_flower",
+            () -> new TaintedWhiteCrystalBlueFlowerBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).noOcclusion().instabreak().sound(SoundType.GRASS)));
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

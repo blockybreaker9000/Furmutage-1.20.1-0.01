@@ -39,7 +39,7 @@ public class TaintedWhiteDirtBlock extends Block {
         }
         
         // Occasionally spawn tainted white grass foliage on top
-        if (random.nextInt(50) == 0) { // 2% chance per random tick
+        if (random.nextInt(100) == 0) { // 40% chance per random tick
             spawnGrassFoliageOnTop(level, pos, random);
         }
     }

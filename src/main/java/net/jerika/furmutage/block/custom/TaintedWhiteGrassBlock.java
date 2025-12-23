@@ -23,7 +23,7 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         // Spread to nearby grass and dirt blocks
-        if (random.nextInt(10) == 0) { // 10% chance per random tick
+        if (random.nextInt(50) == 0) { // 50% chance per random tick
             spreadToNearbyBlocks(level, pos, random);
         }
         
@@ -40,6 +40,11 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
         // Rarely spawn pure white latex entities on top
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnPureWhiteLatexEntity(level, pos, random);
+        }
+        
+        // Occasionally spawn mushrooms on top
+        if (random.nextInt(100) == 0) { // 1% chance per random tick
+            spawnMushroomOnTop(level, pos, random);
         }
     }
 
@@ -146,6 +151,17 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
                     level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_TALL_GRASS.get().defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER), 3);
                     level.setBlock(aboveAbovePos, ModBlocks.TAINTED_WHITE_TALL_GRASS.get().defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 3);
                 }
+            } else if (random.nextInt(4) == 0) {
+                // ~6.7% chance to grow a flower (if other vegetation didn't grow)
+                // Check if there's already a flower nearby (within 3 blocks)
+                if (!hasFlowerNearby(level, abovePos, 10)) {
+                    // Randomly choose between roselight and crystal blue flower (50% chance each)
+                    if (random.nextBoolean()) {
+                        level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_ROSELIGHT_FLOWER.get().defaultBlockState(), 3);
+                    } else {
+                        level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_CRYSTAL_BLUE_FLOWER.get().defaultBlockState(), 3);
+                    }
+                }
             }
         }
     }
@@ -219,6 +235,77 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
                 }
             }
         }
+    }
+    
+    /**
+     * Spawns a mushroom (spotted or drip) on top of this block.
+     */
+    private void spawnMushroomOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        
+        // Only spawn if the space above is air and has low light (mushrooms prefer darkness)
+        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) < 13) {
+            // Check if there's already a mushroom nearby (within 4 blocks)
+            if (!hasMushroomNearby(level, abovePos, 4)) {
+                // Randomly choose between spotted and drip mushroom (50% chance each)
+                if (random.nextBoolean()) {
+                    level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_SPOTTED_MUSHROOM.get().defaultBlockState(), 3);
+                } else {
+                    level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_DRIP_MUSHROOM.get().defaultBlockState(), 3);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Checks if there's a flower within the specified distance.
+     */
+    private boolean hasFlowerNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        int checkRadius = maxDistance;
+        for (int x = -checkRadius; x <= checkRadius; x++) {
+            for (int y = -checkRadius; y <= checkRadius; y++) {
+                for (int z = -checkRadius; z <= checkRadius; z++) {
+                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
+                    
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    double distance = Math.sqrt(x * x + y * y + z * z);
+                    
+                    // Check if within distance and is a flower
+                    if (distance < maxDistance && 
+                        (level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_ROSELIGHT_FLOWER.get()) ||
+                         level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_CRYSTAL_BLUE_FLOWER.get()))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    /**
+     * Checks if there's a mushroom within the specified distance.
+     */
+    private boolean hasMushroomNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        int checkRadius = maxDistance;
+        for (int x = -checkRadius; x <= checkRadius; x++) {
+            for (int y = -checkRadius; y <= checkRadius; y++) {
+                for (int z = -checkRadius; z <= checkRadius; z++) {
+                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
+                    
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    double distance = Math.sqrt(x * x + y * y + z * z);
+                    
+                    // Check if within distance and is a mushroom
+                    if (distance < maxDistance && 
+                        (level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_SPOTTED_MUSHROOM.get()) ||
+                         level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_DRIP_MUSHROOM.get()))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
     
     /**
