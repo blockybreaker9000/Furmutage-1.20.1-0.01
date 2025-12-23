@@ -7,8 +7,12 @@ import net.jerika.furmutage.team.DarkLatexTeam;
 import net.jerika.furmutage.team.WhiteLatexTeam;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
+import com.mojang.logging.LogUtils;
+import org.slf4j.Logger;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -23,6 +27,7 @@ import java.util.WeakHashMap;
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LatexTeamEvents {
+    private static final Logger LOGGER = LogUtils.getLogger();
     // Track entities we've already processed to avoid duplicate goals
     private static final Set<LivingEntity> processedEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
     
@@ -43,26 +48,63 @@ public class LatexTeamEvents {
             return;
         }
         
+        // Only check entities that are in the config file
+        if (!net.jerika.furmutage.config.LatexTeamConfig.isEntityInConfig(pathfinderMob)) {
+            return; // Entity not in config, skip processing
+        }
+        
         // Check if entity is White Latex
         boolean isWhiteLatex = WhiteLatexTeam.isWhiteLatex(pathfinderMob);
         
         // Check if entity is Dark Latex
         boolean isDarkLatex = DarkLatexTeam.isDarkLatex(pathfinderMob);
         
+        // Debug: Log entity info for troubleshooting
+        String entityTypeId = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(pathfinderMob.getType()).toString();
+        String className = pathfinderMob.getClass().getName();
+        LOGGER.info("[LatexTeams] Processing entity from config: {} (class: {}) - White: {}, Dark: {}", 
+            entityTypeId, className, isWhiteLatex, isDarkLatex);
+        
         // Only process entities that belong to one of the teams
         if (!isWhiteLatex && !isDarkLatex) {
+            LOGGER.warn("[LatexTeams] Entity {} matched config but is not assigned to any team!", entityTypeId);
             return;
         }
         
         // Add targeting goals based on team
+        // Use priority 0 for highest priority (will override most other goals)
         if (isWhiteLatex) {
             // White Latex targets Dark Latex and players
-            pathfinderMob.targetSelector.addGoal(1, new TargetDarkLatexTeamGoal(pathfinderMob));
-            pathfinderMob.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(pathfinderMob, Player.class, true));
+            pathfinderMob.targetSelector.addGoal(0, new TargetDarkLatexTeamGoal(pathfinderMob));
+            pathfinderMob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(pathfinderMob, Player.class, true));
+            // Add HurtByTargetGoal to retaliate when attacked
+            pathfinderMob.targetSelector.addGoal(2, new HurtByTargetGoal(pathfinderMob));
+            
+            // Ensure entity has a melee attack goal if it doesn't already have one
+            boolean hasMeleeAttack = pathfinderMob.goalSelector.getAvailableGoals().stream()
+                .anyMatch(goal -> goal.getGoal() instanceof MeleeAttackGoal);
+            if (!hasMeleeAttack) {
+                pathfinderMob.goalSelector.addGoal(2, new MeleeAttackGoal(pathfinderMob, 1.0D, true));
+            }
+            
+            LOGGER.info("[LatexTeams] Assigned White Latex team to entity: {} ({})", 
+                entityTypeId, className);
         } else if (isDarkLatex) {
             // Dark Latex targets White Latex and players
-            pathfinderMob.targetSelector.addGoal(1, new TargetWhiteLatexGoal(pathfinderMob));
-            pathfinderMob.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(pathfinderMob, Player.class, true));
+            pathfinderMob.targetSelector.addGoal(0, new TargetWhiteLatexGoal(pathfinderMob));
+            pathfinderMob.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(pathfinderMob, Player.class, true));
+            // Add HurtByTargetGoal to retaliate when attacked
+            pathfinderMob.targetSelector.addGoal(2, new HurtByTargetGoal(pathfinderMob));
+            
+            // Ensure entity has a melee attack goal if it doesn't already have one
+            boolean hasMeleeAttack = pathfinderMob.goalSelector.getAvailableGoals().stream()
+                .anyMatch(goal -> goal.getGoal() instanceof MeleeAttackGoal);
+            if (!hasMeleeAttack) {
+                pathfinderMob.goalSelector.addGoal(2, new MeleeAttackGoal(pathfinderMob, 1.0D, true));
+            }
+            
+            LOGGER.info("[LatexTeams] Assigned Dark Latex team to entity: {} ({})", 
+                entityTypeId, className);
         }
         
         // Mark entity as processed

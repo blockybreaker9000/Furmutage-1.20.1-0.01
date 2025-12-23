@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "changed:orange"
+    },
+    {
+      "item": "changed:orange"
+    },
+    {
+      "item": "changed:orange"
+    }
+  ],
+  "result": {
+    "item": "furmutage:pealed_oranges"
+  }
+}
+

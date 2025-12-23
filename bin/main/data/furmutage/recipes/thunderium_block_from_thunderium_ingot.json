@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "furmutage:thunderium_ingot"
+    }
+  },
+  "result": {
+    "item": "furmutage:thunderium_block"
+  }
+}

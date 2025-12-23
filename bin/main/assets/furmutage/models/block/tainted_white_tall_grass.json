@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/tall_grass_bottom",
+  "textures": {
+    "cross": "furmutage:block/tainted_white_tall_grass_bottom"
+  },
+  "render_type": "cutout"
+}
+

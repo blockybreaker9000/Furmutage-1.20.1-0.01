@@ -6,6 +6,12 @@ import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.jerika.furmutage.entity.custom.TSCDroneBossEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexCowEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexPigEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -46,6 +52,31 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexBacteriaEntity>> LATEX_BACTERIA =
             ENTITY_TYPES.register("latex_bacteria", () -> EntityType.Builder.of(LatexBacteriaEntity::new, MobCategory.MONSTER)
                     .sized(0.8f, 0.8f).build("latex_bacteria"));
+
+    // White Latex Infected Passive Mobs
+    public static final RegistryObject<EntityType<WhiteLatexCowEntity>> WHITE_LATEX_COW =
+            ENTITY_TYPES.register("white_latex_cow", () -> EntityType.Builder.of(WhiteLatexCowEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 1.4f).build("white_latex_cow"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexPigEntity>> WHITE_LATEX_PIG =
+            ENTITY_TYPES.register("white_latex_pig", () -> EntityType.Builder.of(WhiteLatexPigEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 0.9f).build("white_latex_pig"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexChickenEntity>> WHITE_LATEX_CHICKEN =
+            ENTITY_TYPES.register("white_latex_chicken", () -> EntityType.Builder.of(WhiteLatexChickenEntity::new, MobCategory.CREATURE)
+                    .sized(0.4f, 0.7f).build("white_latex_chicken"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexSheepEntity>> WHITE_LATEX_SHEEP =
+            ENTITY_TYPES.register("white_latex_sheep", () -> EntityType.Builder.of(WhiteLatexSheepEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 1.3f).build("white_latex_sheep"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexRabbitEntity>> WHITE_LATEX_RABBIT =
+            ENTITY_TYPES.register("white_latex_rabbit", () -> EntityType.Builder.of(WhiteLatexRabbitEntity::new, MobCategory.CREATURE)
+                    .sized(0.4f, 0.5f).build("white_latex_rabbit"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexHorseEntity>> WHITE_LATEX_HORSE =
+            ENTITY_TYPES.register("white_latex_horse", () -> EntityType.Builder.of(WhiteLatexHorseEntity::new, MobCategory.CREATURE)
+                    .sized(1.3964844f, 1.6f).build("white_latex_horse"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

@@ -8,6 +8,12 @@ import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
 import net.jerika.furmutage.entity.custom.TSCDroneEntity;
 import net.jerika.furmutage.entity.custom.TSCDroneBossEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexCowEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexPigEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -25,5 +31,13 @@ public class ModEventBusEvents {
         event.put(ModEntities.TSC_DRONE.get(), TSCDroneEntity.createMobAttributes().build());
         event.put(ModEntities.TSC_DRONE_BOSS.get(), TSCDroneBossEntity.createBossAttributes().build());
         event.put(ModEntities.LATEX_BACTERIA.get(), LatexBacteriaEntity.createMobAttributes().build());
+        
+        // White Latex Infected Passive Mobs
+        event.put(ModEntities.WHITE_LATEX_COW.get(), WhiteLatexCowEntity.createAttributes().build());
+        event.put(ModEntities.WHITE_LATEX_PIG.get(), WhiteLatexPigEntity.createAttributes().build());
+        event.put(ModEntities.WHITE_LATEX_CHICKEN.get(), WhiteLatexChickenEntity.createAttributes().build());
+        event.put(ModEntities.WHITE_LATEX_SHEEP.get(), WhiteLatexSheepEntity.createAttributes().build());
+        event.put(ModEntities.WHITE_LATEX_RABBIT.get(), WhiteLatexRabbitEntity.createAttributes().build());
+        event.put(ModEntities.WHITE_LATEX_HORSE.get(), WhiteLatexHorseEntity.createAttributes().build());
     }
 }

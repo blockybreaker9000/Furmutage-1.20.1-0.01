@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "food",
+  "ingredients": [
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "furmutage:pealed_oranges" },
+    { "item": "minecraft:packed_ice" },
+    { "item": "minecraft:sugar" },
+    { "item": "minecraft:sugar" },
+    { "item": "minecraft:sugar" }
+  ],
+  "result": {
+    "item": "furmutage:orange_icecream",
+    "count": 1
+  }
+}
+
+

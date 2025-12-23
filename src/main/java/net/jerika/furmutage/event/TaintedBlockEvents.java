@@ -1,6 +1,7 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.block.custom.ModBlocks;
+import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.furmutage;
 import org.slf4j.Logger;
 import net.minecraft.core.BlockPos;
@@ -8,12 +9,15 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.animal.*;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -57,11 +61,19 @@ public class TaintedBlockEvents {
             return; // Skip transfurred entities
         }
         
-        // Only process players, villagers, pillagers, and zombies
-        if (!(entity instanceof Player) && 
-            !(entity instanceof Villager) && 
-            !(entity instanceof Zombie) && 
-            !(entity instanceof Raider)) {
+        // Process players, villagers, pillagers, zombies, and vanilla passive mobs
+        boolean isTargetEntity = entity instanceof Player ||
+                                 entity instanceof Villager ||
+                                 entity instanceof Zombie ||
+                                 entity instanceof Raider ||
+                                 entity instanceof Cow ||
+                                 entity instanceof Pig ||
+                                 entity instanceof Chicken ||
+                                 entity instanceof Sheep ||
+                                 entity instanceof Rabbit ||
+                                 entity instanceof Horse;
+        
+        if (!isTargetEntity) {
             return;
         }
         
@@ -116,7 +128,23 @@ public class TaintedBlockEvents {
                 if (entity instanceof Player player) {
                     transfurPlayerToPureWhiteLatex(player, level);
                 } else if (level instanceof ServerLevel serverLevel) {
-                    replaceEntityWithPureWhiteLatex(entity, serverLevel);
+                    // Check if it's a vanilla passive mob that should be transformed to infected variant
+                    if (entity instanceof Cow && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexCowEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_COW.get());
+                    } else if (entity instanceof Pig && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexPigEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_PIG.get());
+                    } else if (entity instanceof Chicken && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_CHICKEN.get());
+                    } else if (entity instanceof Sheep && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_SHEEP.get());
+                    } else if (entity instanceof Rabbit && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_RABBIT.get());
+                    } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_HORSE.get());
+                    } else {
+                        // For other entities (villagers, pillagers, zombies), use pure white latex
+                        replaceEntityWithPureWhiteLatex(entity, serverLevel);
+                    }
                 }
                 exposureTime.remove(entity); // Remove from tracking after transfur
             }
@@ -157,6 +185,16 @@ public class TaintedBlockEvents {
         // If it's a player, check if they're transfurred
         if (entity instanceof Player player) {
             return isPlayerTransfurred(player);
+        }
+        
+        // Check if entity is already an infected variant
+        if (entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexCowEntity ||
+            entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexPigEntity ||
+            entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity ||
+            entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity ||
+            entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity ||
+            entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity) {
+            return true; // Already infected
         }
         
         // For other entities, check if they're from Changed mod (Changed entities are considered transfurred)
@@ -232,6 +270,39 @@ public class TaintedBlockEvents {
         }
         
         return null;
+    }
+    
+    /**
+     * Replaces a vanilla passive mob with its infected variant.
+     */
+    private static void replaceEntityWithInfectedVariant(LivingEntity entity, ServerLevel level, EntityType<? extends LivingEntity> infectedType) {
+        try {
+            if (infectedType.create(level) instanceof PathfinderMob) {
+                PathfinderMob infectedEntity = (PathfinderMob) infectedType.create(level);
+                if (infectedEntity != null) {
+                    // Copy position and rotation
+                    infectedEntity.moveTo(entity.getX(), entity.getY(), entity.getZ(), entity.getYRot(), entity.getXRot());
+                    
+                    // Copy health percentage
+                    if (entity.getMaxHealth() > 0) {
+                        float healthPercent = entity.getHealth() / entity.getMaxHealth();
+                        infectedEntity.setHealth(infectedEntity.getMaxHealth() * healthPercent);
+                    }
+                    
+                    // Finalize spawn
+                    infectedEntity.finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()),
+                            MobSpawnType.EVENT, null, null);
+                    
+                    // Spawn the infected entity
+                    level.addFreshEntity(infectedEntity);
+                    
+                    // Remove the original entity
+                    entity.remove(net.minecraft.world.entity.Entity.RemovalReason.DISCARDED);
+                }
+            }
+        } catch (Throwable t) {
+            furmutage.LOGGER.warn("Failed to replace entity with infected variant: " + t.getMessage());
+        }
     }
     
     /**

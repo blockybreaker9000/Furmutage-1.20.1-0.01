@@ -36,11 +36,11 @@ public class ModBlocks {
     public static final RegistryObject<Block> ROSELIGHT_BLOCK = registerBlock("roselight_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
     public static final RegistryObject<Block> TAINTED_WHITE_LOG = registerBlock("tainted_white_log",
-            () -> new TaintedWhiteLogBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG)));
+            () -> new TaintedWhiteLogBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).randomTicks()));
     public static final RegistryObject<Block> STRIPPED_TAINTED_WHITE_LOG = registerBlock("stripped_tainted_white_log",
-            () -> new TaintedWhiteLogBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_LOG)));
+            () -> new TaintedWhiteLogBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_LOG).randomTicks()));
     public static final RegistryObject<Block> TAINTED_WHITE_PLANKS = registerBlock("tainted_white_planks",
-            () -> new TaintedWhitePlanksBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS)));
+            () -> new TaintedWhitePlanksBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).randomTicks()));
     public static final RegistryObject<Block> TAINTED_WHITE_LEAF = registerBlock("tainted_white_leaf",
             () -> new TaintedWhiteLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> TAINTED_WHITE_SAPLING = registerBlock("tainted_white_sapling",
@@ -48,9 +48,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS = registerBlock("tainted_white_grass",
             () -> new TaintedWhiteGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)));
     public static final RegistryObject<Block> TAINTED_WHITE_DIRT = registerBlock("tainted_white_dirt",
-            () -> new TaintedWhiteDirtBlock(BlockBehaviour.Properties.copy(Blocks.DIRT)));
+            () -> new TaintedWhiteDirtBlock(BlockBehaviour.Properties.copy(Blocks.DIRT).randomTicks()));
     public static final RegistryObject<Block> TAINTED_WHITE_SAND = registerBlock("tainted_white_sand",
-            () -> new TaintedWhiteSandBlock(14406560, BlockBehaviour.Properties.copy(Blocks.SAND)));
+            () -> new TaintedWhiteSandBlock(14406560, BlockBehaviour.Properties.copy(Blocks.SAND).randomTicks()));
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS_FOLIAGE = registerBlock("tainted_white_grass_foliage",
             () -> new TaintedWhiteGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_WHITE_TALL_GRASS = registerBlock("tainted_white_tall_grass",

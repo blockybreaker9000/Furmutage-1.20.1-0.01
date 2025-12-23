@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "furmutage:item/latex_bacteria_spawn_egg"
+  }
+}

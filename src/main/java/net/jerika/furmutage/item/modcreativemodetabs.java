@@ -102,12 +102,21 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.ROSELIGHT_ORE.get());
                         output.accept(ModBlocks.THUNDERIUM_ORE.get());
                         output.accept(ModBlocks.CITY_PORTAL_BLOCK.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_GRASS.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_DIRT.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_SAND.get());
                         output.accept(ModBlocks.TAINTED_WHITE_LEAF.get());
-                        output.accept(ModBlocks.TAINTED_WHITE_LOG.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_SAPLING.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_SAPLING.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_SAPLING.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_TALL_GRASS.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_CRYSTAL_BLUE_FLOWER.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_ROSELIGHT_FLOWER.get());
                         output.accept(ModBlocks.TAINTED_WHITE_PLANKS.get());
                         output.accept(ModBlocks.ROSELIGHT_BLOCK.get());
                         output.accept(ModBlocks.THUNDERIUM_BLOCK.get());
-                        output.accept(ModBlocks.TAINTED_WHITE_SAPLING.get());
+
 
 
                     })

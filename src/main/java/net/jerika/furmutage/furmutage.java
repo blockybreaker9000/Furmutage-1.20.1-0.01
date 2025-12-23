@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.config.LatexTeamConfig;
 import net.jerika.furmutage.entity.ModEntities;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.item.AxeItem;
@@ -18,6 +19,12 @@ import net.jerika.furmutage.entity.client.renderer.MuglingRenderer;
 import net.jerika.furmutage.entity.client.renderer.MutantFamilyRenderer;
 import net.jerika.furmutage.entity.client.renderer.TSCDroneBossRenderer;
 import net.jerika.furmutage.entity.client.renderer.TSCDroneRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexChickenRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexCowRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexHorseRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexPigRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexRabbitRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexSheepRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -74,6 +81,9 @@ public class furmutage {
             } catch (Exception e) {
                 LOGGER.error("Failed to register stripping interaction for tainted white log", e);
             }
+            
+            // Note: Latex team config will be loaded via resource reload listener on server start
+            LOGGER.info("[LatexTeams] Latex team system initialized - config will load on server start");
         });
     }
 
@@ -94,7 +104,42 @@ public class furmutage {
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-
+        // Force load the config on server start using classpath (more reliable)
+        LOGGER.info("[LatexTeams] Server starting - attempting to load config from classpath...");
+        try {
+            // Load directly from classpath: /data/furmutage/latex_teams.json
+            java.io.InputStream inputStream = getClass().getClassLoader()
+                .getResourceAsStream("data/" + MOD_ID + "/latex_teams.json");
+            
+            if (inputStream != null) {
+                try (inputStream) {
+                    com.google.gson.JsonObject json = new com.google.gson.Gson()
+                        .fromJson(new java.io.InputStreamReader(inputStream), com.google.gson.JsonObject.class);
+                    LatexTeamConfig.forceLoadFromJson(json);
+                    LOGGER.info("[LatexTeams] Config loaded successfully on server start from classpath!");
+                }
+            } else {
+                LOGGER.error("[LatexTeams] Config file not found in classpath: data/{}/latex_teams.json", MOD_ID);
+                // Try alternative: using resource manager
+                try {
+                    var resourceManager = event.getServer().getResourceManager();
+                    ResourceLocation configLocation = new ResourceLocation(MOD_ID, "latex_teams");
+                    var resource = resourceManager.getResource(configLocation);
+                    if (resource.isPresent()) {
+                        try (var altInputStream = resource.get().open()) {
+                            com.google.gson.JsonObject json = new com.google.gson.Gson()
+                                .fromJson(new java.io.InputStreamReader(altInputStream), com.google.gson.JsonObject.class);
+                            LatexTeamConfig.forceLoadFromJson(json);
+                            LOGGER.info("[LatexTeams] Config loaded successfully from resource manager!");
+                        }
+                    }
+                } catch (Exception e2) {
+                    LOGGER.error("[LatexTeams] Also failed to load from resource manager", e2);
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.error("[LatexTeams] Error loading config on server start", e);
+        }
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -119,6 +164,14 @@ public class furmutage {
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
             EntityRenderers.register(ModEntities.TSC_EXPLOSIVE_GRENADE_PROJECTILE.get(),
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
+            
+            // Register renderers for White Latex infected passive mobs (using custom renderers with custom textures)
+            EntityRenderers.register(ModEntities.WHITE_LATEX_COW.get(), WhiteLatexCowRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_PIG.get(), WhiteLatexPigRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_CHICKEN.get(), WhiteLatexChickenRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_SHEEP.get(), WhiteLatexSheepRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_RABBIT.get(), WhiteLatexRabbitRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_HORSE.get(), WhiteLatexHorseRenderer::new);
 
         }
     }

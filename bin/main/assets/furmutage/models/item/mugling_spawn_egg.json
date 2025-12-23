@@ -1,0 +1,6 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "furmutage:item/mugling_spawn_egg"
+  }
+}

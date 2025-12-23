@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "package": "net.jerika.furmutage.mixins",
+  "minVersion": "0.8",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "furmutage.refmap.json",
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+  ]
+}
