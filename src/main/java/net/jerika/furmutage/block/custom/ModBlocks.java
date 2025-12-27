@@ -63,6 +63,26 @@ public class ModBlocks {
             () -> new TaintedWhiteRoselightFlowerBlock(BlockBehaviour.Properties.copy(Blocks.DANDELION).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_WHITE_CRYSTAL_BLUE_FLOWER = registerBlock("tainted_white_crystal_blue_flower",
             () -> new TaintedWhiteCrystalBlueFlowerBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    
+    // Tainted White Reed - declare as mutable to break circular dependency, then assign
+    public static RegistryObject<Block> TAINTED_WHITE_REED;
+    public static RegistryObject<Block> TAINTED_WHITE_REED_PLANT;
+    
+    static {
+        // Register body block first (without item)
+        TAINTED_WHITE_REED_PLANT = BLOCKS.register("tainted_white_reed_plant",
+            () -> new TaintedWhiteReedPlantBlock(
+                BlockBehaviour.Properties.copy(Blocks.SUGAR_CANE).noOcclusion().instabreak().sound(SoundType.GRASS),
+                () -> (GrowingPlantHeadBlock) TAINTED_WHITE_REED.get()
+            ));
+        
+        // Register head block (with item)
+        TAINTED_WHITE_REED = registerBlock("tainted_white_reed",
+            () -> new TaintedWhiteReedBlock(
+                BlockBehaviour.Properties.copy(Blocks.SUGAR_CANE).noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks(),
+                () -> TAINTED_WHITE_REED_PLANT.get()
+            ));
+    }
 
 
     private static <T extends Block> RegistryObject<T> registerBlock(String name, Supplier<T> block) {

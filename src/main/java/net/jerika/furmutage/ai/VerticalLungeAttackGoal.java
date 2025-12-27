@@ -16,10 +16,10 @@ import java.util.EnumSet;
 public class VerticalLungeAttackGoal extends Goal {
     private final PathfinderMob mob;
     private static final double VERTICAL_THRESHOLD_MIN = 2.0D; // Player must be at least 2 blocks higher
-    private static final double VERTICAL_THRESHOLD_MAX = 4.5D; // Player must be at most 4 blocks higher (4.5 to include 4.0)
+    private static final double VERTICAL_THRESHOLD_MAX = 6.5D; // Player must be at most 6 blocks higher (6.5 to include 6.0)
     private static final double HORIZONTAL_DISTANCE_MAX = 4.0D; // Max horizontal distance to trigger
-    private static final int COOLDOWN = 200; // 10 seconds cooldown (200 ticks)
-    private static final double TRIGGER_CHANCE = 0.50; // 50% chance to trigger when conditions are met
+    private static final int COOLDOWN = 100; // 5 seconds cooldown (100 ticks)
+    private static final double TRIGGER_CHANCE = 1.00; // 100% chance to trigger when conditions are met
     
     private int cooldownTimer = 0;
     private boolean isLunging = false;

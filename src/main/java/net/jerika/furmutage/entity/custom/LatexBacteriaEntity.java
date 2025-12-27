@@ -8,19 +8,22 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
+import net.jerika.furmutage.furmutage;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,6 +40,22 @@ public class LatexBacteriaEntity extends Monster {
 
     public LatexBacteriaEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
+    }
+
+    /**
+     * When the bacteria successfully hits a humanoid target, try to transfur it
+     * into the Changed mod's phage latex wolf variant instead of doing only
+     * normal damage.
+     */
+    @Override
+    public boolean doHurtTarget(Entity target) {
+        boolean result = super.doHurtTarget(target);
+
+        if (!this.level().isClientSide() && target instanceof LivingEntity living) {
+            tryPhageTransfur(living);
+        }
+
+        return result;
     }
 
     @Override
@@ -107,6 +126,166 @@ public class LatexBacteriaEntity extends Monster {
     protected void defineSynchedData() {
         super.defineSynchedData();
         this.entityData.define(JUMPING, false);
+    }
+
+    /**
+     * Best-effort player transfur into the Changed mod's phage latex wolf variant,
+     * using reflection so this compiles even if the API changes.
+     */
+    private void transfurPlayerToPhageLatex(Player player) {
+        try {
+            // Get the LatexVariantInstance for the player (same pattern as in TaintedBlockEvents)
+            Class<?> instanceClass = Class.forName("net.ltxprogrammer.changed.entity.LatexVariantInstance");
+            java.lang.reflect.Method getMethod = instanceClass.getMethod("get", Player.class);
+            Object instance = getMethod.invoke(null, player);
+
+            if (instance == null) {
+                return;
+            }
+
+            // Try to find a phage latex wolf variant field
+            Class<?> variantClass = Class.forName("net.ltxprogrammer.changed.init.ChangedVariants");
+            Object phageVariant = null;
+
+            // Common expected field name
+            try {
+                java.lang.reflect.Field phageField = variantClass.getField("PHAGE_LATEX_WOLF");
+                phageVariant = phageField.get(null);
+            } catch (NoSuchFieldException ignored) {
+                // Fallback: search any field with "PHAGE" and "WOLF" in the name
+                for (java.lang.reflect.Field field : variantClass.getFields()) {
+                    String name = field.getName().toUpperCase();
+                    if (name.contains("PHAGE") && name.contains("WOLF")) {
+                        phageVariant = field.get(null);
+                        break;
+                    }
+                }
+            }
+
+            if (phageVariant == null) {
+                return;
+            }
+
+            // Try several possible method names to apply the variant
+            try {
+                java.lang.reflect.Method setVariantMethod = instanceClass.getMethod("setLatexVariant", Object.class);
+                setVariantMethod.invoke(instance, phageVariant);
+            } catch (NoSuchMethodException e1) {
+                try {
+                    java.lang.reflect.Method transfurMethod = instanceClass.getMethod("transfur", Object.class);
+                    transfurMethod.invoke(instance, phageVariant);
+                } catch (NoSuchMethodException e2) {
+                    try {
+                        java.lang.reflect.Method transfurPlayerMethod = instanceClass.getMethod("transfur", Player.class, Object.class);
+                        transfurPlayerMethod.invoke(null, player, phageVariant);
+                    } catch (NoSuchMethodException e3) {
+                        try {
+                            java.lang.reflect.Method transfurStaticMethod = variantClass.getMethod("transfur", Player.class, Object.class);
+                            transfurStaticMethod.invoke(null, player, phageVariant);
+                        } catch (NoSuchMethodException e4) {
+                            try {
+                                Class<?> helperClass = Class.forName("net.ltxprogrammer.changed.process.ChangedTransfurHelper");
+                                java.lang.reflect.Method transfurHelperMethod = helperClass.getMethod("transfur", Player.class, Object.class);
+                                transfurHelperMethod.invoke(null, player, phageVariant);
+                            } catch (Exception e5) {
+                                // Last attempt: scan for any suitable transfur-like method
+                                for (java.lang.reflect.Method method : variantClass.getMethods()) {
+                                    String name = method.getName().toLowerCase();
+                                    if (!name.contains("transfur")) continue;
+                                    try {
+                                        if (method.getParameterCount() == 2 &&
+                                                method.getParameterTypes()[0] == Player.class) {
+                                            method.invoke(null, player, phageVariant);
+                                            break;
+                                        }
+                                    } catch (Exception ignored2) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Throwable t) {
+            furmutage.LOGGER.warn("Failed to transfur player to phage latex wolf: " + t.getMessage());
+        }
+    }
+
+    /**
+     * Replace a non-player humanoid (villager / raider / zombie / skeleton)
+     * with a phage latex wolf entity from Changed, if present.
+     */
+    private void replaceHumanoidWithPhageLatex(LivingEntity original, net.minecraft.server.level.ServerLevel level) {
+        try {
+            EntityType<?> phageType = ForgeRegistries.ENTITY_TYPES.getValue(
+                    ResourceLocation.tryParse("changed:phage_latex_wolf")
+            );
+
+            // Fallback: try to find any entity whose description id contains "phage" and "wolf"
+            if (phageType == null) {
+                for (EntityType<?> type : ForgeRegistries.ENTITY_TYPES.getValues()) {
+                    String id = type.getDescriptionId().toLowerCase();
+                    if (id.contains("phage") && id.contains("wolf")) {
+                        phageType = type;
+                        break;
+                    }
+                }
+            }
+
+            if (phageType != null && phageType.create(level) instanceof PathfinderMob phageEntity) {
+                phageEntity.moveTo(original.getX(), original.getY(), original.getZ(),
+                        original.getYRot(), original.getXRot());
+
+                // Try to preserve health percentage if possible
+                if (original.getMaxHealth() > 0) {
+                    float healthPercent = original.getHealth() / original.getMaxHealth();
+                    phageEntity.setHealth(phageEntity.getMaxHealth() * healthPercent);
+                }
+
+                phageEntity.finalizeSpawn(level,
+                        level.getCurrentDifficultyAt(original.blockPosition()),
+                        MobSpawnType.EVENT, null, null);
+
+                level.addFreshEntity(phageEntity);
+                original.remove(Entity.RemovalReason.DISCARDED);
+            }
+        } catch (Throwable t) {
+            furmutage.LOGGER.warn("Failed to replace humanoid with phage latex wolf: " + t.getMessage());
+        }
+    }
+
+    /**
+     * Attempt to transfur a humanoid target into a phage latex wolf.
+     * Players are transfurred via the Changed API; non-player humanoids are
+     * replaced with the phage latex wolf entity from the registry.
+     */
+    private void tryPhageTransfur(LivingEntity target) {
+        // Don't re-transfur Changed entities
+        if (isChangedEntity(target)) {
+            return;
+        }
+
+        // Only affect humanoid-style entities
+        boolean isHumanoid = target instanceof Player ||
+                             target instanceof Villager ||
+                             target instanceof Zombie ||
+                             target instanceof net.minecraft.world.entity.monster.Skeleton ||
+                             target instanceof net.minecraft.world.entity.raid.Raider;
+
+        if (!isHumanoid) {
+            return;
+        }
+
+        if (target instanceof Player player) {
+            transfurPlayerToPhageLatex(player);
+        } else if (target.level() instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            replaceHumanoidWithPhageLatex(target, serverLevel);
+        }
+    }
+
+    private boolean isChangedEntity(LivingEntity entity) {
+        String className = entity.getClass().getName();
+        return className.startsWith("net.ltxprogrammer.changed.entity");
     }
 
     @Override

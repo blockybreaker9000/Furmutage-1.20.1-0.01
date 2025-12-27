@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
@@ -61,10 +62,11 @@ public class TaintedBlockEvents {
             return; // Skip transfurred entities
         }
         
-        // Process players, villagers, pillagers, zombies, and vanilla passive mobs
+        // Process players, villagers, pillagers, zombies, skeletons, and vanilla passive mobs
         boolean isTargetEntity = entity instanceof Player ||
                                  entity instanceof Villager ||
                                  entity instanceof Zombie ||
+                                 entity instanceof Skeleton ||
                                  entity instanceof Raider ||
                                  entity instanceof Cow ||
                                  entity instanceof Pig ||

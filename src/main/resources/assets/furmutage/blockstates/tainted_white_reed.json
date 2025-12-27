@@ -1,0 +1,18 @@
+{
+  "variants": {
+    "fruit_age=0": {
+      "model": "furmutage:block/tainted_white_reed_top"
+    },
+    "fruit_age=1": {
+      "model": "furmutage:block/tainted_white_reed_top"
+    },
+    "fruit_age=2": {
+      "model": "furmutage:block/tainted_white_reed_top"
+    },
+    "fruit_age=3": {
+      "model": "furmutage:block/tainted_white_reed_top_fruit"
+    }
+  }
+}
+
+
