@@ -1,10 +1,14 @@
 package net.jerika.furmutage.block.custom;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GrowingPlantBodyBlock;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.Supplier;
@@ -24,6 +28,13 @@ public class TaintedWhiteReedPlantBlock extends GrowingPlantBodyBlock {
     @Override
     protected GrowingPlantHeadBlock getHeadBlock() {
         return headBlock.get();
+    }
+    
+    @Override
+    public void spawnAfterBreak(BlockState state, ServerLevel level, BlockPos pos, ItemStack tool, boolean dropExperience) {
+        super.spawnAfterBreak(state, level, pos, tool, dropExperience);
+        // Drop the reed item (handles all break types)
+        Block.popResource(level, pos, new ItemStack(getHeadBlock().asItem()));
     }
 }
 

@@ -1,6 +1,4 @@
 package net.jerika.furmutage.entity.custom;
-
-import net.jerika.furmutage.ai.team.TargetDarkLatexTeamGoal;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -37,7 +35,7 @@ public class WhiteLatexRabbitEntity extends Rabbit {
         this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         
         // Hostile targeting
-        this.targetSelector.addGoal(0, new TargetDarkLatexTeamGoal(this));
+
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }

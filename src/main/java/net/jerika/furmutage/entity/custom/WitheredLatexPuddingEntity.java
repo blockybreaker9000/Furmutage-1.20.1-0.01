@@ -1,7 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.latex_beast_ai.PuddingSprintAttackGoal;
-import net.jerika.furmutage.ai.VerticalLungeAttackGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -70,16 +69,15 @@ public class WitheredLatexPuddingEntity extends Monster {
     @Override
     protected void registerGoals(){
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new VerticalLungeAttackGoal(this)); // Uncommon vertical lunge when player is 5 blocks high
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
         this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
         this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Player.class, true, false));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, IronGolem.class, true, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
         this.goalSelector.addGoal(1, new PuddingSprintAttackGoal(this, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {

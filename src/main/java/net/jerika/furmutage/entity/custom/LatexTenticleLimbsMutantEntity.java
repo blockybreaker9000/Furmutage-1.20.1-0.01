@@ -2,7 +2,6 @@ package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.latex_beast_ai.LatexTenticleLimbsMutantAi;
 import net.jerika.furmutage.ai.latex_beast_ai.SpookyFollowPlayerGoal;
-import net.jerika.furmutage.ai.VerticalLungeAttackGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -105,7 +104,6 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
     @Override
     protected void registerGoals(){
         this.goalSelector.addGoal(10, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new VerticalLungeAttackGoal(this)); // Uncommon vertical lunge when player is 5 blocks high
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
         // Spooky AI - follow players at a distance
         this.goalSelector.addGoal(2, new SpookyFollowPlayerGoal(this));
@@ -115,9 +113,9 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
         this.goalSelector.addGoal(1, new LatexTenticleLimbsMutantAi(this, 1.0, true));
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
         this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, IronGolem.class, true, false));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal(this, Player.class, true, false));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal(this, Villager.class, true, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
+        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
         this.targetSelector.addGoal(1, new MeleeAttackGoal(this, (double)2.0F, true));
     }
     public static AttributeSupplier.Builder createMobAttributes() {

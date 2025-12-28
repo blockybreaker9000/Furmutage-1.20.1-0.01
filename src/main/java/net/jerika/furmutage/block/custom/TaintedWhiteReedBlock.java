@@ -155,6 +155,8 @@ public class TaintedWhiteReedBlock extends GrowingPlantHeadBlock {
         super.spawnAfterBreak(state, level, pos, tool, dropExperience);
         // Drop fruit if block had fully grown fruit when broken (handles non-player breaks like explosions)
         dropFruitIfPresent(level, pos, state);
+        // Drop the reed item (handles all break types)
+        Block.popResource(level, pos, new ItemStack(this.asItem()));
     }
     
     /**

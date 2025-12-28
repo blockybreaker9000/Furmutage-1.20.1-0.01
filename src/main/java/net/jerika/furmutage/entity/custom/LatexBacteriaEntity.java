@@ -1,7 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.BacteriaJumpAttackGoal;
-import net.jerika.furmutage.ai.VerticalLungeAttackGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -16,12 +15,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.targeting.TargetingConditions;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.NotNull;
@@ -218,7 +215,7 @@ public class LatexBacteriaEntity extends Monster {
     private void replaceHumanoidWithPhageLatex(LivingEntity original, net.minecraft.server.level.ServerLevel level) {
         try {
             EntityType<?> phageType = ForgeRegistries.ENTITY_TYPES.getValue(
-                    ResourceLocation.tryParse("changed:phage_latex_wolf")
+                    ResourceLocation.tryParse("changed:phage_latex_wolf_male")
             );
 
             // Fallback: try to find any entity whose description id contains "phage" and "wolf"
@@ -291,7 +288,6 @@ public class LatexBacteriaEntity extends Monster {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new VerticalLungeAttackGoal(this)); // Uncommon vertical lunge when player is 5 blocks high
         this.goalSelector.addGoal(2, new BacteriaJumpAttackGoal(this, 1.2D, true)); // Fast movement speed
         this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
         this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));

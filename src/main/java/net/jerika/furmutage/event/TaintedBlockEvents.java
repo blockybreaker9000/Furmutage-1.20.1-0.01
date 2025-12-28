@@ -62,12 +62,17 @@ public class TaintedBlockEvents {
             return; // Skip transfurred entities
         }
         
-        // Process players, villagers, pillagers, zombies, skeletons, and vanilla passive mobs
+        // Process players, villagers, pillagers, zombies, skeletons, ravagers, and vanilla passive mobs
+        // Check for Ravager by entity type ID (since import path may vary)
+        boolean isRavager = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()) != null &&
+                            ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString().equals("minecraft:ravager");
+        
         boolean isTargetEntity = entity instanceof Player ||
                                  entity instanceof Villager ||
                                  entity instanceof Zombie ||
                                  entity instanceof Skeleton ||
                                  entity instanceof Raider ||
+                                 isRavager ||
                                  entity instanceof Cow ||
                                  entity instanceof Pig ||
                                  entity instanceof Chicken ||
@@ -143,6 +148,9 @@ public class TaintedBlockEvents {
                         replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_RABBIT.get());
                     } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
                         replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_HORSE.get());
+                    } else if (isRavager && !(entity instanceof net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity)) {
+                        // Transform ravagers into latex mutant family
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.LATEX_MUTANT_FAMILY.get());
                     } else {
                         // For other entities (villagers, pillagers, zombies), use pure white latex
                         replaceEntityWithPureWhiteLatex(entity, serverLevel);
@@ -195,7 +203,8 @@ public class TaintedBlockEvents {
             entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity ||
             entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity ||
             entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity ||
-            entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity) {
+            entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity ||
+            entity instanceof net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity) {
             return true; // Already infected
         }
         
