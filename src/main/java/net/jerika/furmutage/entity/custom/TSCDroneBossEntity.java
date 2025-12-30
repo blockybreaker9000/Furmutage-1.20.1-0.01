@@ -29,7 +29,7 @@ import net.minecraft.world.level.Level;
 public class TSCDroneBossEntity extends TSCDroneEntity {
 
     private final ServerBossEvent bossEvent = new ServerBossEvent(
-            Component.translatable("Dr.K's Admin Drone Boss"),
+            Component.translatable("Assistant Manager Drone"),
             BossEvent.BossBarColor.RED,
             BossEvent.BossBarOverlay.PROGRESS
     );

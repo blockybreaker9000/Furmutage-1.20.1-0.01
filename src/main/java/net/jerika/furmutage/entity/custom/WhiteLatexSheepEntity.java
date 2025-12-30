@@ -1,5 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.sound.ModSounds;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -46,6 +48,11 @@ public class WhiteLatexSheepEntity extends Sheep {
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.WHITE_LATEX_SHEEP_AMBIENT.get();
     }
 }
 

@@ -85,6 +85,66 @@
       "furmutage:tsc_shock_grenade_throw"
     ],
     "subtitle": "subtitles.furmutage.tsc_shock_grenade_throw"
+  },
+  "white_latex_horse_ambient": {
+    "sounds": [
+      "furmutage:white_latex_horse_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_horse_ambient"
+  },
+  "white_latex_cow_ambient": {
+    "sounds": [
+      "furmutage:white_latex_cow_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_cow_ambient"
+  },
+  "white_latex_cow_hurt": {
+    "sounds": [
+      "furmutage:white_latex_cow_hurt"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_cow_hurt"
+  },
+  "white_latex_cow_death": {
+    "sounds": [
+      "furmutage:white_latex_cow_death"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_cow_death"
+  },
+  "white_latex_pig_ambient": {
+    "sounds": [
+      "furmutage:white_latex_pig_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_pig_ambient"
+  },
+  "white_latex_pig_hurt": {
+    "sounds": [
+      "furmutage:white_latex_pig_hurt"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_pig_hurt"
+  },
+  "white_latex_pig_death": {
+    "sounds": [
+      "furmutage:white_latex_pig_death"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_pig_death"
+  },
+  "white_latex_sheep_ambient": {
+    "sounds": [
+      "furmutage:white_latex_sheep_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_sheep_ambient"
+  },
+  "white_latex_chicken_ambient": {
+    "sounds": [
+      "furmutage:white_latex_chicken_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_chicken_ambient"
+  },
+  "white_latex_rabbit_ambient": {
+    "sounds": [
+      "furmutage:white_latex_rabbit_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.white_latex_rabbit_ambient"
   }
 }
 

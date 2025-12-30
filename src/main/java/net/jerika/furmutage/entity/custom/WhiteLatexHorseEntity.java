@@ -1,5 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.sound.ModSounds;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -45,6 +47,11 @@ public class WhiteLatexHorseEntity extends Horse {
                 .add(Attributes.ATTACK_DAMAGE, 5.0D)
                 .add(Attributes.JUMP_STRENGTH, 0.7D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.WHITE_LATEX_HORSE_AMBIENT.get();
     }
 }
 

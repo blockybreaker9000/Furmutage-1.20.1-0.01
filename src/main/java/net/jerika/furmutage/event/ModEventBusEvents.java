@@ -3,6 +3,8 @@ package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.entity.custom.LatexBacteriaEntity;
+import net.jerika.furmutage.entity.custom.LatexExoMutantEntity;
+import net.jerika.furmutage.entity.custom.LatexMutantBomberEntity;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
@@ -31,6 +33,8 @@ public class ModEventBusEvents {
         event.put(ModEntities.TSC_DRONE.get(), TSCDroneEntity.createMobAttributes().build());
         event.put(ModEntities.TSC_DRONE_BOSS.get(), TSCDroneBossEntity.createBossAttributes().build());
         event.put(ModEntities.LATEX_BACTERIA.get(), LatexBacteriaEntity.createMobAttributes().build());
+        event.put(ModEntities.LATEX_MUTANT_BOMBER.get(), LatexMutantBomberEntity.createMobAttributes().build());
+        event.put(ModEntities.LATEX_EXO_MUTANT.get(), LatexExoMutantEntity.createMobAttributes().build());
         
         // White Latex Infected Passive Mobs
         event.put(ModEntities.WHITE_LATEX_COW.get(), WhiteLatexCowEntity.createAttributes().build());

@@ -1,6 +1,8 @@
 package net.jerika.furmutage.entity;
 
 import net.jerika.furmutage.entity.custom.LatexBacteriaEntity;
+import net.jerika.furmutage.entity.custom.LatexExoMutantEntity;
+import net.jerika.furmutage.entity.custom.LatexMutantBomberEntity;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
@@ -52,6 +54,14 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexBacteriaEntity>> LATEX_BACTERIA =
             ENTITY_TYPES.register("latex_bacteria", () -> EntityType.Builder.of(LatexBacteriaEntity::new, MobCategory.MONSTER)
                     .sized(0.8f, 0.8f).build("latex_bacteria"));
+
+    public static final RegistryObject<EntityType<LatexMutantBomberEntity>> LATEX_MUTANT_BOMBER =
+            ENTITY_TYPES.register("latex_mutant_bomber", () -> EntityType.Builder.of(LatexMutantBomberEntity::new, MobCategory.MONSTER)
+                    .sized(0.6f, 1.8f).build("latex_mutant_bomber"));
+
+    public static final RegistryObject<EntityType<LatexExoMutantEntity>> LATEX_EXO_MUTANT =
+            ENTITY_TYPES.register("latex_exo_mutant", () -> EntityType.Builder.of(LatexExoMutantEntity::new, MobCategory.MONSTER)
+                    .sized(0.6f, 1.8f).build("latex_exo_mutant"));
 
     // White Latex Infected Passive Mobs
     public static final RegistryObject<EntityType<WhiteLatexCowEntity>> WHITE_LATEX_COW =

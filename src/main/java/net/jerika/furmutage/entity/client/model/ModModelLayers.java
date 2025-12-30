@@ -17,6 +17,10 @@ public class ModModelLayers {
             new ResourceLocation(furmutage.MOD_ID, "tsc_drone_layer"), "main");
     public static final ModelLayerLocation BACTERIA_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "bacteria_layer"), "main");
+    public static final ModelLayerLocation LATEX_BOMBER_MUTANT_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "latex_bomber_mutant_layer"), "main");
+    public static final ModelLayerLocation LATEX_EXO_MUTANT_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "latex_exo_mutant_layer"), "main");
     
     // Thunderium Armor Model Layers (separate for each piece)
     public static final ModelLayerLocation THUNDERIUM_HELMET_LAYER = new ModelLayerLocation(

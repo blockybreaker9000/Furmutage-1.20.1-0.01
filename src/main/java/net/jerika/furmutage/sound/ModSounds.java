@@ -33,6 +33,28 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> TSC_DRONE_BULLET_THROW = registerSoundEvent("tsc_drone_bullet_throw");
     public static final RegistryObject<SoundEvent> TSC_SHOCK_GRENADE_THROW = registerSoundEvent("tsc_shock_grenade_throw");
 
+    // White Latex Horse sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_HORSE_AMBIENT = registerSoundEvent("white_latex_horse_ambient");
+
+    // White Latex Cow sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_COW_AMBIENT = registerSoundEvent("white_latex_cow_ambient");
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_COW_HURT = registerSoundEvent("white_latex_cow_hurt");
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_COW_DEATH = registerSoundEvent("white_latex_cow_death");
+
+    // White Latex Pig sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_PIG_AMBIENT = registerSoundEvent("white_latex_pig_ambient");
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_PIG_HURT = registerSoundEvent("white_latex_pig_hurt");
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_PIG_DEATH = registerSoundEvent("white_latex_pig_death");
+
+    // White Latex Sheep sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_SHEEP_AMBIENT = registerSoundEvent("white_latex_sheep_ambient");
+
+    // White Latex Chicken sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_CHICKEN_AMBIENT = registerSoundEvent("white_latex_chicken_ambient");
+
+    // White Latex Rabbit sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_RABBIT_AMBIENT = registerSoundEvent("white_latex_rabbit_ambient");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));

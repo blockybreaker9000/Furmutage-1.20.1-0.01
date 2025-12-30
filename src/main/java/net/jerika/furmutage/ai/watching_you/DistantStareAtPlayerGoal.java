@@ -15,7 +15,7 @@ public class DistantStareAtPlayerGoal extends Goal {
     private final Animal animal;
     private Player targetPlayer;
     private int stareTime;
-    private static final double STARE_RANGE = 94.0; // Stare at players up to 64 blocks away
+    private static final double STARE_RANGE = 94.0; // Stare at players up to 94 blocks away
     private static final double MIN_STARE_RANGE = 32.0; // Minimum distance to start staring
     private static final int MIN_STARE_DURATION = 40; // Minimum stare duration (2 seconds)
     private static final int MAX_STARE_DURATION = 200; // Maximum stare duration (10 seconds)

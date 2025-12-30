@@ -1,4 +1,7 @@
 package net.jerika.furmutage.entity.custom;
+
+import net.jerika.furmutage.sound.ModSounds;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -46,6 +49,11 @@ public class WhiteLatexRabbitEntity extends Rabbit {
                 .add(Attributes.MOVEMENT_SPEED, 0.35D)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D)
                 .add(Attributes.FOLLOW_RANGE, 24.0D);
+    }
+
+    @Override
+    protected SoundEvent getAmbientSound() {
+        return ModSounds.WHITE_LATEX_RABBIT_AMBIENT.get();
     }
 }
 

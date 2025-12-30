@@ -184,6 +184,9 @@ public class ModItems {
     public static final RegistryObject<Item> LATEX_BACTERIA_SPAWN_EGG = ITEMS.register("latex_bacteria_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.LATEX_BACTERIA, 0xDDEAEA, 0xDDEAEA,
                     new Item.Properties()));
+    public static final RegistryObject<Item> LATEX_BOMBER_MUTANT_SPAWN_EGG = ITEMS.register("latex_bomber_mutant_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.LATEX_MUTANT_BOMBER, 0xDDEAEA, 0xDDEAEA,
+                    new Item.Properties()));
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)
