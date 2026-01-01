@@ -145,6 +145,24 @@
       "furmutage:white_latex_rabbit_ambient"
     ],
     "subtitle": "subtitles.furmutage.white_latex_rabbit_ambient"
+  },
+  "latex_mutant_bomber_ambient": {
+    "sounds": [
+      "furmutage:latex_mutant_bomber_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.latex_mutant_bomber_ambient"
+  },
+  "latex_mutant_bomber_hurt": {
+    "sounds": [
+      "furmutage:latex_mutant_bomber_hurt"
+    ],
+    "subtitle": "subtitles.furmutage.latex_mutant_bomber_hurt"
+  },
+  "latex_mutant_bomber_death": {
+    "sounds": [
+      "furmutage:latex_mutant_bomber_death"
+    ],
+    "subtitle": "subtitles.furmutage.latex_mutant_bomber_death"
   }
 }
 

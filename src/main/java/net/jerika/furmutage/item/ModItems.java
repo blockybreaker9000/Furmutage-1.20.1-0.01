@@ -43,6 +43,8 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_FIBER = ITEMS.register("tsc_fiber",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TSC_PLASTIC_WASTE_CLUMP = ITEMS.register("tsc_plastic_waste_clump",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUBBER = ITEMS.register("rubber",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_GLOVES = ITEMS.register("tsc_gloves",

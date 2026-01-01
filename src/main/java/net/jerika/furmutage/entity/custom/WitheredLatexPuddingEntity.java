@@ -1,5 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.PuddingSprintAttackGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.sounds.SoundEvent;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
+import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
@@ -68,17 +70,45 @@ public class WitheredLatexPuddingEntity extends Monster {
 
     @Override
     protected void registerGoals(){
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, Monster.class)));
-        this.goalSelector.addGoal(1, new WaterAvoidingRandomStrollGoal(this, 1.10));
-        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 3f));
-        this.goalSelector.addGoal(1, new RandomLookAroundGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.targetSelector.addGoal(1, (new HurtByTargetGoal(this, WhiteLatexEntity.class)));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
+        // Changed mod style AI goals - matching priority order
+        // Priority 1: Custom sprint attack goal (PuddingSprintAttackGoal replaces MeleeAttackGoal)
         this.goalSelector.addGoal(1, new PuddingSprintAttackGoal(this, true));
+        
+        // Priority 2: Random stroll
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.3, 120, false));
+        
+        // Priority 3: Leap at target (only when target is above)
+        this.goalSelector.addGoal(3, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        
+        // Priority 4: Open doors (if has ground navigation)
+        if (GoalUtils.hasGroundPathNavigation(this))
+            this.goalSelector.addGoal(4, new OpenDoorGoal(this, true));
+        
+        // Priority 5: Float in water
+        this.goalSelector.addGoal(5, new FloatGoal(this));
+        
+        // Priority 6: Look at player
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 7.0F));
+        
+        // Priority 7: Random look around
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        
+        // Priority 8: Look at villager
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Villager.class, 7.0F, 0.2F));
+        
+        // Target priorities - Changed mod style
+        // Priority 1: Hurt by target (alert white latex entities)
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this, WhiteLatexEntity.class).setAlertOthers());
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        
+        // Priority 2: Target players
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
+        
+        // Priority 3: Target villagers
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
+        
+        // Priority 4: Target iron golems
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()

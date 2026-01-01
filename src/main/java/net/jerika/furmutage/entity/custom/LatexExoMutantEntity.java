@@ -141,15 +141,44 @@ public class LatexExoMutantEntity extends Monster {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 1.10));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        // Changed mod style AI goals - matching priority order
+        // Priority 1: Custom jump/climb goal (ExoMutantJumpClimbGoal replaces MeleeAttackGoal)
         this.goalSelector.addGoal(1, new ExoMutantJumpClimbGoal(this, 1.5D, true));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
-        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
-        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
+        
+        // Priority 2: Random stroll
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.3, 120, false));
+        
+        // Priority 3: Leap at target (only when target is above) - ExoMutant already has custom jumping
+        // Skipping ChangedStyleLeapAtTargetGoal since ExoMutantJumpClimbGoal handles jumping
+        
+        // Priority 4: Open doors (if has ground navigation)
+        if (net.minecraft.world.entity.ai.util.GoalUtils.hasGroundPathNavigation(this))
+            this.goalSelector.addGoal(4, new OpenDoorGoal(this, true));
+        
+        // Priority 5: Float in water
+        this.goalSelector.addGoal(5, new FloatGoal(this));
+        
+        // Priority 6: Look at player
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 7.0F));
+        
+        // Priority 7: Random look around
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        
+        // Priority 8: Look at villager
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Villager.class, 7.0F, 0.2F));
+        
+        // Target priorities - Changed mod style
+        // Priority 1: Hurt by target
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        
+        // Priority 2: Target players
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
+        
+        // Priority 3: Target villagers
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
+        
+        // Priority 4: Target iron golems
+        this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
     }
 
     public static AttributeSupplier.Builder createMobAttributes() {
@@ -196,9 +225,8 @@ public class LatexExoMutantEntity extends Monster {
     public void travel(Vec3 pTravelVector) {
         if (this.isEffectiveAi() && this.isInWater()) {
             // Fast water movement like tiger shark from Changed mod
-            // Tiger shark moves at full speed in water with no slowdown
-            // Using 1.5x speed multiplier for fast swimming
-            this.moveRelative(1.5f, pTravelVector);
+            // Using 1.0x speed multiplier for balanced swimming speed
+            this.moveRelative(1.0f, pTravelVector);
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.9D)); // Slight drag for realism
         } else {

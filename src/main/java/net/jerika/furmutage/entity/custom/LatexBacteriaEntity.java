@@ -1,6 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.BacteriaJumpAttackGoal;
+import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -287,16 +288,41 @@ public class LatexBacteriaEntity extends Monster {
 
     @Override
     protected void registerGoals() {
-        this.goalSelector.addGoal(1, new FloatGoal(this));
-        this.goalSelector.addGoal(2, new BacteriaJumpAttackGoal(this, 1.2D, true)); // Fast movement speed
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 1.0D));
-        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 8.0F));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
-
-        // Target players and villagers
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
-        this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Villager.class, true));
-        this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
+        // Changed mod style AI goals - matching priority order
+        // Priority 1: Custom jump attack goal (BacteriaJumpAttackGoal replaces MeleeAttackGoal)
+        this.goalSelector.addGoal(1, new BacteriaJumpAttackGoal(this, 1.2D, true));
+        
+        // Priority 2: Random stroll
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.3, 120, false));
+        
+        // Priority 3: Leap at target (only when target is above)
+        this.goalSelector.addGoal(3, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        
+        // Priority 4: Open doors (if has ground navigation)
+        if (net.minecraft.world.entity.ai.util.GoalUtils.hasGroundPathNavigation(this))
+            this.goalSelector.addGoal(4, new OpenDoorGoal(this, true));
+        
+        // Priority 5: Float in water
+        this.goalSelector.addGoal(5, new FloatGoal(this));
+        
+        // Priority 6: Look at player
+        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 7.0F));
+        
+        // Priority 7: Random look around
+        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        
+        // Priority 8: Look at villager
+        this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Villager.class, 7.0F, 0.2F));
+        
+        // Target priorities - Changed mod style
+        // Priority 1: Hurt by target
+        this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
+        
+        // Priority 2: Target players
+        this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true, false));
+        
+        // Priority 3: Target villagers
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Villager.class, true, false));
     }
 
     public static AttributeSupplier.Builder createMobAttributes() {

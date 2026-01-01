@@ -63,6 +63,9 @@ public class ModBlocks {
             () -> new TaintedWhiteRoselightFlowerBlock(BlockBehaviour.Properties.copy(Blocks.DANDELION).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_WHITE_CRYSTAL_BLUE_FLOWER = registerBlock("tainted_white_crystal_blue_flower",
             () -> new TaintedWhiteCrystalBlueFlowerBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TSC_PLASTIC_WASTE_ORE = registerBlock("tsc_plastic_waste_ore",
+            () -> new TSCPlasticWasteOreBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
+                    .strength(3f).requiresCorrectToolForDrops()));
     
     // Tainted White Reed - declare as mutable to break circular dependency, then assign
     public static RegistryObject<Block> TAINTED_WHITE_REED;

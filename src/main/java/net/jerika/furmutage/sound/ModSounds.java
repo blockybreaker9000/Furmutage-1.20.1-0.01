@@ -55,6 +55,11 @@ public class ModSounds {
     // White Latex Rabbit sounds
     public static final RegistryObject<SoundEvent> WHITE_LATEX_RABBIT_AMBIENT = registerSoundEvent("white_latex_rabbit_ambient");
 
+    // Latex Mutant Bomber sounds
+    public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_AMBIENT = registerSoundEvent("latex_mutant_bomber_ambient");
+    public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_HURT = registerSoundEvent("latex_mutant_bomber_hurt");
+    public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_DEATH = registerSoundEvent("latex_mutant_bomber_death");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
