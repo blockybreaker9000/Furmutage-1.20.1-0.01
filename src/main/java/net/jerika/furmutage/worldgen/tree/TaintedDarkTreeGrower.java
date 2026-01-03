@@ -14,9 +14,9 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
-import net.minecraft.world.level.levelgen.feature.foliageplacers.BlobFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.FancyFoliagePlacer;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import net.minecraft.world.level.levelgen.feature.trunkplacers.StraightTrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.MegaJungleTrunkPlacer;
 
 import java.util.Optional;
 import org.jetbrains.annotations.Nullable;
@@ -31,13 +31,14 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
 
     @Override
     public boolean growTree(ServerLevel level, ChunkGenerator chunkGenerator, BlockPos pos, BlockState state, RandomSource random) {
-        // Create tree configuration for a tall tree (around 10 blocks)
+        // Create tree configuration for a big oak tree (like vanilla big oak)
+        // Using MegaJungleTrunkPlacer for the branching trunk structure
         TreeConfiguration.TreeConfigurationBuilder builder = new TreeConfiguration.TreeConfigurationBuilder(
                 BlockStateProvider.simple(ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState()),
-                new StraightTrunkPlacer(8, 2, 0), // Base height: 8, heightRandA: 2 (so 8-10 blocks tall)
+                new MegaJungleTrunkPlacer(10, 2, 19), // Base height: 10, heightRandA: 2, heightRandB: 19 (creates tall branching trunk)
                 BlockStateProvider.simple(ModBlocks.TAINTED_DARK_LEAF.get().defaultBlockState()),
-                new BlobFoliagePlacer(ConstantInt.of(3), ConstantInt.of(0), 3), // radius, offset, height
-                new TwoLayersFeatureSize(1, 0, 1)
+                new FancyFoliagePlacer(ConstantInt.of(2), ConstantInt.of(4), 4), // radius, offset, height (creates large foliage)
+                new TwoLayersFeatureSize(0, 0, 0) // Creates multiple layers of foliage
         );
         
         builder.dirt(BlockStateProvider.simple(net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState()));
@@ -56,10 +57,10 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
             );
             boolean result = Feature.TREE.place(context);
             
-            // If feature placement failed, try manual placement as fallback
+            // If feature placement failed, try manual placement as fallback (simplified big oak)
             if (!result) {
-                // Place a tall tree manually (around 10 blocks)
-                int height = 8 + random.nextInt(3); // 8-10 blocks tall
+                // Place a big oak-like tree manually
+                int height = 10 + random.nextInt(10); // 10-20 blocks tall
                 for (int i = 0; i < height; i++) {
                     BlockPos logPos = pos.above(i);
                     if (level.getBlockState(logPos).canBeReplaced()) {
@@ -67,16 +68,21 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                     }
                 }
                 
-                // Add leaves at the top in a blob shape
-                BlockPos topPos = pos.above(height);
-                for (int x = -2; x <= 2; x++) {
-                    for (int z = -2; z <= 2; z++) {
-                        for (int y = 0; y <= 2; y++) {
-                            BlockPos leafPos = topPos.offset(x, y, z);
-                            // Create a blob shape for leaves
-                            double distance = Math.sqrt(x * x + z * z + y * y);
-                            if (distance <= 2.5 && level.getBlockState(leafPos).canBeReplaced()) {
-                                level.setBlock(leafPos, ModBlocks.TAINTED_DARK_LEAF.get().defaultBlockState(), 3);
+                // Add large foliage layers at different heights (like big oak)
+                int foliageStart = height - 3;
+                for (int layer = 0; layer < 3; layer++) {
+                    int foliageY = foliageStart + layer * 2;
+                    BlockPos foliagePos = pos.above(foliageY);
+                    int radius = 3 - layer; // Decreasing radius for each layer
+                    
+                    for (int x = -radius; x <= radius; x++) {
+                        for (int z = -radius; z <= radius; z++) {
+                            for (int y = 0; y <= 1; y++) {
+                                BlockPos leafPos = foliagePos.offset(x, y, z);
+                                double distance = Math.sqrt(x * x + z * z);
+                                if (distance <= radius && level.getBlockState(leafPos).canBeReplaced()) {
+                                    level.setBlock(leafPos, ModBlocks.TAINTED_DARK_LEAF.get().defaultBlockState(), 3);
+                                }
                             }
                         }
                     }
@@ -86,7 +92,7 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
             return result;
         } catch (Exception e) {
             // Fallback to manual placement if feature placement fails
-            int height = 8 + random.nextInt(3); // 8-10 blocks tall
+            int height = 10 + random.nextInt(10); // 10-20 blocks tall
             for (int i = 0; i < height; i++) {
                 BlockPos logPos = pos.above(i);
                 if (level.getBlockState(logPos).canBeReplaced()) {
@@ -94,16 +100,21 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                 }
             }
             
-            // Add leaves at the top in a blob shape
-            BlockPos topPos = pos.above(height);
-            for (int x = -2; x <= 2; x++) {
-                for (int z = -2; z <= 2; z++) {
-                    for (int y = 0; y <= 2; y++) {
-                        BlockPos leafPos = topPos.offset(x, y, z);
-                        // Create a blob shape for leaves
-                        double distance = Math.sqrt(x * x + z * z + y * y);
-                        if (distance <= 2.5 && level.getBlockState(leafPos).canBeReplaced()) {
-                            level.setBlock(leafPos, ModBlocks.TAINTED_DARK_LEAF.get().defaultBlockState(), 3);
+            // Add large foliage layers at different heights (like big oak)
+            int foliageStart = height - 3;
+            for (int layer = 0; layer < 3; layer++) {
+                int foliageY = foliageStart + layer * 2;
+                BlockPos foliagePos = pos.above(foliageY);
+                int radius = 3 - layer; // Decreasing radius for each layer
+                
+                for (int x = -radius; x <= radius; x++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        for (int y = 0; y <= 1; y++) {
+                            BlockPos leafPos = foliagePos.offset(x, y, z);
+                            double distance = Math.sqrt(x * x + z * z);
+                            if (distance <= radius && level.getBlockState(leafPos).canBeReplaced()) {
+                                level.setBlock(leafPos, ModBlocks.TAINTED_DARK_LEAF.get().defaultBlockState(), 3);
+                            }
                         }
                     }
                 }

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/cube_column",
+  "textures": {
+    "end": "furmutage:block/tainted_dark_log_horizontal",
+    "side": "furmutage:block/tainted_dark_log"
+  }
+}
