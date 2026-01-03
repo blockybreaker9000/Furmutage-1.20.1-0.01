@@ -1,0 +1,11 @@
+{
+  "parent": "minecraft:block/grass_block",
+  "textures": {
+    "particle": "furmutage:block/tainted_dark_dirt",
+    "bottom": "furmutage:block/tainted_dark_dirt",
+    "top": "furmutage:block/tainted_dark_grass_top",
+    "side": "furmutage:block/tainted_dark_grass_side",
+    "overlay": "furmutage:block/tainted_dark_grass_side"
+  }
+}
+

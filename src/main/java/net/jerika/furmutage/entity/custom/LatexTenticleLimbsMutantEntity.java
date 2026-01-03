@@ -1,8 +1,9 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.LatexTenticleLimbsMutantAi;
-import net.jerika.furmutage.ai.latex_beast_ai.SpookyFollowPlayerGoal;
+import net.jerika.furmutage.ai.scary.SpookyFollowPlayerGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -109,27 +110,30 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
         // Priority 1: Custom attack goal (LatexTenticleLimbsMutantAi replaces MeleeAttackGoal)
         this.goalSelector.addGoal(1, new LatexTenticleLimbsMutantAi(this, 1.0, true));
         
-        // Priority 2: Random stroll
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.3, 120, false));
+        // Priority 2: Improved pathfinding for jumping onto blocks, climbing ladders, and gap jumping
+        this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));
         
-        // Priority 2: Spooky follow player (custom behavior)
-        this.goalSelector.addGoal(2, new SpookyFollowPlayerGoal(this));
+        // Priority 3: Random stroll
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.3, 120, false));
         
-        // Priority 3: Leap at target (only when target is above)
-        this.goalSelector.addGoal(3, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        // Priority 3: Spooky follow player (custom behavior)
+        this.goalSelector.addGoal(3, new SpookyFollowPlayerGoal(this));
         
-        // Priority 4: Open doors (if has ground navigation)
+        // Priority 4: Leap at target (only when target is above)
+        this.goalSelector.addGoal(4, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        
+        // Priority 5: Open doors (if has ground navigation)
         if (GoalUtils.hasGroundPathNavigation(this))
-            this.goalSelector.addGoal(4, new OpenDoorGoal(this, true));
+            this.goalSelector.addGoal(5, new OpenDoorGoal(this, true));
         
-        // Priority 5: Float in water
-        this.goalSelector.addGoal(5, new FloatGoal(this));
+        // Priority 6: Float in water
+        this.goalSelector.addGoal(6, new FloatGoal(this));
         
-        // Priority 6: Look at player
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 7.0F));
+        // Priority 7: Look at player
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 7.0F));
         
-        // Priority 7: Random look around
-        this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
+        // Priority 8: Random look around
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
         
         // Priority 8: Look at villager
         this.goalSelector.addGoal(8, new LookAtPlayerGoal(this, Villager.class, 7.0F, 0.2F));
@@ -153,8 +157,8 @@ public class LatexTenticleLimbsMutantEntity extends Monster {
                 .add(Attributes.MAX_HEALTH, 150)
                 .add(Attributes.MOVEMENT_SPEED, 0.25)
                 .add(Attributes.ARMOR_TOUGHNESS, 10)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.2)
                 .add(Attributes.ATTACK_DAMAGE, 10)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 56.0)
                 .add(Attributes.JUMP_STRENGTH, 5.0);
     }

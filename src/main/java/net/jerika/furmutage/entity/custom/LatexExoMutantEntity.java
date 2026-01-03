@@ -1,5 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.ExoMutantJumpClimbGoal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
@@ -145,8 +146,11 @@ public class LatexExoMutantEntity extends Monster {
         // Priority 1: Custom jump/climb goal (ExoMutantJumpClimbGoal replaces MeleeAttackGoal)
         this.goalSelector.addGoal(1, new ExoMutantJumpClimbGoal(this, 1.5D, true));
         
-        // Priority 2: Random stroll
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.3, 120, false));
+        // Priority 2: Improved pathfinding for jumping onto blocks, climbing ladders, and gap jumping
+        this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));
+        
+        // Priority 3: Random stroll
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.3, 120, false));
         
         // Priority 3: Leap at target (only when target is above) - ExoMutant already has custom jumping
         // Skipping ChangedStyleLeapAtTargetGoal since ExoMutantJumpClimbGoal handles jumping
@@ -186,8 +190,8 @@ public class LatexExoMutantEntity extends Monster {
                 .add(Attributes.MAX_HEALTH, 160.0D) // 80 hearts
                 .add(Attributes.MOVEMENT_SPEED, 0.35D) // Increased speed
                 .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 48.0D)
                 .add(Attributes.JUMP_STRENGTH, 2.0D); // High jump capability
     }

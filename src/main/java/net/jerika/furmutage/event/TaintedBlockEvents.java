@@ -3,9 +3,7 @@ package net.jerika.furmutage.event;
 import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.furmutage;
-import org.slf4j.Logger;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -21,6 +19,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -84,98 +85,385 @@ public class TaintedBlockEvents {
             return;
         }
         
-        // Check every CHECK_INTERVAL ticks
-        if (entity.tickCount % CHECK_INTERVAL != 0) {
-            return;
-        }
+        // Check if entity's bounding box is actually touching/intersecting with a tainted block
+        boolean isTouchingTaintedWhiteBlock = false;
+        boolean isTouchingTaintedDarkBlock = false;
         
-        // Check if entity is standing on or in a tainted block
-        BlockPos entityPos = entity.blockPosition();
-        BlockPos belowPos = entityPos.below();
-        BlockPos entityFeetPos = new BlockPos(
-            (int) Math.floor(entity.getX()),
-            (int) Math.floor(entity.getY()),
-            (int) Math.floor(entity.getZ())
-        );
+        // Get entity's bounding box
+        AABB entityBounds = entity.getBoundingBox();
         
-        // Check the block the entity is standing on
-        Block blockBelow = level.getBlockState(belowPos).getBlock();
-        Block blockAtFeet = level.getBlockState(entityFeetPos).getBlock();
+        // Expand slightly to check nearby blocks
+        AABB expandedBounds = entityBounds.inflate(0.1);
         
-        // Also check blocks around the entity (for leaves that might be touching)
-        boolean isOnTaintedBlock = isTaintedBlock(blockBelow) || isTaintedBlock(blockAtFeet);
+        // Get all block positions that the entity's bounding box overlaps
+        int minX = (int) Math.floor(expandedBounds.minX);
+        int minY = (int) Math.floor(expandedBounds.minY);
+        int minZ = (int) Math.floor(expandedBounds.minZ);
+        int maxX = (int) Math.ceil(expandedBounds.maxX);
+        int maxY = (int) Math.ceil(expandedBounds.maxY);
+        int maxZ = (int) Math.ceil(expandedBounds.maxZ);
         
-        // Check blocks around entity (for leaves)
-        if (!isOnTaintedBlock) {
-            for (int x = -1; x <= 1; x++) {
-                for (int y = -1; y <= 1; y++) {
-                    for (int z = -1; z <= 1; z++) {
-                        BlockPos checkPos = entityFeetPos.offset(x, y, z);
-                        Block checkBlock = level.getBlockState(checkPos).getBlock();
-                        if (isTaintedBlock(checkBlock)) {
-                            isOnTaintedBlock = true;
-                            break;
+        // Check each block position that the entity overlaps
+        for (int x = minX; x <= maxX && (!isTouchingTaintedWhiteBlock || !isTouchingTaintedDarkBlock); x++) {
+            for (int y = minY; y <= maxY && (!isTouchingTaintedWhiteBlock || !isTouchingTaintedDarkBlock); y++) {
+                for (int z = minZ; z <= maxZ && (!isTouchingTaintedWhiteBlock || !isTouchingTaintedDarkBlock); z++) {
+                    BlockPos checkPos = new BlockPos(x, y, z);
+                    BlockState blockState = level.getBlockState(checkPos);
+                    Block checkBlock = blockState.getBlock();
+                    
+                    boolean isWhiteBlock = isTaintedWhiteBlock(checkBlock);
+                    boolean isDarkBlock = isTaintedDarkBlock(checkBlock);
+                    
+                    if (isWhiteBlock || isDarkBlock) {
+                        // Check if the block's collision shape intersects with the entity's bounding box
+                        VoxelShape blockShape = blockState.getCollisionShape(level, checkPos);
+                        
+                        boolean intersects = false;
+                        
+                        // If block has no collision shape, check if entity is inside the block
+                        if (blockShape.isEmpty()) {
+                            // For blocks without collision (like leaves), check if entity is inside the block bounds
+                            AABB blockBounds = new AABB(
+                                checkPos.getX(), checkPos.getY(), checkPos.getZ(),
+                                checkPos.getX() + 1, checkPos.getY() + 1, checkPos.getZ() + 1
+                            );
+                            intersects = entityBounds.intersects(blockBounds);
+                        } else {
+                            // For blocks with collision, check if any part of the collision shape intersects
+                            for (AABB blockBox : blockShape.toAabbs()) {
+                                AABB offsetBox = blockBox.move(
+                                    checkPos.getX(), checkPos.getY(), checkPos.getZ()
+                                );
+                                if (entityBounds.intersects(offsetBox)) {
+                                    intersects = true;
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        if (intersects) {
+                            if (isWhiteBlock) {
+                                isTouchingTaintedWhiteBlock = true;
+                            }
+                            if (isDarkBlock) {
+                                isTouchingTaintedDarkBlock = true;
+                            }
                         }
                     }
-                    if (isOnTaintedBlock) break;
                 }
-                if (isOnTaintedBlock) break;
             }
         }
         
-        // Track exposure time and apply transfur if on tainted block
-        if (isOnTaintedBlock) {
-            // Increment exposure time
+        // Track exposure time and apply transfur progress if touching tainted block (like WhiteLatexPillar)
+        // Handle white tainted blocks (pure white latex infection)
+        if (isTouchingTaintedWhiteBlock) {
+            // Only process untransfurred entities (like WhiteLatexPillar does)
+            if (!isTransfurred(entity)) {
+                // For vanilla passive mobs, directly replace them with their infected counterparts
+                if (level instanceof ServerLevel serverLevel) {
+                    boolean wasReplaced = false;
+                    
+                    // Check each vanilla passive mob type and replace with infected variant
+                    if (entity instanceof Cow && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexCowEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_COW.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Pig && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexPigEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_PIG.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Chicken && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_CHICKEN.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Sheep && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_SHEEP.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Rabbit && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_RABBIT.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_HORSE.get());
+                        wasReplaced = true;
+                    }
+                    
+                    // If entity was replaced, we're done
+                    if (wasReplaced) {
+                        return;
+                    }
+                }
+                
+                // For players and other entities, use ProcessTransfur API (like WhiteLatexPillar does)
+                applyWhiteLatexTransfur(entity, level);
+            }
+        }
+        
+        // Handle dark tainted blocks (dark latex infection)
+        if (isTouchingTaintedDarkBlock) {
+            // Only process untransfurred entities
+            if (!isTransfurred(entity)) {
+                // For players and other entities, use ProcessTransfur API with dark latex variant
+                applyDarkLatexTransfur(entity, level);
+            }
+        }
+        
+        // If not touching any tainted block, clear exposure time
+        if (!isTouchingTaintedWhiteBlock && !isTouchingTaintedDarkBlock) {
+            exposureTime.remove(entity);
+        }
+    }
+    
+    /**
+     * Fallback method to replace entities when ProcessTransfur API is not available.
+     */
+    private static void fallbackToEntityReplacement(LivingEntity entity, Level level) {
+        if (!(entity instanceof Player) && level instanceof ServerLevel serverLevel) {
             int currentExposure = exposureTime.getOrDefault(entity, 0);
             currentExposure += CHECK_INTERVAL;
             exposureTime.put(entity, currentExposure);
             
-            // Apply transfur if exposure time reaches threshold
             if (currentExposure >= TRANSFUR_TIME) {
-                if (entity instanceof Player player) {
-                    transfurPlayerToPureWhiteLatex(player, level);
-                } else if (level instanceof ServerLevel serverLevel) {
-                    // Check if it's a vanilla passive mob that should be transformed to infected variant
-                    if (entity instanceof Cow && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexCowEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_COW.get());
-                    } else if (entity instanceof Pig && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexPigEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_PIG.get());
-                    } else if (entity instanceof Chicken && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_CHICKEN.get());
-                    } else if (entity instanceof Sheep && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_SHEEP.get());
-                    } else if (entity instanceof Rabbit && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_RABBIT.get());
-                    } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_HORSE.get());
-                    } else if (isRavager && !(entity instanceof net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity)) {
-                        // Transform ravagers into latex mutant family
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.LATEX_MUTANT_FAMILY.get());
-                    } else {
-                        // For other entities (villagers, pillagers, zombies), use pure white latex
-                        replaceEntityWithPureWhiteLatex(entity, serverLevel);
-                    }
-                }
-                exposureTime.remove(entity); // Remove from tracking after transfur
-            }
-        } else {
-            // Not on tainted block, reduce exposure time (decay over time)
-            int currentExposure = exposureTime.getOrDefault(entity, 0);
-            if (currentExposure > 0) {
-                currentExposure = Math.max(0, currentExposure - CHECK_INTERVAL * 2); // Decay twice as fast
-                if (currentExposure > 0) {
-                    exposureTime.put(entity, currentExposure);
-                } else {
+                // Check if it's a vanilla passive mob that should be transformed to infected variant
+                if (entity instanceof Cow && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexCowEntity)) {
+                    replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_COW.get());
                     exposureTime.remove(entity);
+                } else if (entity instanceof Pig && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexPigEntity)) {
+                    replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_PIG.get());
+                    exposureTime.remove(entity);
+                } else if (entity instanceof Chicken && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity)) {
+                    replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_CHICKEN.get());
+                    exposureTime.remove(entity);
+                } else if (entity instanceof Sheep && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity)) {
+                    replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_SHEEP.get());
+                    exposureTime.remove(entity);
+                } else if (entity instanceof Rabbit && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity)) {
+                    replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_RABBIT.get());
+                    exposureTime.remove(entity);
+                } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
+                    replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_HORSE.get());
+                    exposureTime.remove(entity);
+                } else {
+                    // Check for ravager
+                    boolean isRavager = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()) != null &&
+                                        ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString().equals("minecraft:ravager");
+                    if (isRavager && !(entity instanceof net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.LATEX_MUTANT_FAMILY.get());
+                        exposureTime.remove(entity);
+                    } else {
+                        replaceEntityWithPureWhiteLatex(entity, serverLevel);
+                        exposureTime.remove(entity);
+                    }
                 }
             }
         }
     }
     
     /**
-     * Checks if a block is a tainted block (wood, leaf, grass, dirt, sand, or foliage).
+     * Applies white latex transfur progress to an entity (like WhiteLatexPillar does).
      */
-    private static boolean isTaintedBlock(Block block) {
+    private static void applyWhiteLatexTransfur(LivingEntity entity, Level level) {
+        // Apply transfur progress similar to WhiteLatexPillar (4.8f per tick when inside)
+        // WhiteLatexPillar applies 4.8f every single tick in entityInside(), so we do the same
+        float progressAmount = 4.8f; // Same as WhiteLatexPillar - apply every tick
+        
+        try {
+            // Use ProcessTransfur.progressTransfur like WhiteLatexPillar does
+            Class<?> processTransfurClass = Class.forName("net.ltxprogrammer.changed.process.ProcessTransfur");
+            Class<?> transfurVariantClass = Class.forName("net.ltxprogrammer.changed.entity.variant.TransfurVariant");
+            Class<?> transfurContextClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurContext");
+            Class<?> transfurCauseClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurCause");
+            Class<?> changedVariantsClass = Class.forName("net.ltxprogrammer.changed.init.ChangedTransfurVariants");
+            
+            // Get PURE_WHITE_LATEX_WOLF variant (it's a RegistryObject, need to call .get() on it)
+            java.lang.reflect.Field pureWhiteField = changedVariantsClass.getField("PURE_WHITE_LATEX_WOLF");
+            Object pureWhiteRegistryObject = pureWhiteField.get(null);
+            
+            if (pureWhiteRegistryObject == null) {
+                furmutage.LOGGER.warn("PURE_WHITE_LATEX_WOLF RegistryObject not found in ChangedTransfurVariants");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Call .get() on the RegistryObject to get the actual TransfurVariant
+            java.lang.reflect.Method getMethod = pureWhiteRegistryObject.getClass().getMethod("get");
+            Object pureWhiteVariant = getMethod.invoke(pureWhiteRegistryObject);
+            
+            if (pureWhiteVariant == null) {
+                furmutage.LOGGER.warn("PURE_WHITE_LATEX_WOLF.get() returned null - variant may not be registered yet");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Get TransfurCause.WHITE_LATEX
+            java.lang.reflect.Field whiteLatexCauseField = transfurCauseClass.getField("WHITE_LATEX");
+            Object whiteLatexCause = whiteLatexCauseField.get(null);
+            
+            if (whiteLatexCause == null) {
+                furmutage.LOGGER.warn("TransfurCause.WHITE_LATEX not found");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Get TransfurContext.hazard(TransfurCause.WHITE_LATEX)
+            java.lang.reflect.Method hazardMethod = transfurContextClass.getMethod("hazard", transfurCauseClass);
+            Object transfurContext = hazardMethod.invoke(null, whiteLatexCause);
+            
+            if (transfurContext == null) {
+                furmutage.LOGGER.warn("TransfurContext.hazard() returned null");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Call ProcessTransfur.progressTransfur(entity, amount, variant, context)
+            java.lang.reflect.Method progressTransfurMethod = processTransfurClass.getMethod(
+                "progressTransfur", 
+                LivingEntity.class, 
+                float.class, 
+                transfurVariantClass, 
+                transfurContextClass
+            );
+            
+            furmutage.LOGGER.debug("Calling ProcessTransfur.progressTransfur for {} with amount {} (white latex)", 
+                entity.getName().getString(), progressAmount);
+            
+            boolean result = (Boolean) progressTransfurMethod.invoke(null, entity, progressAmount, pureWhiteVariant, transfurContext);
+            
+            if (result) {
+                furmutage.LOGGER.info("Successfully transfurred {} to Pure White Latex Wolf", 
+                    entity.getName().getString());
+            } else {
+                furmutage.LOGGER.debug("Applied transfur progress to {}: {} points (not yet transfurred)", 
+                    entity.getName().getString(), progressAmount);
+            }
+        } catch (ClassNotFoundException e) {
+            furmutage.LOGGER.warn("Changed mod class not found for transfur progress: {}", e.getMessage());
+            // Fall back to entity replacement for non-players
+            fallbackToEntityReplacement(entity, level);
+        } catch (NoSuchFieldException e) {
+            furmutage.LOGGER.warn("Changed mod field not found for transfur progress: {}", e.getMessage());
+            fallbackToEntityReplacement(entity, level);
+        } catch (NoSuchMethodException e) {
+            furmutage.LOGGER.warn("Changed mod method not found for transfur progress: {}", e.getMessage());
+            fallbackToEntityReplacement(entity, level);
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause != null) {
+                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur: {} - {}", 
+                    cause.getClass().getSimpleName(), cause.getMessage());
+            } else {
+                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur: {}", e.getMessage());
+            }
+            fallbackToEntityReplacement(entity, level);
+        } catch (Exception e) {
+            furmutage.LOGGER.warn("Unexpected error applying transfur progress: {} - {}", 
+                e.getClass().getSimpleName(), e.getMessage(), e);
+            fallbackToEntityReplacement(entity, level);
+        }
+    }
+    
+    /**
+     * Applies dark latex transfur progress to an entity.
+     */
+    private static void applyDarkLatexTransfur(LivingEntity entity, Level level) {
+        // Apply transfur progress similar to WhiteLatexPillar (4.8f per tick when inside)
+        float progressAmount = 4.8f; // Same as WhiteLatexPillar - apply every tick
+        
+        try {
+            // Use ProcessTransfur.progressTransfur like WhiteLatexPillar does
+            Class<?> processTransfurClass = Class.forName("net.ltxprogrammer.changed.process.ProcessTransfur");
+            Class<?> transfurVariantClass = Class.forName("net.ltxprogrammer.changed.entity.variant.TransfurVariant");
+            Class<?> transfurContextClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurContext");
+            Class<?> transfurCauseClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurCause");
+            Class<?> changedVariantsClass = Class.forName("net.ltxprogrammer.changed.init.ChangedTransfurVariants");
+            
+            // Get DARK_LATEX_WOLF variant (it's a RegistryObject, need to call .get() on it)
+            java.lang.reflect.Field darkLatexField = changedVariantsClass.getField("DARK_LATEX_WOLF");
+            Object darkLatexRegistryObject = darkLatexField.get(null);
+            
+            if (darkLatexRegistryObject == null) {
+                furmutage.LOGGER.warn("DARK_LATEX_WOLF RegistryObject not found in ChangedTransfurVariants");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Call .get() on the RegistryObject to get the actual TransfurVariant
+            java.lang.reflect.Method getMethod = darkLatexRegistryObject.getClass().getMethod("get");
+            Object darkLatexVariant = getMethod.invoke(darkLatexRegistryObject);
+            
+            if (darkLatexVariant == null) {
+                furmutage.LOGGER.warn("DARK_LATEX_WOLF.get() returned null - variant may not be registered yet");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Get TransfurCause.DARK_LATEX
+            java.lang.reflect.Field darkLatexCauseField = transfurCauseClass.getField("DARK_LATEX");
+            Object darkLatexCause = darkLatexCauseField.get(null);
+            
+            if (darkLatexCause == null) {
+                furmutage.LOGGER.warn("TransfurCause.DARK_LATEX not found");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Get TransfurContext.hazard(TransfurCause.DARK_LATEX)
+            java.lang.reflect.Method hazardMethod = transfurContextClass.getMethod("hazard", transfurCauseClass);
+            Object transfurContext = hazardMethod.invoke(null, darkLatexCause);
+            
+            if (transfurContext == null) {
+                furmutage.LOGGER.warn("TransfurContext.hazard() returned null");
+                fallbackToEntityReplacement(entity, level);
+                return;
+            }
+            
+            // Call ProcessTransfur.progressTransfur(entity, amount, variant, context)
+            java.lang.reflect.Method progressTransfurMethod = processTransfurClass.getMethod(
+                "progressTransfur", 
+                LivingEntity.class, 
+                float.class, 
+                transfurVariantClass, 
+                transfurContextClass
+            );
+            
+            furmutage.LOGGER.debug("Calling ProcessTransfur.progressTransfur for {} with amount {} (dark latex)", 
+                entity.getName().getString(), progressAmount);
+            
+            boolean result = (Boolean) progressTransfurMethod.invoke(null, entity, progressAmount, darkLatexVariant, transfurContext);
+            
+            if (result) {
+                furmutage.LOGGER.info("Successfully transfurred {} to Dark Latex Wolf", 
+                    entity.getName().getString());
+            } else {
+                furmutage.LOGGER.debug("Applied transfur progress to {}: {} points (not yet transfurred)", 
+                    entity.getName().getString(), progressAmount);
+            }
+        } catch (ClassNotFoundException e) {
+            furmutage.LOGGER.warn("Changed mod class not found for transfur progress: {}", e.getMessage());
+            // Fall back to entity replacement for non-players
+            fallbackToEntityReplacement(entity, level);
+        } catch (NoSuchFieldException e) {
+            furmutage.LOGGER.warn("Changed mod field not found for transfur progress: {}", e.getMessage());
+            fallbackToEntityReplacement(entity, level);
+        } catch (NoSuchMethodException e) {
+            furmutage.LOGGER.warn("Changed mod method not found for transfur progress: {}", e.getMessage());
+            fallbackToEntityReplacement(entity, level);
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause != null) {
+                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur: {} - {}", 
+                    cause.getClass().getSimpleName(), cause.getMessage());
+            } else {
+                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur: {}", e.getMessage());
+            }
+            fallbackToEntityReplacement(entity, level);
+        } catch (Exception e) {
+            furmutage.LOGGER.warn("Unexpected error applying transfur progress: {} - {}", 
+                e.getClass().getSimpleName(), e.getMessage(), e);
+            fallbackToEntityReplacement(entity, level);
+        }
+    }
+    
+    /**
+     * Checks if a block is a tainted white block (wood, leaf, grass, dirt, sand, or foliage).
+     */
+    private static boolean isTaintedWhiteBlock(Block block) {
         return block == ModBlocks.TAINTED_WHITE_LOG.get() ||
                block == ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get() ||
                block == ModBlocks.TAINTED_WHITE_LEAF.get() ||
@@ -185,6 +473,26 @@ public class TaintedBlockEvents {
                block == ModBlocks.TAINTED_WHITE_SAND.get() ||
                block == ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get() ||
                block == ModBlocks.TAINTED_WHITE_TALL_GRASS.get();
+    }
+    
+    /**
+     * Checks if a block is a tainted dark block (wood, leaf, grass, dirt, sand).
+     */
+    private static boolean isTaintedDarkBlock(Block block) {
+        return block == ModBlocks.TAINTED_DARK_LOG.get() ||
+               block == ModBlocks.STRIPPED_TAINTED_DARK_LOG.get() ||
+               block == ModBlocks.TAINTED_DARK_LEAF.get() ||
+               block == ModBlocks.TAINTED_DARK_PLANKS.get() ||
+               block == ModBlocks.TAINTED_DARK_GRASS.get() ||
+               block == ModBlocks.TAINTED_DARK_DIRT.get() ||
+               block == ModBlocks.TAINTED_DARK_SAND.get();
+    }
+    
+    /**
+     * Checks if a block is a tainted block (white or dark).
+     */
+    private static boolean isTaintedBlock(Block block) {
+        return isTaintedWhiteBlock(block) || isTaintedDarkBlock(block);
     }
     
     /**
@@ -214,76 +522,6 @@ public class TaintedBlockEvents {
     }
     
     /**
-     * Gets the transfur damage source from Changed mod.
-     * Uses reflection to access Changed mod's damage source system.
-     */
-    private static DamageSource getTransfurDamageSource(Level level, LivingEntity entity) {
-        try {
-            // Try to get Changed mod's damage sources
-            // Changed mod typically has a DamageSources class or uses a specific damage type
-            Class<?> changedDamageSourcesClass = Class.forName("net.ltxprogrammer.changed.init.ChangedDamageSources");
-            
-            // Try to get a static method that returns transfur damage source
-            // Common patterns: transfurDamage(Entity), latexDamage(Level, Entity), etc.
-            try {
-                java.lang.reflect.Method transfurMethod = changedDamageSourcesClass.getMethod("transfurDamage", Level.class, LivingEntity.class);
-                return (DamageSource) transfurMethod.invoke(null, level, entity);
-            } catch (NoSuchMethodException e1) {
-                try {
-                    java.lang.reflect.Method latexMethod = changedDamageSourcesClass.getMethod("latexDamage", Level.class, LivingEntity.class);
-                    return (DamageSource) latexMethod.invoke(null, level, entity);
-                } catch (NoSuchMethodException e2) {
-                    // Try getting an instance first
-                    try {
-                        java.lang.reflect.Method getInstanceMethod = changedDamageSourcesClass.getMethod("instance", Level.class);
-                        Object instance = getInstanceMethod.invoke(null, level);
-                        if (instance != null) {
-                            java.lang.reflect.Method transfurInstanceMethod = changedDamageSourcesClass.getMethod("transfurDamage", LivingEntity.class);
-                            return (DamageSource) transfurInstanceMethod.invoke(instance, entity);
-                        }
-                    } catch (NoSuchMethodException e3) {
-                        // Try with just Level
-                        try {
-                            java.lang.reflect.Method getInstanceMethod = changedDamageSourcesClass.getMethod("of", Level.class);
-                            Object instance = getInstanceMethod.invoke(null, level);
-                            if (instance != null) {
-                                java.lang.reflect.Method transfurInstanceMethod = instance.getClass().getMethod("transfurDamage", LivingEntity.class);
-                                return (DamageSource) transfurInstanceMethod.invoke(instance, entity);
-                            }
-                        } catch (NoSuchMethodException e4) {
-                            // Last attempt: try to find any method with "transfur" or "latex" in the name
-                            for (java.lang.reflect.Method method : changedDamageSourcesClass.getMethods()) {
-                                String methodName = method.getName().toLowerCase();
-                                if ((methodName.contains("transfur") || methodName.contains("latex")) && 
-                                    DamageSource.class.isAssignableFrom(method.getReturnType())) {
-                                    try {
-                                        if (method.getParameterCount() == 0) {
-                                            return (DamageSource) method.invoke(null);
-                                        } else if (method.getParameterCount() == 1 && method.getParameterTypes()[0] == LivingEntity.class) {
-                                            return (DamageSource) method.invoke(null, entity);
-                                        } else if (method.getParameterCount() == 2 && 
-                                                   method.getParameterTypes()[0] == Level.class && 
-                                                   method.getParameterTypes()[1] == LivingEntity.class) {
-                                            return (DamageSource) method.invoke(null, level, entity);
-                                        }
-                                    } catch (Exception e) {
-                                        // Continue trying other methods
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (Throwable t) {
-            // If anything goes wrong, return null to use fallback damage
-            return null;
-        }
-        
-        return null;
-    }
-    
-    /**
      * Replaces a vanilla passive mob with its infected variant.
      */
     private static void replaceEntityWithInfectedVariant(LivingEntity entity, ServerLevel level, EntityType<? extends LivingEntity> infectedType) {
@@ -301,8 +539,18 @@ public class TaintedBlockEvents {
                     }
                     
                     // Finalize spawn
-                    infectedEntity.finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()),
-                            MobSpawnType.EVENT, null, null);
+                    try {
+                        infectedEntity.finalizeSpawn(level, level.getCurrentDifficultyAt(entity.blockPosition()),
+                                MobSpawnType.EVENT, null, null);
+                    } catch (IllegalArgumentException e) {
+                        // Catch errors from Changed mod trying to use attributes that don't exist in 1.20.1
+                        // (e.g., attack_knockback)
+                        if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                            furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod: {}", e.getMessage());
+                        } else {
+                            throw e; // Re-throw if it's a different error
+                        }
+                    }
                     
                     // Spawn the infected entity
                     level.addFreshEntity(infectedEntity);
@@ -361,78 +609,237 @@ public class TaintedBlockEvents {
     }
     
     /**
-     * Transfurs a player into pure white latex using Changed mod API.
-     * Uses reflection to access Changed mod's transfur system.
+     * @deprecated No longer used - transfur is now handled by ProcessTransfur.progressTransfur
      */
+    @Deprecated
     private static void transfurPlayerToPureWhiteLatex(Player player, Level level) {
+        // Try multiple approaches to transfur the player
+        // Approach 1: Try ChangedTransfurHelper first (most common in newer versions)
         try {
-            // Get the LatexVariantInstance for the player
+            Class<?> helperClass = Class.forName("net.ltxprogrammer.changed.process.ChangedTransfurHelper");
+            Class<?> variantClass = Class.forName("net.ltxprogrammer.changed.init.ChangedVariants");
+            
+            // Try to get PureWhiteLatex variant
+            Object pureWhiteVariant = null;
+            String[] possibleFieldNames = {"PURE_WHITE_LATEX_WOLF", "PURE_WHITE_LATEX", "PUREWHITE_LATEX_WOLF"};
+            for (String fieldName : possibleFieldNames) {
+                try {
+                    java.lang.reflect.Field pureWhiteField = variantClass.getField(fieldName);
+                    pureWhiteVariant = pureWhiteField.get(null);
+                    if (pureWhiteVariant != null) {
+                        break;
+                    }
+                } catch (NoSuchFieldException e) {
+                    continue;
+                }
+            }
+            
+            if (pureWhiteVariant == null) {
+                furmutage.LOGGER.warn("Could not find Pure White Latex variant field in ChangedVariants");
+                return;
+            }
+            
+            // Try different method signatures on ChangedTransfurHelper
+            String[] possibleMethodNames = {"transfur", "transfurPlayer", "transfurTo", "setVariant"};
+            for (String methodName : possibleMethodNames) {
+                try {
+                    // Try (Player, Object) signature
+                    try {
+                        java.lang.reflect.Method method = helperClass.getMethod(methodName, Player.class, Object.class);
+                        method.invoke(null, player, pureWhiteVariant);
+                        furmutage.LOGGER.debug("Successfully transfurred player {} using ChangedTransfurHelper.{}", 
+                            player.getName().getString(), methodName);
+                        return;
+                    } catch (NoSuchMethodException e) {
+                        // Try (Player, Object, boolean) signature
+                        try {
+                            java.lang.reflect.Method method = helperClass.getMethod(methodName, Player.class, Object.class, boolean.class);
+                            method.invoke(null, player, pureWhiteVariant, false);
+                            furmutage.LOGGER.debug("Successfully transfurred player {} using ChangedTransfurHelper.{}(Player, Object, boolean)", 
+                                player.getName().getString(), methodName);
+                            return;
+                        } catch (NoSuchMethodException e2) {
+                            continue;
+                        }
+                    }
+                } catch (java.lang.reflect.InvocationTargetException e) {
+                    Throwable cause = e.getCause();
+                    if (cause != null) {
+                        furmutage.LOGGER.debug("ChangedTransfurHelper.{} failed: {}", methodName, cause.getMessage());
+                    }
+                    continue;
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            // ChangedTransfurHelper doesn't exist, try next approach
+        } catch (Exception e) {
+            furmutage.LOGGER.debug("Error trying ChangedTransfurHelper: {}", e.getMessage());
+        }
+        
+        // Approach 2: Try ChangedVariants static methods
+        try {
+            Class<?> variantClass = Class.forName("net.ltxprogrammer.changed.init.ChangedVariants");
+            
+            // Try to get PureWhiteLatex variant
+            Object pureWhiteVariant = null;
+            String[] possibleFieldNames = {"PURE_WHITE_LATEX_WOLF", "PURE_WHITE_LATEX", "PUREWHITE_LATEX_WOLF"};
+            for (String fieldName : possibleFieldNames) {
+                try {
+                    java.lang.reflect.Field pureWhiteField = variantClass.getField(fieldName);
+                    pureWhiteVariant = pureWhiteField.get(null);
+                    if (pureWhiteVariant != null) {
+                        break;
+                    }
+                } catch (NoSuchFieldException e) {
+                    continue;
+                }
+            }
+            
+            if (pureWhiteVariant == null) {
+                furmutage.LOGGER.warn("Could not find Pure White Latex variant field in ChangedVariants");
+                return;
+            }
+            
+            // Try to find any transfur method in ChangedVariants
+            for (java.lang.reflect.Method method : variantClass.getMethods()) {
+                String methodName = method.getName().toLowerCase();
+                if (methodName.contains("transfur") && method.getParameterCount() >= 1) {
+                    try {
+                        if (method.getParameterCount() == 2 && 
+                            method.getParameterTypes()[0] == Player.class) {
+                            method.invoke(null, player, pureWhiteVariant);
+                            furmutage.LOGGER.debug("Successfully transfurred player {} using ChangedVariants.{}", 
+                                player.getName().getString(), method.getName());
+                            return;
+                        }
+                    } catch (Exception e) {
+                        continue;
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            furmutage.LOGGER.warn("ChangedVariants class not found: {}", e.getMessage());
+        } catch (Exception e) {
+            furmutage.LOGGER.debug("Error trying ChangedVariants: {}", e.getMessage());
+        }
+        
+        // Approach 3: Try LatexVariantInstance (if it exists in this version)
+        try {
             Class<?> instanceClass = Class.forName("net.ltxprogrammer.changed.entity.LatexVariantInstance");
             java.lang.reflect.Method getMethod = instanceClass.getMethod("get", Player.class);
             Object instance = getMethod.invoke(null, player);
             
-            if (instance == null) {
-                // Instance doesn't exist, try to create it or use a different method
-                return;
-            }
-            
-            // Try to get PureWhiteLatex variant
-            Class<?> variantClass = Class.forName("net.ltxprogrammer.changed.init.ChangedVariants");
-            java.lang.reflect.Field pureWhiteField = variantClass.getField("PURE_WHITE_LATEX_WOLF");
-            Object pureWhiteVariant = pureWhiteField.get(null);
-            
-            if (pureWhiteVariant != null) {
-                // Try to set the variant using the instance
-                try {
-                    java.lang.reflect.Method setVariantMethod = instanceClass.getMethod("setLatexVariant", Object.class);
-                    setVariantMethod.invoke(instance, pureWhiteVariant);
-                } catch (NoSuchMethodException e1) {
-                    // Try alternative method names
+            if (instance != null) {
+                Class<?> variantClass = Class.forName("net.ltxprogrammer.changed.init.ChangedVariants");
+                Object pureWhiteVariant = null;
+                String[] possibleFieldNames = {"PURE_WHITE_LATEX_WOLF", "PURE_WHITE_LATEX", "PUREWHITE_LATEX_WOLF"};
+                for (String fieldName : possibleFieldNames) {
                     try {
-                        java.lang.reflect.Method transfurMethod = instanceClass.getMethod("transfur", Object.class);
-                        transfurMethod.invoke(instance, pureWhiteVariant);
-                    } catch (NoSuchMethodException e2) {
-                        // Try with player parameter
+                        java.lang.reflect.Field pureWhiteField = variantClass.getField(fieldName);
+                        pureWhiteVariant = pureWhiteField.get(null);
+                        if (pureWhiteVariant != null) {
+                            break;
+                        }
+                    } catch (NoSuchFieldException e) {
+                        continue;
+                    }
+                }
+                
+                if (pureWhiteVariant != null) {
+                    // Try different methods on the instance
+                    String[] methodNames = {"setLatexVariant", "transfur", "transfurTo"};
+                    for (String methodName : methodNames) {
                         try {
-                            java.lang.reflect.Method transfurPlayerMethod = instanceClass.getMethod("transfur", Player.class, Object.class);
-                            transfurPlayerMethod.invoke(null, player, pureWhiteVariant);
-                        } catch (NoSuchMethodException e3) {
-                            // Try ChangedVariants static method
-                            try {
-                                java.lang.reflect.Method transfurStaticMethod = variantClass.getMethod("transfur", Player.class, Object.class);
-                                transfurStaticMethod.invoke(null, player, pureWhiteVariant);
-                            } catch (NoSuchMethodException e4) {
-                                // Last attempt: try ChangedTransfurHelper or similar
-                                try {
-                                    Class<?> helperClass = Class.forName("net.ltxprogrammer.changed.process.ChangedTransfurHelper");
-                                    java.lang.reflect.Method transfurHelperMethod = helperClass.getMethod("transfur", Player.class, Object.class);
-                                    transfurHelperMethod.invoke(null, player, pureWhiteVariant);
-                                } catch (Exception e5) {
-                                    // If all methods fail, try to find any transfur method
-                                    for (java.lang.reflect.Method method : variantClass.getMethods()) {
-                                        if (method.getName().toLowerCase().contains("transfur") && 
-                                            method.getParameterCount() >= 1) {
-                                            try {
-                                                if (method.getParameterCount() == 2 && 
-                                                    method.getParameterTypes()[0] == Player.class) {
-                                                    method.invoke(null, player, pureWhiteVariant);
-                                                    break;
-                                                }
-                                            } catch (Exception e) {
-                                                // Continue trying
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            java.lang.reflect.Method method = instanceClass.getMethod(methodName, Object.class);
+                            method.invoke(instance, pureWhiteVariant);
+                            furmutage.LOGGER.debug("Successfully transfurred player {} using LatexVariantInstance.{}", 
+                                player.getName().getString(), methodName);
+                            return;
+                        } catch (NoSuchMethodException e) {
+                            continue;
                         }
                     }
                 }
             }
-        } catch (Throwable t) {
-            // If anything goes wrong, log and continue (don't crash)
-            furmutage.LOGGER.warn("Failed to transfur player to pure white latex: " + t.getMessage());
+        } catch (ClassNotFoundException e) {
+            // LatexVariantInstance doesn't exist in this version, that's okay
+        } catch (Exception e) {
+            furmutage.LOGGER.debug("Error trying LatexVariantInstance: {}", e.getMessage());
         }
+        
+        // Approach 4: Try to find any transfur-related class by scanning common packages
+        try {
+            // Try to find any class with "transfur" in the name in common Changed mod packages
+            String[] packagesToSearch = {
+                "net.ltxprogrammer.changed.process",
+                "net.ltxprogrammer.changed.init",
+                "net.ltxprogrammer.changed.entity",
+                "net.ltxprogrammer.changed.util"
+            };
+            
+            for (String packageName : packagesToSearch) {
+                try {
+                    // Try common class names
+                    String[] classNames = {
+                        packageName + ".TransfurHelper",
+                        packageName + ".ChangedTransfurHelper",
+                        packageName + ".TransfurUtil",
+                        packageName + ".LatexTransfurHelper"
+                    };
+                    
+                    for (String className : classNames) {
+                        try {
+                            Class<?> transfurClass = Class.forName(className);
+                            // Try to find a static method that takes Player and variant
+                            for (java.lang.reflect.Method method : transfurClass.getMethods()) {
+                                if (method.getName().toLowerCase().contains("transfur") && 
+                                    java.lang.reflect.Modifier.isStatic(method.getModifiers()) &&
+                                    method.getParameterCount() >= 1) {
+                                    try {
+                                        // Try to get the variant first
+                                        Class<?> variantClass = Class.forName("net.ltxprogrammer.changed.init.ChangedVariants");
+                                        Object pureWhiteVariant = null;
+                                        String[] possibleFieldNames = {"PURE_WHITE_LATEX_WOLF", "PURE_WHITE_LATEX", "PUREWHITE_LATEX_WOLF"};
+                                        for (String fieldName : possibleFieldNames) {
+                                            try {
+                                                java.lang.reflect.Field field = variantClass.getField(fieldName);
+                                                pureWhiteVariant = field.get(null);
+                                                if (pureWhiteVariant != null) break;
+                                            } catch (Exception e) {
+                                                continue;
+                                            }
+                                        }
+                                        
+                                        if (pureWhiteVariant != null && method.getParameterCount() == 2 &&
+                                            method.getParameterTypes()[0] == Player.class) {
+                                            method.invoke(null, player, pureWhiteVariant);
+                                            furmutage.LOGGER.debug("Successfully transfurred player {} using {}.{}", 
+                                                player.getName().getString(), className, method.getName());
+                                            return;
+                                        }
+                                    } catch (Exception e) {
+                                        continue;
+                                    }
+                                }
+                            }
+                        } catch (ClassNotFoundException e) {
+                            continue;
+                        }
+                    }
+                } catch (Exception e) {
+                    continue;
+                }
+            }
+        } catch (Exception e) {
+            furmutage.LOGGER.debug("Error searching for transfur classes: {}", e.getMessage());
+        }
+        
+        // If all approaches fail, log a warning
+        furmutage.LOGGER.warn("Could not transfur player {} to pure white latex - no compatible API found. " +
+            "The Changed mod API may have changed or the required classes are not available.", 
+            player.getName().getString());
     }
     
     /**

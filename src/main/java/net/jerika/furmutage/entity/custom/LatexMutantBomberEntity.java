@@ -1,5 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundEvent;
@@ -105,20 +106,23 @@ public class LatexMutantBomberEntity extends Monster {
         // Priority 1: Move towards target (replaces MeleeAttackGoal for bomber)
         this.goalSelector.addGoal(1, new MoveTowardsTargetGoal(this, 1.0D, 32.0F));
         
-        // Priority 2: Random stroll
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.3, 120, false));
+        // Priority 2: Improved pathfinding for jumping onto blocks, climbing ladders, and gap jumping
+        this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));
         
-        // Priority 3: Leap at target (only when target is above)
-        this.goalSelector.addGoal(3, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        // Priority 3: Random stroll
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.3, 120, false));
         
-        // Priority 4: Open doors (if has ground navigation)
+        // Priority 4: Leap at target (only when target is above)
+        this.goalSelector.addGoal(4, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        
+        // Priority 5: Open doors (if has ground navigation)
         if (net.minecraft.world.entity.ai.util.GoalUtils.hasGroundPathNavigation(this))
-            this.goalSelector.addGoal(4, new OpenDoorGoal(this, true));
+            this.goalSelector.addGoal(5, new OpenDoorGoal(this, true));
         
-        // Priority 5: Float in water
-        this.goalSelector.addGoal(5, new FloatGoal(this));
+        // Priority 6: Float in water
+        this.goalSelector.addGoal(6, new FloatGoal(this));
         
-        // Priority 6: Look at player
+        // Priority 7: Look at player
         this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 7.0F));
         
         // Priority 7: Random look around
@@ -146,7 +150,8 @@ public class LatexMutantBomberEntity extends Monster {
                 .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.35D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D)
-                .add(Attributes.ARMOR, 2.0D);
+                .add(Attributes.ARMOR, 2.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D);
     }
 
     @Override

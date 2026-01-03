@@ -3,6 +3,7 @@ package net.jerika.furmutage;
 import com.mojang.logging.LogUtils;
 import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.entity.ModEntities;
+import net.jerika.furmutage.entity.custom.DeepLatexSquidEntity;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
@@ -22,6 +23,7 @@ import net.jerika.furmutage.entity.client.renderer.WhiteLatexHorseRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexPigRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexRabbitRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexSheepRenderer;
+import net.jerika.furmutage.entity.client.renderer.DeepLatexSquidRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -72,10 +74,18 @@ public class furmutage {
                 @SuppressWarnings("unchecked")
                 Map<Block, Block> strippables = (Map<Block, Block>) strippablesField.get(null);
                 strippables.put(ModBlocks.TAINTED_WHITE_LOG.get(), ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get());
+                strippables.put(ModBlocks.TAINTED_DARK_LOG.get(), ModBlocks.STRIPPED_TAINTED_DARK_LOG.get());
             } catch (Exception e) {
-                LOGGER.error("Failed to register stripping interaction for tainted white log", e);
+                LOGGER.error("Failed to register stripping interaction for tainted logs", e);
             }
             
+            // Register spawn placement for Deep Latex Squid (deep underwater caves only)
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.DEEP_LATEX_SQUID.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.IN_WATER,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                DeepLatexSquidEntity::checkDeepUnderwaterCaveSpawnRules
+            );
         });
     }
 
@@ -121,6 +131,7 @@ public class furmutage {
             EntityRenderers.register(ModEntities.WHITE_LATEX_SHEEP.get(), WhiteLatexSheepRenderer::new);
             EntityRenderers.register(ModEntities.WHITE_LATEX_RABBIT.get(), WhiteLatexRabbitRenderer::new);
             EntityRenderers.register(ModEntities.WHITE_LATEX_HORSE.get(), WhiteLatexHorseRenderer::new);
+            EntityRenderers.register(ModEntities.DEEP_LATEX_SQUID.get(), DeepLatexSquidRenderer::new);
 
         }
     }

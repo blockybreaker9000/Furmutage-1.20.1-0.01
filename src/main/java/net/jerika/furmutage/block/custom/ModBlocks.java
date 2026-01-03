@@ -6,6 +6,7 @@ import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.jerika.furmutage.worldgen.tree.TaintedWhiteTreeGrower;
+import net.jerika.furmutage.worldgen.tree.TaintedDarkTreeGrower;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -51,6 +52,33 @@ public class ModBlocks {
             () -> new TaintedWhiteDirtBlock(BlockBehaviour.Properties.copy(Blocks.DIRT).randomTicks()));
     public static final RegistryObject<Block> TAINTED_WHITE_SAND = registerBlock("tainted_white_sand",
             () -> new TaintedWhiteSandBlock(14406560, BlockBehaviour.Properties.copy(Blocks.SAND).randomTicks()));
+    
+    // Tainted Dark Blocks
+    public static final RegistryObject<Block> TAINTED_DARK_LOG = registerBlock("tainted_dark_log",
+            () -> new TaintedDarkLogBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).randomTicks()));
+    public static final RegistryObject<Block> STRIPPED_TAINTED_DARK_LOG = registerBlock("stripped_tainted_dark_log",
+            () -> new TaintedDarkLogBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_LOG).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_DARK_PLANKS = registerBlock("tainted_dark_planks",
+            () -> new TaintedDarkPlanksBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_DARK_LEAF = registerBlock("tainted_dark_leaf",
+            () -> new TaintedDarkLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
+    public static final RegistryObject<Block> TAINTED_DARK_GRASS = registerBlock("tainted_dark_grass",
+            () -> new TaintedDarkGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)));
+    public static final RegistryObject<Block> TAINTED_DARK_DIRT = registerBlock("tainted_dark_dirt",
+            () -> new TaintedDarkDirtBlock(BlockBehaviour.Properties.copy(Blocks.DIRT).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_DARK_SAND = registerBlock("tainted_dark_sand",
+            () -> new TaintedDarkSandBlock(0x1a1a1a, BlockBehaviour.Properties.copy(Blocks.SAND).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_DARK_TALL_GRASS = registerBlock("tainted_dark_tall_grass",
+            () -> new TaintedDarkTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_DARK_GRASS_FOLIAGE = registerBlock("tainted_dark_grass_foliage",
+            () -> new TaintedDarkGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_DARK_ROSELIGHT_FLOWER = registerBlock("tainted_dark_roselight_flower",
+            () -> new TaintedDarkRoselightFlowerBlock(BlockBehaviour.Properties.copy(Blocks.DANDELION).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_DARK_CRYSTAL_BLUE_FLOWER = registerBlock("tainted_dark_crystal_blue_flower",
+            () -> new TaintedDarkCrystalBlueFlowerBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).noOcclusion().instabreak().sound(SoundType.GRASS)));
+    public static final RegistryObject<Block> TAINTED_DARK_SAPLING = registerBlock("tainted_dark_sapling",
+            () -> new SaplingBlock(new TaintedDarkTreeGrower(), BlockBehaviour.Properties.copy(Blocks.MANGROVE_PROPAGULE)));
+    
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS_FOLIAGE = registerBlock("tainted_white_grass_foliage",
             () -> new TaintedWhiteGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_WHITE_TALL_GRASS = registerBlock("tainted_white_tall_grass",

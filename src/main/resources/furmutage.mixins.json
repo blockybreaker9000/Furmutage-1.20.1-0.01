@@ -5,7 +5,10 @@
   "compatibilityLevel": "JAVA_17",
   "refmap": "furmutage.refmap.json",
   "mixins": [
-    "LivingEntitySwimMixin"
+    "LivingEntitySwimMixin",
+    "EntitySensingXRayMixin",
+    "LivingEntityLadderClimbMixin",
+    "TransfurCrystalBlockMixin"
   ],
   "injectors": {
     "defaultRequire": 1

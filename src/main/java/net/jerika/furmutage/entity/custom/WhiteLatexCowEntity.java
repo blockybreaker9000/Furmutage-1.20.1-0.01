@@ -1,5 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
+import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -34,9 +35,10 @@ public class WhiteLatexCowEntity extends Cow {
         // Register hostile goals
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.8D));
-        this.goalSelector.addGoal(3, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(4, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));
+        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
         
         // Hostile targeting
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -48,6 +50,7 @@ public class WhiteLatexCowEntity extends Cow {
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
     }
 

@@ -1,5 +1,6 @@
 package net.jerika.furmutage.block.custom;
 
+import net.jerika.furmutage.furmutage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -226,8 +227,18 @@ public class TaintedWhiteSandBlock extends SandBlock {
                         double spawnY = abovePos.getY();
                         double spawnZ = abovePos.getZ() + 0.5;
                         latexEntity.moveTo(spawnX, spawnY, spawnZ, random.nextFloat() * 360.0F, 0.0F);
-                        latexEntity.finalizeSpawn(level, level.getCurrentDifficultyAt(abovePos),
-                                MobSpawnType.EVENT, null, null);
+                        try {
+                            latexEntity.finalizeSpawn(level, level.getCurrentDifficultyAt(abovePos),
+                                    MobSpawnType.EVENT, null, null);
+                        } catch (IllegalArgumentException e) {
+                            // Catch errors from Changed mod trying to use attributes that don't exist in 1.20.1
+                            // (e.g., attack_knockback)
+                            if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                                furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod: {}", e.getMessage());
+                            } else {
+                                throw e; // Re-throw if it's a different error
+                            }
+                        }
                         level.addFreshEntity(latexEntity);
                     }
                 }

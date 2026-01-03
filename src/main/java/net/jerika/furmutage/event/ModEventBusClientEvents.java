@@ -19,6 +19,7 @@ public class ModEventBusClientEvents {
         event.registerLayerDefinition(ModModelLayers.BACTERIA_LAYER, BacteriaModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LATEX_BOMBER_MUTANT_LAYER, LatexBomberMutantModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LATEX_EXO_MUTANT_LAYER, LatexExoMutantModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.DEEP_LATEX_SQUID_LAYER, DeepLatexSquidModel::createBodyLayer);
     }
 
 }

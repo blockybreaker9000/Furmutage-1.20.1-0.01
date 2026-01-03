@@ -45,8 +45,18 @@ public class WhiteLatexBottleProjectile extends ThrowableItemProjectile {
                 PathfinderMob pup = (PathfinderMob) purewhiteLatexWolfPupType.create(serverLevel);
                 if (pup != null) {
                     pup.moveTo(this.getX(), this.getY(), this.getZ(), this.getYRot(), 0.0F);
-                    pup.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(pup.blockPosition()),
-                            MobSpawnType.EVENT, null, null);
+                    try {
+                        pup.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(pup.blockPosition()),
+                                MobSpawnType.EVENT, null, null);
+                    } catch (IllegalArgumentException e) {
+                        // Catch errors from Changed mod trying to use attributes that don't exist in 1.20.1
+                        // (e.g., attack_knockback)
+                        if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                            net.jerika.furmutage.furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod: {}", e.getMessage());
+                        } else {
+                            throw e; // Re-throw if it's a different error
+                        }
+                    }
                     serverLevel.addFreshEntity(pup);
                 }
             }

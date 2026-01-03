@@ -1,6 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.BacteriaJumpAttackGoal;
+import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -168,6 +169,14 @@ public class LatexBacteriaEntity extends Monster {
             try {
                 java.lang.reflect.Method setVariantMethod = instanceClass.getMethod("setLatexVariant", Object.class);
                 setVariantMethod.invoke(instance, phageVariant);
+            } catch (IllegalArgumentException e) {
+                // Catch errors from Changed mod trying to use attributes that don't exist in 1.20.1
+                // (e.g., attack_knockback)
+                if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                    furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod transfur: {}", e.getMessage());
+                    return; // Exit early if this is the attack_knockback error
+                }
+                throw e; // Re-throw if it's a different error
             } catch (NoSuchMethodException e1) {
                 try {
                     java.lang.reflect.Method transfurMethod = instanceClass.getMethod("transfur", Object.class);
@@ -240,9 +249,19 @@ public class LatexBacteriaEntity extends Monster {
                     phageEntity.setHealth(phageEntity.getMaxHealth() * healthPercent);
                 }
 
-                phageEntity.finalizeSpawn(level,
-                        level.getCurrentDifficultyAt(original.blockPosition()),
-                        MobSpawnType.EVENT, null, null);
+                try {
+                    phageEntity.finalizeSpawn(level,
+                            level.getCurrentDifficultyAt(original.blockPosition()),
+                            MobSpawnType.EVENT, null, null);
+                } catch (IllegalArgumentException e) {
+                    // Catch errors from Changed mod trying to use attributes that don't exist in 1.20.1
+                    // (e.g., attack_knockback)
+                    if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                        furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod: {}", e.getMessage());
+                    } else {
+                        throw e; // Re-throw if it's a different error
+                    }
+                }
 
                 level.addFreshEntity(phageEntity);
                 original.remove(Entity.RemovalReason.DISCARDED);
@@ -292,21 +311,24 @@ public class LatexBacteriaEntity extends Monster {
         // Priority 1: Custom jump attack goal (BacteriaJumpAttackGoal replaces MeleeAttackGoal)
         this.goalSelector.addGoal(1, new BacteriaJumpAttackGoal(this, 1.2D, true));
         
-        // Priority 2: Random stroll
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.3, 120, false));
+        // Priority 2: Improved pathfinding for jumping onto blocks, climbing ladders, and gap jumping
+        this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));
         
-        // Priority 3: Leap at target (only when target is above)
-        this.goalSelector.addGoal(3, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        // Priority 3: Random stroll
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.3, 120, false));
         
-        // Priority 4: Open doors (if has ground navigation)
+        // Priority 4: Leap at target (only when target is above)
+        this.goalSelector.addGoal(4, new ChangedStyleLeapAtTargetGoal(this, 0.4f));
+        
+        // Priority 5: Open doors (if has ground navigation)
         if (net.minecraft.world.entity.ai.util.GoalUtils.hasGroundPathNavigation(this))
-            this.goalSelector.addGoal(4, new OpenDoorGoal(this, true));
+            this.goalSelector.addGoal(5, new OpenDoorGoal(this, true));
         
-        // Priority 5: Float in water
-        this.goalSelector.addGoal(5, new FloatGoal(this));
+        // Priority 6: Float in water
+        this.goalSelector.addGoal(6, new FloatGoal(this));
         
-        // Priority 6: Look at player
-        this.goalSelector.addGoal(6, new LookAtPlayerGoal(this, Player.class, 7.0F));
+        // Priority 7: Look at player
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 7.0F));
         
         // Priority 7: Random look around
         this.goalSelector.addGoal(7, new RandomLookAroundGoal(this));
@@ -330,7 +352,7 @@ public class LatexBacteriaEntity extends Monster {
                 .add(Attributes.MAX_HEALTH, 20.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.35D)
                 .add(Attributes.ATTACK_DAMAGE, 4.0D)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.1)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.JUMP_STRENGTH, 5.0)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
     }

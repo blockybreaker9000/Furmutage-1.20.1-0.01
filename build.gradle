@@ -18,6 +18,7 @@ base {
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+
 minecraft {
     // The mappings can be changed at any time and must be in the following format.
     // Channel:   Version:
@@ -151,12 +152,6 @@ repositories {
 
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
-    // flatDir {
-    //     dir 'libs'
-    // }
-
-
-    // Comment this when you think that github may work
     flatDir {
         dirs 'libs/net/ltxprogrammer/changed/Changed-m1.20.1-f47.4.0/v0.15.0'
     }
@@ -204,20 +199,11 @@ dependencies {
         changing = true
     }
 
-    // Note: Mods in run/mods/ folder will be loaded at runtime automatically by Forge
-    // Do NOT add them as dependencies here - it causes mixin conflicts in development
-    // The mods will work fine when running the game, they just won't be in the compile classpath
-
-    // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
-    // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")
-    // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    // runtimeOnly fg.deobf("mezz.jei:jei-${mc_version}-forge:${jei_version}")
-
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation fg.deobf("blank:coolmod-${mc_version}:${coolmod_version}")
+    // Mod dependencies from CurseForge instance
+    // These mods are already compiled jars - they will be loaded at runtime from run/mods/ automatically
+    // Note: For compile-time API access, you would need dev jars or source jars
+    // Since these are already compiled, we don't add them as dependencies here
+    // They will work fine at runtime when placed in run/mods/ folder
 
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
@@ -282,3 +268,4 @@ publishing {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
+

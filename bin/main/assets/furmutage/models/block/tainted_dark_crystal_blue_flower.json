@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "furmutage:block/tainted_dark_crystal_blue_flower"
+  },
+  "render_type": "cutout"
+}
+

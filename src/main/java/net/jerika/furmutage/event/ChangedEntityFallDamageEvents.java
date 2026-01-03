@@ -7,7 +7,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * Event handler that gives Changed mod entities 10 blocks of fall damage resistance.
+ * Event handler that gives Changed mod entities and furmutage entities 10 blocks of fall damage resistance.
  * Entities can fall up to 10 blocks without taking damage, and will take reduced damage
  * if they fall more than 10 blocks.
  */
@@ -25,8 +25,13 @@ public class ChangedEntityFallDamageEvents {
             return;
         }
         
-        // Only apply to Changed mod entities
-        if (!isChangedEntity(entity)) {
+        // Apply to Changed mod entities or furmutage entities
+        // Skip entities that already have fall damage immunity (like flying entities)
+        if (isFurmutageEntityWithFallImmunity(entity)) {
+            return; // These entities already have fall damage immunity
+        }
+        
+        if (!isChangedEntity(entity) && !isFurmutageEntity(entity)) {
             return;
         }
         
@@ -57,6 +62,35 @@ public class ChangedEntityFallDamageEvents {
         // Check if the entity's class is in the Changed mod package
         String className = entity.getClass().getName();
         return className.startsWith("net.ltxprogrammer.changed.entity");
+    }
+    
+    /**
+     * Checks if the entity is a furmutage entity.
+     */
+    private static boolean isFurmutageEntity(LivingEntity entity) {
+        if (entity == null) {
+            return false;
+        }
+        
+        // Check if the entity's class is in the furmutage entity package
+        String className = entity.getClass().getName();
+        return className.startsWith("net.jerika.furmutage.entity.custom");
+    }
+    
+    /**
+     * Checks if the entity is a furmutage entity that already has fall damage immunity
+     * (like flying entities that override causeFallDamage to return false).
+     */
+    private static boolean isFurmutageEntityWithFallImmunity(LivingEntity entity) {
+        if (!isFurmutageEntity(entity)) {
+            return false;
+        }
+        
+        // Check for specific entities that already have fall damage immunity
+        String className = entity.getClass().getName();
+        return className.contains("TSCDrone") || // TSCDroneEntity and TSCDroneBossEntity
+               className.contains("LatexBacteria") || // LatexBacteriaEntity
+               className.contains("LatexExoMutant"); // LatexExoMutantEntity
     }
 }
 

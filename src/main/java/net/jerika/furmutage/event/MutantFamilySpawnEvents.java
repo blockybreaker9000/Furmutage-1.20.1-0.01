@@ -79,8 +79,18 @@ public class MutantFamilySpawnEvents {
                 PathfinderMob companion = (PathfinderMob) pureWhiteLatexType.create(level);
                 if (companion != null) {
                     companion.moveTo(spawnX, spawnY, spawnZ, mutantFamily.getYRot(), 0.0F);
-                    companion.finalizeSpawn(level, level.getCurrentDifficultyAt(companion.blockPosition()), 
-                            MobSpawnType.EVENT, null, null);
+                    try {
+                        companion.finalizeSpawn(level, level.getCurrentDifficultyAt(companion.blockPosition()), 
+                                MobSpawnType.EVENT, null, null);
+                    } catch (IllegalArgumentException e) {
+                        // Catch errors from Changed mod trying to use attributes that don't exist in 1.20.1
+                        // (e.g., attack_knockback)
+                        if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                            furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod: {}", e.getMessage());
+                        } else {
+                            throw e; // Re-throw if it's a different error
+                        }
+                    }
                     level.addFreshEntity(companion);
                 }
             }

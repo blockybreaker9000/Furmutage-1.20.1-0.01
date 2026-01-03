@@ -167,8 +167,8 @@ public class TSCDroneEntity extends Monster implements RangedAttackMob {
         return LivingEntity.createLivingAttributes()
                 .add(Attributes.MAX_HEALTH, 10.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.1)
                 .add(Attributes.ATTACK_DAMAGE, 2.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 32.0D);
     }
 
