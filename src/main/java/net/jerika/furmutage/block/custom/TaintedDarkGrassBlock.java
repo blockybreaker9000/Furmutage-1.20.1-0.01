@@ -48,11 +48,6 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             spawnMushroomOnTop(level, pos, random);
         }
         
-        // Spawn tainted dark reeds if there's water adjacent
-        if (random.nextInt(50) == 0) { // 2% chance per random tick
-            spawnReedIfWaterNearby(level, pos, random);
-        }
-        
         // Rarely spawn Changed mod crystals on top
         if (random.nextInt(100) == 0) { // 1% chance per random tick (rare but more common)
             spawnChangedCrystalOnTop(level, pos, random);
@@ -288,67 +283,7 @@ public class TaintedDarkGrassBlock extends GrassBlock {
     /**
      * Spawns a tainted dark reed on top of this block if there's water adjacent.
      */
-    private void spawnReedIfWaterNearby(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air
-        if (!aboveState.isAir()) {
-            return;
-        }
-        
-        // Check if there's water adjacent to this grass block (horizontally or below)
-        boolean hasWaterNearby = false;
-        
-        // Check horizontal directions
-        for (Direction direction : Direction.Plane.HORIZONTAL) {
-            BlockPos adjacentPos = pos.relative(direction);
-            BlockState adjacentState = level.getBlockState(adjacentPos);
-            if (adjacentState.is(Blocks.WATER)) {
-                hasWaterNearby = true;
-                break;
-            }
-        }
-        
-        // Also check below (water source block)
-        if (!hasWaterNearby) {
-            BlockPos belowPos = pos.below();
-            BlockState belowState = level.getBlockState(belowPos);
-            if (belowState.is(Blocks.WATER)) {
-                hasWaterNearby = true;
-            }
-        }
-        
-        // Only spawn if water is nearby and no reed already exists nearby
-        if (hasWaterNearby && !hasReedNearby(level, abovePos, 3)) {
-            level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_REED.get().defaultBlockState(), 3);
-        }
-    }
-    
-    /**
-     * Checks if there's a tainted dark reed within the specified distance.
-     */
-    private boolean hasReedNearby(ServerLevel level, BlockPos pos, int maxDistance) {
-        int checkRadius = maxDistance;
-        for (int x = -checkRadius; x <= checkRadius; x++) {
-            for (int y = -checkRadius; y <= checkRadius; y++) {
-                for (int z = -checkRadius; z <= checkRadius; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
-                    
-                    BlockPos checkPos = pos.offset(x, y, z);
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-                    
-                    // Check if within distance and is a reed
-                    if (distance < maxDistance && 
-                        (level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_REED.get()) ||
-                         level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_REED_PLANT.get()))) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
+
     
     /**
      * Spawns a dark latex entity (wolf or pup) on top of this block.
@@ -381,7 +316,7 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 } else {
                     // Try to find the Dark Latex Wolf entity type
                     darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
-                            ResourceLocation.tryParse("changed:dark_latex_wolf")
+                            ResourceLocation.tryParse("changed:dark_latex_wolf_male")
                     );
                 }
                 
@@ -390,13 +325,13 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                     for (EntityType<?> entityType : ForgeRegistries.ENTITY_TYPES.getValues()) {
                         String name = entityType.getDescriptionId().toLowerCase();
                         if (spawnPup) {
-                            if ((name.contains("dark_latex") || name.contains("darklatex")) && 
+                            if ((name.contains("dark_latex_wolf_male") || name.contains("darklatexwolfmale")) &&
                                 (name.contains("pup") || name.contains("puppy"))) {
                                 darkLatexType = entityType;
                                 break;
                             }
                         } else {
-                            if ((name.contains("dark_latex") || name.contains("darklatex")) && 
+                            if ((name.contains("dark_latex_pup") || name.contains("darklatexpup")) &&
                                 !name.contains("pup") && !name.contains("puppy")) {
                                 darkLatexType = entityType;
                                 break;
@@ -453,7 +388,7 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                                         1.0, 1.0, 1.0));
                         for (var entity : entities) {
                             String name = entity.getType().getDescriptionId().toLowerCase();
-                            if (name.contains("dark_latex") || name.contains("darklatex")) {
+                            if (name.contains("dark_latex_wolf_male") || name.contains("darklatexwolfmale")) {
                                 return true;
                             }
                         }

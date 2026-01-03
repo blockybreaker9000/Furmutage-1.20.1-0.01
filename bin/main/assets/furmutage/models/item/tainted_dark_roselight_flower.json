@@ -1,0 +1,7 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "furmutage:block/tainted_dark_roselight_flower"
+  }
+}
+

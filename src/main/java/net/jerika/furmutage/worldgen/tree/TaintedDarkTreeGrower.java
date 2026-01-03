@@ -57,13 +57,21 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
             );
             boolean result = Feature.TREE.place(context);
             
+            // Ensure there's a log at the sapling position (the feature might leave air or the sapling there)
+            BlockState posState = level.getBlockState(pos);
+            if (result && (!posState.is(ModBlocks.TAINTED_DARK_LOG.get()) && posState.canBeReplaced())) {
+                level.setBlock(pos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
+            }
+            
             // If feature placement failed, try manual placement as fallback (simplified big oak)
             if (!result) {
                 // Place a big oak-like tree manually
                 int height = 10 + random.nextInt(10); // 10-20 blocks tall
+                // Start from the sapling position (replace the sapling with the first log)
                 for (int i = 0; i < height; i++) {
                     BlockPos logPos = pos.above(i);
-                    if (level.getBlockState(logPos).canBeReplaced()) {
+                    // Always place the first log at the sapling position, then check for replaceable blocks above
+                    if (i == 0 || level.getBlockState(logPos).canBeReplaced()) {
                         level.setBlock(logPos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
                     }
                 }
@@ -93,9 +101,11 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
         } catch (Exception e) {
             // Fallback to manual placement if feature placement fails
             int height = 10 + random.nextInt(10); // 10-20 blocks tall
+            // Start from the sapling position (replace the sapling with the first log)
             for (int i = 0; i < height; i++) {
                 BlockPos logPos = pos.above(i);
-                if (level.getBlockState(logPos).canBeReplaced()) {
+                // Always place the first log at the sapling position, then check for replaceable blocks above
+                if (i == 0 || level.getBlockState(logPos).canBeReplaced()) {
                     level.setBlock(logPos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
                 }
             }

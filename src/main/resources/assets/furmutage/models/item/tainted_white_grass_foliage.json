@@ -1,4 +1,7 @@
 {
-  "parent": "furmutage:block/tainted_white_grass_foliage"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "furmutage:item/tainted_white_grass_foliage"
+  }
 }
 
