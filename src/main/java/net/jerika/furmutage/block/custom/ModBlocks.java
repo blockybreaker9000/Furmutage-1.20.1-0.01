@@ -128,6 +128,10 @@ public class ModBlocks {
             () -> new TaintedDarkCrystalBlueFlowerBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_DARK_SAPLING = registerBlock("tainted_dark_sapling",
             () -> new SaplingBlock(new TaintedDarkTreeGrower(), BlockBehaviour.Properties.copy(Blocks.MANGROVE_PROPAGULE)));
+    public static final RegistryObject<Block> DARK_LYNCHING_VINE = registerBlock("dark_lynching_vine",
+            () -> new DarkLynchingVineBlock(BlockBehaviour.Properties.copy(Blocks.WEEPING_VINES).randomTicks()));
+    public static final RegistryObject<Block> DARK_LYNCHING_VINE_PLANT = BLOCKS.register("dark_lynching_vine_plant",
+            () -> new DarkLynchingVinePlantBlock(BlockBehaviour.Properties.copy(Blocks.WEEPING_VINES_PLANT).randomTicks()));
     
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS_FOLIAGE = registerBlock("tainted_white_grass_foliage",
             () -> new TaintedWhiteGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));

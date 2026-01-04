@@ -26,17 +26,7 @@ public class TaintedWhiteSandBlock extends SandBlock {
         if (random.nextInt(12) == 0) { // ~8.3% chance per random tick
             spreadToNearbyBlocks(level, pos, random);
         }
-        
-        // Rarely spawn tainted white saplings on top
-        if (random.nextInt(200) == 0) { // 0.5% chance per random tick (very rare)
-            spawnSaplingOnTop(level, pos, random);
-        }
-        
-        // Occasionally spawn tainted white grass foliage on top
-        if (random.nextInt(20) == 0) { // 5% chance per random tick (faster growth)
-            spawnGrassFoliageOnTop(level, pos, random);
-        }
-        
+
         // Rarely spawn pure white latex entities on top
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnPureWhiteLatexEntity(level, pos, random);

@@ -90,7 +90,7 @@ public class LatexTeamEvents {
         LivingEntity attacker = mob.getLastHurtByMob();
         double followRange = mob.getAttributeValue(Attributes.FOLLOW_RANGE);
         if (followRange <= 0) {
-            followRange = 32.0;
+            followRange = 42.0;
         }
         double followRangeSq = followRange * followRange;
         
@@ -186,7 +186,7 @@ public class LatexTeamEvents {
                     // Use slower movement speed (0.25 instead of normal)
                     double movementSpeed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
                     if (movementSpeed <= 0) {
-                        movementSpeed = 0.15D; // Default slow speed
+                        movementSpeed = 0.25D; // Default speed
                     } else {
                         movementSpeed = movementSpeed * 0.25; // Quarter of normal speed
                     }

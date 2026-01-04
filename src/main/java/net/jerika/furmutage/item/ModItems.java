@@ -194,6 +194,11 @@ public class ModItems {
                     .nutrition(4)
                     .saturationMod(0.3f)
                     .build())));
+    public static final RegistryObject<Item> PHAGE_BLUEBERRY = ITEMS.register("phage_blueberry",
+            () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(2)
+                    .saturationMod(0.2f)
+                    .build())));
 
 
     public static void register(IEventBus eventBus) {

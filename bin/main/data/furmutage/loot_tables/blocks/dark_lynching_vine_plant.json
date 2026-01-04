@@ -1,0 +1,50 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "conditions": [
+        {
+          "condition": "minecraft:match_tool",
+          "predicate": {
+            "items": ["minecraft:shears"]
+          }
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "furmutage:dark_lynching_vine"
+        }
+      ]
+    },
+    {
+      "conditions": [
+        {
+          "condition": "minecraft:block_state_property",
+          "block": "furmutage:dark_lynching_vine_plant",
+          "properties": {
+            "berries": "true"
+          }
+        }
+      ],
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "furmutage:phage_blueberry",
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 2
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
+

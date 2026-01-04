@@ -45,7 +45,7 @@ public class TSCDroneBossEntity extends TSCDroneEntity {
                 .add(Attributes.MAX_HEALTH, 200.0D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.FOLLOW_RANGE, 88.0D)
+                .add(Attributes.FOLLOW_RANGE, 60.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 3.0D);
     }
 

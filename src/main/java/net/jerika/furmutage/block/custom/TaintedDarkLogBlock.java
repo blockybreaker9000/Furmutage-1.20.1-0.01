@@ -29,6 +29,11 @@ public class TaintedDarkLogBlock extends RotatedPillarBlock {
         if (random.nextInt(30) == 0) { // ~3.33% chance per random tick (faster growth)
             spawnGrassFoliageOnTop(level, pos, random);
         }
+        
+        // Very rarely spawn dark lynching vines on the underside
+        if (random.nextInt(500) == 0) { // 0.2% chance per random tick (very rare)
+            spawnVinesUnderneath(level, pos, random);
+        }
     }
     
     /**
@@ -149,6 +154,19 @@ public class TaintedDarkLogBlock extends RotatedPillarBlock {
                     }
                 }
             }
+        }
+    }
+    
+    /**
+     * Very rarely spawns dark lynching vines on the underside of this block.
+     */
+    private void spawnVinesUnderneath(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos belowPos = pos.below();
+        BlockState belowState = level.getBlockState(belowPos);
+        
+        // Only spawn if the space below is air
+        if (belowState.isAir()) {
+            level.setBlock(belowPos, ModBlocks.DARK_LYNCHING_VINE.get().defaultBlockState(), 3);
         }
     }
 }

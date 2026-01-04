@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "furmutage:block/dark_lynching_vine_plant"
+  },
+  "render_type": "cutout"
+}
+

@@ -29,8 +29,6 @@ public class TaintedWhiteRoselightFlowerBlock extends FlowerBlock {
         return state.is(ModBlocks.TAINTED_WHITE_GRASS.get()) ||
                state.is(ModBlocks.TAINTED_WHITE_DIRT.get()) ||
                state.is(ModBlocks.TAINTED_WHITE_SAND.get()) ||
-               state.is(Blocks.GRASS_BLOCK) ||
-               state.is(Blocks.DIRT) ||
                state.is(Blocks.COARSE_DIRT);
     }
 

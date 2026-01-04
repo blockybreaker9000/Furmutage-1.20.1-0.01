@@ -121,7 +121,7 @@ public class WitheredLatexPuddingEntity extends Monster {
                 .add(Attributes.ARMOR_TOUGHNESS, 2)
                 .add(Attributes.ATTACK_DAMAGE, 3)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.FOLLOW_RANGE, 16.0)
+                .add(Attributes.FOLLOW_RANGE, 60.0)
                 .add(Attributes.JUMP_STRENGTH, 2.0);
     }
 

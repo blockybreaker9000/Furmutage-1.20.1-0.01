@@ -51,7 +51,7 @@ public class WhiteLatexPigEntity extends Pig {
                 .add(Attributes.MOVEMENT_SPEED, 0.3D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.FOLLOW_RANGE, 32.0D);
+                .add(Attributes.FOLLOW_RANGE, 60.0D);
     }
 
     @Override

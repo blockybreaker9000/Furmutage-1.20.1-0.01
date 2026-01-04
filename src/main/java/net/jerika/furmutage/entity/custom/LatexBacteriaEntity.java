@@ -354,7 +354,7 @@ public class LatexBacteriaEntity extends Monster {
                 .add(Attributes.ATTACK_DAMAGE, 4.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.JUMP_STRENGTH, 5.0)
-                .add(Attributes.FOLLOW_RANGE, 32.0D);
+                .add(Attributes.FOLLOW_RANGE, 60.0D);
     }
 
     @Override

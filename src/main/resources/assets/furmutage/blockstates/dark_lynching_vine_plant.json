@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "berries=false": {
+      "model": "furmutage:block/dark_lynching_vine_plant"
+    },
+    "berries=true": {
+      "model": "furmutage:block/dark_lynching_vine_plant_berries"
+    }
+  }
+}
+
+

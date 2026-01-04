@@ -75,13 +75,7 @@ public class TaintedDarkTallGrassBlock extends DoublePlantBlock {
                state.is(ModBlocks.TAINTED_DARK_DIRT.get()) ||
                state.is(ModBlocks.TAINTED_DARK_SAND.get()) ||
                state.is(ModBlocks.TAINTED_DARK_LOG.get()) ||
-               state.is(ModBlocks.STRIPPED_TAINTED_DARK_LOG.get()) ||
-               state.is(ModBlocks.TAINTED_DARK_PLANKS.get()) ||
-               state.is(Blocks.GRASS_BLOCK) ||
-               state.is(Blocks.DIRT) ||
-               state.is(Blocks.COARSE_DIRT) ||
-               state.is(Blocks.SAND) ||
-               state.is(Blocks.RED_SAND);
+               state.is(ModBlocks.STRIPPED_TAINTED_DARK_LOG.get());
     }
 
     @Override

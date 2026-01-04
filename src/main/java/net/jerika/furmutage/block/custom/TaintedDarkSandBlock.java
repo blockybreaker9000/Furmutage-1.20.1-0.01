@@ -200,13 +200,13 @@ public class TaintedDarkSandBlock extends SandBlock {
                     // Fallback: try alternative pup names
                     if (darkLatexType == null) {
                         darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
-                                ResourceLocation.tryParse("changed:dark_latex_pup")
+                                ResourceLocation.tryParse("changed:dark_latex_wolf_male")
                         );
                     }
                 } else {
                     // Try to find the Dark Latex Wolf entity type
                     darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
-                            ResourceLocation.tryParse("changed:dark_latex_wolf")
+                            ResourceLocation.tryParse("changed:dark_latex_wolf_female")
                     );
                 }
                 
@@ -290,7 +290,7 @@ public class TaintedDarkSandBlock extends SandBlock {
     }
     
     /**
-     * Rarely spawns a Changed mod crystal (pup crystal or other crystals) on top of this block.
+     * Rarely spawns Changed mod crystals in small clusters on top of tainted dark blocks.
      */
     private void spawnChangedCrystalOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
         BlockPos abovePos = pos.above();
@@ -305,6 +305,9 @@ public class TaintedDarkSandBlock extends SandBlock {
         if (hasChangedCrystalNearby(level, abovePos, 15)) {
             return;
         }
+        
+        // Determine cluster size (2-5 crystals)
+        int clusterSize = 2 + random.nextInt(4); // 2, 3, 4, or 5 crystals
         
         // Try to get Changed mod crystal blocks using reflection
         try {
@@ -327,62 +330,99 @@ public class TaintedDarkSandBlock extends SandBlock {
             java.util.List<String> crystalList = new java.util.ArrayList<>(java.util.Arrays.asList(crystalNames));
             java.util.Collections.shuffle(crystalList, new java.util.Random(random.nextLong()));
             
-            // Try each crystal type in random order
+            // Collect all available crystal blocks
+            java.util.List<net.minecraft.world.level.block.Block> availableCrystals = new java.util.ArrayList<>();
             for (String crystalName : crystalList) {
                 try {
-                    // Get the RegistryObject field
                     java.lang.reflect.Field field = changedBlocksClass.getField(crystalName);
                     Object registryObject = field.get(null);
-                    
-                    // Get the actual block from the RegistryObject
                     java.lang.reflect.Method getMethod = registryObject.getClass().getMethod("get");
                     net.minecraft.world.level.block.Block crystalBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(registryObject);
-                    
                     if (crystalBlock != null) {
-                        // Check if this is a double block (has DOUBLE_BLOCK_HALF property)
-                        BlockState crystalState = crystalBlock.defaultBlockState();
-                        boolean isDoubleBlock = crystalState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF);
-                        
-                        if (isDoubleBlock) {
-                            // Check if there's space for both halves
-                            BlockPos upperPos = abovePos.above();
-                            BlockState upperState = level.getBlockState(upperPos);
-                            
-                            if (!upperState.isAir()) {
-                                continue; // Not enough space, try next crystal type
-                            }
-                            
-                            // Place the lower half
-                            BlockState lowerState = crystalState.setValue(
-                                net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
-                                net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER
-                            );
-                            level.setBlock(abovePos, lowerState, 3);
-                            
-                            // Place the upper half
-                            BlockState upperCrystalState = crystalState.setValue(
-                                net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
-                                net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER
-                            );
-                            level.setBlock(upperPos, upperCrystalState, 3);
-                        } else {
-                            // Single block crystal, just place it
-                            level.setBlock(abovePos, crystalState, 3);
-                        }
-                        
-                        return; // Successfully placed a crystal
+                        availableCrystals.add(crystalBlock);
                     }
                 } catch (Exception e) {
-                    // Try next crystal type if this one fails
+                    // Skip this crystal type if it fails
                     continue;
                 }
+            }
+            
+            if (availableCrystals.isEmpty()) {
+                return; // No crystals available
+            }
+            
+            // Find valid positions in a small radius (2-3 blocks) for the cluster
+            java.util.List<BlockPos> validPositions = new java.util.ArrayList<>();
+            int clusterRadius = 3;
+            
+            for (int x = -clusterRadius; x <= clusterRadius; x++) {
+                for (int z = -clusterRadius; z <= clusterRadius; z++) {
+                    BlockPos checkPos = pos.offset(x, 0, z);
+                    BlockPos checkAbovePos = checkPos.above();
+                    BlockState checkState = level.getBlockState(checkPos);
+                    BlockState checkAboveState = level.getBlockState(checkAbovePos);
+                    
+                    // Check if the block below is valid (tainted dark grass or sand) and space above is air
+                    if ((checkState.is(ModBlocks.TAINTED_DARK_GRASS.get()) || 
+                         checkState.is(ModBlocks.TAINTED_DARK_SAND.get())) &&
+                        checkAboveState.isAir()) {
+                        validPositions.add(checkAbovePos);
+                    }
+                }
+            }
+            
+            if (validPositions.isEmpty()) {
+                return; // No valid positions found
+            }
+            
+            // Shuffle valid positions to randomize placement
+            java.util.Collections.shuffle(validPositions, new java.util.Random(random.nextLong()));
+            
+            // Place crystals in the cluster
+            int crystalsPlaced = 0;
+            for (int i = 0; i < Math.min(clusterSize, validPositions.size()) && crystalsPlaced < clusterSize; i++) {
+                BlockPos crystalPos = validPositions.get(i);
+                
+                // Randomly select a crystal type for this position
+                net.minecraft.world.level.block.Block crystalBlock = availableCrystals.get(random.nextInt(availableCrystals.size()));
+                BlockState crystalState = crystalBlock.defaultBlockState();
+                boolean isDoubleBlock = crystalState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF);
+                
+                if (isDoubleBlock) {
+                    // Check if there's space for both halves
+                    BlockPos upperPos = crystalPos.above();
+                    BlockState upperState = level.getBlockState(upperPos);
+                    
+                    if (!upperState.isAir()) {
+                        continue; // Not enough space, try next position
+                    }
+                    
+                    // Place the lower half
+                    BlockState lowerState = crystalState.setValue(
+                        net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
+                        net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER
+                    );
+                    level.setBlock(crystalPos, lowerState, 3);
+                    
+                    // Place the upper half
+                    BlockState upperCrystalState = crystalState.setValue(
+                        net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
+                        net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER
+                    );
+                    level.setBlock(upperPos, upperCrystalState, 3);
+                } else {
+                    // Single block crystal, just place it
+                    level.setBlock(crystalPos, crystalState, 3);
+                }
+                
+                crystalsPlaced++;
             }
         } catch (ClassNotFoundException e) {
             // Changed mod not loaded, skip
             furmutage.LOGGER.debug("Changed mod not found, skipping crystal spawn");
         } catch (Exception e) {
             // Log error but don't crash
-            furmutage.LOGGER.warn("Failed to spawn Changed mod crystal: {}", e.getMessage());
+            furmutage.LOGGER.warn("Failed to spawn Changed mod crystal cluster: {}", e.getMessage());
         }
     }
     

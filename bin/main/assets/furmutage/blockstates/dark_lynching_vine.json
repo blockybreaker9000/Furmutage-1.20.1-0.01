@@ -1,0 +1,82 @@
+{
+  "variants": {
+    "age=0": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=1": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=2": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=3": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=4": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=5": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=6": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=7": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=8": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=9": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=10": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=11": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=12": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=13": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=14": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=15": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=16": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=17": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=18": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=19": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=20": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=21": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=22": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=23": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=24": {
+      "model": "furmutage:block/dark_lynching_vine"
+    },
+    "age=25": {
+      "model": "furmutage:block/dark_lynching_vine"
+    }
+  }
+}

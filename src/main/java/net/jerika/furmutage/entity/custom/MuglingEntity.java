@@ -111,7 +111,8 @@ public class MuglingEntity extends Animal {
                 .add(Attributes.MAX_HEALTH, 5)
                 .add(Attributes.MOVEMENT_SPEED, 0.5)
                 .add(Attributes.ARMOR_TOUGHNESS, 1)
-                .add(Attributes.ATTACK_KNOCKBACK, 0.0D);
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
+                .add(Attributes.FOLLOW_RANGE, 60.0D);
     }
     @Nullable
     @Override

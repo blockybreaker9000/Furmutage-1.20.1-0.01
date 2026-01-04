@@ -87,6 +87,7 @@ public class TaintedBlockEvents {
         
         // Check if entity's bounding box is actually touching/intersecting with a tainted block
         boolean isTouchingTaintedWhiteBlock = false;
+        boolean isTouchingTaintedDarkTallGrass = false;
         
         // Get entity's bounding box
         AABB entityBounds = entity.getBoundingBox();
@@ -103,16 +104,17 @@ public class TaintedBlockEvents {
         int maxZ = (int) Math.ceil(expandedBounds.maxZ);
         
         // Check each block position that the entity overlaps
-        for (int x = minX; x <= maxX && !isTouchingTaintedWhiteBlock; x++) {
-            for (int y = minY; y <= maxY && !isTouchingTaintedWhiteBlock; y++) {
-                for (int z = minZ; z <= maxZ && !isTouchingTaintedWhiteBlock; z++) {
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                for (int z = minZ; z <= maxZ; z++) {
                     BlockPos checkPos = new BlockPos(x, y, z);
                     BlockState blockState = level.getBlockState(checkPos);
                     Block checkBlock = blockState.getBlock();
                     
                     boolean isWhiteBlock = isTaintedWhiteBlock(checkBlock);
+                    boolean isDarkTallGrass = checkBlock == ModBlocks.TAINTED_DARK_TALL_GRASS.get();
                     
-                    if (isWhiteBlock) {
+                    if (isWhiteBlock && !isTouchingTaintedWhiteBlock) {
                         // Check if the block's collision shape intersects with the entity's bounding box
                         VoxelShape blockShape = blockState.getCollisionShape(level, checkPos);
                         
@@ -141,6 +143,21 @@ public class TaintedBlockEvents {
                         
                         if (intersects) {
                             isTouchingTaintedWhiteBlock = true;
+                        }
+                    }
+                    
+                    if (isDarkTallGrass && !isTouchingTaintedDarkTallGrass) {
+                        // For tall grass (blocks with no collision), check if entity's bounding box overlaps block space
+                        // Tall grass blocks have no collision, so entities pass through them
+                        // Check if entity's bounding box intersects with the block's bounding box
+                        AABB blockBounds = new AABB(
+                            checkPos.getX(), checkPos.getY(), checkPos.getZ(),
+                            checkPos.getX() + 1, checkPos.getY() + 1, checkPos.getZ() + 1
+                        );
+                        
+                        if (entityBounds.intersects(blockBounds)) {
+                            isTouchingTaintedDarkTallGrass = true;
+                            furmutage.LOGGER.debug("Entity {} detected touching dark tall grass at {}", entity.getName().getString(), checkPos);
                         }
                     }
                 }
@@ -188,8 +205,20 @@ public class TaintedBlockEvents {
             }
         }
         
+        // Handle dark tainted tall grass (dark latex infection, like laser emitter)
+        if (isTouchingTaintedDarkTallGrass) {
+            // Only process untransfurred entities
+            if (!isTransfurred(entity)) {
+                furmutage.LOGGER.debug("Entity {} is touching dark tall grass, applying dark latex transfur", entity.getName().getString());
+                // Apply dark latex transfur progress (like laser emitter does)
+                applyDarkLatexTransfur(entity, level);
+            } else {
+                furmutage.LOGGER.debug("Entity {} is touching dark tall grass but is already transfurred, skipping", entity.getName().getString());
+            }
+        }
+        
         // If not touching any tainted block, clear exposure time
-        if (!isTouchingTaintedWhiteBlock) {
+        if (!isTouchingTaintedWhiteBlock && !isTouchingTaintedDarkTallGrass) {
             exposureTime.remove(entity);
         }
     }
@@ -244,8 +273,8 @@ public class TaintedBlockEvents {
      */
     private static void applyWhiteLatexTransfur(LivingEntity entity, Level level) {
         // Apply transfur progress similar to WhiteLatexPillar (4.8f per tick when inside)
-        // WhiteLatexPillar applies 4.8f every single tick in entityInside(), so we do the same
-        float progressAmount = 4.8f; // Same as WhiteLatexPillar - apply every tick
+        // WhiteLatexPillar applies 1.0f every single tick in entityInside(), so we do the same
+        float progressAmount = 1.0f; // Same as WhiteLatexPillar - apply every tick
         
         try {
             // Use ProcessTransfur.progressTransfur like WhiteLatexPillar does
@@ -339,6 +368,111 @@ public class TaintedBlockEvents {
             furmutage.LOGGER.warn("Unexpected error applying transfur progress: {} - {}", 
                 e.getClass().getSimpleName(), e.getMessage(), e);
             fallbackToEntityReplacement(entity, level);
+        }
+    }
+    
+    /**
+     * Applies dark latex transfur progress to an entity (like laser emitter does).
+     */
+    private static void applyDarkLatexTransfur(LivingEntity entity, Level level) {
+        // Apply transfur progress similar to laser emitter (1.0f per tick when inside)
+        float progressAmount = 1.0f; // Same as white latex - apply every tick
+        
+        try {
+            // Use ProcessTransfur.progressTransfur like white latex does
+            Class<?> processTransfurClass = Class.forName("net.ltxprogrammer.changed.process.ProcessTransfur");
+            Class<?> transfurVariantClass = Class.forName("net.ltxprogrammer.changed.entity.variant.TransfurVariant");
+            Class<?> transfurContextClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurContext");
+            Class<?> transfurCauseClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurCause");
+            Class<?> changedVariantsClass = Class.forName("net.ltxprogrammer.changed.init.ChangedTransfurVariants");
+            
+            // Get DARK_LATEX_WOLF_MALE variant (it's a RegistryObject, need to call .get() on it)
+            java.lang.reflect.Field darkLatexField = changedVariantsClass.getField("DARK_LATEX_WOLF_MALE");
+            Object darkLatexRegistryObject = darkLatexField.get(null);
+            
+            if (darkLatexRegistryObject == null) {
+                furmutage.LOGGER.warn("DARK_LATEX_WOLF_MALE RegistryObject not found in ChangedTransfurVariants");
+                return;
+            }
+            
+            // Call .get() on the RegistryObject to get the actual TransfurVariant
+            java.lang.reflect.Method getMethod = darkLatexRegistryObject.getClass().getMethod("get");
+            Object darkLatexVariant = getMethod.invoke(darkLatexRegistryObject);
+            
+            if (darkLatexVariant == null) {
+                furmutage.LOGGER.warn("DARK_LATEX_WOLF_MALE.get() returned null - variant may not be registered yet");
+                return;
+            }
+            
+            // Get TransfurCause - try common dark latex cause names
+            Object darkLatexCause = null;
+            String[] causeNames = {"DARK_LATEX", "LATEX", "LATEX_WALL_SPLOTCH", "DARK_LATEX_WOLF"};
+            for (String causeName : causeNames) {
+                try {
+                    java.lang.reflect.Field darkLatexCauseField = transfurCauseClass.getField(causeName);
+                    darkLatexCause = darkLatexCauseField.get(null);
+                    if (darkLatexCause != null) {
+                        furmutage.LOGGER.debug("Found TransfurCause: {}", causeName);
+                        break;
+                    }
+                } catch (NoSuchFieldException e) {
+                    // Try next cause name
+                    continue;
+                }
+            }
+            
+            if (darkLatexCause == null) {
+                furmutage.LOGGER.warn("Could not find any valid TransfurCause for dark latex (tried: DARK_LATEX, LATEX, LATEX_WALL_SPLOTCH, DARK_LATEX_WOLF)");
+                return;
+            }
+            
+            // Get TransfurContext.hazard(TransfurCause.DARK_LATEX)
+            java.lang.reflect.Method hazardMethod = transfurContextClass.getMethod("hazard", transfurCauseClass);
+            Object transfurContext = hazardMethod.invoke(null, darkLatexCause);
+            
+            if (transfurContext == null) {
+                furmutage.LOGGER.warn("TransfurContext.hazard() returned null");
+                return;
+            }
+            
+            // Call ProcessTransfur.progressTransfur(entity, amount, variant, context)
+            java.lang.reflect.Method progressTransfurMethod = processTransfurClass.getMethod(
+                "progressTransfur", 
+                LivingEntity.class, 
+                float.class, 
+                transfurVariantClass, 
+                transfurContextClass
+            );
+            
+            furmutage.LOGGER.debug("Calling ProcessTransfur.progressTransfur for {} with amount {} (dark latex)", 
+                entity.getName().getString(), progressAmount);
+            
+            boolean result = (Boolean) progressTransfurMethod.invoke(null, entity, progressAmount, darkLatexVariant, transfurContext);
+            
+            if (result) {
+                furmutage.LOGGER.info("Successfully transfurred {} to Dark Latex Wolf Male", 
+                    entity.getName().getString());
+            } else {
+                furmutage.LOGGER.debug("Applied transfur progress to {}: {} points (not yet transfurred)", 
+                    entity.getName().getString(), progressAmount);
+            }
+        } catch (ClassNotFoundException e) {
+            furmutage.LOGGER.warn("Changed mod class not found for dark latex transfur progress: {}", e.getMessage());
+        } catch (NoSuchFieldException e) {
+            furmutage.LOGGER.warn("Changed mod field not found for dark latex transfur progress: {}", e.getMessage());
+        } catch (NoSuchMethodException e) {
+            furmutage.LOGGER.warn("Changed mod method not found for dark latex transfur progress: {}", e.getMessage());
+        } catch (java.lang.reflect.InvocationTargetException e) {
+            Throwable cause = e.getCause();
+            if (cause != null) {
+                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur for dark latex: {} - {}", 
+                    cause.getClass().getSimpleName(), cause.getMessage());
+            } else {
+                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur for dark latex: {}", e.getMessage());
+            }
+        } catch (Exception e) {
+            furmutage.LOGGER.warn("Unexpected error applying dark latex transfur progress: {} - {}", 
+                e.getClass().getSimpleName(), e.getMessage(), e);
         }
     }
     

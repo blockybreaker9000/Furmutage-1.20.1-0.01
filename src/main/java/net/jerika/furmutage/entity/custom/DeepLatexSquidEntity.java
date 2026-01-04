@@ -86,7 +86,7 @@ public class DeepLatexSquidEntity extends PathfinderMob {
             .add(Attributes.MOVEMENT_SPEED, 0.925D) // Matches AbstractLatexSquidDog
             .add(Attributes.ATTACK_DAMAGE, 4.0D)
             .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-            .add(Attributes.FOLLOW_RANGE, 32.0D);
+            .add(Attributes.FOLLOW_RANGE, 60.0D);
         
         // Add Forge attributes if available
         try {
