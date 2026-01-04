@@ -5,14 +5,17 @@ import net.jerika.furmutage.entity.client.model.LatexExoMutantModel;
 import net.jerika.furmutage.entity.client.model.ModModelLayers;
 import net.jerika.furmutage.entity.custom.LatexExoMutantEntity;
 import net.jerika.furmutage.furmutage;
+import net.ltxprogrammer.changed.client.renderer.AdvancedHumanoidRenderer;
+import net.ltxprogrammer.changed.client.renderer.model.armor.ArmorLatexMaleWolfModel;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
-public class LatexExoMutantRenderer extends MobRenderer<LatexExoMutantEntity, LatexExoMutantModel<LatexExoMutantEntity>> {
+public class LatexExoMutantRenderer extends AdvancedHumanoidRenderer<LatexExoMutantEntity, LatexExoMutantModel<LatexExoMutantEntity>, 
+        ArmorLatexMaleWolfModel<LatexExoMutantEntity>> {
     public LatexExoMutantRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext, new LatexExoMutantModel<>(pContext.bakeLayer(ModModelLayers.LATEX_EXO_MUTANT_LAYER)), 0.5f);
+        super(pContext, new LatexExoMutantModel<>(pContext.bakeLayer(ModModelLayers.LATEX_EXO_MUTANT_LAYER)),
+                ArmorLatexMaleWolfModel.MODEL_SET, 0.5f);
     }
 
     @Override

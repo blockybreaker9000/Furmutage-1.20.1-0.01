@@ -12,9 +12,9 @@ import net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexCowEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexPigEntity;
+import net.jerika.furmutage.entity.custom.GiantPureWhiteLatexEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity;
-import net.jerika.furmutage.entity.custom.DeepLatexSquidEntity;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -89,9 +89,9 @@ public class ModEntities {
             ENTITY_TYPES.register("white_latex_horse", () -> EntityType.Builder.of(WhiteLatexHorseEntity::new, MobCategory.CREATURE)
                     .sized(1.3964844f, 1.6f).build("white_latex_horse"));
     
-    public static final RegistryObject<EntityType<net.jerika.furmutage.entity.custom.DeepLatexSquidEntity>> DEEP_LATEX_SQUID =
-            ENTITY_TYPES.register("deep_latex_squid", () -> EntityType.Builder.of(net.jerika.furmutage.entity.custom.DeepLatexSquidEntity::new, MobCategory.WATER_CREATURE)
-                    .sized(0.8f, 0.8f).build("deep_latex_squid"));
+    public static final RegistryObject<EntityType<GiantPureWhiteLatexEntity>> GIANT_PURE_WHITE_LATEX =
+            ENTITY_TYPES.register("giant_pure_white_latex", () -> EntityType.Builder.of(GiantPureWhiteLatexEntity::new, MobCategory.MONSTER)
+                    .sized(1.5f, 6.0f).build("giant_pure_white_latex"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

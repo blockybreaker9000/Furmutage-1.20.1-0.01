@@ -2,11 +2,12 @@ package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.ExoMutantJumpClimbGoal;
+import net.ltxprogrammer.changed.entity.ChangedEntity;
+import net.ltxprogrammer.changed.entity.TransfurMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
@@ -18,7 +19,6 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.animal.IronGolem;
-import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -28,15 +28,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class LatexExoMutantEntity extends Monster {
-    public final AnimationState idleAnimationState = new AnimationState();
-    public final AnimationState attackAnimationState = new AnimationState();
-    public int attackAnimationTimeout = 0;
-    public final AnimationState jumpAnimationState = new AnimationState();
-    public int jumpAnimationTimeout = 0;
-    public final AnimationState swimAnimationState = new AnimationState();
+public class LatexExoMutantEntity extends ChangedEntity {
 
-    public LatexExoMutantEntity(EntityType<? extends Monster> pEntityType, Level pLevel) {
+    public LatexExoMutantEntity(EntityType<? extends ChangedEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
 
@@ -44,99 +38,10 @@ public class LatexExoMutantEntity extends Monster {
     public void tick() {
         super.tick();
 
-        if (this.level().isClientSide()) {
-            setupAnimationStates();
-        }
-
         // Wall climbing logic
         if (!this.level().isClientSide && this.horizontalCollision) {
             this.setDeltaMovement(this.getDeltaMovement().x, 0.2D, this.getDeltaMovement().z);
         }
-    }
-
-    private void setupAnimationStates() {
-        // Idle animation: play continuously when stationary (like pure white latex)
-        if (this.getDeltaMovement().horizontalDistanceSqr() < 1.0E-6 && this.onGround()) {
-            if (!this.idleAnimationState.isStarted()) {
-                this.idleAnimationState.start(this.tickCount);
-            }
-        } else {
-            this.idleAnimationState.stop();
-        }
-
-        // Attack animation - triggered when attacking
-        if (this.swinging && attackAnimationTimeout <= 0) {
-            attackAnimationTimeout = 12; // Animation length (0.6s * 20 ticks)
-            attackAnimationState.start(this.tickCount);
-        } else {
-            --this.attackAnimationTimeout;
-        }
-
-        if (!this.swinging && attackAnimationTimeout <= 0) {
-            attackAnimationState.stop();
-        }
-
-        // Jump animation - only trigger if entity is 2 blocks or higher from ground
-        if (isAtLeast2BlocksHigh()) {
-            if (!this.jumpAnimationState.isStarted()) {
-                jumpAnimationTimeout = 10;
-                this.jumpAnimationState.start(this.tickCount);
-            }
-        } else if (this.onGround() && jumpAnimationTimeout <= 0) {
-            this.jumpAnimationState.stop();
-        } else if (jumpAnimationTimeout > 0) {
-            --this.jumpAnimationTimeout;
-        }
-
-        // Swimming animation - play when in water
-        if (this.isInWater()) {
-            if (!this.swimAnimationState.isStarted()) {
-                this.swimAnimationState.start(this.tickCount);
-            }
-        } else {
-            this.swimAnimationState.stop();
-        }
-    }
-
-    /**
-     * Checks if the entity is at least 2 blocks high from the ground
-     */
-    private boolean isAtLeast2BlocksHigh() {
-        if (this.onGround()) {
-            return false;
-        }
-
-        BlockPos entityPos = this.blockPosition();
-        double entityY = this.getY();
-        
-        // Find the first solid block below the entity
-        for (int y = 0; y <= 10; y++) {
-            BlockPos checkPos = entityPos.below(y);
-            BlockState state = this.level().getBlockState(checkPos);
-            
-            // Check if block is solid (not air and has collision shape)
-            if (!state.isAir() && !state.getCollisionShape(this.level(), checkPos).isEmpty()) {
-                double groundY = checkPos.getY() + 1.0; // Top of the block
-                double distanceFromGround = entityY - groundY;
-                
-                // Check if entity is at least 2 blocks (2.0) above the ground
-                return distanceFromGround >= 2.0;
-            }
-        }
-        
-        // If no solid block found within 10 blocks, assume we're high enough
-        return true;
-    }
-
-    @Override
-    protected void updateWalkAnimation(float pPartialTick) {
-        float f;
-        if (this.getPose() == Pose.STANDING) {
-            f = Math.min(pPartialTick * 6f, 1f);
-        } else {
-            f = 0f;
-        }
-        this.walkAnimation.update(f, 0.2f);
     }
 
 
@@ -186,7 +91,7 @@ public class LatexExoMutantEntity extends Monster {
     }
 
     public static AttributeSupplier.Builder createMobAttributes() {
-        return Monster.createLivingAttributes()
+        return ChangedEntity.createLatexAttributes()
                 .add(Attributes.MAX_HEALTH, 160.0D) // 80 hearts
                 .add(Attributes.MOVEMENT_SPEED, 0.35D) // Increased speed
                 .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
@@ -255,6 +160,11 @@ public class LatexExoMutantEntity extends Monster {
     }
 
     public void setExoMutantAttack(boolean b) {
+    }
+
+    @Override
+    public TransfurMode getTransfurMode() {
+        return TransfurMode.REPLICATION;
     }
 }
 

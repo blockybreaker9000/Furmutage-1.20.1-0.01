@@ -24,7 +24,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private LivingEntity target;
     private static final double JUMP_DISTANCE = 4.0D; // Jump when within 4 blocks of obstacle
     private static final double GAP_JUMP_DISTANCE = 3.0D; // Jump across gaps up to 3 blocks
-    private static final double MAX_OBSTACLE_HEIGHT = 3.0D; // Can jump over obstacles up to 3 blocks high
+    private static final double MIN_WALL_HEIGHT = 2.0D; // Minimum wall height to jump (2 blocks)
+    private static final double MAX_OBSTACLE_HEIGHT = 5.0D; // Can jump over obstacles up to 5 blocks high
     private static final double MIN_TARGET_HEIGHT_DIFF = 2.0D; // Minimum height difference to trigger jump (2 blocks)
     private static final double MAX_JUMP_HEIGHT = 5.0D; // Maximum jump height (5 blocks)
     private int jumpCooldown = 0;
@@ -161,25 +162,101 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         // Check if there's a solid block in front
         BlockState frontBlock = this.mob.level().getBlockState(checkPos);
-        BlockState frontBlockAbove = this.mob.level().getBlockState(checkPos.above());
-        
-        // Check if there's a block in front but space above to jump
-        boolean hasBlockInFront = !frontBlock.isAir() && !frontBlock.getCollisionShape(this.mob.level(), checkPos).isEmpty();
-        boolean hasSpaceAbove = frontBlockAbove.isAir() || frontBlockAbove.getCollisionShape(this.mob.level(), checkPos.above()).isEmpty();
         
         // Special case: Check for fences (they're 1.5 blocks tall and jumpable)
         boolean isFence = isFenceBlock(frontBlock);
-        if (isFence && hasSpaceAbove) {
-            return true; // Fences are always jumpable if there's space above
+        if (isFence) {
+            BlockState frontBlockAbove = this.mob.level().getBlockState(checkPos.above());
+            boolean hasSpaceAbove = frontBlockAbove.isAir() || frontBlockAbove.getCollisionShape(this.mob.level(), checkPos.above()).isEmpty();
+            if (hasSpaceAbove) {
+                return true; // Fences are always jumpable if there's space above
+            }
         }
         
-        if (hasBlockInFront && hasSpaceAbove) {
-            // Check if the block is not too high
-            double blockHeight = checkPos.getY() + 1.0;
-            double mobY = this.mob.getY();
-            double heightDiff = blockHeight - mobY;
+        // Check for walls 2-5 blocks high
+        // Count how many solid blocks are stacked vertically
+        int wallHeight = 0;
+        BlockPos currentCheck = checkPos;
+        double mobY = this.mob.getY();
+        
+        // Check blocks from ground level up to 6 blocks (to detect walls up to 5 blocks high)
+        for (int y = 0; y <= 6; y++) {
+            BlockPos checkBlockPos = currentCheck.atY((int)Math.floor(mobY) + y);
+            BlockState blockState = this.mob.level().getBlockState(checkBlockPos);
             
-            return heightDiff <= MAX_OBSTACLE_HEIGHT && heightDiff > 0.5D;
+            // Check if this block is solid (has collision)
+            boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
+            
+            if (isSolid) {
+                wallHeight++;
+            } else {
+                // We've hit air, check if we have a valid wall height
+                if (wallHeight >= MIN_WALL_HEIGHT && wallHeight <= MAX_OBSTACLE_HEIGHT) {
+                    // Check if there's clear space above the wall for the entity to pass
+                    // Need to check if the space above the wall is clear for at least 2 blocks (entity height)
+                    boolean hasClearSpaceAbove = true;
+                    for (int clearCheck = 1; clearCheck <= 3; clearCheck++) {
+                        BlockPos spaceCheckPos = checkBlockPos.above(clearCheck - 1);
+                        BlockState spaceBlock = this.mob.level().getBlockState(spaceCheckPos);
+                        if (!spaceBlock.isAir() && !spaceBlock.getCollisionShape(this.mob.level(), spaceCheckPos).isEmpty()) {
+                            hasClearSpaceAbove = false;
+                            break;
+                        }
+                    }
+                    
+                    // Also check if entity's current position has clear space above
+                    BlockPos entityHeadPos = mobPos.above(1);
+                    BlockState entityHeadBlock = this.mob.level().getBlockState(entityHeadPos);
+                    boolean entityHasClearSpace = entityHeadBlock.isAir() || entityHeadBlock.getCollisionShape(this.mob.level(), entityHeadPos).isEmpty();
+                    
+                    if (hasClearSpaceAbove && entityHasClearSpace) {
+                        return true; // Found a valid wall 2-5 blocks high that we can jump over
+                    }
+                }
+                // Reset wall height if we hit air before reaching minimum height
+                wallHeight = 0;
+            }
+        }
+        
+        // Also check if there's a solid block starting from the ground at checkPos
+        BlockPos groundCheck = checkPos.below();
+        BlockState groundBlock = this.mob.level().getBlockState(groundCheck);
+        boolean hasGround = !groundBlock.isAir() && !groundBlock.getCollisionShape(this.mob.level(), groundCheck).isEmpty();
+        
+        if (hasGround) {
+            // Check wall from ground level
+            wallHeight = 0;
+            for (int y = 0; y <= 6; y++) {
+                BlockPos checkBlockPos = groundCheck.above(y + 1);
+                BlockState blockState = this.mob.level().getBlockState(checkBlockPos);
+                boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
+                
+                if (isSolid) {
+                    wallHeight++;
+                } else {
+                    if (wallHeight >= MIN_WALL_HEIGHT && wallHeight <= MAX_OBSTACLE_HEIGHT) {
+                        // Check clear space above wall
+                        boolean hasClearSpaceAbove = true;
+                        for (int clearCheck = 1; clearCheck <= 3; clearCheck++) {
+                            BlockPos spaceCheckPos = checkBlockPos.above(clearCheck - 1);
+                            BlockState spaceBlock = this.mob.level().getBlockState(spaceCheckPos);
+                            if (!spaceBlock.isAir() && !spaceBlock.getCollisionShape(this.mob.level(), spaceCheckPos).isEmpty()) {
+                                hasClearSpaceAbove = false;
+                                break;
+                            }
+                        }
+                        
+                        BlockPos entityHeadPos = mobPos.above(1);
+                        BlockState entityHeadBlock = this.mob.level().getBlockState(entityHeadPos);
+                        boolean entityHasClearSpace = entityHeadBlock.isAir() || entityHeadBlock.getCollisionShape(this.mob.level(), entityHeadPos).isEmpty();
+                        
+                        if (hasClearSpaceAbove && entityHasClearSpace) {
+                            return true;
+                        }
+                    }
+                    wallHeight = 0;
+                }
+            }
         }
         
         return false;
@@ -293,7 +370,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private void performObstacleJump() {
         Vec3 lookVec = this.mob.getLookAngle();
         
-        // Check if we're jumping over a fence (needs slightly different jump)
+        // Calculate wall height to adjust jump strength
         BlockPos mobPos = this.mob.blockPosition();
         BlockPos checkPos = mobPos.offset(
             (int) Math.signum(lookVec.x),
@@ -303,8 +380,63 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         BlockState frontBlock = this.mob.level().getBlockState(checkPos);
         boolean isFence = isFenceBlock(frontBlock);
         
-        double jumpHeight = isFence ? 0.5D : 0.6D; // Reduced jump height
-        double forwardMomentum = isFence ? 0.4D : 0.35D; // Reduced forward momentum
+        // Measure wall height
+        double wallHeight = 1.0D; // Default to 1 block
+        if (!isFence) {
+            BlockPos currentCheck = checkPos;
+            double mobY = this.mob.getY();
+            int blocksHigh = 0;
+            
+            for (int y = 0; y <= 6; y++) {
+                BlockPos checkBlockPos = currentCheck.atY((int)Math.floor(mobY) + y);
+                BlockState blockState = this.mob.level().getBlockState(checkBlockPos);
+                boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
+                
+                if (isSolid) {
+                    blocksHigh++;
+                } else if (blocksHigh > 0) {
+                    wallHeight = blocksHigh;
+                    break;
+                }
+            }
+            
+            // Also check from ground level
+            BlockPos groundCheck = checkPos.below();
+            BlockState groundBlock = this.mob.level().getBlockState(groundCheck);
+            boolean hasGround = !groundBlock.isAir() && !groundBlock.getCollisionShape(this.mob.level(), groundCheck).isEmpty();
+            
+            if (hasGround) {
+                blocksHigh = 0;
+                for (int y = 0; y <= 6; y++) {
+                    BlockPos checkBlockPos = groundCheck.above(y + 1);
+                    BlockState blockState = this.mob.level().getBlockState(checkBlockPos);
+                    boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
+                    
+                    if (isSolid) {
+                        blocksHigh++;
+                    } else if (blocksHigh > 0) {
+                        if (blocksHigh > wallHeight) {
+                            wallHeight = blocksHigh;
+                        }
+                        break;
+                    }
+                }
+            }
+            
+            // Clamp wall height to valid range
+            wallHeight = Math.max(MIN_WALL_HEIGHT, Math.min(wallHeight, MAX_OBSTACLE_HEIGHT));
+        }
+        
+        // Calculate jump parameters based on wall height
+        // For 2 blocks: base jump, for 5 blocks: maximum jump
+        // Jump height scales with higher base and scaling for better wall clearance
+        // Increased jump heights: 2 blocks = 0.7, 3 blocks = 1.0, 4 blocks = 1.3, 5 blocks = 1.6
+        double jumpHeight = isFence ? 0.6D : 0.7D + (wallHeight - MIN_WALL_HEIGHT) * 0.3D;
+        jumpHeight = Math.min(jumpHeight, 1.6D); // Increased cap for 5-block walls
+        
+        // Forward momentum also scales with wall height (higher walls need more momentum)
+        double forwardMomentum = isFence ? 0.5D : 0.45D + (wallHeight - MIN_WALL_HEIGHT) * 0.04D;
+        forwardMomentum = Math.min(forwardMomentum, 0.6D); // Slightly increased forward momentum
         
         Vec3 jumpVec = new Vec3(
             lookVec.x * forwardMomentum,

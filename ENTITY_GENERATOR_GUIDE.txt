@@ -1,0 +1,102 @@
+================================================================================
+                    FURMUTAGE ENTITY GENERATOR GUIDE
+================================================================================
+
+QUICK START:
+------------
+
+1. Open ExampleEntityGenerator.java and modify it to create your entities
+2. Run the main() method
+3. Copy the generated snippets to ModEntities.java and furmutage.java
+4. Create texture files
+5. Register attributes in your mod's common setup event
+
+EXAMPLE CODE:
+-------------
+
+import net.jerika.furmutage.datagen.*;
+
+// Create a monster entity
+EntityConfig config = new EntityConfigBuilder("DarkLatexWolf")
+    .description("A dark latex wolf")
+    .monster()
+    .size(0.7f, 1.93f)
+    .health(30.0)
+    .speed(0.3)
+    .damage(5.0)
+    .hostile()
+    .avoidsWater(true)
+    .build();
+
+EntityGenerator.generateEntity(config);
+
+WHAT GETS GENERATED:
+--------------------
+
+✓ Entity class (entity/custom/YourEntityEntity.java)
+✓ Renderer class (entity/client/renderer/YourEntityEntityRenderer.java)
+✓ Registration code snippet (copy to ModEntities.java)
+✓ Client setup snippet (copy to furmutage.java)
+
+WHAT YOU NEED TO DO MANUALLY:
+-----------------------------
+
+1. Add registration code to ModEntities.java
+   - Copy from entity_generator_output/{name}_registration.txt
+
+2. Add client setup to furmutage.java
+   - Copy from entity_generator_output/{name}_client_setup.txt
+   - Add inside ClientModEvents.onClientSetup()
+
+3. Register attributes in common setup:
+   @SubscribeEvent
+   public static void registerAttributes(EntityAttributeCreationEvent event) {
+       event.put(ModEntities.YOUR_ENTITY.get(), YourEntityEntity.createAttributes().build());
+   }
+
+4. Create texture file:
+   src/main/resources/assets/furmutage/textures/entity/your_entity_name.png
+
+5. Create model class (if using custom model):
+   src/main/java/net/jerika/furmutage/entity/client/model/YourEntityNameModel.java
+   
+   And add to ModModelLayers.java:
+   public static final ModelLayerLocation YOUR_ENTITY_LAYER = 
+       new ModelLayerLocation(new ResourceLocation(furmutage.MOD_ID, "your_entity"), "main");
+
+COMMON CONFIGURATIONS:
+----------------------
+
+Hostile Monster:
+    .monster()
+    .hostile()
+    .damage(5.0)
+    .health(30.0)
+
+Peaceful Animal:
+    .animal()
+    .peaceful()
+    .babyScaling(true)
+
+Infected Vanilla Mob:
+    .extendsClass("Cow")
+    .category(EntityGenerator.MobCategory.MONSTER)
+    .hostile()
+
+Aquatic Entity:
+    .creature()
+    .category(EntityGenerator.MobCategory.WATER_CREATURE)
+    .canSwim(true)
+
+TIPS:
+-----
+
+- Use .addImport() for custom AI goals or other dependencies
+- Use .addField() and .addMethod() for additional functionality
+- Sound events should be registered in ModSounds.java first
+- Check existing entities for reference on custom implementations
+
+For more details, see: src/main/java/net/jerika/furmutage/datagen/README.md
+
+================================================================================
+

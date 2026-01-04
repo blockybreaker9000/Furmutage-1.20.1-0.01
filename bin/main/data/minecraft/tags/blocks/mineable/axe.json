@@ -1,5 +1,28 @@
 {
   "values": [
-
+    "furmutage:tainted_white_log",
+    "furmutage:stripped_tainted_white_log",
+    "furmutage:tainted_white_planks",
+    "furmutage:tainted_white_slab",
+    "furmutage:tainted_white_stairs",
+    "furmutage:tainted_white_fence",
+    "furmutage:tainted_white_fence_gate",
+    "furmutage:tainted_white_door",
+    "furmutage:tainted_white_trapdoor",
+    "furmutage:tainted_white_button",
+    "furmutage:tainted_white_pressure_plate",
+    "furmutage:tainted_white_ladder",
+    "furmutage:tainted_dark_log",
+    "furmutage:stripped_tainted_dark_log",
+    "furmutage:tainted_dark_planks",
+    "furmutage:tainted_dark_slab",
+    "furmutage:tainted_dark_stairs",
+    "furmutage:tainted_dark_fence",
+    "furmutage:tainted_dark_fence_gate",
+    "furmutage:tainted_dark_door",
+    "furmutage:tainted_dark_trapdoor",
+    "furmutage:tainted_dark_button",
+    "furmutage:tainted_dark_pressure_plate",
+    "furmutage:tainted_dark_ladder"
   ]
 }

@@ -2,17 +2,25 @@ package net.jerika.furmutage.entity.client.model;
 
 // Made with Blockbench 5.0.7
 // Exported for Minecraft version 1.17 or later with Mojang mappings
+// Updated to use Changed mod's HumanoidAnimator system
 
-import net.jerika.furmutage.entity.animations.LatexExoMutantAnimations;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.jerika.furmutage.entity.custom.LatexExoMutantEntity;
-import net.minecraft.client.model.HierarchicalModel;
+import net.ltxprogrammer.changed.client.renderer.animate.AnimatorPresets;
+import net.ltxprogrammer.changed.client.renderer.animate.HumanoidAnimator;
+import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModel;
+import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModelInterface;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
-import net.minecraft.util.Mth;
+import net.minecraft.world.entity.HumanoidArm;
+import org.jetbrains.annotations.NotNull;
 
-public class LatexExoMutantModel<T extends LatexExoMutantEntity> extends HierarchicalModel<T> {
-	private final ModelPart root;
+import java.util.List;
+
+public class LatexExoMutantModel<T extends LatexExoMutantEntity> extends AdvancedHumanoidModel<T> implements AdvancedHumanoidModelInterface<T, LatexExoMutantModel<T>> {
+	private final HumanoidAnimator<T, LatexExoMutantModel<T>> animator;
 	private final ModelPart LeftArm;
 	private final ModelPart LeftBraceLeft;
 	private final ModelPart LeftBraceRight;
@@ -66,7 +74,7 @@ public class LatexExoMutantModel<T extends LatexExoMutantEntity> extends Hierarc
 	private final ModelPart RightLegReplacementLower2;
 
 	public LatexExoMutantModel(ModelPart root) {
-		this.root = root;
+		super(root);
 		this.LeftArm = root.getChild("LeftArm");
 		this.LeftBraceLeft = this.LeftArm.getChild("LeftBraceLeft");
 		this.LeftBraceRight = this.LeftArm.getChild("LeftBraceRight");
@@ -118,6 +126,25 @@ public class LatexExoMutantModel<T extends LatexExoMutantEntity> extends Hierarc
 		this.RightLegReplacement = this.RightLeg.getChild("RightLegReplacement");
 		this.RightPants = this.RightLegReplacement.getChild("RightPants");
 		this.RightLegReplacementLower2 = this.RightLegReplacement.getChild("RightLegReplacementLower2");
+
+		// Setup HumanoidAnimator with wolfLike preset
+		var tailPrimary = this.Tail.getChild("TailPrimary");
+		var tailSecondary = tailPrimary.getChild("TailSecondary");
+		var tailTertiary = tailSecondary.getChild("TailTertiary");
+		List<ModelPart> tailJoints = List.of(tailPrimary, tailSecondary, tailTertiary);
+
+		var leftLowerLeg = this.LeftLeg.getChild("LeftLowerLeg");
+		var leftFoot = leftLowerLeg.getChild("LeftFoot");
+		var rightLowerLeg = this.RightLeg.getChild("RightLowerLeg");
+		var rightFoot = rightLowerLeg.getChild("RightFoot");
+
+		animator = HumanoidAnimator.of(this).hipOffset(-1.5f)
+				.addPreset(AnimatorPresets.wolfLike(
+						this.Head, this.Head.getChild("LeftEar"), this.Head.getChild("RightEar"),
+						this.Torso, this.LeftArm, this.RightArm,
+						this.Tail, tailJoints,
+						this.LeftLeg, leftLowerLeg, leftFoot, leftFoot.getChild("LeftPad"),
+						this.RightLeg, rightLowerLeg, rightFoot, rightFoot.getChild("RightPad")));
 	}
 
 	public static LayerDefinition createBodyLayer() {
@@ -330,38 +357,52 @@ public class LatexExoMutantModel<T extends LatexExoMutantEntity> extends Hierarc
 	}
 
 	@Override
-	public ModelPart root() {
-		return this.root;
+	public void prepareMobModel(T p_102861_, float p_102862_, float p_102863_, float p_102864_) {
+		this.prepareMobModel(animator, p_102861_, p_102862_, p_102863_, p_102864_);
+	}
+
+	public void setupHand(T entity) {
+		animator.setupHand();
 	}
 
 	@Override
-	public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		this.root().getAllParts().forEach(ModelPart::resetPose);
-		this.applyHeadRotation(netHeadYaw, headPitch, ageInTicks);
-
-		// Walk animation - matches other latex entities
-		this.animateWalk(LatexExoMutantAnimations.LATEX_EXO_MUTANT_WALK, limbSwing, limbSwingAmount, 2f, 2f);
-		
-		// Idle animation - matches other latex entities
-		this.animate(entity.idleAnimationState, LatexExoMutantAnimations.LATEX_EXO_MUTANT_IDLE, ageInTicks, 1.5f);
-		
-		// Attack animation - matches other latex entities
-		this.animate(entity.attackAnimationState, LatexExoMutantAnimations.LATEX_EXO_MUTANT_ATTACK, ageInTicks, 2f);
-		
-		// Jump animation - only when 2 blocks or higher
-		this.animate(entity.jumpAnimationState, LatexExoMutantAnimations.LATEX_EXO_MUTANT_JUMP, ageInTicks, 1.0f);
-		
-		// Swimming animation - when in water
-		if (entity.isInWater()) {
-			this.animate(entity.swimAnimationState, LatexExoMutantAnimations.LATEX_EXO_MUTANT_SWIM, ageInTicks, 1.0f);
-		}
+	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+		animator.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 	}
 
-	private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, float pAgeInTicks) {
-		pNetHeadYaw = Mth.clamp(pNetHeadYaw, -30.0F, 30.0F);
-		pHeadPitch = Mth.clamp(pHeadPitch, -25.0F, 45.0F);
+	@Override
+	public ModelPart getArm(HumanoidArm p_102852_) {
+		return p_102852_ == HumanoidArm.LEFT ? this.LeftArm : this.RightArm;
+	}
 
-		this.Head.yRot = pNetHeadYaw * ((float)Math.PI / 180F);
-		this.Head.xRot = pHeadPitch * ((float)Math.PI / 180F);
+	@Override
+	public ModelPart getLeg(HumanoidArm p_102852_) {
+		return p_102852_ == HumanoidArm.LEFT ? this.LeftLeg : this.RightLeg;
+	}
+
+	@Override
+	public ModelPart getHead() {
+		return this.Head;
+	}
+
+	@Override
+	public ModelPart getTorso() {
+		return this.Torso;
+	}
+
+	@Override
+	public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+		RightLeg.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		LeftLeg.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		Head.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		Torso.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		RightArm.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+		LeftArm.render(poseStack, buffer, packedLight, packedOverlay, red, green, blue, alpha);
+	}
+
+	@Override
+	public HumanoidAnimator<T, LatexExoMutantModel<T>> getAnimator(T entity) {
+		return animator;
 	}
 }

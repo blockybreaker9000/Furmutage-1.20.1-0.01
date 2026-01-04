@@ -1,5 +1,10 @@
 {
   "values": [
-    
+    "furmutage:tainted_white_leaf",
+    "furmutage:tainted_white_grass_foliage",
+    "furmutage:tainted_white_tall_grass",
+    "furmutage:tainted_dark_leaf",
+    "furmutage:tainted_dark_grass_foliage",
+    "furmutage:tainted_dark_tall_grass"
   ]
 }

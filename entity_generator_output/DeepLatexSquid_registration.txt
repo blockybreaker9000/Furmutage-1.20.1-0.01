@@ -1,0 +1,5 @@
+    // Deep Latex Squid
+    public static final RegistryObject<EntityType<DeepLatexSquidEntity>> DEEP_LATEX_SQUID =
+            ENTITY_TYPES.register("deep_latex_squid", () -> EntityType.Builder.of(DeepLatexSquidEntity::new, MobCategory.WATER_CREATURE)
+                    .sized(0.8f, 0.8f).build("deep_latex_squid"));
+

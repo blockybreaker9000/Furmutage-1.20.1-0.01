@@ -16,7 +16,7 @@ import net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexPigEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity;
-import net.jerika.furmutage.entity.custom.DeepLatexSquidEntity;
+import net.jerika.furmutage.entity.custom.GiantPureWhiteLatexEntity;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -44,6 +44,6 @@ public class ModEventBusEvents {
         event.put(ModEntities.WHITE_LATEX_SHEEP.get(), WhiteLatexSheepEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_RABBIT.get(), WhiteLatexRabbitEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_HORSE.get(), WhiteLatexHorseEntity.createAttributes().build());
-        event.put(ModEntities.DEEP_LATEX_SQUID.get(), DeepLatexSquidEntity.createAttributes().build());
+        event.put(ModEntities.GIANT_PURE_WHITE_LATEX.get(), GiantPureWhiteLatexEntity.createAttributes().build());
     }
 }
