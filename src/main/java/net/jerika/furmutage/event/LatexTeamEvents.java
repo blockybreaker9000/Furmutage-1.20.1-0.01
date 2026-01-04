@@ -85,60 +85,80 @@ public class LatexTeamEvents {
         }
         
         LivingEntity currentTarget = mob.getTarget();
-        boolean needsNewTarget = (currentTarget == null || !currentTarget.isAlive() || 
-                !areOnDifferentTeams(mob, currentTarget));
         
-        // Find new target if needed
-        if (needsNewTarget) {
-            double range = mob.getAttributeValue(Attributes.FOLLOW_RANGE);
-            if (range <= 0) {
-                range = 32.0;
+        // Priority 1: Check if entity has an attacker (lastHurtByMob) - prioritize attacker over team targeting
+        LivingEntity attacker = mob.getLastHurtByMob();
+        double followRange = mob.getAttributeValue(Attributes.FOLLOW_RANGE);
+        if (followRange <= 0) {
+            followRange = 32.0;
+        }
+        double followRangeSq = followRange * followRange;
+        
+        if (attacker != null && attacker.isAlive() && attacker.distanceToSqr(mob) <= followRangeSq) {
+            // If we have an attacker and it's within range, target them instead of team-based targeting
+            if (currentTarget != attacker) {
+                mob.setTarget(attacker);
+                String attackerType = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
+                int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
+                String mobTeamName = mobTeam == 1 ? "White" : "Dark";
+                furmutage.LOGGER.info("[LatexTeamEvents] {} ({}) -> ATTACKER {} distance: {}", 
+                        mobType, mobTeamName,
+                        attackerType,
+                        String.format("%.1f", mob.distanceTo(attacker)));
             }
+        } else {
+            // No attacker or attacker is out of range - use team-based targeting
+            boolean needsNewTarget = (currentTarget == null || !currentTarget.isAlive() || 
+                    !areOnDifferentTeams(mob, currentTarget));
             
-            LivingEntity nearestEnemy = null;
-            double nearestDistance = range * range;
-            
-            for (LivingEntity entity : mob.level().getEntitiesOfClass(
-                    LivingEntity.class, 
-                    mob.getBoundingBox().inflate(range, range / 2, range))) {
+            // Find new target if needed
+            if (needsNewTarget) {
+                double range = followRange;
                 
-                if (!(entity instanceof Mob otherMob) || !otherMob.isAlive() || otherMob == mob) {
-                    continue;
-                }
+                LivingEntity nearestEnemy = null;
+                double nearestDistance = range * range;
                 
-                String otherType = ForgeRegistries.ENTITY_TYPES.getKey(otherMob.getType()).toString();
-                if (!LatexTeamConfig.isEntityInTeam(otherType)) {
-                    continue;
-                }
-                
-                if (areOnDifferentTeams(mob, otherMob)) {
-                    double distanceSq = mob.distanceToSqr(otherMob);
-                    if (distanceSq < nearestDistance) {
-                        nearestDistance = distanceSq;
-                        nearestEnemy = otherMob;
+                for (LivingEntity entity : mob.level().getEntitiesOfClass(
+                        LivingEntity.class, 
+                        mob.getBoundingBox().inflate(range, range / 2, range))) {
+                    
+                    if (!(entity instanceof Mob otherMob) || !otherMob.isAlive() || otherMob == mob) {
+                        continue;
+                    }
+                    
+                    String otherType = ForgeRegistries.ENTITY_TYPES.getKey(otherMob.getType()).toString();
+                    if (!LatexTeamConfig.isEntityInTeam(otherType)) {
+                        continue;
+                    }
+                    
+                    if (areOnDifferentTeams(mob, otherMob)) {
+                        double distanceSq = mob.distanceToSqr(otherMob);
+                        if (distanceSq < nearestDistance) {
+                            nearestDistance = distanceSq;
+                            nearestEnemy = otherMob;
+                        }
                     }
                 }
-            }
-            
-            if (nearestEnemy != null) {
-                mob.setTarget(nearestEnemy);
-                mob.setLastHurtByMob(nearestEnemy);
-                String enemyType = ForgeRegistries.ENTITY_TYPES.getKey(nearestEnemy.getType()).toString();
-                int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
-                int enemyTeam = LatexTeamConfig.getTeamForEntity(enemyType);
-                String mobTeamName = mobTeam == 1 ? "White" : "Dark";
-                String enemyTeamName = enemyTeam == 1 ? "White" : "Dark";
-                furmutage.LOGGER.info("[LatexTeamEvents] {} ({}) -> {} ({}) distance: {}", 
-                        mobType, mobTeamName,
-                        enemyType, enemyTeamName,
-                        String.format("%.1f", mob.distanceTo(nearestEnemy)));
+                
+                if (nearestEnemy != null) {
+                    mob.setTarget(nearestEnemy);
+                    mob.setLastHurtByMob(nearestEnemy);
+                    String enemyType = ForgeRegistries.ENTITY_TYPES.getKey(nearestEnemy.getType()).toString();
+                    int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
+                    int enemyTeam = LatexTeamConfig.getTeamForEntity(enemyType);
+                    String mobTeamName = mobTeam == 1 ? "White" : "Dark";
+                    String enemyTeamName = enemyTeam == 1 ? "White" : "Dark";
+                    furmutage.LOGGER.info("[LatexTeamEvents] {} ({}) -> {} ({}) distance: {}", 
+                            mobType, mobTeamName,
+                            enemyType, enemyTeamName,
+                            String.format("%.1f", mob.distanceTo(nearestEnemy)));
+                }
             }
         }
         
-        // Attack if target is close enough
+        // Attack if target is close enough (either attacker or team enemy)
         currentTarget = mob.getTarget();
-        if (currentTarget != null && currentTarget.isAlive() && 
-            areOnDifferentTeams(mob, currentTarget)) {
+        if (currentTarget != null && currentTarget.isAlive()) {
             
             double distanceSq = mob.distanceToSqr(currentTarget);
             double attackReach = (mob.getBbWidth() + currentTarget.getBbWidth()) * 1.5;
@@ -163,12 +183,12 @@ public class LatexTeamEvents {
             } else {
                 // Move towards target at slower speed
                 if (mob instanceof PathfinderMob pathfinderMob) {
-                    // Use slower movement speed (0.5 instead of 1.0)
+                    // Use slower movement speed (0.25 instead of normal)
                     double movementSpeed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
                     if (movementSpeed <= 0) {
-                        movementSpeed = 0.25D; // Default slow speed
+                        movementSpeed = 0.15D; // Default slow speed
                     } else {
-                        movementSpeed = movementSpeed * 0.5; // Half of normal speed
+                        movementSpeed = movementSpeed * 0.25; // Quarter of normal speed
                     }
                     pathfinderMob.getNavigation().moveTo(currentTarget, movementSpeed);
                 }

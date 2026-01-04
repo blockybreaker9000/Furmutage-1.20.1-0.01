@@ -87,7 +87,6 @@ public class TaintedBlockEvents {
         
         // Check if entity's bounding box is actually touching/intersecting with a tainted block
         boolean isTouchingTaintedWhiteBlock = false;
-        boolean isTouchingTaintedDarkBlock = false;
         
         // Get entity's bounding box
         AABB entityBounds = entity.getBoundingBox();
@@ -104,17 +103,16 @@ public class TaintedBlockEvents {
         int maxZ = (int) Math.ceil(expandedBounds.maxZ);
         
         // Check each block position that the entity overlaps
-        for (int x = minX; x <= maxX && (!isTouchingTaintedWhiteBlock || !isTouchingTaintedDarkBlock); x++) {
-            for (int y = minY; y <= maxY && (!isTouchingTaintedWhiteBlock || !isTouchingTaintedDarkBlock); y++) {
-                for (int z = minZ; z <= maxZ && (!isTouchingTaintedWhiteBlock || !isTouchingTaintedDarkBlock); z++) {
+        for (int x = minX; x <= maxX && !isTouchingTaintedWhiteBlock; x++) {
+            for (int y = minY; y <= maxY && !isTouchingTaintedWhiteBlock; y++) {
+                for (int z = minZ; z <= maxZ && !isTouchingTaintedWhiteBlock; z++) {
                     BlockPos checkPos = new BlockPos(x, y, z);
                     BlockState blockState = level.getBlockState(checkPos);
                     Block checkBlock = blockState.getBlock();
                     
                     boolean isWhiteBlock = isTaintedWhiteBlock(checkBlock);
-                    boolean isDarkBlock = isTaintedDarkBlock(checkBlock);
                     
-                    if (isWhiteBlock || isDarkBlock) {
+                    if (isWhiteBlock) {
                         // Check if the block's collision shape intersects with the entity's bounding box
                         VoxelShape blockShape = blockState.getCollisionShape(level, checkPos);
                         
@@ -142,12 +140,7 @@ public class TaintedBlockEvents {
                         }
                         
                         if (intersects) {
-                            if (isWhiteBlock) {
-                                isTouchingTaintedWhiteBlock = true;
-                            }
-                            if (isDarkBlock) {
-                                isTouchingTaintedDarkBlock = true;
-                            }
+                            isTouchingTaintedWhiteBlock = true;
                         }
                     }
                 }
@@ -195,17 +188,8 @@ public class TaintedBlockEvents {
             }
         }
         
-        // Handle dark tainted blocks (dark latex infection)
-        if (isTouchingTaintedDarkBlock) {
-            // Only process untransfurred entities
-            if (!isTransfurred(entity)) {
-                // For players and other entities, use ProcessTransfur API with dark latex variant
-                applyDarkLatexTransfur(entity, level);
-            }
-        }
-        
         // If not touching any tainted block, clear exposure time
-        if (!isTouchingTaintedWhiteBlock && !isTouchingTaintedDarkBlock) {
+        if (!isTouchingTaintedWhiteBlock) {
             exposureTime.remove(entity);
         }
     }
@@ -359,108 +343,6 @@ public class TaintedBlockEvents {
     }
     
     /**
-     * Applies dark latex transfur progress to an entity.
-     */
-    private static void applyDarkLatexTransfur(LivingEntity entity, Level level) {
-        // Apply transfur progress similar to WhiteLatexPillar (4.8f per tick when inside)
-        float progressAmount = 4.8f; // Same as WhiteLatexPillar - apply every tick
-        
-        try {
-            // Use ProcessTransfur.progressTransfur like WhiteLatexPillar does
-            Class<?> processTransfurClass = Class.forName("net.ltxprogrammer.changed.process.ProcessTransfur");
-            Class<?> transfurVariantClass = Class.forName("net.ltxprogrammer.changed.entity.variant.TransfurVariant");
-            Class<?> transfurContextClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurContext");
-            Class<?> transfurCauseClass = Class.forName("net.ltxprogrammer.changed.entity.TransfurCause");
-            Class<?> changedVariantsClass = Class.forName("net.ltxprogrammer.changed.init.ChangedTransfurVariants");
-            
-            // Get DARK_LATEX_WOLF variant (it's a RegistryObject, need to call .get() on it)
-            java.lang.reflect.Field darkLatexField = changedVariantsClass.getField("DARK_LATEX_WOLF");
-            Object darkLatexRegistryObject = darkLatexField.get(null);
-            
-            if (darkLatexRegistryObject == null) {
-                furmutage.LOGGER.warn("DARK_LATEX_WOLF RegistryObject not found in ChangedTransfurVariants");
-                fallbackToEntityReplacement(entity, level);
-                return;
-            }
-            
-            // Call .get() on the RegistryObject to get the actual TransfurVariant
-            java.lang.reflect.Method getMethod = darkLatexRegistryObject.getClass().getMethod("get");
-            Object darkLatexVariant = getMethod.invoke(darkLatexRegistryObject);
-            
-            if (darkLatexVariant == null) {
-                furmutage.LOGGER.warn("DARK_LATEX_WOLF.get() returned null - variant may not be registered yet");
-                fallbackToEntityReplacement(entity, level);
-                return;
-            }
-            
-            // Get TransfurCause.DARK_LATEX
-            java.lang.reflect.Field darkLatexCauseField = transfurCauseClass.getField("DARK_LATEX");
-            Object darkLatexCause = darkLatexCauseField.get(null);
-            
-            if (darkLatexCause == null) {
-                furmutage.LOGGER.warn("TransfurCause.DARK_LATEX not found");
-                fallbackToEntityReplacement(entity, level);
-                return;
-            }
-            
-            // Get TransfurContext.hazard(TransfurCause.DARK_LATEX)
-            java.lang.reflect.Method hazardMethod = transfurContextClass.getMethod("hazard", transfurCauseClass);
-            Object transfurContext = hazardMethod.invoke(null, darkLatexCause);
-            
-            if (transfurContext == null) {
-                furmutage.LOGGER.warn("TransfurContext.hazard() returned null");
-                fallbackToEntityReplacement(entity, level);
-                return;
-            }
-            
-            // Call ProcessTransfur.progressTransfur(entity, amount, variant, context)
-            java.lang.reflect.Method progressTransfurMethod = processTransfurClass.getMethod(
-                "progressTransfur", 
-                LivingEntity.class, 
-                float.class, 
-                transfurVariantClass, 
-                transfurContextClass
-            );
-            
-            furmutage.LOGGER.debug("Calling ProcessTransfur.progressTransfur for {} with amount {} (dark latex)", 
-                entity.getName().getString(), progressAmount);
-            
-            boolean result = (Boolean) progressTransfurMethod.invoke(null, entity, progressAmount, darkLatexVariant, transfurContext);
-            
-            if (result) {
-                furmutage.LOGGER.info("Successfully transfurred {} to Dark Latex Wolf", 
-                    entity.getName().getString());
-            } else {
-                furmutage.LOGGER.debug("Applied transfur progress to {}: {} points (not yet transfurred)", 
-                    entity.getName().getString(), progressAmount);
-            }
-        } catch (ClassNotFoundException e) {
-            furmutage.LOGGER.warn("Changed mod class not found for transfur progress: {}", e.getMessage());
-            // Fall back to entity replacement for non-players
-            fallbackToEntityReplacement(entity, level);
-        } catch (NoSuchFieldException e) {
-            furmutage.LOGGER.warn("Changed mod field not found for transfur progress: {}", e.getMessage());
-            fallbackToEntityReplacement(entity, level);
-        } catch (NoSuchMethodException e) {
-            furmutage.LOGGER.warn("Changed mod method not found for transfur progress: {}", e.getMessage());
-            fallbackToEntityReplacement(entity, level);
-        } catch (java.lang.reflect.InvocationTargetException e) {
-            Throwable cause = e.getCause();
-            if (cause != null) {
-                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur: {} - {}", 
-                    cause.getClass().getSimpleName(), cause.getMessage());
-            } else {
-                furmutage.LOGGER.warn("Error invoking ProcessTransfur.progressTransfur: {}", e.getMessage());
-            }
-            fallbackToEntityReplacement(entity, level);
-        } catch (Exception e) {
-            furmutage.LOGGER.warn("Unexpected error applying transfur progress: {} - {}", 
-                e.getClass().getSimpleName(), e.getMessage(), e);
-            fallbackToEntityReplacement(entity, level);
-        }
-    }
-    
-    /**
      * Checks if a block is a tainted white block (wood, leaf, grass, dirt, sand, or foliage).
      */
     private static boolean isTaintedWhiteBlock(Block block) {
@@ -476,23 +358,10 @@ public class TaintedBlockEvents {
     }
     
     /**
-     * Checks if a block is a tainted dark block (wood, leaf, grass, dirt, sand).
-     */
-    private static boolean isTaintedDarkBlock(Block block) {
-        return block == ModBlocks.TAINTED_DARK_LOG.get() ||
-               block == ModBlocks.STRIPPED_TAINTED_DARK_LOG.get() ||
-               block == ModBlocks.TAINTED_DARK_LEAF.get() ||
-               block == ModBlocks.TAINTED_DARK_PLANKS.get() ||
-               block == ModBlocks.TAINTED_DARK_GRASS.get() ||
-               block == ModBlocks.TAINTED_DARK_DIRT.get() ||
-               block == ModBlocks.TAINTED_DARK_SAND.get();
-    }
-    
-    /**
-     * Checks if a block is a tainted block (white or dark).
+     * Checks if a block is a tainted block (white).
      */
     private static boolean isTaintedBlock(Block block) {
-        return isTaintedWhiteBlock(block) || isTaintedDarkBlock(block);
+        return isTaintedWhiteBlock(block);
     }
     
     /**

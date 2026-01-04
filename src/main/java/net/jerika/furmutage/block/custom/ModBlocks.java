@@ -42,6 +42,31 @@ public class ModBlocks {
             () -> new TaintedWhiteLogBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_LOG).randomTicks()));
     public static final RegistryObject<Block> TAINTED_WHITE_PLANKS = registerBlock("tainted_white_planks",
             () -> new TaintedWhitePlanksBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_WHITE_SLAB = registerBlock("tainted_white_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SLAB)));
+    public static final RegistryObject<Block> TAINTED_WHITE_STAIRS = registerBlock("tainted_white_stairs",
+            () -> new StairBlock(() -> TAINTED_WHITE_PLANKS.get().defaultBlockState(),
+                    BlockBehaviour.Properties.copy(Blocks.OAK_STAIRS)));
+    public static final RegistryObject<Block> TAINTED_WHITE_FENCE = registerBlock("tainted_white_fence",
+            () -> new FenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
+    public static final RegistryObject<Block> TAINTED_WHITE_FENCE_GATE = registerBlock("tainted_white_fence_gate",
+            () -> new FenceGateBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE_GATE),
+                    net.minecraft.world.level.block.state.properties.WoodType.OAK));
+    public static final RegistryObject<Block> TAINTED_WHITE_DOOR = registerBlock("tainted_white_door",
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_DOOR),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_WHITE_TRAPDOOR = registerBlock("tainted_white_trapdoor",
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_TRAPDOOR),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_WHITE_BUTTON = registerBlock("tainted_white_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.OAK_BUTTON),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK, 30, true));
+    public static final RegistryObject<Block> TAINTED_WHITE_PRESSURE_PLATE = registerBlock("tainted_white_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING,
+                    BlockBehaviour.Properties.copy(Blocks.OAK_PRESSURE_PLATE),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_WHITE_LADDER = registerBlock("tainted_white_ladder",
+            () -> new LadderBlock(BlockBehaviour.Properties.copy(Blocks.LADDER)));
     public static final RegistryObject<Block> TAINTED_WHITE_LEAF = registerBlock("tainted_white_leaf",
             () -> new TaintedWhiteLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> TAINTED_WHITE_SAPLING = registerBlock("tainted_white_sapling",
@@ -60,10 +85,35 @@ public class ModBlocks {
             () -> new TaintedDarkLogBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_LOG).randomTicks()));
     public static final RegistryObject<Block> TAINTED_DARK_PLANKS = registerBlock("tainted_dark_planks",
             () -> new TaintedDarkPlanksBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_DARK_SLAB = registerBlock("tainted_dark_slab",
+            () -> new SlabBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SLAB)));
+    public static final RegistryObject<Block> TAINTED_DARK_STAIRS = registerBlock("tainted_dark_stairs",
+            () -> new StairBlock(() -> TAINTED_DARK_PLANKS.get().defaultBlockState(),
+                    BlockBehaviour.Properties.copy(Blocks.OAK_STAIRS)));
+    public static final RegistryObject<Block> TAINTED_DARK_FENCE = registerBlock("tainted_dark_fence",
+            () -> new FenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE)));
+    public static final RegistryObject<Block> TAINTED_DARK_FENCE_GATE = registerBlock("tainted_dark_fence_gate",
+            () -> new FenceGateBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE_GATE),
+                    net.minecraft.world.level.block.state.properties.WoodType.OAK));
+    public static final RegistryObject<Block> TAINTED_DARK_DOOR = registerBlock("tainted_dark_door",
+            () -> new DoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_DOOR),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_DARK_TRAPDOOR = registerBlock("tainted_dark_trapdoor",
+            () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_TRAPDOOR),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_DARK_BUTTON = registerBlock("tainted_dark_button",
+            () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.OAK_BUTTON),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK, 30, true));
+    public static final RegistryObject<Block> TAINTED_DARK_PRESSURE_PLATE = registerBlock("tainted_dark_pressure_plate",
+            () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING,
+                    BlockBehaviour.Properties.copy(Blocks.OAK_PRESSURE_PLATE),
+                    net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_DARK_LADDER = registerBlock("tainted_dark_ladder",
+            () -> new LadderBlock(BlockBehaviour.Properties.copy(Blocks.LADDER)));
     public static final RegistryObject<Block> TAINTED_DARK_LEAF = registerBlock("tainted_dark_leaf",
             () -> new TaintedDarkLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> TAINTED_DARK_GRASS = registerBlock("tainted_dark_grass",
-            () -> new TaintedDarkGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK)));
+            () -> new TaintedDarkGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK).randomTicks()));
     public static final RegistryObject<Block> TAINTED_DARK_DIRT = registerBlock("tainted_dark_dirt",
             () -> new TaintedDarkDirtBlock(BlockBehaviour.Properties.copy(Blocks.DIRT).randomTicks()));
     public static final RegistryObject<Block> TAINTED_DARK_SAND = registerBlock("tainted_dark_sand",
@@ -71,7 +121,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_DARK_TALL_GRASS = registerBlock("tainted_dark_tall_grass",
             () -> new TaintedDarkTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_DARK_GRASS_FOLIAGE = registerBlock("tainted_dark_grass_foliage",
-            () -> new TaintedDarkGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
+            () -> new TaintedDarkGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
     public static final RegistryObject<Block> TAINTED_DARK_ROSELIGHT_FLOWER = registerBlock("tainted_dark_roselight_flower",
             () -> new TaintedDarkRoselightFlowerBlock(BlockBehaviour.Properties.copy(Blocks.DANDELION).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_DARK_CRYSTAL_BLUE_FLOWER = registerBlock("tainted_dark_crystal_blue_flower",

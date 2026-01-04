@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "furmutage:block/tainted_white_slab"
+    },
+    "type=double": {
+      "model": "furmutage:block/tainted_white_planks"
+    },
+    "type=top": {
+      "model": "furmutage:block/tainted_white_slab_top"
+    }
+  }
+}

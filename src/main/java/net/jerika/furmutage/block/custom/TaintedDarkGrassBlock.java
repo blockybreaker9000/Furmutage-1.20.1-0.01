@@ -28,8 +28,8 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             spreadToNearbyBlocks(level, pos, random);
         }
         
-        // Rarely spawn tainted dark saplings on top
-        if (random.nextInt(200) == 0) { // 0.5% chance per random tick (very rare)
+        // Spawn tainted dark saplings on top
+        if (random.nextInt(10) == 0) { // 10% chance per random tick (more frequent)
             spawnSaplingOnTop(level, pos, random);
         }
         
@@ -48,8 +48,8 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             spawnMushroomOnTop(level, pos, random);
         }
         
-        // Rarely spawn Changed mod crystals on top
-        if (random.nextInt(100) == 0) { // 1% chance per random tick (rare but more common)
+        // Spawn Changed mod crystals on top (more naturally)
+        if (random.nextInt(50) == 0) { // 2% chance per random tick (more frequent spawning)
             spawnChangedCrystalOnTop(level, pos, random);
         }
     }
@@ -132,8 +132,8 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         
         // Only spawn if the space above is air and has enough light
         if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            // Check if there's already a sapling within 5-6 blocks
-            if (!hasSaplingNearby(level, abovePos, 5)) {
+            // Check if there's already a sapling within 3 blocks
+            if (!hasSaplingNearby(level, abovePos, 3)) {
                 level.setBlock(abovePos, ModBlocks.TAINTED_DARK_SAPLING.get().defaultBlockState(), 3);
             }
         }
@@ -173,9 +173,9 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         
         // Only grow if the space above is air
         if (aboveState.isAir()) {
-            if (random.nextInt(10) == 0) {
-                // 10% chance to grow a sapling (only if no sapling nearby)
-                if (!hasSaplingNearby(level, abovePos, 5)) {
+            if (random.nextInt(3) == 0) {
+                // 33% chance to grow a sapling (only if no sapling nearby)
+                if (!hasSaplingNearby(level, abovePos, 3)) {
                     level.setBlock(abovePos, ModBlocks.TAINTED_DARK_SAPLING.get().defaultBlockState(), 3);
                 }
             } else if (random.nextInt(2) == 0) {
@@ -286,7 +286,7 @@ public class TaintedDarkGrassBlock extends GrassBlock {
 
     
     /**
-     * Spawns a dark latex entity (wolf or pup) on top of this block.
+     * Spawns a dark latex entity (wolf male, wolf female, or pup) on top of this block.
      */
     private void spawnDarkLatexEntity(ServerLevel level, BlockPos pos, RandomSource random) {
         BlockPos abovePos = pos.above();
@@ -296,46 +296,43 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
             // Check if there's already a dark latex entity nearby (within 8 blocks)
             if (!hasDarkLatexNearby(level, abovePos, 8)) {
-                // Randomly choose between wolf and pup (50% chance each)
-                boolean spawnPup = random.nextBoolean();
-                
                 EntityType<?> darkLatexType = null;
                 
-                if (spawnPup) {
-                    // Try to find the Dark Latex Pup entity type
-                    darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
-                            ResourceLocation.tryParse("changed:dark_latex_wolf_pup")
-                    );
-                    
-                    // Fallback: try alternative pup names
-                    if (darkLatexType == null) {
-                        darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
-                                ResourceLocation.tryParse("changed:dark_latex_pup")
-                        );
-                    }
-                } else {
-                    // Try to find the Dark Latex Wolf entity type
+                // Randomly choose between wolf male, wolf female, and pup (33% chance each)
+                int choice = random.nextInt(3);
+                
+                if (choice == 0) {
+                    // Try to find the Dark Latex Wolf Male entity type
                     darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
                             ResourceLocation.tryParse("changed:dark_latex_wolf_male")
                     );
+                } else if (choice == 1) {
+                    // Try to find the Dark Latex Wolf Female entity type
+                    darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
+                            ResourceLocation.tryParse("changed:dark_latex_wolf_female")
+                    );
+                } else {
+                    // Try to find the Dark Latex Wolf Pup entity type
+                    darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
+                            ResourceLocation.tryParse("changed:dark_latex_wolf_pup")
+                    );
                 }
                 
-                // Fallback: try to find any entity with "dark_latex" in the name
+                // Fallback: try to find any entity with matching name
                 if (darkLatexType == null) {
                     for (EntityType<?> entityType : ForgeRegistries.ENTITY_TYPES.getValues()) {
                         String name = entityType.getDescriptionId().toLowerCase();
-                        if (spawnPup) {
-                            if ((name.contains("dark_latex_wolf_male") || name.contains("darklatexwolfmale")) &&
-                                (name.contains("pup") || name.contains("puppy"))) {
-                                darkLatexType = entityType;
-                                break;
-                            }
-                        } else {
-                            if ((name.contains("dark_latex_pup") || name.contains("darklatexpup")) &&
-                                !name.contains("pup") && !name.contains("puppy")) {
-                                darkLatexType = entityType;
-                                break;
-                            }
+                        String key = ForgeRegistries.ENTITY_TYPES.getKey(entityType).toString().toLowerCase();
+                        
+                        if (choice == 0 && (name.contains("dark_latex_wolf_male") || key.contains("dark_latex_wolf_male"))) {
+                            darkLatexType = entityType;
+                            break;
+                        } else if (choice == 1 && (name.contains("dark_latex_wolf_female") || key.contains("dark_latex_wolf_female"))) {
+                            darkLatexType = entityType;
+                            break;
+                        } else if (choice == 2 && (name.contains("dark_latex_wolf_pup") || key.contains("dark_latex_wolf_pup"))) {
+                            darkLatexType = entityType;
+                            break;
                         }
                     }
                 }
@@ -388,7 +385,9 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                                         1.0, 1.0, 1.0));
                         for (var entity : entities) {
                             String name = entity.getType().getDescriptionId().toLowerCase();
-                            if (name.contains("dark_latex_wolf_male") || name.contains("darklatexwolfmale")) {
+                            String key = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString().toLowerCase();
+                            if (name.contains("dark_latex_wolf") || key.contains("dark_latex_wolf") ||
+                                name.contains("darklatexwolf") || key.contains("darklatexwolf")) {
                                 return true;
                             }
                         }
@@ -421,9 +420,9 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             // Get the ChangedBlocks class
             Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
             
-            // List of crystal block names to try (in order of preference)
+            // List of crystal block names (randomly select one)
             String[] crystalNames = {
-                "LATEX_PUP_CRYSTAL",      // Pup crystal (most common)
+                "LATEX_PUP_CRYSTAL",      // Pup crystal
                 "LATEX_CRYSTAL",          // Regular dark latex crystal
                 "WOLF_CRYSTAL",           // Wolf crystal
                 "WOLF_CRYSTAL_SMALL",     // Small wolf crystal
@@ -433,8 +432,12 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 "DARK_DRAGON_CRYSTAL"     // Dark dragon crystal
             };
             
-            // Try each crystal type
-            for (String crystalName : crystalNames) {
+            // Shuffle the array to get random order
+            java.util.List<String> crystalList = new java.util.ArrayList<>(java.util.Arrays.asList(crystalNames));
+            java.util.Collections.shuffle(crystalList, new java.util.Random(random.nextLong()));
+            
+            // Try each crystal type in random order
+            for (String crystalName : crystalList) {
                 try {
                     // Get the RegistryObject field
                     java.lang.reflect.Field field = changedBlocksClass.getField(crystalName);
@@ -445,25 +448,37 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                     net.minecraft.world.level.block.Block crystalBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(registryObject);
                     
                     if (crystalBlock != null) {
-                        // Place the crystal block
+                        // Check if this is a double block (has DOUBLE_BLOCK_HALF property)
                         BlockState crystalState = crystalBlock.defaultBlockState();
+                        boolean isDoubleBlock = crystalState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF);
                         
-                        // For LatexPupCrystal, it needs to be placed with HALF = LOWER
-                        if (crystalName.equals("LATEX_PUP_CRYSTAL")) {
-                            try {
-                                // Try to set HALF property if it exists
-                                if (crystalState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF)) {
-                                    crystalState = crystalState.setValue(
-                                        net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
-                                        net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER
-                                    );
-                                }
-                            } catch (Exception e) {
-                                // If setting HALF fails, just use default state
+                        if (isDoubleBlock) {
+                            // Check if there's space for both halves
+                            BlockPos upperPos = abovePos.above();
+                            BlockState upperState = level.getBlockState(upperPos);
+                            
+                            if (!upperState.isAir()) {
+                                continue; // Not enough space, try next crystal type
                             }
+                            
+                            // Place the lower half
+                            BlockState lowerState = crystalState.setValue(
+                                net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
+                                net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER
+                            );
+                            level.setBlock(abovePos, lowerState, 3);
+                            
+                            // Place the upper half
+                            BlockState upperCrystalState = crystalState.setValue(
+                                net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
+                                net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER
+                            );
+                            level.setBlock(upperPos, upperCrystalState, 3);
+                        } else {
+                            // Single block crystal, just place it
+                            level.setBlock(abovePos, crystalState, 3);
                         }
                         
-                        level.setBlock(abovePos, crystalState, 3);
                         return; // Successfully placed a crystal
                     }
                 } catch (Exception e) {

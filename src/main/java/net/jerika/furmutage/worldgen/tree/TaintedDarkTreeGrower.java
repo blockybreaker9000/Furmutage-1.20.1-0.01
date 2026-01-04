@@ -2,6 +2,7 @@ package net.jerika.furmutage.worldgen.tree;
 
 import net.jerika.furmutage.block.custom.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
@@ -63,6 +64,11 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                 level.setBlock(pos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
             }
             
+            // Add branches to the tree if feature placement succeeded
+            if (result) {
+                addBranchesToTree(level, pos, random);
+            }
+            
             // If feature placement failed, try manual placement as fallback (simplified big oak)
             if (!result) {
                 // Place a big oak-like tree manually
@@ -75,6 +81,9 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                         level.setBlock(logPos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
                     }
                 }
+                
+                // Add branches to the tree
+                addBranchesToTree(level, pos, random);
                 
                 // Add large foliage layers at different heights (like big oak)
                 int foliageStart = height - 3;
@@ -110,6 +119,9 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                 }
             }
             
+            // Add branches to the tree
+            addBranchesToTree(level, pos, random);
+            
             // Add large foliage layers at different heights (like big oak)
             int foliageStart = height - 3;
             for (int layer = 0; layer < 3; layer++) {
@@ -130,6 +142,68 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                 }
             }
             return true;
+        }
+    }
+    
+    /**
+     * Adds branch paths (horizontal logs) extending from the main trunk.
+     */
+    private void addBranchesToTree(ServerLevel level, BlockPos trunkBase, RandomSource random) {
+        // Find the height of the trunk by checking for logs above
+        int trunkHeight = 0;
+        for (int i = 0; i < 30; i++) {
+            BlockPos checkPos = trunkBase.above(i);
+            if (level.getBlockState(checkPos).is(ModBlocks.TAINTED_DARK_LOG.get())) {
+                trunkHeight = i + 1;
+            } else {
+                break;
+            }
+        }
+        
+        if (trunkHeight < 5) {
+            return; // Tree too short for branches
+        }
+        
+        // Add 3-6 branches at different heights
+        int branchCount = 3 + random.nextInt(4); // 3-6 branches
+        Direction[] directions = {
+            Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST,
+            Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST // Allow duplicates for more variety
+        };
+        
+        for (int i = 0; i < branchCount; i++) {
+            // Branch height: between 40% and 80% of trunk height
+            int branchHeight = (int)(trunkHeight * (0.4f + random.nextFloat() * 0.4f));
+            BlockPos branchStart = trunkBase.above(branchHeight);
+            
+            // Only add branch if there's a log at the branch start position
+            if (!level.getBlockState(branchStart).is(ModBlocks.TAINTED_DARK_LOG.get())) {
+                continue;
+            }
+            
+            // Random direction for the branch
+            Direction branchDir = directions[random.nextInt(directions.length)];
+            
+            // Branch length: 2-4 blocks
+            int branchLength = 2 + random.nextInt(3);
+            
+            // Place branch logs
+            for (int j = 1; j <= branchLength; j++) {
+                BlockPos branchPos = branchStart.relative(branchDir, j);
+                
+                // Sometimes add a slight upward or downward angle
+                if (j > 1 && random.nextInt(3) == 0) {
+                    if (random.nextBoolean()) {
+                        branchPos = branchPos.above();
+                    } else {
+                        branchPos = branchPos.below();
+                    }
+                }
+                
+                if (level.getBlockState(branchPos).canBeReplaced()) {
+                    level.setBlock(branchPos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
+                }
+            }
         }
     }
 }

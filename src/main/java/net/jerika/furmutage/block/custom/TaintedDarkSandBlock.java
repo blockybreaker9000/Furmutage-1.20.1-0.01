@@ -39,6 +39,11 @@ public class TaintedDarkSandBlock extends SandBlock {
         if (random.nextInt(20) == 0) { // 5% chance per random tick (faster growth)
             spawnGrassFoliageOnTop(level, pos, random);
         }
+        
+        // Spawn Changed mod crystals on top (more naturally)
+        if (random.nextInt(50) == 0) { // 2% chance per random tick (more frequent spawning)
+            spawnChangedCrystalOnTop(level, pos, random);
+        }
     }
     
     /**
@@ -281,6 +286,172 @@ public class TaintedDarkSandBlock extends SandBlock {
                 }
             }
         }
+        return false;
+    }
+    
+    /**
+     * Rarely spawns a Changed mod crystal (pup crystal or other crystals) on top of this block.
+     */
+    private void spawnChangedCrystalOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        
+        // Only spawn if the space above is air
+        if (!aboveState.isAir()) {
+            return;
+        }
+        
+        // Check if there's already a crystal nearby (within 15 blocks)
+        if (hasChangedCrystalNearby(level, abovePos, 15)) {
+            return;
+        }
+        
+        // Try to get Changed mod crystal blocks using reflection
+        try {
+            // Get the ChangedBlocks class
+            Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
+            
+            // List of crystal block names (randomly select one)
+            String[] crystalNames = {
+                "LATEX_PUP_CRYSTAL",      // Pup crystal
+                "LATEX_CRYSTAL",          // Regular dark latex crystal
+                "WOLF_CRYSTAL",           // Wolf crystal
+                "WOLF_CRYSTAL_SMALL",     // Small wolf crystal
+                "DARK_LATEX_CRYSTAL_LARGE", // Large dark latex crystal
+                "BEIFENG_CRYSTAL",        // Beifeng crystal
+                "BEIFENG_CRYSTAL_SMALL",  // Small Beifeng crystal
+                "DARK_DRAGON_CRYSTAL"     // Dark dragon crystal
+            };
+            
+            // Shuffle the array to get random order
+            java.util.List<String> crystalList = new java.util.ArrayList<>(java.util.Arrays.asList(crystalNames));
+            java.util.Collections.shuffle(crystalList, new java.util.Random(random.nextLong()));
+            
+            // Try each crystal type in random order
+            for (String crystalName : crystalList) {
+                try {
+                    // Get the RegistryObject field
+                    java.lang.reflect.Field field = changedBlocksClass.getField(crystalName);
+                    Object registryObject = field.get(null);
+                    
+                    // Get the actual block from the RegistryObject
+                    java.lang.reflect.Method getMethod = registryObject.getClass().getMethod("get");
+                    net.minecraft.world.level.block.Block crystalBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(registryObject);
+                    
+                    if (crystalBlock != null) {
+                        // Check if this is a double block (has DOUBLE_BLOCK_HALF property)
+                        BlockState crystalState = crystalBlock.defaultBlockState();
+                        boolean isDoubleBlock = crystalState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF);
+                        
+                        if (isDoubleBlock) {
+                            // Check if there's space for both halves
+                            BlockPos upperPos = abovePos.above();
+                            BlockState upperState = level.getBlockState(upperPos);
+                            
+                            if (!upperState.isAir()) {
+                                continue; // Not enough space, try next crystal type
+                            }
+                            
+                            // Place the lower half
+                            BlockState lowerState = crystalState.setValue(
+                                net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
+                                net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER
+                            );
+                            level.setBlock(abovePos, lowerState, 3);
+                            
+                            // Place the upper half
+                            BlockState upperCrystalState = crystalState.setValue(
+                                net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF,
+                                net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER
+                            );
+                            level.setBlock(upperPos, upperCrystalState, 3);
+                        } else {
+                            // Single block crystal, just place it
+                            level.setBlock(abovePos, crystalState, 3);
+                        }
+                        
+                        return; // Successfully placed a crystal
+                    }
+                } catch (Exception e) {
+                    // Try next crystal type if this one fails
+                    continue;
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            // Changed mod not loaded, skip
+            furmutage.LOGGER.debug("Changed mod not found, skipping crystal spawn");
+        } catch (Exception e) {
+            // Log error but don't crash
+            furmutage.LOGGER.warn("Failed to spawn Changed mod crystal: {}", e.getMessage());
+        }
+    }
+    
+    /**
+     * Checks if there's a Changed mod crystal within the specified distance.
+     */
+    private boolean hasChangedCrystalNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        try {
+            // Get the ChangedBlocks class
+            Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
+            
+            // List of crystal block names to check
+            String[] crystalNames = {
+                "LATEX_PUP_CRYSTAL",
+                "LATEX_CRYSTAL",
+                "WOLF_CRYSTAL",
+                "WOLF_CRYSTAL_SMALL",
+                "DARK_LATEX_CRYSTAL_LARGE",
+                "BEIFENG_CRYSTAL",
+                "BEIFENG_CRYSTAL_SMALL",
+                "DARK_DRAGON_CRYSTAL"
+            };
+            
+            // Collect all crystal blocks
+            java.util.Set<net.minecraft.world.level.block.Block> crystalBlocks = new java.util.HashSet<>();
+            for (String crystalName : crystalNames) {
+                try {
+                    java.lang.reflect.Field field = changedBlocksClass.getField(crystalName);
+                    Object registryObject = field.get(null);
+                    java.lang.reflect.Method getMethod = registryObject.getClass().getMethod("get");
+                    net.minecraft.world.level.block.Block crystalBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(registryObject);
+                    if (crystalBlock != null) {
+                        crystalBlocks.add(crystalBlock);
+                    }
+                } catch (Exception e) {
+                    // Skip this crystal type
+                    continue;
+                }
+            }
+            
+            // Check if any crystal blocks exist nearby
+            int checkRadius = maxDistance;
+            for (int x = -checkRadius; x <= checkRadius; x++) {
+                for (int y = -checkRadius; y <= checkRadius; y++) {
+                    for (int z = -checkRadius; z <= checkRadius; z++) {
+                        if (x == 0 && y == 0 && z == 0) continue;
+                        
+                        BlockPos checkPos = pos.offset(x, y, z);
+                        double distance = Math.sqrt(x * x + y * y + z * z);
+                        
+                        if (distance < maxDistance) {
+                            BlockState checkState = level.getBlockState(checkPos);
+                            for (net.minecraft.world.level.block.Block crystalBlock : crystalBlocks) {
+                                if (checkState.is(crystalBlock)) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            // Changed mod not loaded, return false
+            return false;
+        } catch (Exception e) {
+            // Error checking, return false to allow spawning
+            return false;
+        }
+        
         return false;
     }
 }
