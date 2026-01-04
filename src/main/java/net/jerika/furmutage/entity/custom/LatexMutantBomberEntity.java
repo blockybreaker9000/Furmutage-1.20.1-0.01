@@ -150,6 +150,7 @@ public class LatexMutantBomberEntity extends Monster {
                 .add(Attributes.MAX_HEALTH, 30.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.35D)
                 .add(Attributes.FOLLOW_RANGE, 60.0D)
+                .add(Attributes.ATTACK_DAMAGE, 0.5D)
                 .add(Attributes.ARMOR, 2.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D);
     }

@@ -94,12 +94,12 @@ public class ChangedEntitySwimEvents {
                 }
             }
             
-            // Set follow range to 60 blocks for Changed entities (except roomba)
+            // Set follow range to 80 blocks for Changed entities (except roomba)
             if (entityId.startsWith("changed:") && !EXCLUDED_FOLLOW_RANGE_ENTITIES.contains(entityId)) {
                 AttributeInstance followRange = livingEntity.getAttribute(Attributes.FOLLOW_RANGE);
                 if (followRange != null) {
-                    // Set the base value to 60 blocks
-                    followRange.setBaseValue(60.0D);
+                    // Set the base value to 80 blocks
+                    followRange.setBaseValue(80.0D);
                 }
             }
             // Note: X-ray vision is handled by EntitySensingXRayMixin

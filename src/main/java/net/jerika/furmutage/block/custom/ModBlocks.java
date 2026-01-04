@@ -70,7 +70,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_WHITE_LEAF = registerBlock("tainted_white_leaf",
             () -> new TaintedWhiteLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> TAINTED_WHITE_SAPLING = registerBlock("tainted_white_sapling",
-            () -> new SaplingBlock(new TaintedWhiteTreeGrower(), BlockBehaviour.Properties.copy(Blocks.MANGROVE_PROPAGULE)));
+            () -> new TaintedWhiteSaplingBlock(new TaintedWhiteTreeGrower(), BlockBehaviour.Properties.copy(Blocks.MANGROVE_PROPAGULE)));
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS = registerBlock("tainted_white_grass",
             () -> new TaintedWhiteGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_DIRT = registerBlock("tainted_white_dirt",
@@ -127,7 +127,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_DARK_CRYSTAL_BLUE_FLOWER = registerBlock("tainted_dark_crystal_blue_flower",
             () -> new TaintedDarkCrystalBlueFlowerBlock(BlockBehaviour.Properties.copy(Blocks.POPPY).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_DARK_SAPLING = registerBlock("tainted_dark_sapling",
-            () -> new SaplingBlock(new TaintedDarkTreeGrower(), BlockBehaviour.Properties.copy(Blocks.MANGROVE_PROPAGULE)));
+            () -> new TaintedDarkSaplingBlock(new TaintedDarkTreeGrower(), BlockBehaviour.Properties.copy(Blocks.MANGROVE_PROPAGULE)));
     public static final RegistryObject<Block> DARK_LYNCHING_VINE = registerBlock("dark_lynching_vine",
             () -> new DarkLynchingVineBlock(BlockBehaviour.Properties.copy(Blocks.WEEPING_VINES).randomTicks()));
     public static final RegistryObject<Block> DARK_LYNCHING_VINE_PLANT = BLOCKS.register("dark_lynching_vine_plant",

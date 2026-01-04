@@ -56,6 +56,15 @@
     ],
     "subtitle": "subtitles.furmutage.tainted_white_grass_music"
   },
+  "tainted_dark_grass_music": {
+    "sounds": [
+      {
+        "name": "furmutage:tainted_dark_grass_music",
+        "stream": true
+      }
+    ],
+    "subtitle": "subtitles.furmutage.tainted_dark_grass_music"
+  },
   "tsc_drone_ambient": {
     "sounds": [
       "furmutage:tsc_drone_ambient"

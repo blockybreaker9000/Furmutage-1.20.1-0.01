@@ -5,6 +5,8 @@ import net.jerika.furmutage.furmutage;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -26,11 +28,14 @@ public class ModClientEvents {
     private static final long NIGHT_SOUND_INTERVAL = 6000; // Play every 5 minutes (in ticks)
     private static final long NIGHT_START_DELAY = 1000; // Delay before regular ambient sounds can play (after night starts)
     
-    // Tainted white grass biome music
+    // Tainted grass biome music (white and dark)
     private static boolean wasOnTaintedGrass = false;
+    private static boolean wasOnTaintedWhiteGrass = false; // Track which type was playing
     private static long lastTaintedMusicTime = -1;
     private static final long TAINTED_MUSIC_CHECK_INTERVAL = 100; // Check every 5 seconds (100 ticks)
     private static final long TAINTED_MUSIC_PLAY_INTERVAL = 36000; // Play music every ~30 minutes (assuming music track length)
+    private static final int MUSIC_DETECTION_RANGE = 50; // Music plays when tainted grass is within 50 blocks
+    private static SimpleSoundInstance currentMusicInstance = null;
 
     @SubscribeEvent
     public static void onClientTick(TickEvent.ClientTickEvent event) {
@@ -103,55 +108,118 @@ public class ModClientEvents {
             // Update previous day time for wrap-around detection
             previousDayTime = dayTime;
             
-            // Handle tainted white grass biome music
-            handleTaintedWhiteGrassMusic(mc, player, level);
+            // Handle tainted grass biome music (white and dark)
+            handleTaintedGrassMusic(mc, player, level);
         }
     }
     
-    private static void handleTaintedWhiteGrassMusic(Minecraft mc, LocalPlayer player, Level level) {
-        // Check periodically if player is on or near tainted white grass blocks
+    private static void handleTaintedGrassMusic(Minecraft mc, LocalPlayer player, Level level) {
+        // Check periodically if player is on or near tainted grass blocks (white or dark)
         if (level.getGameTime() % TAINTED_MUSIC_CHECK_INTERVAL != 0) {
             return; // Only check every interval to reduce overhead
         }
         
         BlockPos playerPos = player.blockPosition();
-        boolean isOnTaintedGrass = isOnTaintedWhiteGrass(level, playerPos);
+        BlockPos nearestTaintedWhitePos = findNearestTaintedWhiteGrass(level, playerPos, MUSIC_DETECTION_RANGE);
+        BlockPos nearestTaintedDarkPos = findNearestTaintedDarkGrass(level, playerPos, MUSIC_DETECTION_RANGE);
+        
+        boolean isOnTaintedWhiteGrass = nearestTaintedWhitePos != null;
+        boolean isOnTaintedDarkGrass = nearestTaintedDarkPos != null;
+        boolean isOnTaintedGrass = isOnTaintedWhiteGrass || isOnTaintedDarkGrass;
         long currentTime = level.getGameTime();
         
         if (isOnTaintedGrass) {
-            // Check if enough time has passed to play music again
-            if (lastTaintedMusicTime == -1 || (currentTime - lastTaintedMusicTime) >= TAINTED_MUSIC_PLAY_INTERVAL) {
-                // Play biome music with MUSIC source (this is handled by Minecraft's music system)
-                level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                        ModSounds.TAINTED_WHITE_GRASS_MUSIC.get(), SoundSource.MUSIC, 1.0f, 1.0f);
-                lastTaintedMusicTime = currentTime;
+            // Determine which music to play (white takes priority if both are present)
+            boolean shouldPlayWhite = isOnTaintedWhiteGrass;
+            boolean shouldPlayDark = isOnTaintedDarkGrass && !isOnTaintedWhiteGrass;
+            BlockPos musicSourcePos = shouldPlayWhite ? nearestTaintedWhitePos : nearestTaintedDarkPos;
+            
+            // Check if we need to switch music or if enough time has passed to play music again
+            boolean musicChanged = (shouldPlayWhite && !wasOnTaintedWhiteGrass) || (shouldPlayDark && wasOnTaintedWhiteGrass);
+            boolean shouldPlayMusic = lastTaintedMusicTime == -1 || 
+                                     (currentTime - lastTaintedMusicTime) >= TAINTED_MUSIC_PLAY_INTERVAL ||
+                                     musicChanged;
+            
+            if (shouldPlayMusic) {
+                SoundManager soundManager = mc.getSoundManager();
+                if (soundManager != null) {
+                    // Stop the previous music if switching types or if already playing
+                    if (currentMusicInstance != null) {
+                        soundManager.stop(currentMusicInstance);
+                        currentMusicInstance = null;
+                    }
+                    if (musicChanged) {
+                        if (wasOnTaintedWhiteGrass) {
+                            soundManager.stop(ModSounds.TAINTED_WHITE_GRASS_MUSIC.get().getLocation(), SoundSource.MUSIC);
+                        } else {
+                            soundManager.stop(ModSounds.TAINTED_DARK_GRASS_MUSIC.get().getLocation(), SoundSource.MUSIC);
+                        }
+                    }
+                    
+                    // Play the appropriate biome music as a positional sound from the tainted grass location
+                    SoundEvent musicToPlay = shouldPlayWhite ? ModSounds.TAINTED_WHITE_GRASS_MUSIC.get() : ModSounds.TAINTED_DARK_GRASS_MUSIC.get();
+                    
+                    // Create a positional sound instance that can be heard from 50 blocks away
+                    // Using LINEAR attenuation with volume 3.125f (50/16) allows it to be heard from ~50 blocks
+                    // Minecraft's LINEAR attenuation makes sounds inaudible beyond 16 blocks at volume 1.0
+                    // To hear from 50 blocks, we need volume = 50/16 ≈ 3.125f
+                    currentMusicInstance = new SimpleSoundInstance(
+                            musicToPlay.getLocation(),
+                            SoundSource.MUSIC,
+                            3.125f, // volume - calculated to reach ~50 blocks (50/16)
+                            1.0f, // pitch
+                            level.getRandom(),
+                            true, // looping (music typically loops)
+                            0, // delay
+                            SimpleSoundInstance.Attenuation.LINEAR, // Linear attenuation for distance-based volume
+                            musicSourcePos.getX() + 0.5, // Center of the block
+                            musicSourcePos.getY() + 0.5,
+                            musicSourcePos.getZ() + 0.5,
+                            false // not relative
+                    );
+                    
+                    soundManager.play(currentMusicInstance);
+                    lastTaintedMusicTime = currentTime;
+                    wasOnTaintedWhiteGrass = shouldPlayWhite;
+                }
             }
             wasOnTaintedGrass = true;
         } else {
-            // Stop music when player leaves tainted white grass area
+            // Stop music when player leaves tainted grass area
             if (wasOnTaintedGrass) {
-                // Stop our specific tainted grass music by stopping all MUSIC source sounds
-                // This will stop our music and allow normal biome music to resume
-                if (mc.getSoundManager() != null) {
-                    // Stop all MUSIC category sounds (our tainted grass music uses MUSIC source)
-                    // Note: This is necessary since playSound doesn't return a trackable instance
-                    mc.getSoundManager().stop(ModSounds.TAINTED_WHITE_GRASS_MUSIC.get().getLocation(), SoundSource.MUSIC);
+                SoundManager soundManager = mc.getSoundManager();
+                if (soundManager != null) {
+                    // Stop the positional sound instance
+                    if (currentMusicInstance != null) {
+                        soundManager.stop(currentMusicInstance);
+                        currentMusicInstance = null;
+                    }
+                    // Also stop by location in case
+                    if (wasOnTaintedWhiteGrass) {
+                        soundManager.stop(ModSounds.TAINTED_WHITE_GRASS_MUSIC.get().getLocation(), SoundSource.MUSIC);
+                    } else {
+                        soundManager.stop(ModSounds.TAINTED_DARK_GRASS_MUSIC.get().getLocation(), SoundSource.MUSIC);
+                    }
                 }
                 lastTaintedMusicTime = -1; // Reset timer so music can play again when they return
                 wasOnTaintedGrass = false;
+                wasOnTaintedWhiteGrass = false;
             }
         }
     }
     
-    private static boolean isOnTaintedWhiteGrass(Level level, BlockPos pos) {
-        // Check blocks around the player (including below and in a small area)
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                for (int y = -1; y <= 1; y++) {
+    private static BlockPos findNearestTaintedWhiteGrass(Level level, BlockPos pos, int range) {
+        BlockPos nearest = null;
+        double nearestDistSq = Double.MAX_VALUE;
+        
+        // Check blocks around the player within the specified range
+        for (int x = -range; x <= range; x++) {
+            for (int z = -range; z <= range; z++) {
+                for (int y = -range; y <= range; y++) {
                     BlockPos checkPos = pos.offset(x, y, z);
                     Block block = level.getBlockState(checkPos).getBlock();
                     
-                    // Check if it's a tainted white grass block or related tainted blocks
+                    // Check if it's a tainted white grass block or related tainted white blocks
                     if (block == ModBlocks.TAINTED_WHITE_GRASS.get() ||
                         block == ModBlocks.TAINTED_WHITE_DIRT.get() ||
                         block == ModBlocks.TAINTED_WHITE_SAND.get() ||
@@ -159,12 +227,49 @@ public class ModClientEvents {
                         block == ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get() ||
                         block == ModBlocks.TAINTED_WHITE_PLANKS.get() ||
                         block == ModBlocks.TAINTED_WHITE_LEAF.get()) {
-                        return true;
+                        
+                        double distSq = pos.distSqr(checkPos);
+                        if (distSq < nearestDistSq) {
+                            nearest = checkPos;
+                            nearestDistSq = distSq;
+                        }
                     }
                 }
             }
         }
-        return false;
+        return nearest;
+    }
+    
+    private static BlockPos findNearestTaintedDarkGrass(Level level, BlockPos pos, int range) {
+        BlockPos nearest = null;
+        double nearestDistSq = Double.MAX_VALUE;
+        
+        // Check blocks around the player within the specified range
+        for (int x = -range; x <= range; x++) {
+            for (int z = -range; z <= range; z++) {
+                for (int y = -range; y <= range; y++) {
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    Block block = level.getBlockState(checkPos).getBlock();
+                    
+                    // Check if it's a tainted dark grass block or related tainted dark blocks
+                    if (block == ModBlocks.TAINTED_DARK_GRASS.get() ||
+                        block == ModBlocks.TAINTED_DARK_DIRT.get() ||
+                        block == ModBlocks.TAINTED_DARK_SAND.get() ||
+                        block == ModBlocks.TAINTED_DARK_LOG.get() ||
+                        block == ModBlocks.STRIPPED_TAINTED_DARK_LOG.get() ||
+                        block == ModBlocks.TAINTED_DARK_PLANKS.get() ||
+                        block == ModBlocks.TAINTED_DARK_LEAF.get()) {
+                        
+                        double distSq = pos.distSqr(checkPos);
+                        if (distSq < nearestDistSq) {
+                            nearest = checkPos;
+                            nearestDistSq = distSq;
+                        }
+                    }
+                }
+            }
+        }
+        return nearest;
     }
 
     private static void playRandomNightSound(Level level, LocalPlayer player) {

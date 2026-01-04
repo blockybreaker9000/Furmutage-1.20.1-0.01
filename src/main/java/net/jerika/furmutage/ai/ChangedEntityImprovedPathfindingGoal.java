@@ -22,12 +22,12 @@ import java.util.EnumSet;
 public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private final PathfinderMob mob;
     private LivingEntity target;
-    private static final double JUMP_DISTANCE = 4.0D; // Jump when within 4 blocks of obstacle
-    private static final double GAP_JUMP_DISTANCE = 3.0D; // Jump across gaps up to 3 blocks
+    private static final double JUMP_DISTANCE = 2.0D; // Jump when within 2 blocks of obstacle
+    private static final double GAP_JUMP_DISTANCE = 4.0D; // Jump across gaps up to 3 blocks
     private static final double MIN_WALL_HEIGHT = 2.0D; // Minimum wall height to jump (2 blocks)
-    private static final double MAX_OBSTACLE_HEIGHT = 5.0D; // Can jump over obstacles up to 5 blocks high
+    private static final double MAX_OBSTACLE_HEIGHT = 6.0D; // Can jump over obstacles up to 6 blocks high
     private static final double MIN_TARGET_HEIGHT_DIFF = 2.0D; // Minimum height difference to trigger jump (2 blocks)
-    private static final double MAX_JUMP_HEIGHT = 5.0D; // Maximum jump height (5 blocks)
+    private static final double MAX_JUMP_HEIGHT = 6.0D; // Maximum jump height (6 blocks)
     private int jumpCooldown = 0;
     private static final int JUMP_COOLDOWN = 15; // Cooldown of 0.75 seconds (15 ticks)
     private boolean isJumping = false;
@@ -104,7 +104,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             else if (isGapAhead()) {
                 performGapJump();
             }
-            // Check if target is 2 blocks above us and we need to jump up (legacy check)
+            // Check if target is 2 blocks above us, and we need to jump up (legacy check)
             else if (isTarget2BlocksHigher() && distanceSqr <= JUMP_DISTANCE * JUMP_DISTANCE) {
                 performVerticalJump();
             }

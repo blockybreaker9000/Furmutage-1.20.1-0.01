@@ -5,8 +5,9 @@ import net.ltxprogrammer.changed.entity.ChangedEntity;
 import net.ltxprogrammer.changed.entity.TransfurMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -32,6 +33,22 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
     @Override
     public void tick() {
         super.tick();
+        
+        // Apply permanent Slowness 2 effect without particles
+        if (!this.level().isClientSide) {
+            // Check if slowness effect exists, if not add it
+            if (!this.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
+                // Duration: very long (999999 ticks), Amplifier: 1 (slowness 2), no particles/icon
+                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 1, false, false, false));
+            } else {
+                // Refresh the effect to keep it permanent
+                MobEffectInstance existing = this.getEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                if (existing != null && existing.getDuration() < 999990) {
+                    this.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
+                    this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 1, false, false, false));
+                }
+            }
+        }
         
         // Destroy leaves within 1 block of the entity's hitbox
         if (!this.level().isClientSide && this.tickCount % 5 == 0) { // Check every 5 ticks for performance
@@ -81,7 +98,7 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
     public static AttributeSupplier.Builder createAttributes() {
         return ChangedEntity.createLatexAttributes()
                 .add(Attributes.MAX_HEALTH, 40.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.3D)
+                .add(Attributes.MOVEMENT_SPEED, 0.0005D)
                 .add(Attributes.ATTACK_DAMAGE, 6.0D)
                 .add(Attributes.FOLLOW_RANGE, 60.0D);
     }

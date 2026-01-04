@@ -319,7 +319,6 @@ public class TaintedDarkSandBlock extends SandBlock {
                 "LATEX_PUP_CRYSTAL",      // Pup crystal
                 "LATEX_CRYSTAL",          // Regular dark latex crystal
                 "WOLF_CRYSTAL",           // Wolf crystal
-                "WOLF_CRYSTAL_SMALL",     // Small wolf crystal
                 "DARK_LATEX_CRYSTAL_LARGE", // Large dark latex crystal
                 "BEIFENG_CRYSTAL",        // Beifeng crystal
                 "BEIFENG_CRYSTAL_SMALL",  // Small Beifeng crystal
@@ -439,7 +438,6 @@ public class TaintedDarkSandBlock extends SandBlock {
                 "LATEX_PUP_CRYSTAL",
                 "LATEX_CRYSTAL",
                 "WOLF_CRYSTAL",
-                "WOLF_CRYSTAL_SMALL",
                 "DARK_LATEX_CRYSTAL_LARGE",
                 "BEIFENG_CRYSTAL",
                 "BEIFENG_CRYSTAL_SMALL",

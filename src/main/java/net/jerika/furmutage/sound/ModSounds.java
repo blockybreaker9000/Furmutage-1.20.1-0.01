@@ -24,8 +24,9 @@ public class ModSounds {
     // Morning chime
     public static final RegistryObject<SoundEvent> MORNING_CHIME = registerSoundEvent("morning_chime");
     
-    // Tainted white grass biome music
+    // Tainted grass biome music
     public static final RegistryObject<SoundEvent> TAINTED_WHITE_GRASS_MUSIC = registerSoundEvent("tainted_white_grass_music");
+    public static final RegistryObject<SoundEvent> TAINTED_DARK_GRASS_MUSIC = registerSoundEvent("tainted_dark_grass_music");
 
     public static final RegistryObject<SoundEvent> TSC_DRONE_AMBIENT = registerSoundEvent("tsc_drone_ambient");
     public static final RegistryObject<SoundEvent> TSC_DRONE_HURT = registerSoundEvent("tsc_drone_hurt");

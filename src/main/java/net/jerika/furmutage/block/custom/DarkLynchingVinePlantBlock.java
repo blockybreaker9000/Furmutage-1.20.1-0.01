@@ -51,7 +51,7 @@ public class DarkLynchingVinePlantBlock extends GrowingPlantBodyBlock {
                                    !belowState.is(ModBlocks.DARK_LYNCHING_VINE_PLANT.get());
             
             // Only grow berries if this is NOT the bottom block
-            if (!isBottomBlock && random.nextInt(11) == 0) { // ~9% chance per random tick
+            if (!isBottomBlock && random.nextInt(30) == 0) { // ~30% chance per random tick
                 level.setBlock(pos, state.setValue(BERRIES, true), 2);
             }
         }

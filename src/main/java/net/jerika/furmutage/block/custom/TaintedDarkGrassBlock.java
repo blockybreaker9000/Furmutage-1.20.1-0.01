@@ -43,11 +43,6 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             spawnDarkLatexEntity(level, pos, random);
         }
         
-        // Occasionally spawn mushrooms on top
-        if (random.nextInt(100) == 0) { // 1% chance per random tick
-            spawnMushroomOnTop(level, pos, random);
-        }
-        
         // Spawn Changed mod crystals on top (more naturally)
         if (random.nextInt(50) == 0) { // 2% chance per random tick (more frequent spawning)
             spawnChangedCrystalOnTop(level, pos, random);
@@ -204,27 +199,6 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                     } else {
                         level.setBlock(abovePos, ModBlocks.TAINTED_DARK_CRYSTAL_BLUE_FLOWER.get().defaultBlockState(), 3);
                     }
-                }
-            }
-        }
-    }
-    
-    /**
-     * Spawns a mushroom (spotted or drip) on top of this block.
-     */
-    private void spawnMushroomOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air and has low light (mushrooms prefer darkness)
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) < 13) {
-            // Check if there's already a mushroom nearby (within 4 blocks)
-            if (!hasMushroomNearby(level, abovePos, 4)) {
-                // Randomly choose between spotted and drip mushroom (50% chance each)
-                if (random.nextBoolean()) {
-                    level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_SPOTTED_MUSHROOM.get().defaultBlockState(), 3);
-                } else {
-                    level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_DRIP_MUSHROOM.get().defaultBlockState(), 3);
                 }
             }
         }
@@ -420,7 +394,6 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 "LATEX_PUP_CRYSTAL",      // Pup crystal
                 "LATEX_CRYSTAL",          // Regular dark latex crystal
                 "WOLF_CRYSTAL",           // Wolf crystal
-                "WOLF_CRYSTAL_SMALL",     // Small wolf crystal
                 "DARK_LATEX_CRYSTAL_LARGE", // Large dark latex crystal
                 "BEIFENG_CRYSTAL",        // Beifeng crystal
                 "BEIFENG_CRYSTAL_SMALL",  // Small Beifeng crystal
@@ -540,7 +513,6 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 "LATEX_PUP_CRYSTAL",
                 "LATEX_CRYSTAL",
                 "WOLF_CRYSTAL",
-                "WOLF_CRYSTAL_SMALL",
                 "DARK_LATEX_CRYSTAL_LARGE",
                 "BEIFENG_CRYSTAL",
                 "BEIFENG_CRYSTAL_SMALL",
