@@ -72,7 +72,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_WHITE_SAPLING = registerBlock("tainted_white_sapling",
             () -> new TaintedWhiteSaplingBlock(new TaintedWhiteTreeGrower(), BlockBehaviour.Properties.copy(Blocks.MANGROVE_PROPAGULE)));
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS = registerBlock("tainted_white_grass",
-            () -> new TaintedWhiteGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK).requiresCorrectToolForDrops()));
+            () -> new TaintedWhiteGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK).sound(SoundType.MUD).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_DIRT = registerBlock("tainted_white_dirt",
             () -> new TaintedWhiteDirtBlock(BlockBehaviour.Properties.copy(Blocks.DIRT).randomTicks().requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_SAND = registerBlock("tainted_white_sand",
@@ -113,7 +113,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_DARK_LEAF = registerBlock("tainted_dark_leaf",
             () -> new TaintedDarkLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> TAINTED_DARK_GRASS = registerBlock("tainted_dark_grass",
-            () -> new TaintedDarkGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK).randomTicks().requiresCorrectToolForDrops()));
+            () -> new TaintedDarkGrassBlock(BlockBehaviour.Properties.copy(Blocks.GRASS_BLOCK).sound(SoundType.MUD).randomTicks().requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_DARK_DIRT = registerBlock("tainted_dark_dirt",
             () -> new TaintedDarkDirtBlock(BlockBehaviour.Properties.copy(Blocks.DIRT).randomTicks().requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_DARK_SAND = registerBlock("tainted_dark_sand",
@@ -132,6 +132,10 @@ public class ModBlocks {
             () -> new DarkLynchingVineBlock(BlockBehaviour.Properties.copy(Blocks.WEEPING_VINES).randomTicks()));
     public static final RegistryObject<Block> DARK_LYNCHING_VINE_PLANT = BLOCKS.register("dark_lynching_vine_plant",
             () -> new DarkLynchingVinePlantBlock(BlockBehaviour.Properties.copy(Blocks.WEEPING_VINES_PLANT).randomTicks()));
+    public static final RegistryObject<Block> ROSELIGHT_CRYSTAL_SHARDS = registerBlock("roselight_crystal_shards",
+            () -> new RoselightCrystalShardBlock(BlockBehaviour.Properties.copy(Blocks.AMETHYST_CLUSTER).noOcclusion().instabreak().sound(SoundType.AMETHYST)));
+    public static final RegistryObject<Block> THUNDERIUM_CRYSTAL_SHARDS = registerBlock("thunderium_crystal_shards",
+            () -> new ThunderiumCrystalShardBlock(BlockBehaviour.Properties.copy(Blocks.AMETHYST_CLUSTER).noOcclusion().instabreak().sound(SoundType.AMETHYST)));
     
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS_FOLIAGE = registerBlock("tainted_white_grass_foliage",
             () -> new TaintedWhiteGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));

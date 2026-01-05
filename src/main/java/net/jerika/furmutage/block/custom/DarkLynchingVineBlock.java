@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.GrowingPlantHeadBlock;
@@ -50,6 +51,16 @@ public class DarkLynchingVineBlock extends GrowingPlantHeadBlock {
     @Override
     public List<ItemStack> getDrops(BlockState state, LootParams.Builder builder) {
         List<ItemStack> drops = super.getDrops(state, builder);
+        
+        // Check if mined with shears - if so, drop the block itself
+        if (builder.getOptionalParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL) != null) {
+            ItemStack tool = builder.getOptionalParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.TOOL);
+            if (tool != null && tool.is(Items.SHEARS)) {
+                drops.add(new ItemStack(this.asItem()));
+            }
+        }
+        
+        // Drop berries if present
         if (state.getValue(BERRIES)) {
             drops.add(new ItemStack(ModItems.PHAGE_BLUEBERRY.get(), 1 + builder.getLevel().getRandom().nextInt(2)));
         }

@@ -20,90 +20,19 @@ public class TaintedWhiteDirtBlock extends Block {
         // Convert to tainted white grass if there's light above
         BlockPos abovePos = pos.above();
         BlockState aboveState = level.getBlockState(abovePos);
-        
+
         if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
             // Convert to tainted white grass if conditions are right
             if (random.nextInt(5) == 0) { // 20% chance
                 level.setBlock(pos, ModBlocks.TAINTED_WHITE_GRASS.get().defaultBlockState(), 3);
             }
         }
-        
+
         // Spread to nearby dirt blocks
         if (random.nextInt(15) == 0) { // ~6.7% chance per random tick
             spreadToNearbyBlocks(level, pos, random);
         }
-        
-        // Rarely spawn tainted white saplings on top
-        if (random.nextInt(200) == 0) { // 0.5% chance per random tick (very rare)
-            spawnSaplingOnTop(level, pos, random);
-        }
-        
-        // Occasionally spawn tainted white grass foliage on top
-        if (random.nextInt(30) == 0) { // ~3.33% chance per random tick (faster growth)
-            spawnGrassFoliageOnTop(level, pos, random);
-        }
-    }
-    
-    /**
-     * Spawns tainted white grass foliage on top of this block.
-     */
-    private void spawnGrassFoliageOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air and has enough light
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            if (random.nextInt(3) == 0) {
-                // 33% chance for tall grass
-                BlockPos aboveAbovePos = abovePos.above();
-                if (level.getBlockState(aboveAbovePos).isAir()) {
-                    level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_TALL_GRASS.get().defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER), 3);
-                    level.setBlock(aboveAbovePos, ModBlocks.TAINTED_WHITE_TALL_GRASS.get().defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 3);
-                }
-            } else {
-                // 67% chance for normal grass
-                level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get().defaultBlockState(), 3);
-            }
-        }
-    }
-    
-    /**
-     * Rarely spawns a tainted white sapling on top of this block.
-     */
-    private void spawnSaplingOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air and has enough light
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            // Check if there's already a sapling within 5-6 blocks
-            if (!hasSaplingNearby(level, abovePos, 5)) {
-                level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_SAPLING.get().defaultBlockState(), 3);
-            }
-        }
-    }
-    
-    /**
-     * Checks if there's a tainted white sapling within the specified distance.
-     */
-    private boolean hasSaplingNearby(ServerLevel level, BlockPos pos, int maxDistance) {
-        int checkRadius = maxDistance;
-        for (int x = -checkRadius; x <= checkRadius; x++) {
-            for (int y = -checkRadius; y <= checkRadius; y++) {
-                for (int z = -checkRadius; z <= checkRadius; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
-                    
-                    BlockPos checkPos = pos.offset(x, y, z);
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-                    
-                    // Check if within distance and is a sapling
-                    if (distance < maxDistance && level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_SAPLING.get())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
+
     }
 
     /**

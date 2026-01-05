@@ -34,7 +34,7 @@ public class ModClientEvents {
     private static long lastTaintedMusicTime = -1;
     private static final long TAINTED_MUSIC_CHECK_INTERVAL = 100; // Check every 5 seconds (100 ticks)
     private static final long TAINTED_MUSIC_PLAY_INTERVAL = 36000; // Play music every ~30 minutes (assuming music track length)
-    private static final int MUSIC_DETECTION_RANGE = 50; // Music plays when tainted grass is within 50 blocks
+    private static final int MUSIC_DETECTION_RANGE = 10; // Music plays when tainted grass is within 10 blocks
     private static SimpleSoundInstance currentMusicInstance = null;
 
     @SubscribeEvent
@@ -159,14 +159,14 @@ public class ModClientEvents {
                     // Play the appropriate biome music as a positional sound from the tainted grass location
                     SoundEvent musicToPlay = shouldPlayWhite ? ModSounds.TAINTED_WHITE_GRASS_MUSIC.get() : ModSounds.TAINTED_DARK_GRASS_MUSIC.get();
                     
-                    // Create a positional sound instance that can be heard from 50 blocks away
-                    // Using LINEAR attenuation with volume 3.125f (50/16) allows it to be heard from ~50 blocks
+                    // Create a positional sound instance that can be heard from 10 blocks away
+                    // Using LINEAR attenuation with volume 0.625f (10/16) allows it to be heard from ~10 blocks
                     // Minecraft's LINEAR attenuation makes sounds inaudible beyond 16 blocks at volume 1.0
-                    // To hear from 50 blocks, we need volume = 50/16 ≈ 3.125f
+                    // To hear from 10 blocks, we need volume = 10/16 ≈ 0.625f
                     currentMusicInstance = new SimpleSoundInstance(
                             musicToPlay.getLocation(),
                             SoundSource.MUSIC,
-                            3.125f, // volume - calculated to reach ~50 blocks (50/16)
+                            0.625f, // volume - calculated to reach ~10 blocks (10/16)
                             1.0f, // pitch
                             level.getRandom(),
                             true, // looping (music typically loops)

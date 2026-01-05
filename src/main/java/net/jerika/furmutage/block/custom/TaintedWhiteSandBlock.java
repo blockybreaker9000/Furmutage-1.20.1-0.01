@@ -31,70 +31,12 @@ public class TaintedWhiteSandBlock extends SandBlock {
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnPureWhiteLatexEntity(level, pos, random);
         }
-    }
-    
-    /**
-     * Spawns tainted white grass foliage on top of this block.
-     */
-    private void spawnGrassFoliageOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
         
-        // Only spawn if the space above is air and has enough light
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            if (random.nextInt(4) == 0) {
-                // 25% chance for tall grass
-                BlockPos aboveAbovePos = abovePos.above();
-                if (level.getBlockState(aboveAbovePos).isAir()) {
-                    level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_TALL_GRASS.get().defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.LOWER), 3);
-                    level.setBlock(aboveAbovePos, ModBlocks.TAINTED_WHITE_TALL_GRASS.get().defaultBlockState().setValue(DoublePlantBlock.HALF, DoubleBlockHalf.UPPER), 3);
-                }
-            } else {
-                // 75% chance for normal grass
-                level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get().defaultBlockState(), 3);
-            }
+        // Spawn Changed mod white latex pillars on top (in small clusters)
+        if (random.nextInt(10) == 0) { // 10% chance per random tick (frequent)
+            spawnWhiteLatexPillarsOnTop(level, pos, random);
         }
     }
-    
-    /**
-     * Rarely spawns a tainted white sapling on top of this block.
-     */
-    private void spawnSaplingOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air and has enough light
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            // Check if there's already a sapling within 5-6 blocks
-            if (!hasSaplingNearby(level, abovePos, 5)) {
-                level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_SAPLING.get().defaultBlockState(), 3);
-            }
-        }
-    }
-    
-    /**
-     * Checks if there's a tainted white sapling within the specified distance.
-     */
-    private boolean hasSaplingNearby(ServerLevel level, BlockPos pos, int maxDistance) {
-        int checkRadius = maxDistance;
-        for (int x = -checkRadius; x <= checkRadius; x++) {
-            for (int y = -checkRadius; y <= checkRadius; y++) {
-                for (int z = -checkRadius; z <= checkRadius; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
-                    
-                    BlockPos checkPos = pos.offset(x, y, z);
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-                    
-                    // Check if within distance and is a sapling
-                    if (distance < maxDistance && level.getBlockState(checkPos).is(ModBlocks.TAINTED_WHITE_SAPLING.get())) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * Spreads taint to nearby sand blocks and can also spread to dirt.
      */
@@ -266,6 +208,173 @@ public class TaintedWhiteSandBlock extends SandBlock {
                 }
             }
         }
+        return false;
+    }
+    
+    /**
+     * Rarely spawns Changed mod white latex pillars in small clusters on top of tainted white blocks.
+     */
+    private void spawnWhiteLatexPillarsOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        
+        // Only spawn if the space above is air
+        if (!aboveState.isAir()) {
+            return;
+        }
+        
+        // Check if there's already a white latex pillar nearby (within 15 blocks)
+        if (hasWhiteLatexPillarNearby(level, abovePos, 15)) {
+            return;
+        }
+        
+        // Determine cluster size (2-5 pillars)
+        int clusterSize = 2 + random.nextInt(4); // 2, 3, 4, or 5 pillars
+        
+        // Try to get Changed mod white latex pillar block using reflection
+        try {
+            // Get the ChangedBlocks class
+            Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
+            
+            // Get the WHITE_LATEX_PILLAR field
+            java.lang.reflect.Field pillarField = changedBlocksClass.getField("WHITE_LATEX_PILLAR");
+            Object registryObject = pillarField.get(null);
+            java.lang.reflect.Method getMethod = registryObject.getClass().getMethod("get");
+            net.minecraft.world.level.block.Block pillarBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(registryObject);
+            
+            if (pillarBlock == null) {
+                return; // Pillar block not available
+            }
+            
+            // Find valid positions in a small radius (2-3 blocks) for the cluster
+            java.util.List<BlockPos> validPositions = new java.util.ArrayList<>();
+            int clusterRadius = 3;
+            
+            for (int x = -clusterRadius; x <= clusterRadius; x++) {
+                for (int z = -clusterRadius; z <= clusterRadius; z++) {
+                    BlockPos checkPos = pos.offset(x, 0, z);
+                    BlockState checkState = level.getBlockState(checkPos);
+                    BlockPos pillarPos = null;
+                    
+                    // Check if the block is valid surface for spawning pillars
+                    if (checkState.is(ModBlocks.TAINTED_WHITE_GRASS.get()) ||
+                        checkState.is(ModBlocks.TAINTED_WHITE_SAND.get())) {
+                        // For grass, sand, or foliage: place pillar directly above
+                        BlockPos checkAbovePos = checkPos.above();
+                        if (level.getBlockState(checkAbovePos).isAir()) {
+                            pillarPos = checkAbovePos;
+                        }
+                    } else if (checkState.is(ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get())) {
+                        // For grass foliage: place pillar directly above
+                        BlockPos checkAbovePos = checkPos.above();
+                        if (level.getBlockState(checkAbovePos).isAir()) {
+                            pillarPos = checkAbovePos;
+                        }
+                    } else if (checkState.is(ModBlocks.TAINTED_WHITE_TALL_GRASS.get())) {
+                        // For tall grass: check if it's upper or lower half
+                        if (checkState.hasProperty(DoublePlantBlock.HALF)) {
+                            DoubleBlockHalf half = checkState.getValue(DoublePlantBlock.HALF);
+                            if (half == DoubleBlockHalf.UPPER) {
+                                // Upper half: place pillar directly above
+                                BlockPos checkAbovePos = checkPos.above();
+                                if (level.getBlockState(checkAbovePos).isAir()) {
+                                    pillarPos = checkAbovePos;
+                                }
+                            } else {
+                                // Lower half: check if upper half exists and space above that is air
+                                BlockPos upperPos = checkPos.above();
+                                BlockState upperState = level.getBlockState(upperPos);
+                                if (upperState.is(ModBlocks.TAINTED_WHITE_TALL_GRASS.get()) &&
+                                    upperState.hasProperty(DoublePlantBlock.HALF) &&
+                                    upperState.getValue(DoublePlantBlock.HALF) == DoubleBlockHalf.UPPER) {
+                                    BlockPos aboveUpperPos = upperPos.above();
+                                    if (level.getBlockState(aboveUpperPos).isAir()) {
+                                        pillarPos = aboveUpperPos;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (pillarPos != null) {
+                        validPositions.add(pillarPos);
+                    }
+                }
+            }
+            
+            if (validPositions.isEmpty()) {
+                return; // No valid positions found
+            }
+            
+            // Shuffle valid positions to randomize placement
+            java.util.Collections.shuffle(validPositions, new java.util.Random(random.nextLong()));
+            
+            // Place pillars in the cluster
+            int pillarsPlaced = 0;
+            for (int i = 0; i < Math.min(clusterSize, validPositions.size()) && pillarsPlaced < clusterSize; i++) {
+                BlockPos pillarPos = validPositions.get(i);
+                
+                // Place the pillar
+                BlockState pillarState = pillarBlock.defaultBlockState();
+                level.setBlock(pillarPos, pillarState, 3);
+                
+                pillarsPlaced++;
+            }
+        } catch (ClassNotFoundException e) {
+            // Changed mod not loaded, skip
+            furmutage.LOGGER.debug("Changed mod not found, skipping white latex pillar spawn");
+        } catch (NoSuchFieldException e) {
+            // WHITE_LATEX_PILLAR field doesn't exist, skip
+            furmutage.LOGGER.debug("WHITE_LATEX_PILLAR field not found in Changed mod: {}", e.getMessage());
+        } catch (Exception e) {
+            // Log error but don't crash
+            furmutage.LOGGER.warn("Failed to spawn Changed mod white latex pillar cluster: {}", e.getMessage());
+        }
+    }
+    
+    /**
+     * Checks if there's a Changed mod white latex pillar within the specified distance.
+     */
+    private boolean hasWhiteLatexPillarNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        try {
+            // Get the ChangedBlocks class
+            Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
+            
+            // Get the WHITE_LATEX_PILLAR field
+            java.lang.reflect.Field pillarField = changedBlocksClass.getField("WHITE_LATEX_PILLAR");
+            Object registryObject = pillarField.get(null);
+            java.lang.reflect.Method getMethod = registryObject.getClass().getMethod("get");
+            net.minecraft.world.level.block.Block pillarBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(registryObject);
+            
+            if (pillarBlock == null) {
+                return false;
+            }
+            
+            // Check blocks in a radius around the position
+            int checkRadius = maxDistance;
+            for (int x = -checkRadius; x <= checkRadius; x++) {
+                for (int y = -checkRadius; y <= checkRadius; y++) {
+                    for (int z = -checkRadius; z <= checkRadius; z++) {
+                        if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
+                        
+                        BlockPos checkPos = pos.offset(x, y, z);
+                        double distance = Math.sqrt(x * x + y * y + z * z);
+                        
+                        // Check if within distance and is a white latex pillar
+                        if (distance < maxDistance && level.getBlockState(checkPos).is(pillarBlock)) {
+                            return true;
+                        }
+                    }
+                }
+            }
+        } catch (ClassNotFoundException | NoSuchFieldException e) {
+            // Changed mod not loaded or field doesn't exist, return false
+            return false;
+        } catch (Exception e) {
+            // Error checking, assume no pillar nearby
+            return false;
+        }
+        
         return false;
     }
 }

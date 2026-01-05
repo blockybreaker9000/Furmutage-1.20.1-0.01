@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "furmutage:block/roselight_crystal_shards"
+  },
+  "render_type": "cutout"
+}
+
+

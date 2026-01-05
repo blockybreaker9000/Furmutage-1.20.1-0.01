@@ -29,51 +29,12 @@ public class TaintedDarkSandBlock extends SandBlock {
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnDarkLatexEntity(level, pos, random);
         }
-        
-        // Rarely spawn tainted dark saplings on top
-        if (random.nextInt(200) == 0) { // 0.5% chance per random tick (very rare)
-            spawnSaplingOnTop(level, pos, random);
-        }
-        
-        // Occasionally spawn tainted dark grass foliage on top
-        if (random.nextInt(20) == 0) { // 5% chance per random tick (faster growth)
-            spawnGrassFoliageOnTop(level, pos, random);
-        }
-        
+
         // Spawn Changed mod crystals on top (more naturally)
         if (random.nextInt(50) == 0) { // 2% chance per random tick (more frequent spawning)
             spawnChangedCrystalOnTop(level, pos, random);
         }
     }
-    
-    /**
-     * Spawns tainted dark grass foliage on top of this block.
-     */
-    private void spawnGrassFoliageOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air and has enough light
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            if (random.nextInt(4) == 0) {
-                // 25% chance for tall grass
-                BlockPos aboveAbovePos = abovePos.above();
-                if (level.getBlockState(aboveAbovePos).isAir()) {
-                    int variant = random.nextInt(3);
-                    level.setBlock(abovePos, ModBlocks.TAINTED_DARK_TALL_GRASS.get().defaultBlockState()
-                            .setValue(net.minecraft.world.level.block.DoublePlantBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER)
-                            .setValue(TaintedDarkTallGrassBlock.VARIANT, variant), 3);
-                    level.setBlock(aboveAbovePos, ModBlocks.TAINTED_DARK_TALL_GRASS.get().defaultBlockState()
-                            .setValue(net.minecraft.world.level.block.DoublePlantBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER)
-                            .setValue(TaintedDarkTallGrassBlock.VARIANT, variant), 3);
-                }
-            } else {
-                // 75% chance for normal grass
-                level.setBlock(abovePos, ModBlocks.TAINTED_DARK_GRASS_FOLIAGE.get().defaultBlockState(), 3);
-            }
-        }
-    }
-    
     /**
      * Rarely spawns a tainted dark sapling on top of this block.
      */
@@ -349,20 +310,20 @@ public class TaintedDarkSandBlock extends SandBlock {
             if (availableCrystals.isEmpty()) {
                 return; // No crystals available
             }
-            
+
             // Find valid positions in a small radius (2-3 blocks) for the cluster
             java.util.List<BlockPos> validPositions = new java.util.ArrayList<>();
             int clusterRadius = 3;
-            
+
             for (int x = -clusterRadius; x <= clusterRadius; x++) {
                 for (int z = -clusterRadius; z <= clusterRadius; z++) {
                     BlockPos checkPos = pos.offset(x, 0, z);
                     BlockPos checkAbovePos = checkPos.above();
                     BlockState checkState = level.getBlockState(checkPos);
                     BlockState checkAboveState = level.getBlockState(checkAbovePos);
-                    
+
                     // Check if the block below is valid (tainted dark grass or sand) and space above is air
-                    if ((checkState.is(ModBlocks.TAINTED_DARK_GRASS.get()) || 
+                    if ((checkState.is(ModBlocks.TAINTED_DARK_GRASS.get()) ||
                          checkState.is(ModBlocks.TAINTED_DARK_SAND.get())) &&
                         checkAboveState.isAir()) {
                         validPositions.add(checkAbovePos);

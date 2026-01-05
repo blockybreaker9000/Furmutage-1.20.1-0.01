@@ -19,90 +19,11 @@ public class TaintedDarkLogBlock extends RotatedPillarBlock {
         if (random.nextInt(5) == 0) { // 20% chance per random tick (faster spreading)
             spreadToNearbyBlocks(level, pos, random);
         }
-        
-        // Rarely spawn tainted dark saplings on top
-        if (random.nextInt(250) == 0) { // 0.4% chance per random tick (very rare)
-            spawnSaplingOnTop(level, pos, random);
-        }
-        
-        // Occasionally spawn tainted dark grass foliage on top
-        if (random.nextInt(30) == 0) { // ~3.33% chance per random tick (faster growth)
-            spawnGrassFoliageOnTop(level, pos, random);
-        }
-        
+
         // Very rarely spawn dark lynching vines on the underside
         if (random.nextInt(500) == 0) { // 0.2% chance per random tick (very rare)
             spawnVinesUnderneath(level, pos, random);
         }
-    }
-    
-    /**
-     * Spawns tainted dark grass foliage on top of this block.
-     */
-    private void spawnGrassFoliageOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air and has enough light
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            if (random.nextInt(5) == 0) {
-                // 20% chance for tall grass
-                BlockPos aboveAbovePos = abovePos.above();
-                if (level.getBlockState(aboveAbovePos).isAir()) {
-                    int variant = random.nextInt(3);
-                    level.setBlock(abovePos, ModBlocks.TAINTED_DARK_TALL_GRASS.get().defaultBlockState()
-                            .setValue(net.minecraft.world.level.block.DoublePlantBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.LOWER)
-                            .setValue(TaintedDarkTallGrassBlock.VARIANT, variant), 3);
-                    level.setBlock(aboveAbovePos, ModBlocks.TAINTED_DARK_TALL_GRASS.get().defaultBlockState()
-                            .setValue(net.minecraft.world.level.block.DoublePlantBlock.HALF, net.minecraft.world.level.block.state.properties.DoubleBlockHalf.UPPER)
-                            .setValue(TaintedDarkTallGrassBlock.VARIANT, variant), 3);
-                }
-            } else {
-                // 80% chance for normal grass
-                level.setBlock(abovePos, ModBlocks.TAINTED_DARK_GRASS_FOLIAGE.get().defaultBlockState(), 3);
-            }
-        }
-    }
-    
-    /**
-     * Rarely spawns a tainted dark sapling on top of this block.
-     */
-    private void spawnSaplingOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-        
-        // Only spawn if the space above is air and has enough light
-        if (aboveState.isAir() && level.getMaxLocalRawBrightness(abovePos) >= 9) {
-            // Check if there's already a sapling within 5-6 blocks
-            if (!hasSaplingNearby(level, abovePos, 5)) {
-                level.setBlock(abovePos, ModBlocks.TAINTED_DARK_SAPLING.get().defaultBlockState(), 3);
-            }
-        }
-    }
-    
-    /**
-     * Checks if there's a tainted dark sapling within the specified distance.
-     */
-    private boolean hasSaplingNearby(ServerLevel level, BlockPos pos, int maxDistance) {
-        int checkRadius = maxDistance;
-        for (int x = -checkRadius; x <= checkRadius; x++) {
-            for (int y = -checkRadius; y <= checkRadius; y++) {
-                for (int z = -checkRadius; z <= checkRadius; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
-                    
-                    BlockPos checkPos = pos.offset(x, y, z);
-                    double distance = Math.sqrt(x * x + y * y + z * z);
-                    
-                    // Check if within distance and is a sapling
-                    if (distance < maxDistance && 
-                        (level.getBlockState(checkPos).is(ModBlocks.TAINTED_DARK_SAPLING.get()) ||
-                         level.getBlockState(checkPos).is(ModBlocks.TAINTED_DARK_TALL_GRASS.get()))) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
     }
 
     /**

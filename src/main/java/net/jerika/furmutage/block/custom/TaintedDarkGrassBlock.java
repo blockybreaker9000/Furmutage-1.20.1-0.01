@@ -47,6 +47,11 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         if (random.nextInt(50) == 0) { // 2% chance per random tick (more frequent spawning)
             spawnChangedCrystalOnTop(level, pos, random);
         }
+        
+        // Spawn roselight crystal shards on top
+        if (random.nextInt(100) == 0) { // 1% chance per random tick
+            spawnRoselightCrystalShardsOnTop(level, pos, random);
+        }
     }
 
     /**
@@ -565,6 +570,50 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             return false;
         }
         
+        return false;
+    }
+    
+    /**
+     * Spawns roselight crystal shards on top of tainted dark grass blocks.
+     */
+    private void spawnRoselightCrystalShardsOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        
+        // Only spawn if the space above is air
+        if (!aboveState.isAir()) {
+            return;
+        }
+        
+        // Check if there's already a roselight crystal shard nearby (within 10 blocks)
+        if (hasRoselightCrystalShardNearby(level, abovePos, 10)) {
+            return;
+        }
+        
+        // Spawn the crystal shard
+        level.setBlock(abovePos, ModBlocks.ROSELIGHT_CRYSTAL_SHARDS.get().defaultBlockState(), 3);
+    }
+    
+    /**
+     * Checks if there's a roselight crystal shard within the specified distance.
+     */
+    private boolean hasRoselightCrystalShardNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        int checkRadius = maxDistance;
+        for (int x = -checkRadius; x <= checkRadius; x++) {
+            for (int y = -checkRadius; y <= checkRadius; y++) {
+                for (int z = -checkRadius; z <= checkRadius; z++) {
+                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
+                    
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    double distance = Math.sqrt(x * x + y * y + z * z);
+                    
+                    // Check if within distance and is a roselight crystal shard
+                    if (distance < maxDistance && level.getBlockState(checkPos).is(ModBlocks.ROSELIGHT_CRYSTAL_SHARDS.get())) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 }

@@ -57,6 +57,11 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
         if (random.nextInt(10) == 0) { // 10% chance per random tick (frequent)
             spawnWhiteLatexPillarsOnTop(level, pos, random);
         }
+        
+        // Spawn thunderium crystal shards on top
+        if (random.nextInt(100) == 0) { // 1% chance per random tick
+            spawnThunderiumCrystalShardsOnTop(level, pos, random);
+        }
     }
 
     /**
@@ -615,6 +620,50 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
             return false;
         }
         
+        return false;
+    }
+    
+    /**
+     * Spawns thunderium crystal shards on top of tainted white grass blocks.
+     */
+    private void spawnThunderiumCrystalShardsOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        
+        // Only spawn if the space above is air
+        if (!aboveState.isAir()) {
+            return;
+        }
+        
+        // Check if there's already a thunderium crystal shard nearby (within 10 blocks)
+        if (hasThunderiumCrystalShardNearby(level, abovePos, 10)) {
+            return;
+        }
+        
+        // Spawn the crystal shard
+        level.setBlock(abovePos, ModBlocks.THUNDERIUM_CRYSTAL_SHARDS.get().defaultBlockState(), 3);
+    }
+    
+    /**
+     * Checks if there's a thunderium crystal shard within the specified distance.
+     */
+    private boolean hasThunderiumCrystalShardNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        int checkRadius = maxDistance;
+        for (int x = -checkRadius; x <= checkRadius; x++) {
+            for (int y = -checkRadius; y <= checkRadius; y++) {
+                for (int z = -checkRadius; z <= checkRadius; z++) {
+                    if (x == 0 && y == 0 && z == 0) continue; // Skip the spawn position itself
+                    
+                    BlockPos checkPos = pos.offset(x, y, z);
+                    double distance = Math.sqrt(x * x + y * y + z * z);
+                    
+                    // Check if within distance and is a thunderium crystal shard
+                    if (distance < maxDistance && level.getBlockState(checkPos).is(ModBlocks.THUNDERIUM_CRYSTAL_SHARDS.get())) {
+                        return true;
+                    }
+                }
+            }
+        }
         return false;
     }
 }

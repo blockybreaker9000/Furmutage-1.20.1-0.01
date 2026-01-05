@@ -147,6 +147,10 @@ public class ModItems {
 
     public static final RegistryObject<Item> ROSELIGHT_PIC = ITEMS.register("roselight_pic",
             () -> new PickaxeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_SHARD = ITEMS.register("roselight_glass_shard",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_GLASS_SHARD = ITEMS.register("thunderium_glass_shard",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROSELIGHT_AXE = ITEMS.register("roselight_axe",
             () -> new AxeItem(ModToolTiers.ROSELIGHT, 9, -2, new Item.Properties().durability(800)));
     public static final RegistryObject<Item> ROSELIGHT_SHOVEL = ITEMS.register("roselight_shovel",

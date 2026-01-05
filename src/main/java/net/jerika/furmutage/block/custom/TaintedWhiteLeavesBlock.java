@@ -24,7 +24,7 @@ public class TaintedWhiteLeavesBlock extends LeavesBlock {
         }
         
         // Check if there's a tainted white log within 15 blocks
-        if (hasTaintedWhiteLogWithinRange(level, pos, 15)) {
+        if (hasTaintedWhiteLogWithinRange(level, pos, 8)) {
             // Log found nearby, don't decay - just return without calling super
             // But still allow spreading
         } else {
