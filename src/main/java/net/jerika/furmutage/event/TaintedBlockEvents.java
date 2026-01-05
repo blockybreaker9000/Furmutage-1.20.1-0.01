@@ -9,6 +9,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.animal.*;
 import net.minecraft.world.entity.animal.horse.Horse;
+import net.minecraft.world.entity.animal.horse.Llama;
+import net.minecraft.world.entity.animal.goat.Goat;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
@@ -79,7 +81,11 @@ public class TaintedBlockEvents {
                                  entity instanceof Chicken ||
                                  entity instanceof Sheep ||
                                  entity instanceof Rabbit ||
-                                 entity instanceof Horse;
+                                 entity instanceof Horse ||
+                                 entity instanceof Squid ||
+                                 entity instanceof Llama ||
+                                 entity instanceof Dolphin ||
+                                 entity instanceof Goat;
         
         if (!isTargetEntity) {
             return;
@@ -191,6 +197,18 @@ public class TaintedBlockEvents {
                         wasReplaced = true;
                     } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
                         replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_HORSE.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Squid && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSquidEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_SQUID.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Llama && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexLlamaEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_LLAMA.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Dolphin && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexDolphinEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_DOLPHIN.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Goat && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexGoatEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_GOAT.get());
                         wasReplaced = true;
                     }
                     

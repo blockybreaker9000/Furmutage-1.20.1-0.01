@@ -56,6 +56,18 @@ public class ModSounds {
     // White Latex Rabbit sounds
     public static final RegistryObject<SoundEvent> WHITE_LATEX_RABBIT_AMBIENT = registerSoundEvent("white_latex_rabbit_ambient");
 
+    // White Latex Squid sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_SQUID_AMBIENT = registerSoundEvent("white_latex_squid_ambient");
+
+    // White Latex Llama sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_LLAMA_AMBIENT = registerSoundEvent("white_latex_llama_ambient");
+
+    // White Latex Dolphin sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_DOLPHIN_AMBIENT = registerSoundEvent("white_latex_dolphin_ambient");
+
+    // White Latex Goat sounds
+    public static final RegistryObject<SoundEvent> WHITE_LATEX_GOAT_AMBIENT = registerSoundEvent("white_latex_goat_ambient");
+
     // Latex Mutant Bomber sounds
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_AMBIENT = registerSoundEvent("latex_mutant_bomber_ambient");
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_HURT = registerSoundEvent("latex_mutant_bomber_hurt");

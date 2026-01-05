@@ -56,7 +56,9 @@ public class ChangedEntitySwimEvents {
             "changed:latex_squid_dog_male",
             "changed:latex_tiger_shark",
             "changed:latex_orca",
-            "changed:latex_eel"
+            "changed:latex_eel",
+            "furmutage:white_latex_dolphin",
+            "furmutage:white_latex_squid"
     );
     
     // Entities to exclude from follow range modifications (roomba)

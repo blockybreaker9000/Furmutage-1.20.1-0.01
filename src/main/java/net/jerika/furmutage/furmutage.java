@@ -23,6 +23,10 @@ import net.jerika.furmutage.entity.client.renderer.WhiteLatexPigRenderer;
 import net.jerika.furmutage.entity.client.renderer.GiantPureWhiteLatexRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexRabbitRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexSheepRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexSquidRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexLlamaRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexDolphinRenderer;
+import net.jerika.furmutage.entity.client.renderer.WhiteLatexGoatRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -122,6 +126,10 @@ public class furmutage {
             EntityRenderers.register(ModEntities.WHITE_LATEX_SHEEP.get(), WhiteLatexSheepRenderer::new);
             EntityRenderers.register(ModEntities.WHITE_LATEX_RABBIT.get(), WhiteLatexRabbitRenderer::new);
             EntityRenderers.register(ModEntities.WHITE_LATEX_HORSE.get(), WhiteLatexHorseRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_SQUID.get(), WhiteLatexSquidRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_LLAMA.get(), WhiteLatexLlamaRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_DOLPHIN.get(), WhiteLatexDolphinRenderer::new);
+            EntityRenderers.register(ModEntities.WHITE_LATEX_GOAT.get(), WhiteLatexGoatRenderer::new);
             EntityRenderers.register(ModEntities.GIANT_PURE_WHITE_LATEX.get(), GiantPureWhiteLatexRenderer::new);
 
         }

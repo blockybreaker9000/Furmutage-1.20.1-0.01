@@ -15,6 +15,10 @@ import net.jerika.furmutage.entity.custom.WhiteLatexPigEntity;
 import net.jerika.furmutage.entity.custom.GiantPureWhiteLatexEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexSquidEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexLlamaEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexDolphinEntity;
+import net.jerika.furmutage.entity.custom.WhiteLatexGoatEntity;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -88,6 +92,22 @@ public class ModEntities {
     public static final RegistryObject<EntityType<WhiteLatexHorseEntity>> WHITE_LATEX_HORSE =
             ENTITY_TYPES.register("white_latex_horse", () -> EntityType.Builder.of(WhiteLatexHorseEntity::new, MobCategory.CREATURE)
                     .sized(1.3964844f, 1.6f).build("white_latex_horse"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexSquidEntity>> WHITE_LATEX_SQUID =
+            ENTITY_TYPES.register("white_latex_squid", () -> EntityType.Builder.of(WhiteLatexSquidEntity::new, MobCategory.WATER_CREATURE)
+                    .sized(0.8f, 0.8f).build("white_latex_squid"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexLlamaEntity>> WHITE_LATEX_LLAMA =
+            ENTITY_TYPES.register("white_latex_llama", () -> EntityType.Builder.of(WhiteLatexLlamaEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 1.87f).build("white_latex_llama"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexDolphinEntity>> WHITE_LATEX_DOLPHIN =
+            ENTITY_TYPES.register("white_latex_dolphin", () -> EntityType.Builder.of(WhiteLatexDolphinEntity::new, MobCategory.WATER_CREATURE)
+                    .sized(0.9f, 0.6f).build("white_latex_dolphin"));
+    
+    public static final RegistryObject<EntityType<WhiteLatexGoatEntity>> WHITE_LATEX_GOAT =
+            ENTITY_TYPES.register("white_latex_goat", () -> EntityType.Builder.of(WhiteLatexGoatEntity::new, MobCategory.CREATURE)
+                    .sized(0.9f, 1.3f).build("white_latex_goat"));
     
     public static final RegistryObject<EntityType<GiantPureWhiteLatexEntity>> GIANT_PURE_WHITE_LATEX =
             ENTITY_TYPES.register("giant_pure_white_latex", () -> EntityType.Builder.of(GiantPureWhiteLatexEntity::new, MobCategory.MONSTER)
