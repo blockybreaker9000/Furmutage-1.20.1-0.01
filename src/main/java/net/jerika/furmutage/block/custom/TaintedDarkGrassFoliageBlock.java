@@ -35,7 +35,7 @@ public class TaintedDarkGrassFoliageBlock extends BushBlock {
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         super.randomTick(state, level, pos, random);
         
-        // Rarely spawn dark latex entities (male or female only) on top
+        // Rarely spawn dark latex entities (male, female, or pup) on top
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnDarkLatexEntity(level, pos, random);
         }
@@ -129,7 +129,7 @@ public class TaintedDarkGrassFoliageBlock extends BushBlock {
     }
 
     /**
-     * Spawns a dark latex entity (wolf male or wolf female) on top of this block.
+     * Spawns a dark latex entity (wolf male, wolf female, or wolf pup) on top of this block.
      */
     private void spawnDarkLatexEntity(ServerLevel level, BlockPos pos, RandomSource random) {
         BlockPos abovePos = pos.above();
@@ -140,18 +140,23 @@ public class TaintedDarkGrassFoliageBlock extends BushBlock {
             // Check if there's already a dark latex entity nearby (within 8 blocks)
             if (!hasDarkLatexNearby(level, abovePos, 8)) {
                 EntityType<?> darkLatexType = null;
-                boolean isMale = random.nextBoolean();
+                int variant = random.nextInt(3); // 0 = male, 1 = female, 2 = pup
                 
-                // Randomly choose between wolf male and wolf female (50% chance each)
-                if (isMale) {
+                // Randomly choose between wolf male, wolf female, or wolf pup (33% chance each)
+                if (variant == 0) {
                     // Try to find the Dark Latex Wolf Male entity type
                     darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
                             ResourceLocation.tryParse("changed:dark_latex_wolf_male")
                     );
-                } else {
+                } else if (variant == 1) {
                     // Try to find the Dark Latex Wolf Female entity type
                     darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
                             ResourceLocation.tryParse("changed:dark_latex_wolf_female")
+                    );
+                } else {
+                    // Try to find the Dark Latex Wolf Pup entity type
+                    darkLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
+                            ResourceLocation.tryParse("changed:dark_latex_wolf_pup")
                     );
                 }
                 
@@ -161,10 +166,13 @@ public class TaintedDarkGrassFoliageBlock extends BushBlock {
                         String name = entityType.getDescriptionId().toLowerCase();
                         String key = ForgeRegistries.ENTITY_TYPES.getKey(entityType).toString().toLowerCase();
                         
-                        if (isMale && (name.contains("dark_latex_wolf_male") || key.contains("dark_latex_wolf_male"))) {
+                        if (variant == 0 && (name.contains("dark_latex_wolf_male") || key.contains("dark_latex_wolf_male"))) {
                             darkLatexType = entityType;
                             break;
-                        } else if (!isMale && (name.contains("dark_latex_wolf_female") || key.contains("dark_latex_wolf_female"))) {
+                        } else if (variant == 1 && (name.contains("dark_latex_wolf_female") || key.contains("dark_latex_wolf_female"))) {
+                            darkLatexType = entityType;
+                            break;
+                        } else if (variant == 2 && (name.contains("dark_latex_wolf_pup") || key.contains("dark_latex_wolf_pup"))) {
                             darkLatexType = entityType;
                             break;
                         }

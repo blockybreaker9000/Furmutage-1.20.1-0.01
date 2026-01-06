@@ -144,7 +144,7 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_WHITE_GRASS_FOLIAGE = registerBlock("tainted_white_grass_foliage",
             () -> new TaintedWhiteGrassFoliageBlock(BlockBehaviour.Properties.copy(Blocks.GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_WHITE_TALL_GRASS = registerBlock("tainted_white_tall_grass",
-            () -> new TaintedWhiteTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).noOcclusion().instabreak().sound(SoundType.GRASS)));
+            () -> new TaintedWhiteTallGrassBlock(BlockBehaviour.Properties.copy(Blocks.TALL_GRASS).noOcclusion().instabreak().sound(SoundType.GRASS).randomTicks()));
     public static final RegistryObject<Block> TAINTED_WHITE_SPOTTED_MUSHROOM = registerBlock("tainted_white_spotted_mushroom",
             () -> new TaintedWhiteSpottedMushroomBlock(BlockBehaviour.Properties.copy(Blocks.RED_MUSHROOM).noOcclusion().instabreak().sound(SoundType.GRASS)));
     public static final RegistryObject<Block> TAINTED_WHITE_DRIP_MUSHROOM = registerBlock("tainted_white_drip_mushroom",
