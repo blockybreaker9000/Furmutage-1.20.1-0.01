@@ -1,3 +1,6 @@
 {
-  "parent": "furmutage:block/dark_lynching_vine"
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "furmutage:item/dark_lynching_vine"
+  }
 }

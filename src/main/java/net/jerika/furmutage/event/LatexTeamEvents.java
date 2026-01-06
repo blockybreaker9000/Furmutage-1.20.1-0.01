@@ -181,14 +181,24 @@ public class LatexTeamEvents {
                             targetType, targetTeamName);
                 }
             } else {
-                // Move towards target at slower speed
+                // Move towards target at slower speed (only for Changed entities)
                 if (mob instanceof PathfinderMob pathfinderMob) {
-                    // Use slower movement speed (0.25 instead of normal)
                     double movementSpeed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
-                    if (movementSpeed <= 0) {
-                        movementSpeed = 0.25D; // Default speed
+                    
+                    // Only apply speed nerf to Changed mod entities, exclude other modded mobs
+                    if (mobType.startsWith("changed:")) {
+                        // Use slower movement speed (0.25 instead of normal) for Changed entities
+                        if (movementSpeed <= 0) {
+                            movementSpeed = 0.25D; // Default speed
+                        } else {
+                            movementSpeed = movementSpeed * 0.25; // Quarter of normal speed
+                        }
                     } else {
-                        movementSpeed = movementSpeed * 0.25; // Quarter of normal speed
+                        // Other modded mobs use normal movement speed
+                        if (movementSpeed <= 0) {
+                            movementSpeed = 1.0D; // Default speed
+                        }
+                        // Use normal speed multiplier (no reduction)
                     }
                     pathfinderMob.getNavigation().moveTo(currentTarget, movementSpeed);
                 }

@@ -3,7 +3,6 @@ package net.jerika.furmutage.entity.custom;
 import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.MutantFamilyAi;
-import net.jerika.furmutage.ai.latex_beast_ai.TargetDarkLatexGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -152,7 +151,6 @@ public class LatexMutantFamilyEntity extends Monster {
         
         // Priority 4: Target iron golems and dark latex
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
-        this.targetSelector.addGoal(4, new TargetDarkLatexGoal(this));
     }
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
