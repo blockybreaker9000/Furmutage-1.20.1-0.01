@@ -58,7 +58,13 @@ public class ChangedEntitySwimEvents {
             "changed:latex_orca",
             "changed:latex_eel",
             "furmutage:white_latex_dolphin",
-            "furmutage:white_latex_squid"
+            "furmutage:white_latex_squid",
+            "furmutage:dark_latex_dolphin",
+            "furmutage:dark_latex_squid",
+            "furmutage:latex_exo_mutant",
+            "furmutage:latex_mutant_family",
+            "furmutage:latex_tenticle_limbs_mutant",
+            "furmutage:withered_latex_pudding"
     );
     
     // Entities to exclude from follow range modifications (roomba)
@@ -94,6 +100,11 @@ public class ChangedEntitySwimEvents {
                     pathfinderMob.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(pathfinderMob));
                     improvedPathfindingEntities.add(pathfinderMob);
                 }
+            }
+            
+            // Check if it's a Furmutage mod entity and not excluded
+            if (entityId.startsWith("furmutage:") && !EXCLUDED_ENTITIES.contains(entityId)) {
+                fastSwimEntities.add(livingEntity);
             }
             
             // Set follow range to 80 blocks for Changed entities (except roomba)

@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "furmutage:item/behemoth_spawn_egg"
+    "layer0": "furmutage:item/exo_mutant_spawn_egg"
   }
 }

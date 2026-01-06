@@ -132,6 +132,10 @@ public class ModBlocks {
             () -> new DarkLynchingVineBlock(BlockBehaviour.Properties.copy(Blocks.WEEPING_VINES).randomTicks()));
     public static final RegistryObject<Block> DARK_LYNCHING_VINE_PLANT = BLOCKS.register("dark_lynching_vine_plant",
             () -> new DarkLynchingVinePlantBlock(BlockBehaviour.Properties.copy(Blocks.WEEPING_VINES_PLANT).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_WHITE_VINE = registerBlock("tainted_white_vine",
+            () -> new TaintedWhiteVineBlock(BlockBehaviour.Properties.copy(Blocks.VINE).randomTicks()));
+    public static final RegistryObject<Block> TAINTED_DARK_VINE = registerBlock("tainted_dark_vine",
+            () -> new TaintedDarkVineBlock(BlockBehaviour.Properties.copy(Blocks.VINE).randomTicks()));
     public static final RegistryObject<Block> ROSELIGHT_CRYSTAL_SHARDS = registerBlock("roselight_crystal_shards",
             () -> new RoselightCrystalShardBlock(BlockBehaviour.Properties.copy(Blocks.AMETHYST_CLUSTER).noOcclusion().instabreak().sound(SoundType.AMETHYST)));
     public static final RegistryObject<Block> THUNDERIUM_CRYSTAL_SHARDS = registerBlock("thunderium_crystal_shards",

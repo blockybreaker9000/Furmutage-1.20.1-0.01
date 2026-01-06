@@ -1,6 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.ExitWaterGoal;
 import net.ltxprogrammer.changed.entity.ChangedEntity;
 import net.ltxprogrammer.changed.entity.TransfurMode;
 import net.minecraft.core.BlockPos;
@@ -39,13 +40,13 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
             // Check if slowness effect exists, if not add it
             if (!this.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
                 // Duration: very long (999999 ticks), Amplifier: 1 (slowness 2), no particles/icon
-                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 1, false, false, false));
+                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 3, false, false, false));
             } else {
                 // Refresh the effect to keep it permanent
                 MobEffectInstance existing = this.getEffect(MobEffects.MOVEMENT_SLOWDOWN);
                 if (existing != null && existing.getDuration() < 999990) {
                     this.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                    this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 1, false, false, false));
+                    this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 3, false, false, false));
                 }
             }
         }
@@ -84,11 +85,12 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
-        this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));
-        this.goalSelector.addGoal(3, new WaterAvoidingRandomStrollGoal(this, 0.8D));
-        this.goalSelector.addGoal(4, new LookAtPlayerGoal(this, Player.class, 6.0F));
-        this.goalSelector.addGoal(5, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(1, new ExitWaterGoal(this, 0.8D)); // High priority goal to exit water
+        this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(3, new ChangedEntityImprovedPathfindingGoal(this));
+        this.goalSelector.addGoal(4, new WaterAvoidingRandomStrollGoal(this, 0.8D));
+        this.goalSelector.addGoal(5, new LookAtPlayerGoal(this, Player.class, 6.0F));
+        this.goalSelector.addGoal(6, new RandomLookAroundGoal(this));
         
         // Hostile targeting
         this.targetSelector.addGoal(1, new NearestAttackableTargetGoal<>(this, Player.class, true));
@@ -97,10 +99,10 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
 
     public static AttributeSupplier.Builder createAttributes() {
         return ChangedEntity.createLatexAttributes()
-                .add(Attributes.MAX_HEALTH, 40.0D)
+                .add(Attributes.MAX_HEALTH, 200.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.0005D)
-                .add(Attributes.ATTACK_DAMAGE, 6.0D)
-                .add(Attributes.FOLLOW_RANGE, 60.0D);
+                .add(Attributes.ATTACK_DAMAGE, 10.0D)
+                .add(Attributes.FOLLOW_RANGE, 80.0D);
     }
 
     @Override

@@ -27,11 +27,23 @@ import net.jerika.furmutage.entity.client.renderer.WhiteLatexSquidRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexLlamaRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexDolphinRenderer;
 import net.jerika.furmutage.entity.client.renderer.WhiteLatexGoatRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexCowRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexPigRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexChickenRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexSheepRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexRabbitRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexHorseRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexSquidRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexLlamaRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexDolphinRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexGoatRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.jerika.furmutage.item.modcreativemodetabs;
 import net.jerika.furmutage.sound.ModSounds;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraftforge.api.distmarker.Dist;
@@ -130,7 +142,24 @@ public class furmutage {
             EntityRenderers.register(ModEntities.WHITE_LATEX_LLAMA.get(), WhiteLatexLlamaRenderer::new);
             EntityRenderers.register(ModEntities.WHITE_LATEX_DOLPHIN.get(), WhiteLatexDolphinRenderer::new);
             EntityRenderers.register(ModEntities.WHITE_LATEX_GOAT.get(), WhiteLatexGoatRenderer::new);
+            
+            // Register renderers for Dark Latex infected passive mobs
+            EntityRenderers.register(ModEntities.DARK_LATEX_COW.get(), DarkLatexCowRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_PIG.get(), DarkLatexPigRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_CHICKEN.get(), DarkLatexChickenRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_SHEEP.get(), DarkLatexSheepRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_RABBIT.get(), DarkLatexRabbitRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_HORSE.get(), DarkLatexHorseRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_SQUID.get(), DarkLatexSquidRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_LLAMA.get(), DarkLatexLlamaRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_DOLPHIN.get(), DarkLatexDolphinRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_GOAT.get(), DarkLatexGoatRenderer::new);
+            
             EntityRenderers.register(ModEntities.GIANT_PURE_WHITE_LATEX.get(), GiantPureWhiteLatexRenderer::new);
+            
+            // Register render types for vine blocks (cutout rendering)
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_DARK_VINE.get(), RenderType.cutout());
 
         }
     }

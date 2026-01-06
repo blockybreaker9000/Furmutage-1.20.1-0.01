@@ -2,11 +2,14 @@ package net.jerika.furmutage.worldgen.tree;
 
 import net.jerika.furmutage.block.custom.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -55,6 +58,11 @@ public class TaintedWhiteTreeGrower extends AbstractTreeGrower {
             );
             boolean result = Feature.TREE.place(context);
             
+            // Add vines to leaves after tree generation
+            if (result) {
+                addVinesToLeaves(level, pos, random);
+            }
+            
             // If feature placement failed, try manual placement as fallback
             if (!result) {
                 // Place a simple test tree manually - just a few logs and leaves to verify it works
@@ -70,6 +78,8 @@ public class TaintedWhiteTreeGrower extends AbstractTreeGrower {
                         }
                     }
                 }
+                // Add vines to leaves after tree generation
+                addVinesToLeaves(level, pos, random);
                 return true;
             }
             return result;
@@ -87,7 +97,45 @@ public class TaintedWhiteTreeGrower extends AbstractTreeGrower {
                     }
                 }
             }
+            // Add vines to leaves after tree generation
+            addVinesToLeaves(level, pos, random);
             return true;
+        }
+    }
+    
+    /**
+     * Adds tainted white vines to some leaf blocks in the tree (chance to grow on leaves).
+     */
+    private void addVinesToLeaves(ServerLevel level, BlockPos treeBase, RandomSource random) {
+        // Search in a radius around the tree base for leaves
+        int searchRadius = 10;
+        int searchHeight = 15;
+        
+        for (int x = -searchRadius; x <= searchRadius; x++) {
+            for (int y = 0; y <= searchHeight; y++) {
+                for (int z = -searchRadius; z <= searchRadius; z++) {
+                    BlockPos checkPos = treeBase.offset(x, y, z);
+                    BlockState checkState = level.getBlockState(checkPos);
+                    
+                    // If this is a leaf block, 15% chance to add vines
+                    if (checkState.is(ModBlocks.TAINTED_WHITE_LEAF.get()) && random.nextInt(100) < 15) {
+                        // Try to place vine on a random side of the leaf
+                        Direction[] directions = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+                        Direction vineDir = directions[random.nextInt(directions.length)];
+                        BlockPos vinePos = checkPos.relative(vineDir);
+                        
+                        // Only place vine if the position is air
+                        if (level.getBlockState(vinePos).isAir()) {
+                            BlockState vineState = ModBlocks.TAINTED_WHITE_VINE.get().defaultBlockState();
+                            BooleanProperty property = VineBlock.PROPERTY_BY_DIRECTION.get(vineDir.getOpposite());
+                            if (property != null) {
+                                vineState = vineState.setValue(property, true);
+                                level.setBlock(vinePos, vineState, 3);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

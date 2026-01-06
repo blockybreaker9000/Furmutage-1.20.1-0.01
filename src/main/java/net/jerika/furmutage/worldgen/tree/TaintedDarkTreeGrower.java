@@ -7,8 +7,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.ConstantInt;
-import net.minecraft.world.level.block.grower.AbstractTreeGrower;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.grower.AbstractTreeGrower;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -67,6 +69,9 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
             // Add branches to the tree if feature placement succeeded
             if (result) {
                 addBranchesToTree(level, pos, random);
+                // Add vines to leaves and lynching vines to branches after tree generation
+                addVinesToLeaves(level, pos, random);
+                addLynchingVinesToBranches(level, pos, random);
             }
             
             // If feature placement failed, try manual placement as fallback (simplified big oak)
@@ -104,6 +109,9 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                         }
                     }
                 }
+                // Add vines to leaves and lynching vines to branches
+                addVinesToLeaves(level, pos, random);
+                addLynchingVinesToBranches(level, pos, random);
                 return true;
             }
             return result;
@@ -141,6 +149,9 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                     }
                 }
             }
+            // Add vines to leaves and lynching vines to branches
+            addVinesToLeaves(level, pos, random);
+            addLynchingVinesToBranches(level, pos, random);
             return true;
         }
     }
@@ -202,6 +213,85 @@ public class TaintedDarkTreeGrower extends AbstractTreeGrower {
                 
                 if (level.getBlockState(branchPos).canBeReplaced()) {
                     level.setBlock(branchPos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Adds tainted dark vines to some leaf blocks in the tree (chance to grow on leaves).
+     */
+    private void addVinesToLeaves(ServerLevel level, BlockPos treeBase, RandomSource random) {
+        // Search in a radius around the tree base for leaves
+        int searchRadius = 15;
+        int searchHeight = 25;
+        
+        for (int x = -searchRadius; x <= searchRadius; x++) {
+            for (int y = 0; y <= searchHeight; y++) {
+                for (int z = -searchRadius; z <= searchRadius; z++) {
+                    BlockPos checkPos = treeBase.offset(x, y, z);
+                    BlockState checkState = level.getBlockState(checkPos);
+                    
+                    // If this is a leaf block, 15% chance to add vines
+                    if (checkState.is(ModBlocks.TAINTED_DARK_LEAF.get()) && random.nextInt(100) < 15) {
+                        // Try to place vine on a random side of the leaf
+                        Direction[] directions = {Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST};
+                        Direction vineDir = directions[random.nextInt(directions.length)];
+                        BlockPos vinePos = checkPos.relative(vineDir);
+                        
+                        // Only place vine if the position is air
+                        if (level.getBlockState(vinePos).isAir()) {
+                            BlockState vineState = ModBlocks.TAINTED_DARK_VINE.get().defaultBlockState();
+                            BooleanProperty property = VineBlock.PROPERTY_BY_DIRECTION.get(vineDir.getOpposite());
+                            if (property != null) {
+                                vineState = vineState.setValue(property, true);
+                                level.setBlock(vinePos, vineState, 3);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    /**
+     * Adds dark lynching vines to some log blocks (branches) in the tree.
+     */
+    private void addLynchingVinesToBranches(ServerLevel level, BlockPos treeBase, RandomSource random) {
+        // Search in a radius around the tree base for logs
+        int searchRadius = 15;
+        int searchHeight = 25;
+        
+        for (int x = -searchRadius; x <= searchRadius; x++) {
+            for (int y = 0; y <= searchHeight; y++) {
+                for (int z = -searchRadius; z <= searchRadius; z++) {
+                    BlockPos checkPos = treeBase.offset(x, y, z);
+                    BlockState checkState = level.getBlockState(checkPos);
+                    
+                    // If this is a log block (branch), 20% chance to add lynching vine
+                    if (checkState.is(ModBlocks.TAINTED_DARK_LOG.get()) && random.nextInt(100) < 20) {
+                        // Only add lynching vine if the log has air below it (branch hanging)
+                        BlockPos belowPos = checkPos.below();
+                        if (level.getBlockState(belowPos).isAir()) {
+                            // Check if there's already a lynching vine below
+                            BlockPos vineCheckPos = belowPos;
+                            boolean canPlace = true;
+                            for (int i = 0; i < 3; i++) {
+                                BlockState vineCheckState = level.getBlockState(vineCheckPos);
+                                if (vineCheckState.is(ModBlocks.DARK_LYNCHING_VINE.get()) || 
+                                    vineCheckState.is(ModBlocks.DARK_LYNCHING_VINE_PLANT.get())) {
+                                    canPlace = false;
+                                    break;
+                                }
+                                vineCheckPos = vineCheckPos.below();
+                            }
+                            
+                            if (canPlace) {
+                                // Place the lynching vine head block
+                                level.setBlock(belowPos, ModBlocks.DARK_LYNCHING_VINE.get().defaultBlockState(), 3);
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -21,6 +22,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -94,6 +97,10 @@ public class TaintedBlockEvents {
         // Check if entity's bounding box is actually touching/intersecting with a tainted block
         boolean isTouchingTaintedWhiteBlock = false;
         boolean isTouchingTaintedDarkTallGrass = false;
+        boolean isTouchingTaintedDarkFoliage = false;
+        
+        // Track vanilla vines that might need infection
+        java.util.List<BlockPos> vanillaVinePositions = new java.util.ArrayList<>();
         
         // Get entity's bounding box
         AABB entityBounds = entity.getBoundingBox();
@@ -119,6 +126,40 @@ public class TaintedBlockEvents {
                     
                     boolean isWhiteBlock = isTaintedWhiteBlock(checkBlock);
                     boolean isDarkTallGrass = checkBlock == ModBlocks.TAINTED_DARK_TALL_GRASS.get();
+                    boolean isDarkFoliage = checkBlock == ModBlocks.TAINTED_DARK_GRASS_FOLIAGE.get();
+                    boolean isWhiteVine = checkBlock == ModBlocks.TAINTED_WHITE_VINE.get();
+                    boolean isDarkVine = checkBlock == ModBlocks.TAINTED_DARK_VINE.get();
+                    boolean isVanillaVine = checkBlock == Blocks.VINE;
+                    
+                    // Track vanilla vines for potential infection
+                    if (isVanillaVine) {
+                        vanillaVinePositions.add(checkPos);
+                    }
+                    
+                    // Check if touching tainted white vine (vines have no collision, use bounds check)
+                    if (isWhiteVine && !isTouchingTaintedWhiteBlock) {
+                        AABB blockBounds = new AABB(
+                            checkPos.getX(), checkPos.getY(), checkPos.getZ(),
+                            checkPos.getX() + 1, checkPos.getY() + 1, checkPos.getZ() + 1
+                        );
+                        if (entityBounds.intersects(blockBounds)) {
+                            isTouchingTaintedWhiteBlock = true;
+                        }
+                    }
+                    
+                    // Check if touching tainted dark vine
+                    if (isDarkVine) {
+                        AABB blockBounds = new AABB(
+                            checkPos.getX(), checkPos.getY(), checkPos.getZ(),
+                            checkPos.getX() + 1, checkPos.getY() + 1, checkPos.getZ() + 1
+                        );
+                        if (entityBounds.intersects(blockBounds)) {
+                            // Add to dark block tracking - vines can infect like dark foliage
+                            if (!isTouchingTaintedDarkFoliage) {
+                                isTouchingTaintedDarkFoliage = true;
+                            }
+                        }
+                    }
                     
                     if (isWhiteBlock && !isTouchingTaintedWhiteBlock) {
                         // Check if the block's collision shape intersects with the entity's bounding box
@@ -166,7 +207,48 @@ public class TaintedBlockEvents {
                             furmutage.LOGGER.debug("Entity {} detected touching dark tall grass at {}", entity.getName().getString(), checkPos);
                         }
                     }
+                    
+                    if (isDarkFoliage && !isTouchingTaintedDarkFoliage) {
+                        // For foliage (blocks with no collision), check if entity's bounding box overlaps block space
+                        AABB blockBounds = new AABB(
+                            checkPos.getX(), checkPos.getY(), checkPos.getZ(),
+                            checkPos.getX() + 1, checkPos.getY() + 1, checkPos.getZ() + 1
+                        );
+                        
+                        if (entityBounds.intersects(blockBounds)) {
+                            isTouchingTaintedDarkFoliage = true;
+                            furmutage.LOGGER.debug("Entity {} detected touching dark foliage at {}", entity.getName().getString(), checkPos);
+                        }
+                    }
                 }
+            }
+        }
+        
+        // After checking all blocks, handle vanilla vine infection if we found any
+        if (!vanillaVinePositions.isEmpty() && level instanceof ServerLevel serverLevel) {
+            boolean hasWhiteBlock = isTouchingTaintedWhiteBlock;
+            boolean hasDarkBlock = isTouchingTaintedDarkTallGrass || isTouchingTaintedDarkFoliage;
+            
+            // Also check for tainted dark vines or other dark blocks in the area
+            for (BlockPos vinePos : vanillaVinePositions) {
+                // Check surrounding blocks for any tainted dark blocks
+                for (Direction dir : Direction.values()) {
+                    BlockPos checkPos = vinePos.relative(dir);
+                    Block checkBlock = serverLevel.getBlockState(checkPos).getBlock();
+                    if (checkBlock == ModBlocks.TAINTED_DARK_VINE.get() ||
+                        checkBlock == ModBlocks.TAINTED_DARK_TALL_GRASS.get() ||
+                        checkBlock == ModBlocks.TAINTED_DARK_GRASS_FOLIAGE.get() ||
+                        checkBlock == ModBlocks.TAINTED_DARK_GRASS.get() ||
+                        checkBlock == ModBlocks.TAINTED_DARK_DIRT.get() ||
+                        checkBlock == ModBlocks.TAINTED_DARK_SAND.get()) {
+                        hasDarkBlock = true;
+                        break;
+                    }
+                }
+            }
+            
+            for (BlockPos vinePos : vanillaVinePositions) {
+                infectVineIfNearTaintedBlock(serverLevel, vinePos, hasWhiteBlock, hasDarkBlock);
             }
         }
         
@@ -223,20 +305,64 @@ public class TaintedBlockEvents {
             }
         }
         
-        // Handle dark tainted tall grass (dark latex infection, like laser emitter)
-        if (isTouchingTaintedDarkTallGrass) {
+        // Handle dark tainted tall grass and foliage (dark latex infection)
+        boolean isTouchingDarkBlock = isTouchingTaintedDarkTallGrass || isTouchingTaintedDarkFoliage;
+        if (isTouchingDarkBlock) {
             // Only process untransfurred entities
             if (!isTransfurred(entity)) {
-                furmutage.LOGGER.debug("Entity {} is touching dark tall grass, applying dark latex transfur", entity.getName().getString());
-                // Apply dark latex transfur progress (like laser emitter does)
+                // For vanilla passive mobs, directly replace them with their dark latex infected counterparts
+                if (level instanceof ServerLevel serverLevel) {
+                    boolean wasReplaced = false;
+                    
+                    // Check each vanilla passive mob type and replace with dark latex infected variant
+                    if (entity instanceof Cow && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexCowEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexCowEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_COW.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Pig && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexPigEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexPigEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_PIG.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Chicken && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexChickenEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexChickenEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_CHICKEN.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Sheep && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexSheepEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_SHEEP.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Rabbit && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexRabbitEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_RABBIT.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexHorseEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_HORSE.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Squid && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexSquidEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSquidEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_SQUID.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Llama && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexLlamaEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_LLAMA.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Dolphin && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexDolphinEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexDolphinEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_DOLPHIN.get());
+                        wasReplaced = true;
+                    } else if (entity instanceof Goat && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexGoatEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexGoatEntity)) {
+                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_GOAT.get());
+                        wasReplaced = true;
+                    }
+                    
+                    // If entity was replaced, we're done
+                    if (wasReplaced) {
+                        return;
+                    }
+                }
+                
+                // For players and other entities, use dark latex transfur API
+                furmutage.LOGGER.debug("Entity {} is touching dark foliage/tall grass, applying dark latex transfur", entity.getName().getString());
                 applyDarkLatexTransfur(entity, level);
             } else {
-                furmutage.LOGGER.debug("Entity {} is touching dark tall grass but is already transfurred, skipping", entity.getName().getString());
+                furmutage.LOGGER.debug("Entity {} is touching dark foliage/tall grass but is already transfurred, skipping", entity.getName().getString());
             }
         }
         
         // If not touching any tainted block, clear exposure time
-        if (!isTouchingTaintedWhiteBlock && !isTouchingTaintedDarkTallGrass) {
+        if (!isTouchingTaintedWhiteBlock && !isTouchingDarkBlock) {
             exposureTime.remove(entity);
         }
     }
@@ -506,7 +632,8 @@ public class TaintedBlockEvents {
                block == ModBlocks.TAINTED_WHITE_DIRT.get() ||
                block == ModBlocks.TAINTED_WHITE_SAND.get() ||
                block == ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get() ||
-               block == ModBlocks.TAINTED_WHITE_TALL_GRASS.get();
+               block == ModBlocks.TAINTED_WHITE_TALL_GRASS.get() ||
+               block == ModBlocks.TAINTED_WHITE_VINE.get();
     }
     
     /**
@@ -861,6 +988,56 @@ public class TaintedBlockEvents {
         furmutage.LOGGER.warn("Could not transfur player {} to pure white latex - no compatible API found. " +
             "The Changed mod API may have changed or the required classes are not available.", 
             player.getName().getString());
+    }
+    
+    /**
+     * Infects a vanilla vine block if it's near a tainted block.
+     */
+    private static void infectVineIfNearTaintedBlock(ServerLevel level, BlockPos vinePos, boolean nearWhiteBlock, boolean nearDarkBlock) {
+        // Only infect if there's a tainted block adjacent
+        for (Direction direction : Direction.values()) {
+            BlockPos adjacentPos = vinePos.relative(direction);
+            BlockState adjacentState = level.getBlockState(adjacentPos);
+            Block adjacentBlock = adjacentState.getBlock();
+            
+            // Check if adjacent block is a tainted white block
+            if (nearWhiteBlock && isTaintedWhiteBlock(adjacentBlock)) {
+                // Replace vanilla vine with tainted white vine, preserving attachment properties
+                BlockState vineState = level.getBlockState(vinePos);
+                BlockState newVineState = ModBlocks.TAINTED_WHITE_VINE.get().defaultBlockState();
+                
+                // Copy all directional attachment properties
+                for (net.minecraft.world.level.block.state.properties.BooleanProperty property : net.minecraft.world.level.block.VineBlock.PROPERTY_BY_DIRECTION.values()) {
+                    if (vineState.hasProperty(property)) {
+                        newVineState = newVineState.setValue(property, vineState.getValue(property));
+                    }
+                }
+                
+                level.setBlock(vinePos, newVineState, 3);
+                return;
+            } 
+            // Check if adjacent block is a tainted dark block
+            else if (nearDarkBlock && (adjacentBlock == ModBlocks.TAINTED_DARK_TALL_GRASS.get() || 
+                                         adjacentBlock == ModBlocks.TAINTED_DARK_GRASS_FOLIAGE.get() ||
+                                         adjacentBlock == ModBlocks.TAINTED_DARK_VINE.get() ||
+                                         adjacentBlock == ModBlocks.TAINTED_DARK_GRASS.get() ||
+                                         adjacentBlock == ModBlocks.TAINTED_DARK_DIRT.get() ||
+                                         adjacentBlock == ModBlocks.TAINTED_DARK_SAND.get())) {
+                // Replace vanilla vine with tainted dark vine, preserving attachment properties
+                BlockState vineState = level.getBlockState(vinePos);
+                BlockState newVineState = ModBlocks.TAINTED_DARK_VINE.get().defaultBlockState();
+                
+                // Copy all directional attachment properties
+                for (net.minecraft.world.level.block.state.properties.BooleanProperty property : net.minecraft.world.level.block.VineBlock.PROPERTY_BY_DIRECTION.values()) {
+                    if (vineState.hasProperty(property)) {
+                        newVineState = newVineState.setValue(property, vineState.getValue(property));
+                    }
+                }
+                
+                level.setBlock(vinePos, newVineState, 3);
+                return;
+            }
+        }
     }
     
     /**

@@ -21,6 +21,16 @@ import net.jerika.furmutage.entity.custom.WhiteLatexSquidEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexLlamaEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexDolphinEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexGoatEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexCowEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexPigEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexChickenEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexSheepEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexRabbitEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexHorseEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexSquidEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexDolphinEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexGoatEntity;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -52,6 +62,19 @@ public class ModEventBusEvents {
         event.put(ModEntities.WHITE_LATEX_LLAMA.get(), WhiteLatexLlamaEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_DOLPHIN.get(), WhiteLatexDolphinEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_GOAT.get(), WhiteLatexGoatEntity.createAttributes().build());
+        
+        // Dark Latex Infected Passive Mobs
+        event.put(ModEntities.DARK_LATEX_COW.get(), DarkLatexCowEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_PIG.get(), DarkLatexPigEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_CHICKEN.get(), DarkLatexChickenEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_SHEEP.get(), DarkLatexSheepEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_RABBIT.get(), DarkLatexRabbitEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_HORSE.get(), DarkLatexHorseEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_SQUID.get(), DarkLatexSquidEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_LLAMA.get(), DarkLatexLlamaEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_DOLPHIN.get(), DarkLatexDolphinEntity.createAttributes().build());
+        event.put(ModEntities.DARK_LATEX_GOAT.get(), DarkLatexGoatEntity.createAttributes().build());
+        
         event.put(ModEntities.GIANT_PURE_WHITE_LATEX.get(), GiantPureWhiteLatexEntity.createAttributes().build());
     }
 }

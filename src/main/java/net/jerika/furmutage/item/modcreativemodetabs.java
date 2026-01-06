@@ -73,6 +73,8 @@ public class modcreativemodetabs {
                         output.accept(ModItems.LATEX_TENTICLE_LIMBS_MUTANT_SPAWN_EGG.get());
                         output.accept(ModItems.WITHERED_LATEX_PUDDING_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_BOMBER_MUTANT_SPAWN_EGG.get());
+                        output.accept(ModItems.EXO_MUTANT_SPAWN_EGG.get());
+                        output.accept(ModItems.GIANT_PURE_WHITE_SPAWN_EGG.get());
                         output.accept(ModItems.TSC_DRONE_SPAWN_EGG.get());
                         output.accept(ModItems.TSC_DRONE_BOSS_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_BACTERIA_SPAWN_EGG.get());

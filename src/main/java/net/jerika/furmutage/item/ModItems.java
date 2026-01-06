@@ -193,6 +193,12 @@ public class ModItems {
     public static final RegistryObject<Item> LATEX_BOMBER_MUTANT_SPAWN_EGG = ITEMS.register("latex_bomber_mutant_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.LATEX_MUTANT_BOMBER, 0xDDEAEA, 0xDDEAEA,
                     new Item.Properties()));
+    public static final RegistryObject<Item> GIANT_PURE_WHITE_SPAWN_EGG = ITEMS.register("giant_pure_white_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.GIANT_PURE_WHITE_LATEX, 0xDDEAEA, 0xDDEAEA,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> EXO_MUTANT_SPAWN_EGG = ITEMS.register("exo_mutant_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.LATEX_EXO_MUTANT, 0xDDEAEA, 0xDDEAEA,
+                    new Item.Properties()));
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)
