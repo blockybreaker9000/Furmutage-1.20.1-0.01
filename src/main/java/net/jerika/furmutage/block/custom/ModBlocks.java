@@ -30,8 +30,6 @@ public class ModBlocks {
     public static final RegistryObject<Block> THUNDERIUM_ORE = registerBlock("thunderium_ore",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
                     .strength(3f).requiresCorrectToolForDrops(), UniformInt.of(5, 7)));
-    public static final RegistryObject<Block> CITY_PORTAL_BLOCK = registerBlock("city_portal_block",
-            () -> new Block(BlockBehaviour.Properties.copy(Blocks.AMETHYST_BLOCK).sound(SoundType.SCULK_CATALYST)));
     public static final RegistryObject<Block> THUNDERIUM_BLOCK = registerBlock("thunderium_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
     public static final RegistryObject<Block> ROSELIGHT_BLOCK = registerBlock("roselight_block",

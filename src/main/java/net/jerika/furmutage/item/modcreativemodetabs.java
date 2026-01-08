@@ -104,7 +104,6 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.RAW_ROSELIGHT.get());
                         output.accept(ModBlocks.ROSELIGHT_ORE.get());
                         output.accept(ModBlocks.THUNDERIUM_ORE.get());
-                        output.accept(ModBlocks.CITY_PORTAL_BLOCK.get());
                         output.accept(ModBlocks.TAINTED_WHITE_GRASS.get());
                         output.accept(ModBlocks.TAINTED_DARK_GRASS.get());
                         output.accept(ModBlocks.ROSELIGHT_BLOCK.get());
