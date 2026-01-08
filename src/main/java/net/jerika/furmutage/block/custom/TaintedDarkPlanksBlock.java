@@ -15,8 +15,8 @@ public class TaintedDarkPlanksBlock extends Block {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // Spread to nearby sand, dirt, and grass blocks
-        if (random.nextInt(25) == 0) { // 4% chance per random tick
+        // Spread to nearby sand, dirt, and grass blocks - faster than grass and sand
+        if (random.nextInt(4) < 3) { // 75% chance per random tick (faster than grass/sand at 50%)
             spreadToNearbyBlocks(level, pos, random);
         }
 

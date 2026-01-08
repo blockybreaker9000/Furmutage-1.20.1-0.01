@@ -29,8 +29,8 @@ public class TaintedWhiteDirtBlock extends Block {
             }
         }
 
-        // Spread to nearby dirt blocks
-        if (random.nextInt(15) == 0) { // ~6.7% chance per random tick
+        // Spread to nearby dirt blocks - faster than grass and sand
+        if (random.nextInt(4) < 3) { // 75% chance per random tick (faster than grass/sand at 50%)
             spreadToNearbyBlocks(level, pos, random);
         }
         

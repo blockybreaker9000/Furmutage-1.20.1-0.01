@@ -15,8 +15,8 @@ public class TaintedDarkLogBlock extends RotatedPillarBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // Spread to nearby logs, planks, and leaves
-        if (random.nextInt(5) == 0) { // 20% chance per random tick (faster spreading)
+        // Spread to nearby logs, planks, and leaves - faster than grass and sand
+        if (random.nextInt(4) < 3) { // 75% chance per random tick (faster than grass/sand at 50%)
             spreadToNearbyBlocks(level, pos, random);
         }
 

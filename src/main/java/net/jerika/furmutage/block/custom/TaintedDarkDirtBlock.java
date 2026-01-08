@@ -29,6 +29,11 @@ public class TaintedDarkDirtBlock extends Block {
             }
         }
         
+        // Spread to nearby dirt blocks - faster than grass and sand
+        if (random.nextInt(4) < 3) { // 75% chance per random tick (faster than grass/sand at 50%)
+            spreadToNearbyBlocks(level, pos, random);
+        }
+        
         // Convert nearby water to dark latex fluid
         if (random.nextInt(2) == 0) { // 50% chance per random tick (faster spreading)
             convertNearbyWaterToLatexFluid(level, pos, random, false);
