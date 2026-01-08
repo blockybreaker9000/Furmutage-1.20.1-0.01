@@ -46,8 +46,39 @@ public class TaintedDarkGrassFoliageBlock extends BushBlock {
         super.entityInside(state, level, pos, entity);
         
         if (!level.isClientSide && entity instanceof LivingEntity livingEntity) {
-            applyDarkLatexTransfur(livingEntity, level);
+            // Only apply transfur to players and humanoid entities
+            if (canBeTransfurred(livingEntity)) {
+                applyDarkLatexTransfur(livingEntity, level);
+            }
         }
+    }
+    
+    /**
+     * Checks if an entity can be transfurred (only players and humanoid entities).
+     */
+    private boolean canBeTransfurred(LivingEntity entity) {
+        // Only allow players and humanoid mobs
+        if (entity instanceof net.minecraft.world.entity.player.Player) {
+            return true;
+        }
+        
+        // Check for humanoid mobs that can be transfurred
+        net.minecraft.resources.ResourceLocation entityKey = net.minecraftforge.registries.ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        boolean isRavager = entityKey != null && entityKey.toString().equals("minecraft:ravager");
+        
+        boolean isHumanoid = entity instanceof net.minecraft.world.entity.npc.Villager ||
+                            entity instanceof net.minecraft.world.entity.monster.Zombie ||
+                            entity instanceof net.minecraft.world.entity.monster.Skeleton ||
+                            entity instanceof net.minecraft.world.entity.raid.Raider ||
+                            isRavager;
+        
+        if (!isHumanoid) {
+            return false;
+        }
+        
+        // Don't transfur entities that are already transfurred or from Changed mod
+        String entityClassName = entity.getClass().getName();
+        return !entityClassName.startsWith("net.ltxprogrammer.changed.entity");
     }
     
     /**

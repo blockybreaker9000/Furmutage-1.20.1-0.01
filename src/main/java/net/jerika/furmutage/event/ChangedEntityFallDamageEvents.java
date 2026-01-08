@@ -40,14 +40,12 @@ public class ChangedEntityFallDamageEvents {
         // If the fall distance is 10 blocks or less, cancel all fall damage
         if (distance <= FALL_DAMAGE_RESISTANCE_BLOCKS) {
             event.setCanceled(true);
-            furmutage.LOGGER.debug("Cancelled fall damage for {} (fell {} blocks, within {} block resistance)", 
-                entity.getName().getString(), distance, FALL_DAMAGE_RESISTANCE_BLOCKS);
+            // Removed debug log to reduce spam
         } else {
             // If the fall distance is more than 10 blocks, reduce the damage by 10 blocks
             float reducedDistance = distance - FALL_DAMAGE_RESISTANCE_BLOCKS;
             event.setDistance(reducedDistance);
-            furmutage.LOGGER.debug("Reduced fall damage for {} (fell {} blocks, reduced to {} blocks)", 
-                entity.getName().getString(), distance, reducedDistance);
+            // Removed debug log to reduce spam
         }
     }
     

@@ -82,6 +82,10 @@ minecraft {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', mod_id
 
+            // Curios mixin support
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -97,6 +101,10 @@ minecraft {
             property 'forge.logging.console.level', 'debug'
 
             property 'forge.enabledGameTestNamespaces', mod_id
+
+            // Curios mixin support
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 "${mod_id}" {
@@ -117,6 +125,10 @@ minecraft {
 
             property 'forge.enabledGameTestNamespaces', mod_id
 
+            // Curios mixin support
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
+
             mods {
                 "${mod_id}" {
                     source sourceSets.main
@@ -133,6 +145,10 @@ minecraft {
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+
+            // Curios mixin support
+            property 'mixin.env.remapRefMap', 'true'
+            property 'mixin.env.refMapRemappingFile', "${buildDir}/createSrgToMcp/output.srg"
 
             mods {
                 "${mod_id}" {
@@ -165,11 +181,16 @@ repositories {
         url "https://cursemaven.com"
     }
 
-    //Comment this if the Github servers got downed
-    /*maven {
+    maven {
+        url = "https://maven.theillusivec4.top/"
+    }
+    
+    // Changed mod repository - updated to use official LtxProgrammer repository
+    // This pulls from the 0.15-features branch
+    maven {
         name = "Changed"
-        url = "https://raw.githubusercontent.com/Foxyas/Changed-Minecraft-Mod/0.15-features/mcmodsrepo/"
-    }*/
+        url = "https://raw.githubusercontent.com/LtxProgrammer/Changed-Minecraft-Mod/0.15-features/mcmodsrepo/"
+    }
 }
 
 mixin {
@@ -195,9 +216,19 @@ dependencies {
         jarJar.ranged(it, "[0.4.1,)")
     }
 
+    // Changed mod dependency - using latest from 0.15-features branch
+    // This will pull from the GitHub repository mcmodsrepo folder
+    // If the GitHub repository is not accessible, it will fall back to the local JAR
     implementation fg.deobf("net.ltxprogrammer.changed:Changed-m1.20.1-f47.4.0:v0.15.0") {
         changing = true
     }
+
+    // Curios API dependency
+    // Note: If version doesn't work, check available versions at:
+    // https://maven.theillusivec4.top/top/theillusivec4/curios/curios-forge/
+    // Or use CurseMaven: runtimeOnly fg.deobf("curse.maven:curios-309927:VERSION_ID")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
 
     // Mod dependencies from CurseForge instance
     // These mods are already compiled jars - they will be loaded at runtime from run/mods/ automatically

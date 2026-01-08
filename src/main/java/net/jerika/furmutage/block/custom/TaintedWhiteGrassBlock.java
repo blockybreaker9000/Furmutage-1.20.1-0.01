@@ -59,8 +59,13 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
         }
         
         // Spawn thunderium crystal shards on top
-        if (random.nextInt(100) == 0) { // 1% chance per random tick
+        if (random.nextInt(200) == 0) { // 0.5% chance per random tick (decreased from 1%)
             spawnThunderiumCrystalShardsOnTop(level, pos, random);
+        }
+        
+        // Convert nearby water to white latex fluid
+        if (random.nextInt(2) == 0) { // 50% chance per random tick (faster spreading)
+            convertNearbyWaterToLatexFluid(level, pos, random, true);
         }
     }
 
@@ -665,6 +670,69 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
             }
         }
         return false;
+    }
+    
+    /**
+     * Converts nearby water blocks to white latex fluid.
+     */
+    private void convertNearbyWaterToLatexFluid(ServerLevel level, BlockPos pos, RandomSource random, boolean isWhite) {
+        try {
+            // Get the ChangedBlocks class
+            Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
+            
+            // Get the fluid block based on type
+            String fluidBlockName = isWhite ? "WHITE_LATEX_FLUID" : "DARK_LATEX_FLUID";
+            java.lang.reflect.Field fluidField = changedBlocksClass.getField(fluidBlockName);
+            Object fluidRegistryObject = fluidField.get(null);
+            
+            if (fluidRegistryObject == null) {
+                return;
+            }
+            
+            // Call .get() on the RegistryObject to get the actual Block
+            java.lang.reflect.Method getMethod = fluidRegistryObject.getClass().getMethod("get");
+            net.minecraft.world.level.block.Block latexFluidBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(fluidRegistryObject);
+            
+            if (latexFluidBlock == null) {
+                return;
+            }
+            
+            // Search within 12 blocks for water (increased from 5)
+            int radius = 12;
+            java.util.List<BlockPos> waterPositions = new java.util.ArrayList<>();
+            
+            for (int x = -radius; x <= radius; x++) {
+                for (int y = -radius; y <= radius; y++) {
+                    for (int z = -radius; z <= radius; z++) {
+                        BlockPos checkPos = pos.offset(x, y, z);
+                        double distance = Math.sqrt(x * x + y * y + z * z);
+                        
+                        // Only convert water within radius blocks
+                        if (distance <= radius) {
+                            BlockState checkState = level.getBlockState(checkPos);
+                            if (checkState.is(Blocks.WATER)) {
+                                waterPositions.add(checkPos);
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Convert up to 10 water blocks per tick (increased from 3 for faster spreading)
+            if (!waterPositions.isEmpty()) {
+                java.util.Collections.shuffle(waterPositions, new java.util.Random(random.nextLong()));
+                int toConvert = Math.min(10, waterPositions.size());
+                
+                for (int i = 0; i < toConvert; i++) {
+                    BlockPos waterPos = waterPositions.get(i);
+                    level.setBlock(waterPos, latexFluidBlock.defaultBlockState(), 3);
+                }
+            }
+        } catch (ClassNotFoundException e) {
+            // Changed mod not loaded, skip
+        } catch (Exception e) {
+            furmutage.LOGGER.warn("Failed to convert water to latex fluid: {}", e.getMessage());
+        }
     }
 }
 

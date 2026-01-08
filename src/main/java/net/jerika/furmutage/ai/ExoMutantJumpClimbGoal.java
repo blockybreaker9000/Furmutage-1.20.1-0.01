@@ -78,13 +78,18 @@ public class ExoMutantJumpClimbGoal extends MeleeAttackGoal {
         double heightDiff = target.getY() - this.entity.getY();
         boolean targetIsAbove = heightDiff > 2.0D;
 
+        // Calculate if we're in attack range - don't jump when we can attack
+        boolean inAttackRange = distanceSqr <= (attackDistanceSqr * 2.25); // 4.5 blocks (3x attack range for safety margin)
+        
         // Check if we can't reach target normally (wall in the way or target is high up)
-        if (targetIsAbove && distanceSqr <= wallClimbDistanceSqr && this.entity.onGround() && jumpCooldown <= 0) {
+        // Don't jump if we're close enough to attack
+        if (!inAttackRange && targetIsAbove && distanceSqr <= wallClimbDistanceSqr && this.entity.onGround() && jumpCooldown <= 0) {
             // Try to climb wall by jumping high
             performHighJump(target);
         }
         // Check for high jump when target is far but reachable
-        else if (jumpCooldown <= 0 && this.entity.onGround() && distanceSqr <= highJumpDistanceSqr && distanceSqr > attackDistanceSqr) {
+        // Ensure we're not in attack range before jumping
+        else if (!inAttackRange && jumpCooldown <= 0 && this.entity.onGround() && distanceSqr <= highJumpDistanceSqr) {
             if (targetIsAbove) {
                 // High jump towards elevated target
                 performHighJump(target);
@@ -93,8 +98,9 @@ public class ExoMutantJumpClimbGoal extends MeleeAttackGoal {
                 performJump(target);
             }
         }
-        // Normal jump when close
-        else if (jumpCooldown <= 0 && this.entity.onGround() && distanceSqr <= jumpDistanceSqr && distanceSqr > attackDistanceSqr) {
+        // Normal jump when close (but not too close to attack)
+        // Don't jump when in attack range
+        else if (!inAttackRange && jumpCooldown <= 0 && this.entity.onGround() && distanceSqr <= jumpDistanceSqr) {
             performJump(target);
         }
 
@@ -118,7 +124,8 @@ public class ExoMutantJumpClimbGoal extends MeleeAttackGoal {
         }
 
         // Attack when close enough
-        if (distanceSqr <= attackDistanceSqr && attackCooldown <= 0) {
+        boolean isAttacking = distanceSqr <= attackDistanceSqr && attackCooldown <= 0;
+        if (isAttacking) {
             this.entity.setExoMutantAttack(true);
             this.entity.swing(InteractionHand.MAIN_HAND);
             this.entity.doHurtTarget(target);

@@ -204,7 +204,11 @@ public class TaintedBlockEvents {
                         
                         if (entityBounds.intersects(blockBounds)) {
                             isTouchingTaintedDarkTallGrass = true;
-                            furmutage.LOGGER.debug("Entity {} detected touching dark tall grass at {}", entity.getName().getString(), checkPos);
+                            // Only log for players/humanoids to reduce spam from animals and Changed entities
+                            if (entity instanceof Player || entity instanceof Villager || entity instanceof Zombie || 
+                                entity instanceof Skeleton || entity instanceof Raider) {
+                                furmutage.LOGGER.debug("Entity {} detected touching dark tall grass at {}", entity.getName().getString(), checkPos);
+                            }
                         }
                     }
                     
@@ -217,7 +221,11 @@ public class TaintedBlockEvents {
                         
                         if (entityBounds.intersects(blockBounds)) {
                             isTouchingTaintedDarkFoliage = true;
-                            furmutage.LOGGER.debug("Entity {} detected touching dark foliage at {}", entity.getName().getString(), checkPos);
+                            // Only log for players/humanoids to reduce spam from animals and Changed entities
+                            if (entity instanceof Player || entity instanceof Villager || entity instanceof Zombie || 
+                                entity instanceof Skeleton || entity instanceof Raider) {
+                                furmutage.LOGGER.debug("Entity {} detected touching dark foliage at {}", entity.getName().getString(), checkPos);
+                            }
                         }
                     }
                 }
@@ -354,10 +362,17 @@ public class TaintedBlockEvents {
                 }
                 
                 // For players and other entities, use dark latex transfur API
-                furmutage.LOGGER.debug("Entity {} is touching dark foliage/tall grass, applying dark latex transfur", entity.getName().getString());
-                applyDarkLatexTransfur(entity, level);
+                // Only log and apply if entity can be transfurred to reduce spam
+                if (canBeTransfurred(entity)) {
+                    furmutage.LOGGER.debug("Entity {} is touching dark foliage/tall grass, applying dark latex transfur", entity.getName().getString());
+                    applyDarkLatexTransfur(entity, level);
+                }
             } else {
-                furmutage.LOGGER.debug("Entity {} is touching dark foliage/tall grass but is already transfurred, skipping", entity.getName().getString());
+                // Only log if entity could have been transfurred (is humanoid/player) to reduce spam
+                if (entity instanceof Player || entity instanceof Villager || entity instanceof Zombie || 
+                    entity instanceof Skeleton || entity instanceof Raider) {
+                    furmutage.LOGGER.debug("Entity {} is touching dark foliage/tall grass but is already transfurred, skipping", entity.getName().getString());
+                }
             }
         }
         
@@ -413,9 +428,41 @@ public class TaintedBlockEvents {
     }
     
     /**
+     * Checks if an entity can be transfurred (only players and humanoid entities).
+     */
+    private static boolean canBeTransfurred(LivingEntity entity) {
+        // Only allow players and humanoid mobs
+        if (entity instanceof Player) {
+            return true;
+        }
+        
+        // Check for humanoid mobs that can be transfurred
+        boolean isRavager = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()) != null &&
+                            ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString().equals("minecraft:ravager");
+        
+        boolean isHumanoid = entity instanceof Villager ||
+                            entity instanceof Zombie ||
+                            entity instanceof Skeleton ||
+                            entity instanceof Raider ||
+                            isRavager;
+        
+        if (!isHumanoid) {
+            return false;
+        }
+        
+        // Don't transfur entities that are already transfurred or from Changed mod
+        return !isTransfurred(entity);
+    }
+    
+    /**
      * Applies white latex transfur progress to an entity (like WhiteLatexPillar does).
      */
     private static void applyWhiteLatexTransfur(LivingEntity entity, Level level) {
+        // Only apply transfur to players and humanoid entities that can be transfurred
+        if (!canBeTransfurred(entity)) {
+            return;
+        }
+        
         // Apply transfur progress similar to WhiteLatexPillar (4.8f per tick when inside)
         // WhiteLatexPillar applies 1.0f every single tick in entityInside(), so we do the same
         float progressAmount = 1.0f; // Same as WhiteLatexPillar - apply every tick
@@ -485,10 +532,8 @@ public class TaintedBlockEvents {
             if (result) {
                 furmutage.LOGGER.info("Successfully transfurred {} to Pure White Latex Wolf", 
                     entity.getName().getString());
-            } else {
-                furmutage.LOGGER.debug("Applied transfur progress to {}: {} points (not yet transfurred)", 
-                    entity.getName().getString(), progressAmount);
             }
+            // Removed debug log for transfur progress to reduce spam - only log when actually transfurred
         } catch (ClassNotFoundException e) {
             furmutage.LOGGER.warn("Changed mod class not found for transfur progress: {}", e.getMessage());
             // Fall back to entity replacement for non-players
@@ -519,6 +564,11 @@ public class TaintedBlockEvents {
      * Applies dark latex transfur progress to an entity (like laser emitter does).
      */
     private static void applyDarkLatexTransfur(LivingEntity entity, Level level) {
+        // Only apply transfur to players and humanoid entities that can be transfurred
+        if (!canBeTransfurred(entity)) {
+            return;
+        }
+        
         // Apply transfur progress similar to laser emitter (1.0f per tick when inside)
         float progressAmount = 1.0f; // Same as white latex - apply every tick
         
@@ -596,10 +646,8 @@ public class TaintedBlockEvents {
             if (result) {
                 furmutage.LOGGER.info("Successfully transfurred {} to Dark Latex Wolf Male", 
                     entity.getName().getString());
-            } else {
-                furmutage.LOGGER.debug("Applied transfur progress to {}: {} points (not yet transfurred)", 
-                    entity.getName().getString(), progressAmount);
             }
+            // Removed debug log for transfur progress to reduce spam - only log when actually transfurred
         } catch (ClassNotFoundException e) {
             furmutage.LOGGER.warn("Changed mod class not found for dark latex transfur progress: {}", e.getMessage());
         } catch (NoSuchFieldException e) {
