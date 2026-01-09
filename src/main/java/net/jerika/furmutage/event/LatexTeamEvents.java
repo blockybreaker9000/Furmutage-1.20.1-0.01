@@ -7,7 +7,10 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -21,6 +24,7 @@ public class LatexTeamEvents {
     private static final Set<Mob> teamEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
     private static final int TARGET_CHECK_INTERVAL = 10; // Check every 10 ticks (0.5 seconds)
     private static final int ATTACK_COOLDOWN = 20; // Attack every 20 ticks (1 second)
+    private static final double HORDE_RADIUS = 32.0D; // 32 block radius for horde aggro (like zombie pigmen)
     
     /**
      * Check if two entities are on different teams
@@ -201,6 +205,87 @@ public class LatexTeamEvents {
                         // Use normal speed multiplier (no reduction)
                     }
                     pathfinderMob.getNavigation().moveTo(currentTarget, movementSpeed);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Zombie pigman-style horde behavior: when a team entity is attacked,
+     * nearby teammates within 32 blocks also become hostile to the attacker.
+     */
+    @SubscribeEvent
+    public static void onLivingAttack(LivingAttackEvent event) {
+        LivingEntity attackedEntity = event.getEntity();
+        
+        // Only process on server side
+        if (attackedEntity == null || attackedEntity.level().isClientSide) {
+            return;
+        }
+        
+        // Check if the attacked entity is in a team
+        if (!(attackedEntity instanceof Mob)) {
+            return;
+        }
+        
+        String attackedType = ForgeRegistries.ENTITY_TYPES.getKey(attackedEntity.getType()).toString();
+        if (!LatexTeamConfig.isEntityInTeam(attackedType)) {
+            return;
+        }
+        
+        // Get the attacker
+        LivingEntity attacker = null;
+        if (event.getSource().getEntity() instanceof LivingEntity livingAttacker) {
+            attacker = livingAttacker;
+        } else if (event.getSource().getDirectEntity() instanceof LivingEntity directAttacker) {
+            attacker = directAttacker;
+        }
+        
+        if (attacker == null || !attacker.isAlive() || attacker == attackedEntity) {
+            return;
+        }
+        
+        // Don't aggro if attacker is on the same team
+        String attackerType = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
+        if (LatexTeamConfig.isEntityInTeam(attackerType)) {
+            int attackedTeam = LatexTeamConfig.getTeamForEntity(attackedType);
+            int attackerTeam = LatexTeamConfig.getTeamForEntity(attackerType);
+            if (attackedTeam == attackerTeam) {
+                return; // Same team, no horde aggro
+            }
+        }
+        
+        // Find nearby teammates and make them hostile to the attacker
+        if (attackedEntity.level() instanceof ServerLevel serverLevel) {
+            int attackedTeam = LatexTeamConfig.getTeamForEntity(attackedType);
+            double hordeRadiusSq = HORDE_RADIUS * HORDE_RADIUS;
+            
+            // Search for nearby teammates
+            AABB searchArea = attackedEntity.getBoundingBox().inflate(HORDE_RADIUS, HORDE_RADIUS / 2, HORDE_RADIUS);
+            for (LivingEntity nearbyEntity : serverLevel.getEntitiesOfClass(
+                    LivingEntity.class, searchArea, entity -> {
+                        if (!(entity instanceof Mob mob) || !mob.isAlive() || mob == attackedEntity) {
+                            return false;
+                        }
+                        String nearbyType = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString();
+                        if (!LatexTeamConfig.isEntityInTeam(nearbyType)) {
+                            return false;
+                        }
+                        // Only aggro teammates on the same team
+                        int nearbyTeam = LatexTeamConfig.getTeamForEntity(nearbyType);
+                        return nearbyTeam == attackedTeam;
+                    })) {
+                
+                if (nearbyEntity instanceof Mob nearbyMob) {
+                    double distanceSq = attackedEntity.distanceToSqr(nearbyMob);
+                    
+                    // Check if within horde radius
+                    if (distanceSq <= hordeRadiusSq) {
+                        // Make the nearby teammate hostile to the attacker
+                        // Set the attacker as their target and also as lastHurtByMob
+                        nearbyMob.setTarget(attacker);
+                        nearbyMob.setLastHurtByMob(attacker);
+                    }
                 }
             }
         }

@@ -590,19 +590,12 @@ public class MutantFamilyModel<T extends LatexMutantFamilyEntity> extends Hierar
     @Override
     public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
-        this.applyHeadRotation(netHeadYaw , headPitch, ageInTicks);
 
         this.animateWalk(mutantfamilyAnimations.MUTANT_FAMILY_WALK, limbSwing, limbSwingAmount, 2f, 2f);
         this.animate(((LatexMutantFamilyEntity) entity).idleAnimationState, mutantfamilyAnimations.MUTANT_FAMILY_IDLE, ageInTicks, 3f);
         this.animate(entity.attackAnimationState, mutantfamilyAnimations.MUTANT_FAMILY_ATTACK, ageInTicks, 2f);
     }
-    private void applyHeadRotation(float pNetHeadYaw, float pHeadPitch, float pAgeInTicks) {
-        pNetHeadYaw = Mth.clamp(pNetHeadYaw, -30.0F, 30.0F);
-        pHeadPitch = Mth.clamp(pHeadPitch, -25.0F, 45.0F);
 
-        this.heads.yRot = pNetHeadYaw * ((float)Math.PI / 180F);
-        this.heads.xRot = pHeadPitch * ((float)Math.PI / 180F);
-	}
 
 	@Override
 	public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {

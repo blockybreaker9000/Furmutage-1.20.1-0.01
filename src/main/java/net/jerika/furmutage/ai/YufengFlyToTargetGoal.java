@@ -2,6 +2,7 @@ package net.jerika.furmutage.ai;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.phys.Vec3;
 
@@ -75,6 +76,9 @@ public class YufengFlyToTargetGoal extends Goal {
         double currentY = mob.getY();
         double targetY = target.getY();
         
+        // Trigger wing flapping animation when flying
+        tryTriggerWingFlap();
+        
         // Stop flying if we're already above the target
         if (currentY > targetY + 0.5D) {
             // Re-enable gravity and stop flying
@@ -95,6 +99,10 @@ public class YufengFlyToTargetGoal extends Goal {
 
         // Enable flying mode
         mob.setNoGravity(true);
+        
+        // Set pose that might trigger wing flapping animation
+        // Try setting a custom pose that Changed mod might recognize for flying
+        trySetFlyingPose();
 
         // Calculate direction to target position
         double dx = targetX - mob.getX();
@@ -135,6 +143,25 @@ public class YufengFlyToTargetGoal extends Goal {
     public void stop() {
         // Re-enable gravity when done flying
         mob.setNoGravity(false);
+        // Reset pose
+        mob.setPose(Pose.STANDING);
+    }
+    
+    /**
+     * Try to set a pose that might trigger wing flapping animation
+     */
+    private void trySetFlyingPose() {
+        try {
+            // Try setting the entity to a flying-like pose
+            // Changed mod might check for certain poses to trigger wing animations
+            mob.setPose(Pose.FALL_FLYING);
+        } catch (Exception e) {
+            // If FALL_FLYING doesn't work, try other poses
+            try {
+                mob.setPose(Pose.SWIMMING);
+            } catch (Exception ignored) {
+            }
+        }
     }
 
     /**
@@ -176,6 +203,72 @@ public class YufengFlyToTargetGoal extends Goal {
             }
         } catch (Exception e) {
             // If reflection fails, we'll just use setNoGravity
+        }
+    }
+
+    /**
+     * Try to trigger wing flapping animation using Changed mod's methods
+     */
+    private void tryTriggerWingFlap() {
+        try {
+            Class<?> entityClass = mob.getClass();
+            
+            // Look for methods related to wings/flapping
+            java.lang.reflect.Method[] methods = entityClass.getMethods();
+            for (java.lang.reflect.Method method : methods) {
+                String methodName = method.getName().toLowerCase();
+                // Try methods like flapWings, setWingFlap, animateWings, etc.
+                if ((methodName.contains("wing") || methodName.contains("flap")) && 
+                    method.getParameterCount() <= 1) {
+                    try {
+                        if (method.getParameterCount() == 0) {
+                            method.invoke(mob);
+                        } else if (method.getParameterTypes()[0] == boolean.class) {
+                            method.invoke(mob, true);
+                        } else if (method.getParameterTypes()[0] == float.class || 
+                                   method.getParameterTypes()[0] == Float.class) {
+                            method.invoke(mob, 1.0f);
+                        }
+                        return;
+                    } catch (Exception ignored) {
+                    }
+                }
+            }
+            
+            // Try to find and set a wing flapping field
+            try {
+                java.lang.reflect.Field[] fields = entityClass.getDeclaredFields();
+                for (java.lang.reflect.Field field : fields) {
+                    String fieldName = field.getName().toLowerCase();
+                    if (fieldName.contains("wing") || fieldName.contains("flap") || 
+                        fieldName.contains("flying")) {
+                        field.setAccessible(true);
+                        Class<?> fieldType = field.getType();
+                        if (fieldType == boolean.class || fieldType == Boolean.class) {
+                            field.setBoolean(mob, true);
+                        } else if (fieldType == float.class || fieldType == Float.class) {
+                            field.setFloat(mob, 1.0f);
+                        }
+                    }
+                }
+            } catch (Exception ignored) {
+            }
+            
+            // Try to trigger animation state if it exists
+            try {
+                java.lang.reflect.Field animField = entityClass.getDeclaredField("wingFlapAnimationState");
+                animField.setAccessible(true);
+                Object animState = animField.get(mob);
+                if (animState != null && animState.getClass().getName().contains("AnimationState")) {
+                    java.lang.reflect.Method startMethod = animState.getClass().getMethod("start", int.class);
+                    startMethod.invoke(animState, mob.tickCount);
+                }
+            } catch (Exception ignored) {
+            }
+            
+        } catch (Exception e) {
+            // If reflection fails, try alternative approach
+            // The wing flapping might be handled client-side by the Changed mod's renderer
         }
     }
 }

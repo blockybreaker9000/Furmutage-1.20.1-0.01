@@ -160,7 +160,8 @@ public class LatexMutantFamilyEntity extends Monster {
                 .add(Attributes.ATTACK_DAMAGE, 10)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
                 .add(Attributes.FOLLOW_RANGE, 60.0)
-                .add(Attributes.JUMP_STRENGTH, 5.0);
+                .add(Attributes.JUMP_STRENGTH, 5.0)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 5.0);
     }
 
 

@@ -116,12 +116,14 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             }
         }
         
-        // Check for 1-block gaps that require crawling - check before jumping
+        // Always check for 1-block gaps that require crawling - check before jumping
+        // Crouch 100% of the time when there's any block obstruction between entity and target
         if (crawlCheckCooldown <= 0 && this.mob.onGround() && !isJumping) {
-            if (needsCrawling()) {
+            if (needsCrawling() || isBlockBetweenEntityAndTarget()) {
+                // Always crouch when there's any block obstruction
                 performCrawling();
-            } else if (isCrawling && !isInCrawlSpace() && !needsCrawlJump) {
-                // Stop crawling if we're no longer in a crawl space and not preparing to jump
+            } else if (isCrawling && !isInCrawlSpace() && !needsCrawlJump && !isBlockBetweenEntityAndTarget()) {
+                // Only stop crawling if we're no longer in a crawl space, not preparing to jump, and no blocks in the way
                 this.mob.setPose(Pose.STANDING);
                 isCrawling = false;
             }
@@ -935,11 +937,9 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
      * Make the entity crawl through a 1-block gap
      */
     private void performCrawling() {
-        if (!isCrawling) {
-            // Start crawling by setting pose to SWIMMING (crawling pose in Minecraft)
-            this.mob.setPose(Pose.SWIMMING);
-            isCrawling = true;
-        }
+        // Always set pose to SWIMMING (crawling pose in Minecraft) - 100% of the time
+        this.mob.setPose(Pose.SWIMMING);
+        isCrawling = true;
         
         // Move towards the target while crawling
         double baseSpeed = this.mob.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
@@ -956,6 +956,78 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         // Look at target
         this.mob.getLookControl().setLookAt(this.target, 30.0F, 30.0F);
+    }
+    
+    /**
+     * Check if there's any block obstruction between the entity and the target
+     * This makes entities crouch 100% of the time when there's any block in the way
+     */
+    private boolean isBlockBetweenEntityAndTarget() {
+        if (this.target == null) {
+            return false;
+        }
+        
+        BlockPos mobPos = this.mob.blockPosition();
+        Vec3 mobVec = this.mob.position();
+        Vec3 targetVec = this.target.position();
+        
+        // Calculate direction to target
+        Vec3 direction = new Vec3(
+            targetVec.x - mobVec.x,
+            0,
+            targetVec.z - mobVec.z
+        );
+        
+        double distance = direction.length();
+        if (distance < 0.1) {
+            return false;
+        }
+        
+        direction = direction.normalize();
+        
+        // Check blocks along the path from entity to target (up to 8 blocks)
+        int checkDistance = Math.min((int)distance, 8);
+        for (int i = 1; i <= checkDistance; i++) {
+            BlockPos checkPos = mobPos.offset(
+                (int) Math.round(direction.x * i),
+                0,
+                (int) Math.round(direction.z * i)
+            );
+            
+            // Check if there's a solid block at head height (1 block above ground)
+            BlockPos headPos = checkPos.above(1);
+            BlockState headBlock = this.mob.level().getBlockState(headPos);
+            boolean hasBlockAtHeadHeight = !headBlock.isAir() && !headBlock.getCollisionShape(this.mob.level(), headPos).isEmpty();
+            
+            // Check if there's a solid block at entity level
+            BlockState levelBlock = this.mob.level().getBlockState(checkPos);
+            boolean hasBlockAtLevel = !levelBlock.isAir() && !levelBlock.getCollisionShape(this.mob.level(), checkPos).isEmpty();
+            
+            // If there's a block at head height OR entity level, we need to crouch
+            if (hasBlockAtHeadHeight || hasBlockAtLevel) {
+                return true;
+            }
+        }
+        
+        // Also check the immediate space ahead (where entity is trying to move)
+        Vec3 lookVec = this.mob.getLookAngle();
+        BlockPos aheadPos = mobPos.offset(
+            (int) Math.signum(lookVec.x),
+            0,
+            (int) Math.signum(lookVec.z)
+        );
+        
+        // Check if there's a block at head height ahead
+        BlockPos aheadHeadPos = aheadPos.above(1);
+        BlockState aheadHeadBlock = this.mob.level().getBlockState(aheadHeadPos);
+        boolean hasBlockAhead = !aheadHeadBlock.isAir() && !aheadHeadBlock.getCollisionShape(this.mob.level(), aheadHeadPos).isEmpty();
+        
+        // Also check current position for blocks above
+        BlockPos currentHeadPos = mobPos.above(1);
+        BlockState currentHeadBlock = this.mob.level().getBlockState(currentHeadPos);
+        boolean hasBlockAbove = !currentHeadBlock.isAir() && !currentHeadBlock.getCollisionShape(this.mob.level(), currentHeadPos).isEmpty();
+        
+        return hasBlockAhead || hasBlockAbove;
     }
 }
 
