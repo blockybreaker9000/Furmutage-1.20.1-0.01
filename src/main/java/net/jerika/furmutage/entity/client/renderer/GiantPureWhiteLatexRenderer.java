@@ -11,8 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
-public class GiantPureWhiteLatexRenderer extends AdvancedHumanoidRenderer<GiantPureWhiteLatexEntity, GiantPureWhiteLatexModel<GiantPureWhiteLatexEntity>,
-        ArmorLatexMaleWolfModel<GiantPureWhiteLatexEntity>> {
+public class GiantPureWhiteLatexRenderer extends AdvancedHumanoidRenderer<GiantPureWhiteLatexEntity, GiantPureWhiteLatexModel<GiantPureWhiteLatexEntity>> {
     public GiantPureWhiteLatexRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new GiantPureWhiteLatexModel<>(pContext.bakeLayer(ModModelLayers.GIANT_PURE_WHITE_LATEX_LAYER)),
                 ArmorLatexMaleWolfModel.MODEL_SET, 0.8f);

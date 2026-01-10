@@ -155,6 +155,10 @@ public class ModBlocks {
             () -> new TSCPlasticWasteOreBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
                     .strength(3f).requiresCorrectToolForDrops()));
     
+    public static final RegistryObject<Block> EUGENICS_CRAFTING_BLOCK = registerBlock("eugenics_crafting_block",
+            () -> new EugenicsCraftingBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)
+                    .strength(2.5f)));
+    
     // Tainted White Reed - declare as mutable to break circular dependency, then assign
     public static RegistryObject<Block> TAINTED_WHITE_REED;
     public static RegistryObject<Block> TAINTED_WHITE_REED_PLANT;

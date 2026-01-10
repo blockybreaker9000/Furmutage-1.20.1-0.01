@@ -154,7 +154,7 @@ public class ModItems {
     public static final RegistryObject<Item> ROSELIGHT_AXE = ITEMS.register("roselight_axe",
             () -> new AxeItem(ModToolTiers.ROSELIGHT, 9, -2, new Item.Properties().durability(800)));
     public static final RegistryObject<Item> ROSELIGHT_SHOVEL = ITEMS.register("roselight_shovel",
-            () -> new ShovelItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
+            () -> new net.jerika.furmutage.item.custom.RoselightChainMiningShovel());
     public static final RegistryObject<Item> ROSELIGHT_HOE = ITEMS.register("roselight_hoe",
             () -> new HoeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
 

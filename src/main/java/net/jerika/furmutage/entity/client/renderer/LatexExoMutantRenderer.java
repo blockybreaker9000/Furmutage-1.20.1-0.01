@@ -11,8 +11,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 
-public class LatexExoMutantRenderer extends AdvancedHumanoidRenderer<LatexExoMutantEntity, LatexExoMutantModel<LatexExoMutantEntity>, 
-        ArmorLatexMaleWolfModel<LatexExoMutantEntity>> {
+public class LatexExoMutantRenderer extends AdvancedHumanoidRenderer<LatexExoMutantEntity, LatexExoMutantModel<LatexExoMutantEntity>> {
     public LatexExoMutantRenderer(EntityRendererProvider.Context pContext) {
         super(pContext, new LatexExoMutantModel<>(pContext.bakeLayer(ModModelLayers.LATEX_EXO_MUTANT_LAYER)),
                 ArmorLatexMaleWolfModel.MODEL_SET, 0.5f);

@@ -2,10 +2,17 @@ package net.jerika.furmutage;
 
 import com.mojang.logging.LogUtils;
 import net.jerika.furmutage.block.custom.ModBlocks;
+import net.jerika.furmutage.block.entity.ModBlockEntities;
+import net.jerika.furmutage.config.ModCommonConfig;
 import net.jerika.furmutage.entity.ModEntities;
+import net.jerika.furmutage.menu.ModMenuTypes;
+import net.jerika.furmutage.menu.client.EugenicsCraftingScreen;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.config.ModConfig;
 import java.util.Map;
 
 import net.jerika.furmutage.entity.client.renderer.LatexBacteriaRenderer;
@@ -69,10 +76,14 @@ public class furmutage {
 
         ModItems.register(modEventBus);
         ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
 
         ModSounds.register(modEventBus);
 
         ModEntities.register(modEventBus);
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfig.SPEC, "furmutage-common.toml");
 
         modEventBus.addListener(this::commonSetup);
 
@@ -111,6 +122,10 @@ public class furmutage {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
+            event.enqueueWork(() -> {
+                MenuScreens.register(ModMenuTypes.EUGENICS_CRAFTING_MENU.get(), EugenicsCraftingScreen::new);
+            });
+            
             EntityRenderers.register(ModEntities.MUGLING.get(), MuglingRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_MUTANT_FAMILY.get(), MutantFamilyRenderer::new);
             EntityRenderers.register(ModEntities.WITHERED_LATEX_PUDDING.get(), WitheredLatexPuddingRenderer::new);

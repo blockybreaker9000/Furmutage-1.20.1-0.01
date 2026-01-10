@@ -1,0 +1,10 @@
+{
+  "_comment": "This file is managed by Furmutage mod. Set disableVanillaStructures=true in config to disable structures.",
+  "structures": [],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 4096,
+    "separation": 0,
+    "salt": 83469867
+  }
+}

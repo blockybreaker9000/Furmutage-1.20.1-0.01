@@ -1,0 +1,12 @@
+{
+  "_comment": "This file is managed by Furmutage mod. Set disableVanillaStructures=true in config to disable structures.",
+  "structures": [],
+  "placement": {
+    "type": "minecraft:concentric_rings",
+    "distance": 32,
+    "count": 128,
+    "spread": 3,
+    "salt": 0,
+    "preferred_biomes": "#minecraft:stronghold_biased_to"
+  }
+}

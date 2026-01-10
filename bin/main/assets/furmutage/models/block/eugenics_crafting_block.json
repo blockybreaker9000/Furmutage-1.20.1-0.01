@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "furmutage:block/eugenics_crafting_block_top",
+    "down": "furmutage:block/eugenics_crafting_block_bottom",
+    "up": "furmutage:block/eugenics_crafting_block_top",
+    "north": "furmutage:block/eugenics_crafting_block_north",
+    "south": "furmutage:block/eugenics_crafting_block_south",
+    "east": "furmutage:block/eugenics_crafting_block_east",
+    "west": "furmutage:block/eugenics_crafting_block_west"
+  }
+}
