@@ -23,6 +23,8 @@ public class ModModelLayers {
             new ResourceLocation(furmutage.MOD_ID, "latex_exo_mutant_layer"), "main");
     public static final ModelLayerLocation GIANT_PURE_WHITE_LATEX_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "giant_pure_white_latex"), "main");
+    public static final ModelLayerLocation DEEPSLATE_LATEX_SQUID_DOG_FEMALE_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "deepslate_latex_squid_dog_female"), "main");
     
     // Thunderium Armor Model Layers (separate for each piece)
     public static final ModelLayerLocation THUNDERIUM_HELMET_LAYER = new ModelLayerLocation(

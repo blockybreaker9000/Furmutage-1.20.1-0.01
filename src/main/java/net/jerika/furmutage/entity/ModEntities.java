@@ -29,6 +29,7 @@ import net.jerika.furmutage.entity.custom.DarkLatexSquidEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexDolphinEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexGoatEntity;
+import net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -163,6 +164,10 @@ public class ModEntities {
     public static final RegistryObject<EntityType<GiantPureWhiteLatexEntity>> GIANT_PURE_WHITE_LATEX =
             ENTITY_TYPES.register("giant_pure_white_latex", () -> EntityType.Builder.of(GiantPureWhiteLatexEntity::new, MobCategory.MONSTER)
                     .sized(1.5f, 6.0f).build("giant_pure_white_latex"));
+
+    public static final RegistryObject<EntityType<DeepSlateLatexSquidDog>> DEEPSLATE_LATEX_SQUID_DOG =
+            ENTITY_TYPES.register("deepslate_latex_squid_dog", () -> EntityType.Builder.of(DeepSlateLatexSquidDog::new, MobCategory.WATER_CREATURE)
+                    .sized(0.8f, 2.1f).clientTrackingRange(10).build("deepslate_latex_squid_dog"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

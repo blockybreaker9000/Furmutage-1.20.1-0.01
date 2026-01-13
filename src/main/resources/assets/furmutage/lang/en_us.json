@@ -97,6 +97,8 @@
   "entity.furmutage.tsc_drone": "TSC Drone",
   "entity.furmutage.tsc_drone_boss": "TSC Drone Boss",
   "entity.furmutage.latex_bacteria": "Latex Bacteria",
+  "entity.furmutage.deepslate_latex_squid_dog": "DeepSlate Latex Squid Dog",
+  "item.furmutage.deepslate_latex_squid_dog_spawn_egg": "DeepSlate Latex Squid Dog Spawn Egg",
 
   "subtitles.furmutage.night_ambient": "Night Ambience",
   "subtitles.furmutage.night_chime": "Night Chime",

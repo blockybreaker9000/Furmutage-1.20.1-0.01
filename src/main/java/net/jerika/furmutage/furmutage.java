@@ -44,6 +44,7 @@ import net.jerika.furmutage.entity.client.renderer.DarkLatexSquidRenderer;
 import net.jerika.furmutage.entity.client.renderer.DarkLatexLlamaRenderer;
 import net.jerika.furmutage.entity.client.renderer.DarkLatexDolphinRenderer;
 import net.jerika.furmutage.entity.client.renderer.DarkLatexGoatRenderer;
+import net.jerika.furmutage.entity.client.renderer.DeepSlateLatexSquidDogRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
@@ -104,6 +105,14 @@ public class furmutage {
             } catch (Exception e) {
                 LOGGER.error("Failed to register stripping interaction for tainted logs", e);
             }
+            
+            // Register spawn placement for DeepSlateLatexSquidDog
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.DEEPSLATE_LATEX_SQUID_DOG.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.IN_WATER,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog::checkDeepSlateSpawnRules
+            );
         });
     }
 
@@ -171,6 +180,8 @@ public class furmutage {
             EntityRenderers.register(ModEntities.DARK_LATEX_GOAT.get(), DarkLatexGoatRenderer::new);
             
             EntityRenderers.register(ModEntities.GIANT_PURE_WHITE_LATEX.get(), GiantPureWhiteLatexRenderer::new);
+            
+            EntityRenderers.register(ModEntities.DEEPSLATE_LATEX_SQUID_DOG.get(), DeepSlateLatexSquidDogRenderer::new);
             
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());

@@ -31,6 +31,7 @@ import net.jerika.furmutage.entity.custom.DarkLatexSquidEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexDolphinEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexGoatEntity;
+import net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -76,5 +77,7 @@ public class ModEventBusEvents {
         event.put(ModEntities.DARK_LATEX_GOAT.get(), DarkLatexGoatEntity.createAttributes().build());
         
         event.put(ModEntities.GIANT_PURE_WHITE_LATEX.get(), GiantPureWhiteLatexEntity.createAttributes().build());
+        
+        event.put(ModEntities.DEEPSLATE_LATEX_SQUID_DOG.get(), DeepSlateLatexSquidDog.createAttributes().build());
     }
 }
