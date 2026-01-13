@@ -107,6 +107,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_HURT = registerSoundEvent("latex_mutant_bomber_hurt");
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_DEATH = registerSoundEvent("latex_mutant_bomber_death");
 
+    // Tainted grass placement sound
+    public static final RegistryObject<SoundEvent> TAINTED_HORROR_GRASS_PLACE = registerSoundEvent("tainted_horror_grass_place");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));

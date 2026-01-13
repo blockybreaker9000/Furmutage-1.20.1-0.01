@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "###",
+    "###",
+    "###"
+  ],
+  "key": {
+    "#": {
+      "item": "furmutage:roselight_nugget"
+    }
+  },
+  "result": {
+    "item": "furmutage:roselight_chunk"
+  }
+}

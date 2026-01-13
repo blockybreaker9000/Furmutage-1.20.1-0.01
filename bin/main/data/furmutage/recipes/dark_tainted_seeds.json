@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "DDD",
+    "SSS",
+    "PPP"
+  ],
+  "key": {
+    "D": {
+      "item": "furmutage:dark_latex_clump"
+    },
+    "S": {
+      "tag": "minecraft:seeds"
+    },
+    "P": {
+      "item": "furmutage:tsc_plastic_waste_clump"
+    }
+  },
+  "result": {
+    "item": "furmutage:dark_tainted_seeds"
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "tools",
+  "pattern": [
+    " #",
+    "# "
+  ],
+  "key": {
+    "#": {
+      "item": "furmutage:roselight_ingot"
+    }
+  },
+  "result": {
+    "item": "furmutage:roselight_shears"
+  }
+}

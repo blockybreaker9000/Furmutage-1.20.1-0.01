@@ -172,6 +172,12 @@
       "furmutage:latex_mutant_bomber_death"
     ],
     "subtitle": "subtitles.furmutage.latex_mutant_bomber_death"
+  },
+  "tainted_horror_grass_place": {
+    "sounds": [
+      "furmutage:tainted_horror_grass_place"
+    ],
+    "subtitle": "subtitles.furmutage.tainted_horror_grass_place"
   }
 }
 

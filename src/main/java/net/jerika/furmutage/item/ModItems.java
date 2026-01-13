@@ -3,6 +3,10 @@ package net.jerika.furmutage.item;
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.furmutage;
 import net.jerika.furmutage.item.custom.*;
+import net.jerika.furmutage.item.custom.DarkLatexClumpItem;
+import net.jerika.furmutage.item.custom.WhiteLatexClumpItem;
+import net.jerika.furmutage.item.custom.DarkTaintedSeedsItem;
+import net.jerika.furmutage.item.custom.WhiteTaintedSeedsItem;
 import net.jerika.furmutage.item.DarkLatexBottleItem;
 import net.jerika.furmutage.item.TSCDroneBulletItem;
 import net.jerika.furmutage.item.TSCShockGrenadeItem;
@@ -73,6 +77,14 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_BATTERY = ITEMS.register("tsc_battery",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_CLUMP = ITEMS.register("dark_latex_clump",
+            () -> new DarkLatexClumpItem(new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_CLUMP = ITEMS.register("white_latex_clump",
+            () -> new WhiteLatexClumpItem(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_TAINTED_SEEDS = ITEMS.register("dark_tainted_seeds",
+            () -> new DarkTaintedSeedsItem(new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_TAINTED_SEEDS = ITEMS.register("white_tainted_seeds",
+            () -> new WhiteTaintedSeedsItem(new Item.Properties()));
     public static final RegistryObject<Item> TSC_SHOCK_GRENADE = ITEMS.register("tsc_shock_grenade",
             () -> new TSCShockGrenadeItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> TSC_EXPLOSIVE_GRENADE = ITEMS.register("tsc_explosive_grenade",
@@ -151,12 +163,18 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> THUNDERIUM_GLASS_SHARD = ITEMS.register("thunderium_glass_shard",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_CHUNK = ITEMS.register("roselight_chunk",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_CHUNK = ITEMS.register("thunderium_chunk",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROSELIGHT_AXE = ITEMS.register("roselight_axe",
             () -> new AxeItem(ModToolTiers.ROSELIGHT, 9, -2, new Item.Properties().durability(800)));
     public static final RegistryObject<Item> ROSELIGHT_SHOVEL = ITEMS.register("roselight_shovel",
             () -> new net.jerika.furmutage.item.custom.RoselightChainMiningShovel());
     public static final RegistryObject<Item> ROSELIGHT_HOE = ITEMS.register("roselight_hoe",
             () -> new HoeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
+    public static final RegistryObject<Item> ROSELIGHT_SHEARS = ITEMS.register("roselight_shears",
+            () -> new net.jerika.furmutage.item.custom.RoselightShears());
 
 
     public static final RegistryObject<Item> THUNDERIUM_HELMET = ITEMS.register("thunderium_helmet",

@@ -49,3 +49,24 @@ description="cool description"
     ordering="NONE"
     side="BOTH"
 
+
+[[dependencies.furmutage]]
+    modId="bettercombat"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.furmutage]]
+    modId="cloth-config"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies.furmutage]]
+    modId="playeranimator"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"

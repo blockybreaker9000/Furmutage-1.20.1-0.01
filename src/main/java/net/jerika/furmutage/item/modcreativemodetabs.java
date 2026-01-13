@@ -20,6 +20,11 @@ public class modcreativemodetabs {
                     .displayItems((itemDisplayParameters, output) -> {
 
 
+                        output.accept(ModBlocks.EUGENICS_CRAFTING_BLOCK.get());
+                        output.accept(ModItems.DARK_TAINTED_SEEDS.get());
+                        output.accept(ModItems.WHITE_TAINTED_SEEDS.get());
+                        output.accept(ModItems.DARK_LATEX_CLUMP.get());
+                        output.accept(ModItems.WHITE_LATEX_CLUMP.get());
                         output.accept(ModItems.PEALED_ORANGES.get());
                         output.accept(ModItems.ORANGE_PIE.get());
                         output.accept(ModItems.ORANGE_MUFFIN.get());
@@ -33,6 +38,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.THUNDERIUM_INGOT.get());
                         output.accept(ModItems.THUNDERIUM_NUGGET.get());
                         output.accept(ModItems.THUNDERIUM_RAW_NUGGET.get());
+                        output.accept(ModItems.THUNDERIUM_CHUNK.get());
 
 
 
@@ -40,6 +46,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.RAW_ROSELIGHT_NUGGET.get());
                         output.accept(ModItems.ROSELIGHT_NUGGET.get());
                         output.accept(ModItems.ROSELIGHT_INGOT.get());
+                        output.accept(ModItems.ROSELIGHT_CHUNK.get());
 
 
 
@@ -86,6 +93,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ROSELIGHT_AXE.get());
                         output.accept(ModItems.ROSELIGHT_HOE.get());
                         output.accept(ModItems.ROSELIGHT_SHOVEL.get());
+                        output.accept(ModItems.ROSELIGHT_SHEARS.get());
                         output.accept(ModItems.THUNDERIUMBATTLEAXE.get());
                         output.accept(ModItems.THUNDERIUMDOOMSABER.get());
                         output.accept(ModItems.THUNDERIUMBATTLEMACE.get());

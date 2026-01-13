@@ -62,6 +62,7 @@
   "item.furmutage.roselight_axe": "Roselight Axe",
   "item.furmutage.roselight_shovel": "Roselight Shovel",
   "item.furmutage.roselight_hoe": "Roselight Hoe",
+  "item.furmutage.roselight_shears": "Roselight Shears",
 
   "item.furmutage.mugling_spawn_egg": "Mugling Spawn Egg",
   "item.furmutage.latex_bacteria_spawn_egg": "Latex Bacteria Spawn Egg",
@@ -76,6 +77,7 @@
   "item.furmutage.tsc_explosive_grenade": "TSC Explosive Grenade",
 
   "block.furmutage.raw_thunderium": "Raw Thunderium",
+  "block.furmutage.eugenics_crafting_block": "TSC Eugenics Crafting Block",
   "block.furmutage.raw_roselight": "Raw Roselight",
   "block.furmutage.thunderium_ore": "Thunderium Ore",
   "block.furmutage.roselight_ore": "Roselight Ore",
@@ -99,6 +101,8 @@
   "subtitles.furmutage.night_ambient": "Night Ambience",
   "subtitles.furmutage.night_chime": "Night Chime",
   "subtitles.furmutage.morning_chime": "Morning Chime",
+
+  "container.furmutage.eugenics_crafting": "TSC Eugenics Crafting",
 
   "creativetab.furmutage": "FurMutage"
 }
