@@ -26,7 +26,7 @@ import java.util.List;
 
 public class DeepSlateLatexSquidDogFemaleModel extends AdvancedHumanoidModel<DeepSlateLatexSquidDog> implements AdvancedHumanoidModelInterface<DeepSlateLatexSquidDog, DeepSlateLatexSquidDogFemaleModel>, DoubleArmedModel<DeepSlateLatexSquidDog> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
-            new ResourceLocation(furmutage.MOD_ID, "deepslate_latex_squid_dog_female"), "main");
+            new ResourceLocation(furmutage.MOD_ID, "deepslate_latex_squid_dog"), "main");
     private final ModelPart Head;
     private final ModelPart Torso;
     private final ModelPart LeftArm;

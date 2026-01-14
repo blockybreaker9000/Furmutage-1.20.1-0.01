@@ -155,6 +155,12 @@ public class ModBlocks {
             () -> new TSCPlasticWasteOreBlock(BlockBehaviour.Properties.copy(Blocks.STONE)
                     .strength(3f).requiresCorrectToolForDrops()));
     
+    // Brushable ocean/river plastic waste blocks
+    public static final RegistryObject<Block> PLASTIC_WASTE_SAND = registerBlock("plastic_waste_sand",
+            () -> new PlasticWasteSandBlock(BlockBehaviour.Properties.copy(Blocks.SAND)));
+    public static final RegistryObject<Block> PLASTIC_WASTE_GRAVEL = registerBlock("plastic_waste_gravel",
+            () -> new PlasticWasteGravelBlock(BlockBehaviour.Properties.copy(Blocks.GRAVEL)));
+    
     public static final RegistryObject<Block> EUGENICS_CRAFTING_BLOCK = registerBlock("eugenics_crafting_block",
             () -> new EugenicsCraftingBlock(BlockBehaviour.Properties.copy(Blocks.CRAFTING_TABLE)
                     .strength(2.5f)));

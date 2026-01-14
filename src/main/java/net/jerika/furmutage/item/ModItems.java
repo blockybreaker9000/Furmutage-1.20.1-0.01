@@ -49,6 +49,10 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_PLASTIC_WASTE_CLUMP = ITEMS.register("tsc_plastic_waste_clump",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TSC_PLASTIC_BAR = ITEMS.register("tsc_plastic_bar",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> PLASTIC_WASTE = ITEMS.register("plastic_waste",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUBBER = ITEMS.register("rubber",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_GLOVES = ITEMS.register("tsc_gloves",
@@ -216,6 +220,9 @@ public class ModItems {
                     new Item.Properties()));
     public static final RegistryObject<Item> EXO_MUTANT_SPAWN_EGG = ITEMS.register("exo_mutant_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.LATEX_EXO_MUTANT, 0xDDEAEA, 0xDDEAEA,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> DEEPSLATE_LATEX_SQUID_DOG_SPAWN_EGG = ITEMS.register("deepslate_latex_squid_dog_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DEEPSLATE_LATEX_SQUID_DOG, 0x202020, 0x00FFFF,
                     new Item.Properties()));
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()
