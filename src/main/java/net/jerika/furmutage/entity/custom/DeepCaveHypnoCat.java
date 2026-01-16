@@ -6,11 +6,23 @@ import net.ltxprogrammer.changed.ability.IAbstractChangedEntity;
 import net.ltxprogrammer.changed.ability.SimpleAbilityInstance;
 import net.ltxprogrammer.changed.entity.*;
 import net.ltxprogrammer.changed.entity.AttributePresets;
+import net.ltxprogrammer.changed.entity.TransfurContext;
+import net.ltxprogrammer.changed.entity.TransfurCause;
+import net.ltxprogrammer.changed.entity.variant.TransfurVariant;
 import net.ltxprogrammer.changed.init.ChangedAbilities;
+import net.ltxprogrammer.changed.process.ProcessTransfur;
 import net.ltxprogrammer.changed.util.Color3;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
@@ -20,13 +32,17 @@ import net.minecraft.world.entity.ai.goal.*;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.util.GoalUtils;
+import net.minecraft.world.entity.monster.Skeleton;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 
 public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
+    private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(DeepCaveHypnoCat.class, EntityDataSerializers.BYTE);
     protected final SimpleAbilityInstance hypnosis;
 
     public DeepCaveHypnoCat(EntityType<? extends DeepCaveHypnoCat> type, Level level) {
@@ -36,13 +52,65 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
     }
 
     @Override
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(DATA_FLAGS_ID, (byte)0);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (!this.level().isClientSide) {
+            // Improved climbing detection - only when actively moving into a wall
+            boolean canClimb = false;
+            Vec3 movement = this.getDeltaMovement();
+            boolean isMovingForward = Math.abs(movement.x) > 0.01 || Math.abs(movement.z) > 0.01;
+            
+            // Only climb if we're hitting a wall AND moving forward
+            if (this.horizontalCollision && isMovingForward) {
+                canClimb = true;
+            } else if (this.getTarget() != null && this.getTarget().getY() > this.getY() + 1.0 && isMovingForward) {
+                // Target is above, try to climb towards it
+                BlockPos pos = this.blockPosition();
+                Direction facing = Direction.fromYRot(this.getYRot());
+                BlockPos frontPos = pos.relative(facing);
+                BlockState frontState = this.level().getBlockState(frontPos);
+                if (!frontState.isAir() && frontState.getCollisionShape(this.level(), frontPos) != net.minecraft.world.phys.shapes.Shapes.empty()) {
+                    canClimb = true;
+                }
+            }
+            
+            this.setClimbing(canClimb);
+        }
+    }
+
+    @Override
+    public boolean onClimbable() {
+        return this.isClimbing();
+    }
+
+    public boolean isClimbing() {
+        return (this.entityData.get(DATA_FLAGS_ID) & 1) != 0;
+    }
+
+    public void setClimbing(boolean climbing) {
+        byte b0 = this.entityData.get(DATA_FLAGS_ID);
+        if (climbing) {
+            b0 = (byte)(b0 | 1);
+        } else {
+            b0 = (byte)(b0 & -2);
+        }
+        this.entityData.set(DATA_FLAGS_ID, b0);
+    }
+
+    @Override
     protected void setAttributes(AttributeMap attributes) {
         super.setAttributes(attributes);
         AttributePresets.catLike(attributes);
         // Make hyper aggressive - increase stats
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(64.0D); // Increased follow range
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(128.0D); // Much longer follow range for persistent targeting
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(8.0D); // Increased attack damage
-        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.4D); // Faster movement
+        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.6D); // Faster movement (increased from 0.4D)
     }
 
     @Override
@@ -77,9 +145,15 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
         // Target priorities - Changed mod style
         // Priority 1: Hurt by target
         this.targetSelector.addGoal(1, new HurtByTargetGoal(this));
-        
+
         // Priority 2: Target players
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, true));
+        
+        // Priority 3: Target humanoid entities (skeletons, zombies, pillagers, villagers)
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Skeleton.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Zombie.class, true));
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Raider.class, true)); // Pillagers are Raiders
+        this.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(this, Villager.class, true));
     }
 
     @Override
@@ -101,6 +175,44 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
 
     public Color3 getTransfurColor(TransfurCause cause) {
         return Color3.getColor("#333333");
+    }
+
+    @Override
+    public boolean doHurtTarget(Entity entity) {
+        // Instantly transfur specific humanoid entities into this entity type
+        if (entity instanceof LivingEntity livingEntity && !(entity instanceof Player) && !this.level().isClientSide) {
+            if ((entity instanceof Skeleton || entity instanceof Zombie || entity instanceof Raider || entity instanceof Villager)
+                    && TransfurVariant.getEntityVariant(livingEntity) == null) {
+                
+                // Try to use TransfurVariant first if available
+                TransfurVariant<?> variant = this.getSelfVariant();
+                if (variant != null) {
+                    TransfurContext context = TransfurContext.npcLatexHazard(this, TransfurCause.GRAB_REPLICATE);
+                    ProcessTransfur.transfur(livingEntity, this.level(), variant, false, context);
+                    return true;
+                } else {
+                    // If no variant, directly spawn the entity type and replace
+                    Entity createdEntity = this.getType().create(this.level());
+                    if (createdEntity instanceof ChangedEntity newEntity) {
+                        newEntity.moveTo(livingEntity.getX(), livingEntity.getY(), livingEntity.getZ(), 
+                                        livingEntity.getYRot(), livingEntity.getXRot());
+                        if (livingEntity.hasCustomName()) {
+                            newEntity.setCustomName(livingEntity.getCustomName());
+                            newEntity.setCustomNameVisible(livingEntity.isCustomNameVisible());
+                        }
+                        this.level().addFreshEntity(newEntity);
+                        livingEntity.discard();
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        // Use default transfur behavior for other entities
+        if (!tryTransfurTarget(entity))
+            return super.doHurtTarget(entity);
+        else
+            return true;
     }
 
     public static AttributeSupplier.Builder createAttributes() {
