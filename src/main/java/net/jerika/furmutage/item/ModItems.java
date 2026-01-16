@@ -224,6 +224,12 @@ public class ModItems {
     public static final RegistryObject<Item> DEEPSLATE_LATEX_SQUID_DOG_SPAWN_EGG = ITEMS.register("deepslate_latex_squid_dog_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.DEEPSLATE_LATEX_SQUID_DOG, 0x202020, 0x00FFFF,
                     new Item.Properties()));
+    public static final RegistryObject<Item> DEEP_CAVE_HYPNO_CAT_SPAWN_EGG = ITEMS.register("deep_cave_hypno_cat_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DEEP_CAVE_HYPNO_CAT, 0x333333, 0xD7FF46,
+                    new Item.Properties()));
+    public static final RegistryObject<Item> LATEX_BLOOD_WORM_MUTANT_SPAWN_EGG = ITEMS.register("latex_blood_worm_mutant_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.LATEX_BLOOD_WORM_MUTANT, 0xFFFFFF, 0x7E7E7E,
+                    new Item.Properties()));
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)

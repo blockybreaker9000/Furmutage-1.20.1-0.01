@@ -113,6 +113,22 @@ public class furmutage {
                 net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog::checkDeepSlateSpawnRules
             );
+            
+            // Register spawn placement for DeepCaveHypnoCat
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.DEEP_CAVE_HYPNO_CAT.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.DeepCaveHypnoCat::checkDeepCaveSpawnRules
+            );
+            
+            // Register spawn placement for LatexBloodWormMutant
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.LATEX_BLOOD_WORM_MUTANT.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.LatexBloodWormMutant::checkLatexBloodWormMutantSpawnRules
+            );
         });
     }
 
@@ -182,6 +198,10 @@ public class furmutage {
             EntityRenderers.register(ModEntities.GIANT_PURE_WHITE_LATEX.get(), GiantPureWhiteLatexRenderer::new);
             
             EntityRenderers.register(ModEntities.DEEPSLATE_LATEX_SQUID_DOG.get(), DeepSlateLatexSquidDogRenderer::new);
+            
+            EntityRenderers.register(ModEntities.DEEP_CAVE_HYPNO_CAT.get(), net.jerika.furmutage.entity.client.renderer.DeepCaveHypnoCatRenderer::new);
+            
+            EntityRenderers.register(ModEntities.LATEX_BLOOD_WORM_MUTANT.get(), net.jerika.furmutage.entity.client.renderer.LatexBloodWormMutantRenderer::new);
             
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());

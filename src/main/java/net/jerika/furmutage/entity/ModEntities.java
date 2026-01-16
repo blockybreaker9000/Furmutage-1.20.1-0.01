@@ -30,6 +30,8 @@ import net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexDolphinEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexGoatEntity;
 import net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog;
+import net.jerika.furmutage.entity.custom.DeepCaveHypnoCat;
+import net.jerika.furmutage.entity.custom.LatexBloodWormMutant;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -168,6 +170,14 @@ public class ModEntities {
     public static final RegistryObject<EntityType<DeepSlateLatexSquidDog>> DEEPSLATE_LATEX_SQUID_DOG =
             ENTITY_TYPES.register("deepslate_latex_squid_dog", () -> EntityType.Builder.of(DeepSlateLatexSquidDog::new, MobCategory.WATER_CREATURE)
                     .sized(0.8f, 2.1f).clientTrackingRange(10).build("deepslate_latex_squid_dog"));
+
+    public static final RegistryObject<EntityType<DeepCaveHypnoCat>> DEEP_CAVE_HYPNO_CAT =
+            ENTITY_TYPES.register("deep_cave_hypno_cat", () -> EntityType.Builder.of(DeepCaveHypnoCat::new, MobCategory.MONSTER)
+                    .sized(0.7f, 1.93f).clientTrackingRange(10).build("deep_cave_hypno_cat"));
+
+    public static final RegistryObject<EntityType<LatexBloodWormMutant>> LATEX_BLOOD_WORM_MUTANT =
+            ENTITY_TYPES.register("latex_blood_worm_mutant", () -> EntityType.Builder.of(LatexBloodWormMutant::new, MobCategory.MONSTER)
+                    .sized(0.7F, 1.64F).clientTrackingRange(10).build("latex_blood_worm_mutant"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

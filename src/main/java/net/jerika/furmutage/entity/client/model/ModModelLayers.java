@@ -25,6 +25,10 @@ public class ModModelLayers {
             new ResourceLocation(furmutage.MOD_ID, "giant_pure_white_latex"), "main");
     public static final ModelLayerLocation DEEPSLATE_LATEX_SQUID_DOG_FEMALE_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "deepslate_latex_squid_dog_female"), "main");
+    public static final ModelLayerLocation DEEP_CAVE_HYPNO_CAT_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "deep_cave_hypno_cat"), "main");
+    public static final ModelLayerLocation LATEX_BLOOD_WORM_MUTANT_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "latex_blood_worm_mutant"), "main");
     
     // Thunderium Armor Model Layers (separate for each piece)
     public static final ModelLayerLocation THUNDERIUM_HELMET_LAYER = new ModelLayerLocation(
