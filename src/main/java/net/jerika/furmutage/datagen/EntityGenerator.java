@@ -445,7 +445,7 @@ public class EntityGenerator {
         darkWolf.canMeleeAttack = true;
         darkWolf.avoidsWater = true;
         darkWolf.shadowRadius = 0.5f;
-        darkWolf.customImports.add("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal");
+        darkWolf.customImports.add("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal");
         
         generateEntity(darkWolf);
         

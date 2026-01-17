@@ -26,7 +26,7 @@ public class ExampleEntityGenerator {
             .hostile()
             .avoidsWater(true)
             .shadowRadius(0.5f)
-            .addImport("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal")
+            .addImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
             .build();
         
         EntityGenerator.generateEntity(darkWolf);
@@ -63,7 +63,7 @@ public class ExampleEntityGenerator {
                     "ModSounds.DARK_LATEX_COW_DEATH")
             .texture("textures/entity/dark_latex_cow.png")
             .shadowRadius(0.6f)
-            .addImport("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal")
+            .addImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
             .build();
         
         // Uncomment to generate:

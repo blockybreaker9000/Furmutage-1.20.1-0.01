@@ -89,7 +89,7 @@ EntityConfig infectedCow = new EntityConfigBuilder("DarkLatexCow")
             "ModSounds.DARK_LATEX_COW_HURT", 
             "ModSounds.DARK_LATEX_COW_DEATH")
     .texture("textures/entity/dark_latex_cow.png")
-    .addImport("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal")
+    .addImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
     .build();
 
 EntityGenerator.generateEntity(infectedCow);

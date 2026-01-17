@@ -1,6 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.ExitWaterGoal;
 import net.ltxprogrammer.changed.entity.ChangedEntity;
 import net.ltxprogrammer.changed.entity.TransfurMode;

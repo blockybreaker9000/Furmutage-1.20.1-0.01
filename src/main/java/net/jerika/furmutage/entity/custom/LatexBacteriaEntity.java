@@ -1,8 +1,8 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.BacteriaJumpAttackGoal;
-import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
-import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedStyleLeapAtTargetGoal;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;

@@ -152,7 +152,7 @@ HumanoidLatexEntityGenerator.HumanoidEntityConfig latexTiger =
         .addCustomModelPart("RightEar")
         .allAnimations()
         .shadowRadius(0.6f)
-        .addCustomImport("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal")
+        .addCustomImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
         .build();
 
 HumanoidLatexEntityGenerator.generateHumanoidEntity(latexTiger);

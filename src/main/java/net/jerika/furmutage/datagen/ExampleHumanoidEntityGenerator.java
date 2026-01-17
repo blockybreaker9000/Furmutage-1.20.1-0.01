@@ -23,7 +23,7 @@ public class ExampleHumanoidEntityGenerator {
                 .hasTail(true, true)
                 .allAnimations()
                 .shadowRadius(0.5f)
-                .addCustomImport("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal")
+                .addCustomImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
                 .build();
         
         HumanoidLatexEntityGenerator.generateHumanoidEntity(darkWolf);
@@ -57,7 +57,7 @@ public class ExampleHumanoidEntityGenerator {
                 .hasTail(true, true)
                 .allAnimations()
                 .shadowRadius(0.6f)
-                .addCustomImport("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal")
+                .addCustomImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
                 .addCustomField("// Custom field for wall climbing logic")
                 .build();
         

@@ -1,7 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
-import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedStyleLeapAtTargetGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.PuddingSprintAttackGoal;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.sounds.SoundEvent;

@@ -1,4 +1,4 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.latex_beast_ai;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;

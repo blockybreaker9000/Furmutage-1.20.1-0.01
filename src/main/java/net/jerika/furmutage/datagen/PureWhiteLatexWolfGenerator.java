@@ -23,7 +23,7 @@ public class PureWhiteLatexWolfGenerator {
             .avoidsWater(true)
             .shadowRadius(1.0f)
             .texture("textures/entity/pure_white_latex_wolf.png")
-            .addImport("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal")
+            .addImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
             .build();
         
         EntityGenerator.generateEntity(config);

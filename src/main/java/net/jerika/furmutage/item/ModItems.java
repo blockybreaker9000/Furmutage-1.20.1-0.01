@@ -181,16 +181,6 @@ public class ModItems {
             () -> new net.jerika.furmutage.item.custom.RoselightShears());
 
 
-    public static final RegistryObject<Item> THUNDERIUM_HELMET = ITEMS.register("thunderium_helmet",
-            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.HELMET, new Item.Properties()));
-    public static final RegistryObject<Item> THUNDERIUM_CHESTPLATE = ITEMS.register("thunderium_chestplate",
-            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
-    public static final RegistryObject<Item> THUNDERIUM_LEGGINGS = ITEMS.register("thunderium_leggings",
-            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
-    public static final RegistryObject<Item> THUNDERIUM_BOOTS = ITEMS.register("thunderium_boots",
-            () -> new ArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.BOOTS, new Item.Properties()));
-
-
     public static final RegistryObject<Item> MUGLING_SPAWN_EGG = ITEMS.register("mugling_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.MUGLING, 0x4D72, 0xc5d,
                     new Item.Properties()));

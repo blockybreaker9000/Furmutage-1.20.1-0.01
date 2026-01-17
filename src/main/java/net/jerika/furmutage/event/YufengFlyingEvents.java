@@ -1,6 +1,6 @@
 package net.jerika.furmutage.event;
 
-import net.jerika.furmutage.ai.YufengFlyToTargetGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.YufengFlyToTargetGoal;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.Mob;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;

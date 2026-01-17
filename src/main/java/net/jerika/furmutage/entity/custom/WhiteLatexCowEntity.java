@@ -1,6 +1,6 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;

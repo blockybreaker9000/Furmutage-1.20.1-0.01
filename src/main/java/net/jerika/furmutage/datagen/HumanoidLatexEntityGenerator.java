@@ -162,7 +162,7 @@ public class HumanoidLatexEntityGenerator {
         code.append("import net.minecraft.world.level.block.state.BlockState;\n");
         
         if (config.customImports.size() > 0 || config.isHostile) {
-            code.append("import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;\n");
+            code.append("import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;\n");
         }
         
         // Custom imports
@@ -919,7 +919,7 @@ public class HumanoidLatexEntityGenerator {
         darkWolf.shadowRadius = 0.5f;
         darkWolf.hasTail = true;
         darkWolf.hasTailPrimary = true;
-        darkWolf.customImports.add("net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal");
+        darkWolf.customImports.add("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal");
         
         generateHumanoidEntity(darkWolf);
         

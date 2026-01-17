@@ -1,13 +1,12 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
-import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedStyleLeapAtTargetGoal;
 import net.ltxprogrammer.changed.entity.ChangedEntity;
 import net.ltxprogrammer.changed.entity.Gender;
 import net.ltxprogrammer.changed.entity.TransfurMode;
 import net.ltxprogrammer.changed.entity.TransfurContext;
 import net.ltxprogrammer.changed.entity.TransfurCause;
-import net.ltxprogrammer.changed.entity.beast.AbstractAquaticEntity;
 import net.ltxprogrammer.changed.entity.beast.AbstractLatexSquidDog;
 import net.ltxprogrammer.changed.entity.variant.TransfurVariant;
 import net.ltxprogrammer.changed.process.ProcessTransfur;
@@ -28,10 +27,8 @@ import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
 import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.monster.Skeleton;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.npc.AbstractVillager;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.entity.player.Player;

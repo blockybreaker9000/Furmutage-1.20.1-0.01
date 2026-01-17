@@ -1,7 +1,7 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
-import net.jerika.furmutage.ai.ChangedStyleLeapAtTargetGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedStyleLeapAtTargetGoal;
 import net.ltxprogrammer.changed.ability.IAbstractChangedEntity;
 import net.ltxprogrammer.changed.ability.SimpleAbilityInstance;
 import net.ltxprogrammer.changed.entity.*;
@@ -23,7 +23,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;

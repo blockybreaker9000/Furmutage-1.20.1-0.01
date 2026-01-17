@@ -1,4 +1,4 @@
-package net.jerika.furmutage.ai;
+package net.jerika.furmutage.ai.latex_beast_ai;
 
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;

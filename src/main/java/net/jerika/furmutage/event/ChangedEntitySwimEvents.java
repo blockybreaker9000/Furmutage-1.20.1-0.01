@@ -1,6 +1,6 @@
 package net.jerika.furmutage.event;
 
-import net.jerika.furmutage.ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
