@@ -48,13 +48,6 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ROSELIGHT_INGOT.get());
                         output.accept(ModItems.ROSELIGHT_CHUNK.get());
 
-
-
-                        output.accept(ModItems.THUNDERIUM_HELMET.get());
-                        output.accept(ModItems.THUNDERIUM_CHESTPLATE.get());
-                        output.accept(ModItems.THUNDERIUM_LEGGINGS.get());
-                        output.accept(ModItems.THUNDERIUM_BOOTS.get());
-
                         output.accept(ModItems.TSC_FIBER.get());
                         output.accept(ModItems.RUBBER.get());
                         output.accept(ModItems.TSC_GLOVES.get());

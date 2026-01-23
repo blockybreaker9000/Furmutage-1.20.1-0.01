@@ -26,6 +26,7 @@ public class CraftingRestrictions {
     /**
      * Checks if an item is allowed to be crafted in normal crafting tables.
      * Returns false for Changed and Furmutage items.
+     * Exception: The eugenics crafting block can be crafted in normal crafting tables.
      */
     public static boolean isAllowedItem(Item item) {
         ResourceLocation itemId = ForgeRegistries.ITEMS.getKey(item);
@@ -34,6 +35,12 @@ public class CraftingRestrictions {
         }
         
         String namespace = itemId.getNamespace();
+        String path = itemId.getPath();
+        
+        // Exception: Eugenics crafting block can be crafted in normal crafting tables
+        if (namespace.equals("furmutage") && path.equals("eugenics_crafting_block")) {
+            return true;
+        }
         
         // Changed mod items (namespace: "changed")
         if (namespace.equals("changed")) {

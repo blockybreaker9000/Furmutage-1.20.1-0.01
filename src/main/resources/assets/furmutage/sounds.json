@@ -178,6 +178,12 @@
       "furmutage:tainted_horror_grass_place"
     ],
     "subtitle": "subtitles.furmutage.tainted_horror_grass_place"
+  },
+  "deep_hypno_cat_stare": {
+    "sounds": [
+      "furmutage:deep_hypno_cat_stare"
+    ],
+    "subtitle": "subtitles.furmutage.deep_hypno_cat_stare"
   }
 }
 

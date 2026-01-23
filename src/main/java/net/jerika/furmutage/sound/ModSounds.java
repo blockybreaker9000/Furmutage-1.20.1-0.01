@@ -106,9 +106,12 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_AMBIENT = registerSoundEvent("latex_mutant_bomber_ambient");
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_HURT = registerSoundEvent("latex_mutant_bomber_hurt");
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_DEATH = registerSoundEvent("latex_mutant_bomber_death");
-
+    
     // Tainted grass placement sound
     public static final RegistryObject<SoundEvent> TAINTED_HORROR_GRASS_PLACE = registerSoundEvent("tainted_horror_grass_place");
+
+    // Deep Cave Hypno Cat special stare sound
+    public static final RegistryObject<SoundEvent> DEEP_HYPNO_CAT_STARE = registerSoundEvent("deep_hypno_cat_stare");
 
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);

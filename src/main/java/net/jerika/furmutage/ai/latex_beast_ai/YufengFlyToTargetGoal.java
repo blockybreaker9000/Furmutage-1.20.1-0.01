@@ -14,6 +14,8 @@ import java.util.EnumSet;
 public class YufengFlyToTargetGoal extends Goal {
     private final Mob mob;
     private static final double FLY_HEIGHT = 4.0D; // Fly 4 blocks above target
+    private static final int COOLDOWN_TICKS = 20 * 120; // 2 minutes at 20 tps
+    private int cooldownRemaining = 0;
 
     public YufengFlyToTargetGoal(Mob mob) {
         this.mob = mob;
@@ -22,6 +24,12 @@ public class YufengFlyToTargetGoal extends Goal {
 
     @Override
     public boolean canUse() {
+        // Respect cooldown: do not start flying again until cooldown expires
+        if (cooldownRemaining > 0) {
+            cooldownRemaining--;
+            return false;
+        }
+
         LivingEntity target = mob.getTarget();
         if (target == null || !target.isAlive()) {
             return false;
@@ -47,16 +55,11 @@ public class YufengFlyToTargetGoal extends Goal {
             return false;
         }
 
-        // Stop flying once we're above the target
+        // Stop flying once we're sufficiently above the target
         double targetY = target.getY();
         double mobY = mob.getY();
         
-        // Stop if we're above the target (don't continue flying)
-        if (mobY > targetY + 0.5D) {
-            return false;
-        }
-        
-        // Continue flying if we're not high enough above target yet
+        // Continue flying until we reach the desired height above target
         return mobY < targetY + FLY_HEIGHT;
     }
 
@@ -145,6 +148,9 @@ public class YufengFlyToTargetGoal extends Goal {
         mob.setNoGravity(false);
         // Reset pose
         mob.setPose(Pose.STANDING);
+
+        // Start cooldown so this flying goal cannot activate again for 2 minutes
+        cooldownRemaining = COOLDOWN_TICKS;
     }
     
     /**

@@ -2,6 +2,7 @@ package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.furmutage;
+import net.jerika.furmutage.item.ModItems;
 import net.minecraftforge.event.furnace.FurnaceFuelBurnTimeEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -18,6 +19,18 @@ public class FuelHandler {
         // 1 item = 200 ticks, so 0.25 = 50 ticks
         if (event.getItemStack().getItem() == ModBlocks.TAINTED_WHITE_REED.get().asItem()) {
             event.setBurnTime(50);
+        }
+        
+        // Register dark latex clump as fuel (3 items = 600 ticks)
+        // 1 item = 200 ticks, so 3 items = 600 ticks
+        if (event.getItemStack().getItem() == ModItems.DARK_LATEX_CLUMP.get()) {
+            event.setBurnTime(600);
+        }
+        
+        // Register white latex clump as fuel (3 items = 600 ticks)
+        // 1 item = 200 ticks, so 3 items = 600 ticks
+        if (event.getItemStack().getItem() == ModItems.WHITE_LATEX_CLUMP.get()) {
+            event.setBurnTime(600);
         }
     }
 }

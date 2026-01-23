@@ -69,7 +69,9 @@ public class LivingEntityLadderClimbMixin {
     }
     
     /**
-     * Check if an entity should have ladder climbing (Changed entity, not roomba)
+     * Check if an entity should have ladder climbing.
+     * - All Changed entities except roomba
+     * - All Furmutage entities
      */
     private boolean shouldHaveLadderClimbing(LivingEntity entity) {
         ResourceLocation entityTypeId = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
@@ -78,7 +80,15 @@ public class LivingEntityLadderClimbMixin {
         }
         
         String entityId = entityTypeId.toString();
-        return entityId.startsWith("changed:") && !entityId.equals("changed:roomba");
+        // Changed entities (excluding roomba)
+        if (entityId.startsWith("changed:") && !entityId.equals("changed:roomba")) {
+            return true;
+        }
+        // All Furmutage entities
+        if (entityId.startsWith("furmutage:")) {
+            return true;
+        }
+        return false;
     }
 }
 

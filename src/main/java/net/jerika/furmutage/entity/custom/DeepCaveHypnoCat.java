@@ -11,6 +11,7 @@ import net.ltxprogrammer.changed.entity.TransfurCause;
 import net.ltxprogrammer.changed.entity.variant.TransfurVariant;
 import net.ltxprogrammer.changed.init.ChangedAbilities;
 import net.ltxprogrammer.changed.process.ProcessTransfur;
+import net.jerika.furmutage.sound.ModSounds;
 import net.ltxprogrammer.changed.util.Color3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +39,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.ServerLevelAccessor;
+
+import java.util.List;
 
 public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
     private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(DeepCaveHypnoCat.class, EntityDataSerializers.BYTE);
@@ -60,15 +64,31 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
     public void tick() {
         super.tick();
         if (!this.level().isClientSide) {
+            // Check if any player is looking directly at this entity
+            boolean isBeingWatched = isAnyPlayerLookingAtMe();
+            
+            // If being watched, freeze movement
+            if (isBeingWatched) {
+                // Stop navigation
+                this.getNavigation().stop();
+                // Stop movement
+                this.setDeltaMovement(0, this.getDeltaMovement().y, 0);
+                // Prevent AI goals from running by temporarily disabling movement
+                this.goalSelector.disableControlFlag(Goal.Flag.MOVE);
+            } else {
+                // Re-enable movement when not being watched
+                this.goalSelector.enableControlFlag(Goal.Flag.MOVE);
+            }
+            
             // Improved climbing detection - only when actively moving into a wall
             boolean canClimb = false;
             Vec3 movement = this.getDeltaMovement();
             boolean isMovingForward = Math.abs(movement.x) > 0.01 || Math.abs(movement.z) > 0.01;
             
-            // Only climb if we're hitting a wall AND moving forward
-            if (this.horizontalCollision && isMovingForward) {
+            // Only climb if we're hitting a wall AND moving forward AND not being watched
+            if (!isBeingWatched && this.horizontalCollision && isMovingForward) {
                 canClimb = true;
-            } else if (this.getTarget() != null && this.getTarget().getY() > this.getY() + 1.0 && isMovingForward) {
+            } else if (!isBeingWatched && this.getTarget() != null && this.getTarget().getY() > this.getY() + 1.0 && isMovingForward) {
                 // Target is above, try to climb towards it
                 BlockPos pos = this.blockPosition();
                 Direction facing = Direction.fromYRot(this.getYRot());
@@ -81,6 +101,38 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
             
             this.setClimbing(canClimb);
         }
+    }
+    
+    /**
+     * Checks if any nearby player is looking directly at this entity.
+     * Uses a 35-degree cone check (similar to ExoFollowBehindGoal).
+     */
+    private boolean isAnyPlayerLookingAtMe() {
+        List<Player> players = this.level().getEntitiesOfClass(
+            Player.class,
+            this.getBoundingBox().inflate(32.0D, 16.0D, 32.0D),
+            player -> player != null && player.isAlive() && !player.isSpectator()
+        );
+        
+        for (Player player : players) {
+            if (isPlayerLookingAtMe(player)) {
+                return true;
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Checks if a specific player is looking at this entity.
+     * Uses dot product to check if player's look direction is within a 35-degree cone.
+     */
+    private boolean isPlayerLookingAtMe(Player player) {
+        Vec3 playerLook = player.getViewVector(1.0F).normalize();
+        Vec3 toEntity = this.position().subtract(player.position()).normalize();
+        double dot = playerLook.dot(toEntity);
+        // cos(35°) ~ 0.82, so > 0.82 means roughly within a 35-degree cone
+        return dot > 0.82D && player.hasLineOfSight(this);
     }
 
     @Override
@@ -178,6 +230,18 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
 
     @Override
     public boolean doHurtTarget(Entity entity) {
+        // Play hypno stare sound when affecting a player
+        if (entity instanceof Player && !this.level().isClientSide) {
+            this.level().playSound(
+                    null,
+                    this.getX(), this.getY(), this.getZ(),
+                    ModSounds.DEEP_HYPNO_CAT_STARE.get(),
+                    SoundSource.HOSTILE,
+                    1.0F,
+                    1.0F
+            );
+        }
+
         // Instantly transfur specific humanoid entities into this entity type
         if (entity instanceof LivingEntity livingEntity && !(entity instanceof Player) && !this.level().isClientSide) {
             if ((entity instanceof Skeleton || entity instanceof Zombie || entity instanceof Raider || entity instanceof Villager)
