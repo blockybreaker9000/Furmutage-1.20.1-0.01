@@ -38,6 +38,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private boolean needsCrawlJump = false; // Flag to track if we need to crawl then jump through a gap
     private int crawlPrepTime = 0; // Time spent preparing to jump (crawling first)
     private static final int CRAWL_PREP_TIME = 5; // Crawl for 5 ticks before jumping
+    private int crawlDuration = 0; // How long the entity has been crawling
+    private static final int MIN_CRAWL_DURATION = 30; // Must crawl for 30 ticks (1.5 seconds)
 
     public ChangedEntityImprovedPathfindingGoal(PathfinderMob mob) {
         this.mob = mob;
@@ -63,6 +65,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         crawlCheckCooldown = 0;
         needsCrawlJump = false;
         crawlPrepTime = 0;
+        crawlDuration = 0;
     }
 
     @Override
@@ -71,6 +74,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         isJumping = false;
         needsCrawlJump = false;
         crawlPrepTime = 0;
+        crawlDuration = 0;
         // Reset crawling pose when stopping
         if (isCrawling) {
             this.mob.setPose(Pose.STANDING);
@@ -84,14 +88,23 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             return;
         }
 
+        // Decrement crawl duration timer
+        if (isCrawling && crawlDuration > 0) {
+            crawlDuration--;
+        }
+        
         // Reset jumping state when on ground
         if (this.mob.onGround() && isJumping && jumpCooldown <= 5) {
             this.mob.setJumping(false);
             isJumping = false;
             // Exit crawl mode after landing if we were crawling for a jump
-            if (isCrawling && !isInCrawlSpace() && !needsCrawlJump) {
-                this.mob.setPose(Pose.STANDING);
-                isCrawling = false;
+            // But only if we've been crawling for the minimum duration or we're in a crawl space
+            if (isCrawling && !needsCrawlJump) {
+                if (crawlDuration <= 0 || isInCrawlSpace()) {
+                    this.mob.setPose(Pose.STANDING);
+                    isCrawling = false;
+                    crawlDuration = 0;
+                }
             }
         }
 
@@ -122,14 +135,28 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             if (needsCrawling() || isBlockBetweenEntityAndTarget()) {
                 // Always crouch when there's any block obstruction
                 performCrawling();
-            } else if (isCrawling && !isInCrawlSpace() && !needsCrawlJump && !isBlockBetweenEntityAndTarget()) {
-                // Only stop crawling if we're no longer in a crawl space, not preparing to jump, and no blocks in the way
-                this.mob.setPose(Pose.STANDING);
-                isCrawling = false;
+            } else if (isCrawling && !needsCrawlJump && !isBlockBetweenEntityAndTarget()) {
+                // Only stop crawling if:
+                // 1. We've been crawling for the minimum duration (30 ticks) OR
+                // 2. We're in a 1x1 block gap (crawl space)
+                if (crawlDuration <= 0 || isInCrawlSpace()) {
+                    this.mob.setPose(Pose.STANDING);
+                    isCrawling = false;
+                    crawlDuration = 0;
+                }
             }
             crawlCheckCooldown = CRAWL_CHECK_COOLDOWN;
         } else if (crawlCheckCooldown > 0) {
             crawlCheckCooldown--;
+        }
+        
+        // If entity is in crawl mode, check if they can climb blocks
+        if (isCrawling && this.mob.onGround() && !isJumping) {
+            BlockPos climbableBlockPos = findClimbableBlockInCrawlMode();
+            if (climbableBlockPos != null) {
+                performCrawlClimb(climbableBlockPos);
+                return; // Don't do other pathfinding while climbing
+            }
         }
         
         // Handle crawl-then-jump sequence for 1-block gaps
@@ -139,6 +166,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
                 this.mob.setPose(Pose.SWIMMING);
                 isCrawling = true;
                 crawlPrepTime = 0;
+                crawlDuration = MIN_CRAWL_DURATION; // Set crawl duration when entering crawl mode
             } else {
                 crawlPrepTime++;
                 // After crawling for a bit, perform the jump
@@ -159,28 +187,29 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             }
         }
         
-        // Check for obstacles in the way
-        if (jumpCooldown <= 0 && this.mob.onGround() && distanceSqr > 6.0D && !needsCrawlJump) {
+        // Check for obstacles in the way - allow jumping even when crawling
+        if (jumpCooldown <= 0 && this.mob.onGround() && distanceSqr > 6.0D) {
             // Check if target is higher than 2 blocks - prioritize jumping towards elevated targets
             double heightDiff = this.target.getY() - this.mob.getY();
             if (heightDiff > MIN_TARGET_HEIGHT_DIFF && heightDiff <= MAX_JUMP_HEIGHT) {
-                // Target is between 2 and 5 blocks higher - jump towards it
+                // Target is between 2 and 5 blocks higher - jump towards it (works while crawling)
                 performJumpTowardsTarget();
             }
             // Check for 1-block gap one block above ground (crawl then jump through opening)
-            else if (isOneBlockGapAboveGround()) {
+            // Only trigger crawl jump sequence if not already crawling
+            else if (!isCrawling && isOneBlockGapAboveGround()) {
                 needsCrawlJump = true;
                 crawlPrepTime = 0;
             }
-            // Check for block obstacle first (jump over blocks in the way)
+            // Check for block obstacle first (jump over blocks in the way) - allow even when crawling
             else if (isBlockObstacleAhead()) {
                 performObstacleJump();
             }
-            // Check for gap ahead
+            // Check for gap ahead - allow even when crawling
             else if (isGapAhead()) {
                 performGapJump();
             }
-            // Check if target is 2 blocks above us, and we need to jump up (legacy check)
+            // Check if target is 2 blocks above us, and we need to jump up (legacy check) - allow even when crawling
             else if (isTarget2BlocksHigher() && distanceSqr <= JUMP_DISTANCE * JUMP_DISTANCE) {
                 performVerticalJump();
             }
@@ -939,7 +968,12 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private void performCrawling() {
         // Always set pose to SWIMMING (crawling pose in Minecraft) - 100% of the time
         this.mob.setPose(Pose.SWIMMING);
-        isCrawling = true;
+        
+        // If we're just entering crawl mode, set the duration timer
+        if (!isCrawling) {
+            isCrawling = true;
+            crawlDuration = MIN_CRAWL_DURATION; // Must crawl for 30 ticks
+        }
         
         // Move towards the target while crawling
         double baseSpeed = this.mob.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
@@ -1028,6 +1062,122 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         boolean hasBlockAbove = !currentHeadBlock.isAir() && !currentHeadBlock.getCollisionShape(this.mob.level(), currentHeadPos).isEmpty();
         
         return hasBlockAhead || hasBlockAbove;
+    }
+    
+    /**
+     * Find a climbable block in front of the entity when in crawl mode.
+     * Checks for solid blocks that the entity can climb up.
+     */
+    private BlockPos findClimbableBlockInCrawlMode() {
+        BlockPos mobPos = this.mob.blockPosition();
+        Vec3 lookVec = this.mob.getLookAngle();
+        
+        // Check the block directly in front of the entity
+        BlockPos frontPos = mobPos.offset(
+            (int) Math.signum(lookVec.x),
+            0,
+            (int) Math.signum(lookVec.z)
+        );
+        
+        // Check if there's a solid block in front at ground level
+        BlockState frontBlock = this.mob.level().getBlockState(frontPos);
+        boolean hasSolidBlock = !frontBlock.isAir() && !frontBlock.getCollisionShape(this.mob.level(), frontPos).isEmpty();
+        
+        // Check if there's air above the front block (so we can climb up onto it)
+        BlockPos aboveFrontPos = frontPos.above();
+        BlockState aboveFrontBlock = this.mob.level().getBlockState(aboveFrontPos);
+        boolean hasAirAbove = aboveFrontBlock.isAir() || aboveFrontBlock.getCollisionShape(this.mob.level(), aboveFrontPos).isEmpty();
+        
+        // Check if there's space for the entity to stand on top (at least 2 blocks of air above the block)
+        BlockPos topPos = frontPos.above(2);
+        BlockState topBlock = this.mob.level().getBlockState(topPos);
+        boolean hasSpaceOnTop = topBlock.isAir() || topBlock.getCollisionShape(this.mob.level(), topPos).isEmpty();
+        
+        // Also check if target is above us or in the direction we're trying to climb
+        boolean targetIsAbove = this.target != null && this.target.getY() > this.mob.getY();
+        Vec3 toTarget = this.target != null ? new Vec3(
+            this.target.getX() - this.mob.getX(),
+            0,
+            this.target.getZ() - this.mob.getZ()
+        ).normalize() : lookVec;
+        double alignment = lookVec.dot(toTarget);
+        
+        // Can climb if:
+        // 1. There's a solid block in front
+        // 2. There's air above it (can climb onto it)
+        // 3. There's space for the entity to stand on top
+        // 4. Target is above us or we're moving towards the target
+        if (hasSolidBlock && hasAirAbove && hasSpaceOnTop && (targetIsAbove || alignment > 0.3)) {
+            return frontPos;
+        }
+        
+        // Also check diagonally (for corner climbing)
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                if (x == 0 && z == 0) continue; // Skip center
+                if (Math.abs(x) + Math.abs(z) > 1) continue; // Only check adjacent blocks
+                
+                BlockPos checkPos = mobPos.offset(x, 0, z);
+                BlockState checkBlock = this.mob.level().getBlockState(checkPos);
+                boolean isSolid = !checkBlock.isAir() && !checkBlock.getCollisionShape(this.mob.level(), checkPos).isEmpty();
+                
+                if (isSolid) {
+                    BlockPos aboveCheckPos = checkPos.above();
+                    BlockState aboveCheckBlock = this.mob.level().getBlockState(aboveCheckPos);
+                    boolean hasAirAboveCheck = aboveCheckBlock.isAir() || aboveCheckBlock.getCollisionShape(this.mob.level(), aboveCheckPos).isEmpty();
+                    
+                    BlockPos topCheckPos = checkPos.above(2);
+                    BlockState topCheckBlock = this.mob.level().getBlockState(topCheckPos);
+                    boolean hasSpaceOnTopCheck = topCheckBlock.isAir() || topCheckBlock.getCollisionShape(this.mob.level(), topCheckPos).isEmpty();
+                    
+                    if (hasAirAboveCheck && hasSpaceOnTopCheck && (targetIsAbove || alignment > 0.3)) {
+                        return checkPos;
+                    }
+                }
+            }
+        }
+        
+        return null;
+    }
+    
+    /**
+     * Make the entity climb up a block when in crawl mode.
+     */
+    private void performCrawlClimb(BlockPos climbPos) {
+        Vec3 mobPos = this.mob.position();
+        Vec3 targetPos = new Vec3(
+            climbPos.getX() + 0.5,
+            climbPos.getY() + 1.0, // Target the top of the block
+            climbPos.getZ() + 0.5
+        );
+        
+        // Calculate direction to the climb position
+        Vec3 direction = targetPos.subtract(mobPos);
+        double distance = direction.length();
+        
+        if (distance < 0.1) {
+            // We're at the block, move upward
+            this.mob.setDeltaMovement(this.mob.getDeltaMovement().x, 0.3D, this.mob.getDeltaMovement().z);
+        } else {
+            // Move towards the block and upward
+            direction = direction.normalize();
+            double baseSpeed = this.mob.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
+            double climbSpeed = baseSpeed * 0.6; // Slower when climbing in crawl mode
+            
+            // Apply upward movement
+            Vec3 movement = new Vec3(
+                direction.x * climbSpeed * 0.3,
+                0.3D, // Upward movement
+                direction.z * climbSpeed * 0.3
+            );
+            this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(movement));
+            
+            // Also use navigation to move towards the block
+            this.mob.getNavigation().moveTo(targetPos.x, targetPos.y, targetPos.z, climbSpeed);
+        }
+        
+        // Look at the climb position
+        this.mob.getLookControl().setLookAt(targetPos.x, targetPos.y, targetPos.z, 30.0F, 30.0F);
     }
 }
 

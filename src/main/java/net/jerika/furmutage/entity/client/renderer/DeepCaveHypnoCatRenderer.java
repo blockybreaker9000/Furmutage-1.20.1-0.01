@@ -12,7 +12,13 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Block;
 
 public class DeepCaveHypnoCatRenderer extends MobRenderer<DeepCaveHypnoCat, DeepCaveHypnoCatModel> {
     public DeepCaveHypnoCatRenderer(EntityRendererProvider.Context context) {
@@ -40,11 +46,15 @@ public class DeepCaveHypnoCatRenderer extends MobRenderer<DeepCaveHypnoCat, Deep
         int skyLight = entity.level().getBrightness(LightLayer.SKY, pos);
         int totalLight = Math.max(blockLight, skyLight);
         
+        // Check if any nearby player is holding a light source
+        boolean playerHasLightSource = isPlayerHoldingLightSource(entity, 16.0D);
+        
         // Calculate alpha based on light level (0-15 scale)
         // No light (0) = invisible (alpha 0.0), full light (15) = fully visible (alpha 1.0)
-        float alpha = Mth.clamp(totalLight / 15.0F, 0.0F, 1.0F);
+        // If player has light source, make fully visible
+        float alpha = playerHasLightSource ? 1.0F : Mth.clamp(totalLight / 15.0F, 0.0F, 1.0F);
         
-        // If completely dark, don't render at all
+        // If completely dark and no player with light source, don't render at all
         if (alpha <= 0.0F) {
             return;
         }
@@ -56,5 +66,69 @@ public class DeepCaveHypnoCatRenderer extends MobRenderer<DeepCaveHypnoCat, Deep
         
         // Reset color
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+    
+    /**
+     * Check if any player within range is holding a light source item or block
+     */
+    private boolean isPlayerHoldingLightSource(DeepCaveHypnoCat entity, double range) {
+        if (entity.level() == null) {
+            return false;
+        }
+        
+        for (Player player : entity.level().players()) {
+            if (player.distanceToSqr(entity) <= range * range) {
+                // Check main hand
+                ItemStack mainHand = player.getMainHandItem();
+                if (isLightSource(mainHand)) {
+                    return true;
+                }
+                
+                // Check off hand
+                ItemStack offHand = player.getOffhandItem();
+                if (isLightSource(offHand)) {
+                    return true;
+                }
+            }
+        }
+        
+        return false;
+    }
+    
+    /**
+     * Check if an item stack is a light source
+     */
+    private boolean isLightSource(ItemStack stack) {
+        if (stack.isEmpty()) {
+            return false;
+        }
+        
+        Item item = stack.getItem();
+        
+        // Check if it's a block item with light emission
+        if (item instanceof BlockItem blockItem) {
+            Block block = blockItem.getBlock();
+            // Check if block emits light (light emission > 0)
+            if (block.defaultBlockState().getLightEmission() > 0) {
+                return true;
+            }
+        }
+        
+        // Check for common light source items
+        return item == Items.TORCH ||
+               item == Items.SOUL_TORCH ||
+               item == Items.REDSTONE_TORCH ||
+               item == Items.LANTERN ||
+               item == Items.SOUL_LANTERN ||
+               item == Items.GLOWSTONE ||
+               item == Items.SEA_LANTERN ||
+               item == Items.SHROOMLIGHT ||
+               item == Items.CANDLE ||
+               item == Items.JACK_O_LANTERN ||
+               item == Items.BEACON ||
+               item == Items.END_ROD ||
+               item == Items.CAMPFIRE ||
+               item == Items.SOUL_CAMPFIRE ||
+               item == Items.MAGMA_BLOCK;
     }
 }

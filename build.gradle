@@ -176,12 +176,18 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    
+    // LostCities local JAR location (similar to Changed mod)
+    flatDir {
+        dirs 'libs/lostcities'
+    }
 
     maven {
         url "https://cursemaven.com"
     }
 
     maven {
+        name = "TheIllusiveC4"
         url = "https://maven.theillusivec4.top/"
     }
     
@@ -190,6 +196,12 @@ repositories {
     maven {
         name = "Changed"
         url = "https://raw.githubusercontent.com/LtxProgrammer/Changed-Minecraft-Mod/0.15-features/mcmodsrepo/"
+    }
+    
+    // McJty's maven repository for LostCities
+    maven {
+        name = "McJty"
+        url = "https://maven.k-4u.nl/"
     }
 }
 
@@ -226,9 +238,27 @@ dependencies {
     // Curios API dependency
     // Note: If version doesn't work, check available versions at:
     // https://maven.theillusivec4.top/top/theillusivec4/curios/curios-forge/
-    // Or use CurseMaven: runtimeOnly fg.deobf("curse.maven:curios-309927:VERSION_ID")
+    // fg.deobf() will handle deobfuscation and mapping automatically
+    // The repository at maven.theillusivec4.top should provide the mapped versions
     runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
+    
+    // LostCities mod dependency
+    // Using local JAR approach (similar to Changed mod)
+    // 
+    // SETUP INSTRUCTIONS:
+    // 1. Download LostCities for 1.20.1 from CurseForge:
+    //    https://www.curseforge.com/minecraft/mc-mods/lost-cities/files/all?filter-game-version=1738749986%3A6756
+    // 2. Place the JAR file in libs/lostcities/ folder
+    // 3. Rename it to: lostcities-1.20-7.4.11.jar (or update the file path below)
+    // 4. Uncomment the line below once the JAR is in place
+    //
+    // Note: Make sure the version is compatible with Forge 47.4.0
+    // If you get mapping errors, try a different version
+    //
+    // Using file dependency for local JAR (won't try to find mapped versions)
+    // Uncomment when JAR is placed in libs/lostcities/
+    // implementation fg.deobf(files("libs/lostcities/lostcities-1.20-7.4.11.jar"))
 
     // Mod dependencies from CurseForge instance
     // These mods are already compiled jars - they will be loaded at runtime from run/mods/ automatically

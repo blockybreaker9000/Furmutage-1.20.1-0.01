@@ -167,6 +167,10 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> THUNDERIUM_GLASS_SHARD = ITEMS.register("thunderium_glass_shard",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_ROD = ITEMS.register("roselight_glass_rod",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_GLASS_ROD = ITEMS.register("thunderium_glass_rod",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROSELIGHT_CHUNK = ITEMS.register("roselight_chunk",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> THUNDERIUM_CHUNK = ITEMS.register("thunderium_chunk",

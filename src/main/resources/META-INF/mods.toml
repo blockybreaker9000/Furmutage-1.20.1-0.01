@@ -70,3 +70,10 @@ description="cool description"
     versionRange="[0,)"
     ordering="NONE"
     side="BOTH"
+
+[[dependencies.furmutage]]
+    modId="lostcities"
+    mandatory=false
+    versionRange="[0,)"
+    ordering="NONE"
+    side="BOTH"

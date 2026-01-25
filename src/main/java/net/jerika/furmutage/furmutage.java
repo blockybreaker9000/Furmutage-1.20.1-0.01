@@ -83,6 +83,15 @@ public class furmutage {
         ModSounds.register(modEventBus);
 
         ModEntities.register(modEventBus);
+        
+        // Register dimension components
+        net.jerika.furmutage.worldgen.dimension.ModBiomes.BIOMES.register(modEventBus);
+        net.jerika.furmutage.worldgen.dimension.WastelandBiomeSource.BIOME_SOURCES.register(modEventBus);
+        net.jerika.furmutage.worldgen.dimension.WastelandChunkGenerator.CHUNK_GENERATORS.register(modEventBus);
+        net.jerika.furmutage.worldgen.dimension.ModDimensions.LEVEL_STEMS.register(modEventBus);
+        
+        // Register structures
+        net.jerika.furmutage.worldgen.structure.LostCityStructure.STRUCTURE_TYPES.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfig.SPEC, "furmutage-common.toml");
 

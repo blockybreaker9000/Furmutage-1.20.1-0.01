@@ -12,10 +12,11 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
 /**
- * Custom behavior for the Changed mod's latex_shark_feral entity:
- * - When it successfully attacks something, it "grabs" the target by making it ride the shark.
- * - While grabbed, the target stays mounted on the shark.
- * - Once the shark reaches half of its maximum health, it ejects all passengers.
+ * Custom behavior for grab entities:
+ * - latex_shark_feral: When it successfully attacks something, it "grabs" the target by making it ride the shark.
+ * - DeepSlateLatexSquidDog: Same grab behavior as the feral shark.
+ * - While grabbed, the target stays mounted on the entity.
+ * - Once the entity reaches half of its maximum health, it ejects all passengers.
  *
  * This uses registry name checks so we don't need direct access to the Changed entity class.
  */
@@ -24,6 +25,8 @@ public class LatexSharkGrabEvents {
 
     private static final ResourceLocation LATEX_SHARK_FERAL_ID =
             new ResourceLocation("changed", "latex_shark_feral");
+    private static final ResourceLocation DEEPSLATE_LATEX_SQUID_DOG_ID =
+            new ResourceLocation("furmutage", "deepslate_latex_squid_dog");
 
     private static boolean isLatexSharkFeral(Entity entity) {
         if (!(entity instanceof LivingEntity living)) {
@@ -32,10 +35,22 @@ public class LatexSharkGrabEvents {
         var id = ForgeRegistries.ENTITY_TYPES.getKey(living.getType());
         return LATEX_SHARK_FERAL_ID.equals(id);
     }
+    
+    private static boolean isDeepSlateLatexSquidDog(Entity entity) {
+        if (!(entity instanceof LivingEntity living)) {
+            return false;
+        }
+        var id = ForgeRegistries.ENTITY_TYPES.getKey(living.getType());
+        return DEEPSLATE_LATEX_SQUID_DOG_ID.equals(id);
+    }
+    
+    private static boolean isGrabEntity(Entity entity) {
+        return isLatexSharkFeral(entity) || isDeepSlateLatexSquidDog(entity);
+    }
 
     /**
-     * When latex_shark_feral successfully attacks a target, make the target ride the shark
-     * (simulating a grab / bite). The shark keeps hitting the grabbed target as normal.
+     * When a grab entity (latex_shark_feral or DeepSlateLatexSquidDog) successfully attacks a target,
+     * make the target ride the entity (simulating a grab / bite). The entity keeps hitting the grabbed target as normal.
      */
     @SubscribeEvent
     public static void onLivingAttack(LivingAttackEvent event) {
@@ -47,25 +62,25 @@ public class LatexSharkGrabEvents {
             return;
         }
 
-        if (!isLatexSharkFeral(attacker)) {
+        if (!isGrabEntity(attacker)) {
             return;
         }
 
-        LivingEntity shark = (LivingEntity) attacker;
+        LivingEntity grabEntity = (LivingEntity) attacker;
 
-        // Don't grab if shark is already carrying something or target is already riding
-        if (shark.isVehicle() || target.isPassenger()) {
+        // Don't grab if entity is already carrying something or target is already riding
+        if (grabEntity.isVehicle() || target.isPassenger()) {
             return;
         }
 
-        // Start riding: target becomes a passenger of the shark
+        // Start riding: target becomes a passenger of the entity
         // 'true' forces the mount even if target is already riding something else
-        target.startRiding(shark, true);
+        target.startRiding(grabEntity, true);
     }
 
     /**
-     * Each tick, if a latex_shark_feral is carrying a passenger and its health
-     * drops to half or below, eject all passengers (release the grabbed entity).
+     * Each tick, if a grab entity (latex_shark_feral or DeepSlateLatexSquidDog) is carrying a passenger
+     * and its health drops to half or below, eject all passengers (release the grabbed entity).
      */
     @SubscribeEvent
     public static void onSharkTick(LivingEvent.LivingTickEvent event) {
@@ -75,19 +90,19 @@ public class LatexSharkGrabEvents {
             return;
         }
 
-        if (!isLatexSharkFeral(entity)) {
+        if (!isGrabEntity(entity)) {
             return;
         }
 
-        LivingEntity shark = entity;
+        LivingEntity grabEntity = entity;
 
-        if (!shark.isVehicle()) {
+        if (!grabEntity.isVehicle()) {
             return; // Not carrying anyone
         }
 
-        float halfHealth = shark.getMaxHealth() * 0.5f;
-        if (shark.getHealth() <= halfHealth) {
-            shark.ejectPassengers();
+        float halfHealth = grabEntity.getMaxHealth() * 0.5f;
+        if (grabEntity.getHealth() <= halfHealth) {
+            grabEntity.ejectPassengers();
         }
     }
 }
