@@ -75,6 +75,22 @@ public class LatexTeamEvents {
         if (!LatexTeamConfig.isEntityInTeam(mobType)) {
             return;
         }
+        int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
+        
+        // Hard rule: entities on the same team are always passive toward each other.
+        // If this mob is currently targeting a same-team entity, clear the target.
+        LivingEntity currentTarget = mob.getTarget();
+        if (currentTarget != null) {
+            String targetType = ForgeRegistries.ENTITY_TYPES.getKey(currentTarget.getType()).toString();
+            if (LatexTeamConfig.isEntityInTeam(targetType)) {
+                int targetTeam = LatexTeamConfig.getTeamForEntity(targetType);
+                if (mobTeam != 0 && mobTeam == targetTeam) {
+                    mob.setTarget(null);
+                    mob.setLastHurtByMob(null);
+                    return; // Don't process further AI this tick for friendly target
+                }
+            }
+        }
         
         if (!mob.isAlive()) {
             teamEntities.remove(mob);
@@ -88,7 +104,7 @@ public class LatexTeamEvents {
             return;
         }
         
-        LivingEntity currentTarget = mob.getTarget();
+        currentTarget = mob.getTarget();
         
         // Priority 1: Check if entity has an attacker (lastHurtByMob) - prioritize attacker over team targeting
         LivingEntity attacker = mob.getLastHurtByMob();
@@ -103,7 +119,6 @@ public class LatexTeamEvents {
             if (currentTarget != attacker) {
                 mob.setTarget(attacker);
                 String attackerType = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
-                int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
                 String mobTeamName = mobTeam == 1 ? "White" : "Dark";
                 furmutage.LOGGER.info("[LatexTeamEvents] {} ({}) -> ATTACKER {} distance: {}", 
                         mobType, mobTeamName,
@@ -148,7 +163,6 @@ public class LatexTeamEvents {
                     mob.setTarget(nearestEnemy);
                     mob.setLastHurtByMob(nearestEnemy);
                     String enemyType = ForgeRegistries.ENTITY_TYPES.getKey(nearestEnemy.getType()).toString();
-                    int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
                     int enemyTeam = LatexTeamConfig.getTeamForEntity(enemyType);
                     String mobTeamName = mobTeam == 1 ? "White" : "Dark";
                     String enemyTeamName = enemyTeam == 1 ? "White" : "Dark";
@@ -176,7 +190,6 @@ public class LatexTeamEvents {
                     mob.swing(InteractionHand.MAIN_HAND);
                     mob.doHurtTarget(currentTarget);
                     String targetType = ForgeRegistries.ENTITY_TYPES.getKey(currentTarget.getType()).toString();
-                    int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
                     int targetTeam = LatexTeamConfig.getTeamForEntity(targetType);
                     String mobTeamName = mobTeam == 1 ? "White" : "Dark";
                     String targetTeamName = targetTeam == 1 ? "White" : "Dark";
@@ -245,13 +258,15 @@ public class LatexTeamEvents {
             return;
         }
         
-        // Don't aggro if attacker is on the same team
+        // Don't aggro or allow damage if attacker is on the same team
         String attackerType = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
         if (LatexTeamConfig.isEntityInTeam(attackerType)) {
             int attackedTeam = LatexTeamConfig.getTeamForEntity(attackedType);
             int attackerTeam = LatexTeamConfig.getTeamForEntity(attackerType);
             if (attackedTeam == attackerTeam) {
-                return; // Same team, no horde aggro
+                // Same team: cancel the attack entirely so team members are always passive
+                event.setCanceled(true);
+                return;
             }
         }
         

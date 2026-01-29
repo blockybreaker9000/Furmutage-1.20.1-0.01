@@ -7,11 +7,9 @@ import net.jerika.furmutage.furmutage;
 import net.ltxprogrammer.changed.client.animations.Limb;
 import net.ltxprogrammer.changed.client.renderer.animate.AnimatorPresets;
 import net.ltxprogrammer.changed.client.renderer.animate.HumanoidAnimator;
-import net.ltxprogrammer.changed.client.renderer.model.CorrectorType;
 import net.ltxprogrammer.changed.client.tfanimations.HelperModel;
 import net.ltxprogrammer.changed.client.tfanimations.TransfurHelper;
 import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModel;
-import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModelInterface;
 import net.ltxprogrammer.changed.client.renderer.model.DoubleArmedModel;
 import net.ltxprogrammer.changed.entity.ChangedEntity;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -24,7 +22,7 @@ import net.minecraft.world.entity.HumanoidArm;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DeepSlateLatexSquidDogFemaleModel extends AdvancedHumanoidModel<DeepSlateLatexSquidDog> implements AdvancedHumanoidModelInterface<DeepSlateLatexSquidDog, DeepSlateLatexSquidDogFemaleModel>, DoubleArmedModel<DeepSlateLatexSquidDog> {
+public class DeepSlateLatexSquidDogFemaleModel extends AdvancedHumanoidModel<DeepSlateLatexSquidDog> implements DoubleArmedModel<DeepSlateLatexSquidDog> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "deepslate_latex_squid_dog_female"), "main");
     private final ModelPart Head;
@@ -284,24 +282,6 @@ public class DeepSlateLatexSquidDogFemaleModel extends AdvancedHumanoidModel<Dee
         RightArm2.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
         LeftLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
         RightLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay, red, green, blue, alpha);
-    }
-
-    @Override
-    public void prepareMobModel(DeepSlateLatexSquidDog p_102861_, float p_102862_, float p_102863_, float p_102864_) {
-        this.prepareMobModel(animator, p_102861_, p_102862_, p_102863_, p_102864_);
-    }
-
-    @Override
-    public void setupAnim(DeepSlateLatexSquidDog entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        animator.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-    }
-
-    public PoseStack getPlacementCorrectors(CorrectorType type) {
-        PoseStack corrector = AdvancedHumanoidModelInterface.super.getPlacementCorrectors(type);
-        /*if (type.isArm())
-            corrector.translate(0.0f, -6f / 16.0f, 0.0f);*/
-        return corrector;
     }
 
     @Override

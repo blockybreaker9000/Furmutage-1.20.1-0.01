@@ -217,18 +217,15 @@ public class ChangedStyleHumanoidGenerator {
         code.append("import net.ltxprogrammer.changed.client.renderer.animate.AnimatorPresets;\n");
         code.append("import net.ltxprogrammer.changed.client.renderer.animate.HumanoidAnimator;\n");
         code.append("import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModel;\n");
-        code.append("import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModelInterface;\n");
         code.append("import net.minecraft.client.model.geom.ModelLayerLocation;\n");
         code.append("import net.minecraft.client.model.geom.ModelPart;\n");
         code.append("import net.minecraft.client.model.geom.PartPose;\n");
         code.append("import net.minecraft.client.model.geom.builders.*;\n");
-        code.append("import net.minecraft.world.entity.HumanoidArm;\n");
-        code.append("import org.jetbrains.annotations.NotNull;\n\n");
+        code.append("import net.minecraft.world.entity.HumanoidArm;\n\n");
         code.append("import java.util.List;\n\n");
         
         code.append("public class ").append(modelClassName)
-            .append(" extends AdvancedHumanoidModel<").append(entityClassName).append("> ")
-            .append("implements AdvancedHumanoidModelInterface<").append(entityClassName).append(", ").append(modelClassName).append("> {\n");
+            .append(" extends AdvancedHumanoidModel<").append(entityClassName).append("> {\n");
         
         code.append("    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(\n");
         code.append("            new net.minecraft.resources.ResourceLocation(furmutage.MOD_ID, \"").append(getSnakeCase(config.entityName)).append("\"), \"main\");\n\n");
@@ -363,23 +360,9 @@ public class ChangedStyleHumanoidGenerator {
         code.append("\n        return LayerDefinition.create(meshdefinition, 128, 128);\n");
         code.append("    }\n\n");
         
-        // prepareMobModel
-        code.append("    @Override\n");
-        code.append("    public void prepareMobModel(").append(entityClassName).append(" p_102861_, float p_102862_, float p_102863_, float p_102864_) {\n");
-        code.append("        this.prepareMobModel(animator, p_102861_, p_102862_, p_102863_, p_102864_);\n");
-        code.append("    }\n\n");
-        
         // setupHand
         code.append("    public void setupHand(").append(entityClassName).append(" entity) {\n");
         code.append("        animator.setupHand();\n");
-        code.append("    }\n\n");
-        
-        // setupAnim
-        code.append("    @Override\n");
-        code.append("    public void setupAnim(@NotNull ").append(entityClassName)
-            .append(" entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {\n");
-        code.append("        animator.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);\n");
-        code.append("        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);\n");
         code.append("    }\n\n");
         
         // getArm

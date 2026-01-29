@@ -6,7 +6,6 @@ import net.jerika.furmutage.entity.custom.GiantPureWhiteLatexEntity;
 import net.ltxprogrammer.changed.client.renderer.animate.AnimatorPresets;
 import net.ltxprogrammer.changed.client.renderer.animate.HumanoidAnimator;
 import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModel;
-import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModelInterface;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -15,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class GiantPureWhiteLatexModel<T extends GiantPureWhiteLatexEntity> extends AdvancedHumanoidModel<T> implements AdvancedHumanoidModelInterface<T, GiantPureWhiteLatexModel<T>> {
+public class GiantPureWhiteLatexModel<T extends GiantPureWhiteLatexEntity> extends AdvancedHumanoidModel<T> {
 	private final HumanoidAnimator<T, GiantPureWhiteLatexModel<T>> animator;
 	private final ModelPart RightLeg;
 	private final ModelPart LeftLeg;
@@ -131,19 +130,8 @@ public class GiantPureWhiteLatexModel<T extends GiantPureWhiteLatexEntity> exten
 		return LayerDefinition.create(meshdefinition, 96, 96);
 	}
 
-	@Override
-	public void prepareMobModel(T p_102861_, float p_102862_, float p_102863_, float p_102864_) {
-		this.prepareMobModel(animator, p_102861_, p_102862_, p_102863_, p_102864_);
-	}
-
 	public void setupHand(T entity) {
 		animator.setupHand();
-	}
-
-	@Override
-	public void setupAnim(@NotNull T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-		animator.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-		super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
 	}
 
 	@Override

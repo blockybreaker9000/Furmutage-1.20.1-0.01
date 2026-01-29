@@ -7,7 +7,6 @@ import net.jerika.furmutage.furmutage;
 import net.ltxprogrammer.changed.client.renderer.animate.AnimatorPresets;
 import net.ltxprogrammer.changed.client.renderer.animate.HumanoidAnimator;
 import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModel;
-import net.ltxprogrammer.changed.client.renderer.model.AdvancedHumanoidModelInterface;
 import net.ltxprogrammer.changed.client.renderer.model.LeglessModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
@@ -22,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @OnlyIn(Dist.CLIENT)
-public class LatexBloodWormMutantModel extends AdvancedHumanoidModel<LatexBloodWormMutant> implements AdvancedHumanoidModelInterface<LatexBloodWormMutant, LatexBloodWormMutantModel>, LeglessModel {
+public class LatexBloodWormMutantModel extends AdvancedHumanoidModel<LatexBloodWormMutant> implements LeglessModel {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "latex_blood_worm_mutant"), "main");
     private final ModelPart RightArm;
@@ -91,19 +90,8 @@ public class LatexBloodWormMutantModel extends AdvancedHumanoidModel<LatexBloodW
         return LayerDefinition.create(meshdefinition, 96, 96);
     }
 
-    @Override
-    public void prepareMobModel(LatexBloodWormMutant p_102861_, float p_102862_, float p_102863_, float p_102864_) {
-        this.prepareMobModel(animator, p_102861_, p_102862_, p_102863_, p_102864_);
-    }
-
     public void setupHand(LatexBloodWormMutant entity) {
         animator.setupHand();
-    }
-
-    @Override
-    public void setupAnim(@NotNull LatexBloodWormMutant entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        animator.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
-        super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
     }
 
     public ModelPart getArm(HumanoidArm p_102852_) {

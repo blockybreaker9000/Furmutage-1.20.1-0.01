@@ -103,14 +103,22 @@ public class furmutage {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // Register axe stripping interaction for tainted white log using reflection
+            // Register axe stripping interaction for tainted logs using reflection.
+            // Find field by type (Map<Block, Block>) so it works in both dev and production JAR (obfuscated names).
             try {
-                java.lang.reflect.Field strippablesField = AxeItem.class.getDeclaredField("STRIPPABLES");
-                strippablesField.setAccessible(true);
-                @SuppressWarnings("unchecked")
-                Map<Block, Block> strippables = (Map<Block, Block>) strippablesField.get(null);
-                strippables.put(ModBlocks.TAINTED_WHITE_LOG.get(), ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get());
-                strippables.put(ModBlocks.TAINTED_DARK_LOG.get(), ModBlocks.STRIPPED_TAINTED_DARK_LOG.get());
+                for (java.lang.reflect.Field field : AxeItem.class.getDeclaredFields()) {
+                    if (Map.class.isAssignableFrom(field.getType())) {
+                        field.setAccessible(true);
+                        Object map = field.get(null);
+                        if (map instanceof Map<?, ?> m) {
+                            @SuppressWarnings("unchecked")
+                            Map<Block, Block> strippables = (Map<Block, Block>) map;
+                            strippables.put(ModBlocks.TAINTED_WHITE_LOG.get(), ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get());
+                            strippables.put(ModBlocks.TAINTED_DARK_LOG.get(), ModBlocks.STRIPPED_TAINTED_DARK_LOG.get());
+                            break;
+                        }
+                    }
+                }
             } catch (Exception e) {
                 LOGGER.error("Failed to register stripping interaction for tainted logs", e);
             }

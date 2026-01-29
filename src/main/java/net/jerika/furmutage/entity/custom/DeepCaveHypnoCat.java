@@ -19,6 +19,8 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.entity.Entity;
@@ -124,15 +126,22 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
     }
     
     /**
-     * Checks if a specific player is looking at this entity.
-     * Uses dot product to check if player's look direction is within a 35-degree cone.
+     * Checks if a specific player is aiming their cursor at this entity's head.
+     * Uses the vector from the player's eye position to this entity's eye position,
+     * so it only triggers when the crosshair is roughly on the head.
      */
     private boolean isPlayerLookingAtMe(Player player) {
+        // Player view direction
         Vec3 playerLook = player.getViewVector(1.0F).normalize();
-        Vec3 toEntity = this.position().subtract(player.position()).normalize();
-        double dot = playerLook.dot(toEntity);
-        // cos(35°) ~ 0.82, so > 0.82 means roughly within a 35-degree cone
-        return dot > 0.82D && player.hasLineOfSight(this);
+
+        // From player eye to hypno cat eye (head position)
+        Vec3 playerEyePos = player.getEyePosition(1.0F);
+        Vec3 catHeadPos = this.getEyePosition(1.0F);
+        Vec3 toHead = catHeadPos.subtract(playerEyePos).normalize();
+
+        double dot = playerLook.dot(toHead);
+        // cos(10°) ~ 0.9848, so > 0.985 means very close to crosshair on the head
+        return dot > 0.985D && player.hasLineOfSight(this);
     }
 
     @Override
@@ -232,6 +241,7 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
     public boolean doHurtTarget(Entity entity) {
         // Play hypno stare sound when affecting a player
         if (entity instanceof Player && !this.level().isClientSide) {
+            Player player = (Player)entity;
             this.level().playSound(
                     null,
                     this.getX(), this.getY(), this.getZ(),
@@ -240,6 +250,9 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
                     1.0F,
                     1.0F
             );
+
+            // Apply Poison I for 10 seconds when using the hypno ability on a player
+            player.addEffect(new MobEffectInstance(MobEffects.POISON, 200, 0, false, true));
         }
 
         // Instantly transfur specific humanoid entities into this entity type
