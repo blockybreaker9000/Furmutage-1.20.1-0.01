@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -72,6 +73,18 @@ public class ChangedEntitySwimEvents {
             "changed:roomba"
     );
     
+    /** Clear static entity sets when a level unloads to avoid infinite "Saving world data" hang. */
+    @SubscribeEvent
+    public static void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        fastSwimEntities.clear();
+        improvedPathfindingEntities.clear();
+        changedEntities.clear();
+        entitiesWithSprintReduction.clear();
+    }
+
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
         // Only process on server side

@@ -147,13 +147,8 @@ public class furmutage {
                 net.jerika.furmutage.entity.custom.LatexBloodWormMutant::checkLatexBloodWormMutantSpawnRules
             );
 
-            // Register spawn placement for Loose Behemoth Hand (deep underground, deepslate level or below)
-            net.minecraft.world.entity.SpawnPlacements.register(
-                ModEntities.LOOSE_BEHEMOTH_HAND.get(),
-                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
-                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
-                net.jerika.furmutage.entity.custom.LooseBehemothHand::checkLooseBehemothHandSpawnRules
-            );
+            // Loose Behemoth Hand and Latex Mutant Family: no natural spawn (caused infinite "Saving world data")
+            // Use spawn eggs or commands to spawn them.
         });
     }
 

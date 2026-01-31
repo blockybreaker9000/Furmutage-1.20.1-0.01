@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -301,6 +302,10 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
         if (reason != MobSpawnType.NATURAL) {
             return true;
         }
+        // Don't run Changed API during world gen (can hang) – natural spawn runs later when world is ServerLevel
+        if (world instanceof WorldGenRegion) {
+            return false;
+        }
 
         // Must be between Y level 0 and -60
         int y = pos.getY();
@@ -313,9 +318,6 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
             return false;
         }
         if (world.getBrightness(LightLayer.BLOCK, pos) > 0) {
-            return false;
-        }
-        if (ChangedEntity.getLevelBrightnessAt(world.getLevel(), pos) > random.nextInt(10)) {
             return false;
         }
 

@@ -4,6 +4,7 @@ import net.jerika.furmutage.ai.latex_beast_ai.YufengFlyToTargetGoal;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.Mob;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -32,6 +33,15 @@ public class YufengFlyingEvents {
         "changed:white_latex_dragon_part"
     };
     
+    /** Clear static set when a level unloads to avoid hang during save. */
+    @SubscribeEvent
+    public static void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        processedEntities.clear();
+    }
+
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
         // Only process on server side

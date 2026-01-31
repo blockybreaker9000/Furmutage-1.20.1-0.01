@@ -23,8 +23,14 @@ import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -201,6 +207,30 @@ public class LatexMutantFamilyEntity extends Monster {
     @Override
     protected float getWaterSlowDown() {
         return 0.0f; // No water slowdown - fast in water
+    }
+
+    /** Spawn underground only (Y 10 to -64), same style as Deep Cave Hypno Cat – vanilla brightness only. */
+    public static boolean checkMutantFamilySpawnRules(EntityType<LatexMutantFamilyEntity> entityType, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, RandomSource random) {
+        if (reason != MobSpawnType.NATURAL) {
+            return true;
+        }
+        if (world instanceof WorldGenRegion) {
+            return false;
+        }
+        int y = pos.getY();
+        if (y > 10 || y < -64) {
+            return false;
+        }
+        if (world.getBrightness(LightLayer.SKY, pos) > random.nextInt(50)) {
+            return false;
+        }
+        if (world.getBrightness(LightLayer.BLOCK, pos) > 0) {
+            return false;
+        }
+        if (random.nextFloat() > 0.5f) {
+            return false;
+        }
+        return Monster.checkMonsterSpawnRules(entityType, world, reason, pos, random);
     }
 
     @Override

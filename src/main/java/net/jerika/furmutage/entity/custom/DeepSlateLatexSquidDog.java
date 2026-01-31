@@ -11,6 +11,7 @@ import net.ltxprogrammer.changed.entity.beast.AbstractLatexSquidDog;
 import net.ltxprogrammer.changed.entity.variant.TransfurVariant;
 import net.ltxprogrammer.changed.process.ProcessTransfur;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.core.Direction;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -230,16 +231,21 @@ public class DeepSlateLatexSquidDog extends AbstractLatexSquidDog {
         if (reason != MobSpawnType.NATURAL) {
             return true;
         }
-        // Must be between Y level 0 and -60
-        int y = pos.getY();
-        if (y > 0 || y < -60) {
+        // Don't run during world gen (can hang at 4%) – natural spawn runs later when world is ServerLevel
+        if (world instanceof WorldGenRegion) {
             return false;
         }
-        // For natural spawning, use simplified aquatic spawn rules (water-based)
-        // This is a simplified version that works with RandomSource
+        // Only in water blocks, between Y level 10 and -64 (inclusive)
+        int y = pos.getY();
+        if (y > 10 || y < -64) {
+            return false;
+        }
+        if (!world.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER)) {
+            return false;
+        }
         if (!world.getFluidState(pos.below()).is(net.minecraft.tags.FluidTags.WATER)) {
             return false;
         }
-        return world.getFluidState(pos).is(net.minecraft.tags.FluidTags.WATER);
+        return true;
     }
 }

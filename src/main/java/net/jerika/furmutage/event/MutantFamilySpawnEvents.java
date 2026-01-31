@@ -7,6 +7,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -19,6 +20,15 @@ public class MutantFamilySpawnEvents {
     // Track entities we've already processed to avoid duplicate spawns
     private static final Set<LatexMutantFamilyEntity> processedEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
     
+    /** Clear static set when a level unloads to avoid hang during save. */
+    @SubscribeEvent
+    public static void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        processedEntities.clear();
+    }
+
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
         // Only process on server side

@@ -19,6 +19,7 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.util.GoalUtils;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
@@ -104,13 +105,16 @@ public class LooseBehemothHand extends ChangedEntity implements GenderedEntity {
         return ChangedEntity.createLatexAttributes();
     }
 
-    /** Spawn deep underground at deepslate level or below (Y <= 8). */
+    /** Spawn underground only (Y 10 to -64), same style as Deep Cave Hypno Cat – vanilla brightness only. */
     public static boolean checkLooseBehemothHandSpawnRules(EntityType<LooseBehemothHand> entityType, ServerLevelAccessor world, MobSpawnType reason, net.minecraft.core.BlockPos pos, RandomSource random) {
         if (reason != MobSpawnType.NATURAL) {
             return true;
         }
+        if (world instanceof WorldGenRegion) {
+            return false;
+        }
         int y = pos.getY();
-        if (y > 8) {
+        if (y > 10 || y < -64) {
             return false;
         }
         if (world.getBrightness(LightLayer.SKY, pos) > random.nextInt(50)) {
@@ -119,10 +123,7 @@ public class LooseBehemothHand extends ChangedEntity implements GenderedEntity {
         if (world.getBrightness(LightLayer.BLOCK, pos) > 0) {
             return false;
         }
-        if (ChangedEntity.getLevelBrightnessAt(world.getLevel(), pos) > random.nextInt(12)) {
-            return false;
-        }
-        if (random.nextFloat() > 0.4f) {
+        if (random.nextFloat() > 0.5f) {
             return false;
         }
         return net.minecraft.world.entity.monster.Monster.checkMonsterSpawnRules(entityType, world, reason, pos, random);
