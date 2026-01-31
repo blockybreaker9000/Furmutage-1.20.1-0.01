@@ -23,6 +23,7 @@ public class ModEventBusClientEvents {
         event.registerLayerDefinition(ModModelLayers.DEEPSLATE_LATEX_SQUID_DOG_FEMALE_LAYER, DeepSlateLatexSquidDogFemaleModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.DEEP_CAVE_HYPNO_CAT_LAYER, DeepCaveHypnoCatModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LATEX_BLOOD_WORM_MUTANT_LAYER, LatexBloodWormMutantModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.LOOSE_BEHEMOTH_HAND_LAYER, LooseBehemothHandModel::createBodyLayer);
     }
 
 }

@@ -1,4 +1,4 @@
-# Testing the mod as a JAR (Forge launcher)
+﻿# Testing the mod as a JAR (Forge launcher)
 
 ## Build the JAR
 
@@ -41,3 +41,21 @@ If you see this for `furmutage.mixins.json`:
 - **Use the main JAR** (`furmutage-0.1-1.20.1.jar`), not the `-all` one, so the refmap and resources are correct.
 - Ensure **Changed** is in `mods/` and loads (the crystal mixin targets Changed; if Changed is missing or loads later, that mixin can fail).
 - Rebuild and replace the JAR in `mods/` after pulling the change.
+
+## Changed + Curios mixin error (CuriosApi.getEntitySlots)
+
+If you get:
+
+```text
+InvalidInjectionException: @WrapMethod ... CuriosApiMixin ... getEntitySlots ...
+Expected Lnet/minecraft/world/entity/EntityType; but got Lnet/minecraft/world/entity/LivingEntity;
+```
+
+**Cause:** Changed’s Curios compatibility mixin was written for an older Curios API that used `getEntitySlots(EntityType)`. Newer Curios (e.g. 5.3.3+1.20.1) uses `getEntitySlots(LivingEntity)`, so the mixin no longer matches and fails. This is a bug in **Changed**, not in Furmutage.
+
+**Workaround:** Do not use Curios when playing with Changed. Remove Curios from your `mods/` folder. Furmutage does not require Curios. For runClient/dev this project no longer adds Curios to the run. For pack/JAR do not put Curios in mods/ if you use Changed.
+
+- ~~Use Curios 5.7.x (does not fix it)~~
+- **Remove Curios** from your `mods/` folder when playing with Changed if you don’t need it. Furmutage does not require Curios to run.
+- **Report to Changed** – the Curios compatibility mixin needs to be updated for Curios 5.8+ (`getEntitySlots(LivingEntity)`).
+

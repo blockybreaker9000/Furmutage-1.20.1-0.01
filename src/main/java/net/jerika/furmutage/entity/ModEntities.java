@@ -32,6 +32,7 @@ import net.jerika.furmutage.entity.custom.DarkLatexGoatEntity;
 import net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog;
 import net.jerika.furmutage.entity.custom.DeepCaveHypnoCat;
 import net.jerika.furmutage.entity.custom.LatexBloodWormMutant;
+import net.jerika.furmutage.entity.custom.LooseBehemothHand;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -178,6 +179,10 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexBloodWormMutant>> LATEX_BLOOD_WORM_MUTANT =
             ENTITY_TYPES.register("latex_blood_worm_mutant", () -> EntityType.Builder.of(LatexBloodWormMutant::new, MobCategory.MONSTER)
                     .sized(0.7F, 1.64F).clientTrackingRange(10).build("latex_blood_worm_mutant"));
+
+    public static final RegistryObject<EntityType<LooseBehemothHand>> LOOSE_BEHEMOTH_HAND =
+            ENTITY_TYPES.register("loose_behemoth_hand", () -> EntityType.Builder.of(LooseBehemothHand::new, MobCategory.MONSTER)
+                    .sized(0.8f, 1.2f).clientTrackingRange(8).build("loose_behemoth_hand"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

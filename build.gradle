@@ -235,12 +235,9 @@ dependencies {
         changing = true
     }
 
-    // Curios API dependency
-    // Note: If version doesn't work, check available versions at:
-    // https://maven.theillusivec4.top/top/theillusivec4/curios/curios-forge/
-    // fg.deobf() will handle deobfuscation and mapping automatically
-    // The repository at maven.theillusivec4.top should provide the mapped versions
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}")
+    // Curios API - compileOnly so runClient doesn't load Curios (Changed's Curios mixin is
+    // broken: targets getEntitySlots(EntityType) but wrapper expects LivingEntity; no version works).
+    // If you need Curios at runtime, add the JAR to run/mods/ manually and remove Curios when using Changed.
     compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
     
     // LostCities mod dependency

@@ -38,6 +38,7 @@ public class LatexTeamConfig {
             "furmutage:giant_pure_white_latex",
             "furmutage:latex_exo_mutant",
             "furmutage:latex_blood_worm_mutant",
+            "furmutage:loose_behemoth_hand",
             "furmutage:white_latex_bottle_projectile",
             "spore:biobloob",
             "spore:bloater",

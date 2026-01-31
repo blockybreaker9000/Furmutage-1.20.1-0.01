@@ -146,6 +146,14 @@ public class furmutage {
                 net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 net.jerika.furmutage.entity.custom.LatexBloodWormMutant::checkLatexBloodWormMutantSpawnRules
             );
+
+            // Register spawn placement for Loose Behemoth Hand (deep underground, deepslate level or below)
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.LOOSE_BEHEMOTH_HAND.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.LooseBehemothHand::checkLooseBehemothHandSpawnRules
+            );
         });
     }
 
@@ -219,7 +227,8 @@ public class furmutage {
             EntityRenderers.register(ModEntities.DEEP_CAVE_HYPNO_CAT.get(), net.jerika.furmutage.entity.client.renderer.DeepCaveHypnoCatRenderer::new);
             
             EntityRenderers.register(ModEntities.LATEX_BLOOD_WORM_MUTANT.get(), net.jerika.furmutage.entity.client.renderer.LatexBloodWormMutantRenderer::new);
-            
+            EntityRenderers.register(ModEntities.LOOSE_BEHEMOTH_HAND.get(), net.jerika.furmutage.entity.client.renderer.LooseBehemothHandRenderer::new);
+
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_DARK_VINE.get(), RenderType.cutout());
