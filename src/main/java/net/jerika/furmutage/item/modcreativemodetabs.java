@@ -78,6 +78,10 @@ public class modcreativemodetabs {
                         output.accept(ModItems.TSC_DRONE_SPAWN_EGG.get());
                         output.accept(ModItems.TSC_DRONE_BOSS_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_BACTERIA_SPAWN_EGG.get());
+                        output.accept(ModItems.LOOSE_BEHEMOTH_HAND_SPAWN_EGG.get());
+                        output.accept(ModItems.DEEP_CAVE_HYPNO_CAT_SPAWN_EGG.get());
+                        output.accept(ModItems.DEEPSLATE_LATEX_SQUID_DOG_SPAWN_EGG.get());
+                        output.accept(ModItems.LATEX_BLOOD_WORM_MUTANT_SPAWN_EGG.get());
                         output.accept(ModItems.DARKLATEXBOTTLED.get());
                         output.accept(ModItems.WHITELATEXBOTTLED.get());
 

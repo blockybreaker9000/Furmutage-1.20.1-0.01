@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "changed:dark_dragon_crystal_fragment"
+    }
+  ],
+  "result": {
+    "item": "changed:dark_latex_crystal_fragment",
+    "count": 3
+  }
+}
+
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "changed:dark_latex_dragon_fragment"
+    }
+  ],
+  "result": {
+    "count": 2,
+    "item": "changed:dark_latex_crystal_fragment"
+  }
+}

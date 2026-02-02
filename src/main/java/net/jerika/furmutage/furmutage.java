@@ -147,8 +147,15 @@ public class furmutage {
                 net.jerika.furmutage.entity.custom.LatexBloodWormMutant::checkLatexBloodWormMutantSpawnRules
             );
 
-            // Loose Behemoth Hand and Latex Mutant Family: no natural spawn (caused infinite "Saving world data")
-            // Use spawn eggs or commands to spawn them.
+            // Loose Behemoth Hand: underground natural spawn (like zombies but rarer), vanilla spawn rules only
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.LOOSE_BEHEMOTH_HAND.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.LooseBehemothHand::checkLooseBehemothHandSpawnRules
+            );
+
+            // Latex Mutant Family: no natural spawn (caused infinite "Saving world data"); use spawn eggs or commands.
         });
     }
 

@@ -1,0 +1,10 @@
+{
+  "type": "forge:add_features",
+  "biomes": "#minecraft:is_ocean",
+  "features": [
+    "furmutage:plastic_waste_sand",
+    "furmutage:plastic_waste_gravel"
+  ],
+  "step": "underground_ores"
+}
+

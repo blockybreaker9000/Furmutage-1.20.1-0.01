@@ -1,0 +1,11 @@
+{
+  "type": "furmutage:lost_city",
+  "biomes": [
+    "furmutage:wasteland",
+    "furmutage:wasteland_mountain",
+    "furmutage:wasteland_tainted_flat"
+  ],
+  "step": "surface_structures",
+  "spawn_overrides": {},
+  "terrain_adaptation": "bury"
+}

@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -45,6 +46,15 @@ public class TaintedBlockEvents {
     
     // Check interval: check every 10 ticks (0.5 seconds)
     private static final int CHECK_INTERVAL = 10;
+    
+    /** Clear static entity map when a level unloads to avoid infinite "Saving world data" hang. */
+    @SubscribeEvent
+    public static void onLevelUnload(LevelEvent.Unload event) {
+        if (event.getLevel().isClientSide()) {
+            return;
+        }
+        exposureTime.clear();
+    }
     
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {

@@ -97,10 +97,21 @@
   "entity.furmutage.tsc_drone": "TSC Drone",
   "entity.furmutage.tsc_drone_boss": "TSC Drone Boss",
   "entity.furmutage.latex_bacteria": "Latex Bacteria",
+  "entity.furmutage.deepslate_latex_squid_dog": "DeepSlate Latex Squid Dog",
+  "item.furmutage.deepslate_latex_squid_dog_spawn_egg": "DeepSlate Latex Squid Dog Spawn Egg",
+  "entity.furmutage.deep_cave_hypno_cat": "Deep Cave Hypno Cat",
+  "item.furmutage.deep_cave_hypno_cat_spawn_egg": "Deep Cave Hypno Cat Spawn Egg",
+  "entity.furmutage.latex_blood_worm_mutant": "Latex Blood Worm Mutant",
+  "item.furmutage.latex_blood_worm_mutant_spawn_egg": "Latex Blood Worm Mutant Spawn Egg",
+  "entity.furmutage.loose_behemoth_hand": "Loose Behemoth Hand",
+  "item.furmutage.loose_behemoth_hand_spawn_egg": "Loose Behemoth Hand Spawn Egg",
+  "block.furmutage.plastic_waste_sand": "Plastic Waste Sand",
+  "block.furmutage.plastic_waste_gravel": "Plastic Waste Gravel",
 
   "subtitles.furmutage.night_ambient": "Night Ambience",
   "subtitles.furmutage.night_chime": "Night Chime",
   "subtitles.furmutage.morning_chime": "Morning Chime",
+  "subtitles.furmutage.deep_hypno_cat_stare": "Deep Cave Hypno Cat stare",
 
   "container.furmutage.eugenics_crafting": "TSC Eugenics Crafting",
 

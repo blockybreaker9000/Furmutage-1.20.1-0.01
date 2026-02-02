@@ -224,6 +224,9 @@ public class ModItems {
     public static final RegistryObject<Item> LATEX_BLOOD_WORM_MUTANT_SPAWN_EGG = ITEMS.register("latex_blood_worm_mutant_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.LATEX_BLOOD_WORM_MUTANT, 0xFFFFFF, 0x7E7E7E,
                     new Item.Properties()));
+    public static final RegistryObject<Item> LOOSE_BEHEMOTH_HAND_SPAWN_EGG = ITEMS.register("loose_behemoth_hand_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.LOOSE_BEHEMOTH_HAND, 0x888888, 0xDDDDDD,
+                    new Item.Properties()));
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)

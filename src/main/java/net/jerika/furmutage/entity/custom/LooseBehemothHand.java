@@ -1,6 +1,5 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
 import net.ltxprogrammer.changed.entity.*;
 import net.ltxprogrammer.changed.entity.AttributePresets;
 import net.ltxprogrammer.changed.entity.TransfurCause;
@@ -62,15 +61,15 @@ public class LooseBehemothHand extends ChangedEntity implements GenderedEntity {
         AttributePresets.catLike(attributes);
         attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(32.0D);
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(6.0D);
-        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.35D);
+        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.75D);
     }
 
     @Override
     protected void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2D, false));
-        this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));
-        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.25, 80, false));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        // No ImprovedPathfindingGoal – it was cutting speed to 0.6x and made the hand too slow
+        this.goalSelector.addGoal(3, new RandomStrollGoal(this, 0.75, 80, false));
         if (GoalUtils.hasGroundPathNavigation(this)) {
             this.goalSelector.addGoal(5, new OpenDoorGoal(this, true));
         }
@@ -105,7 +104,7 @@ public class LooseBehemothHand extends ChangedEntity implements GenderedEntity {
         return ChangedEntity.createLatexAttributes();
     }
 
-    /** Spawn underground only (Y 10 to -64), same style as Deep Cave Hypno Cat – vanilla brightness only. */
+    /** Spawn underground only (Y 10 to -64), like zombies (dark, monster rules); rate set to half zombie weight in biomes. */
     public static boolean checkLooseBehemothHandSpawnRules(EntityType<LooseBehemothHand> entityType, ServerLevelAccessor world, MobSpawnType reason, net.minecraft.core.BlockPos pos, RandomSource random) {
         if (reason != MobSpawnType.NATURAL) {
             return true;
@@ -121,9 +120,6 @@ public class LooseBehemothHand extends ChangedEntity implements GenderedEntity {
             return false;
         }
         if (world.getBrightness(LightLayer.BLOCK, pos) > 0) {
-            return false;
-        }
-        if (random.nextFloat() > 0.5f) {
             return false;
         }
         return net.minecraft.world.entity.monster.Monster.checkMonsterSpawnRules(entityType, world, reason, pos, random);

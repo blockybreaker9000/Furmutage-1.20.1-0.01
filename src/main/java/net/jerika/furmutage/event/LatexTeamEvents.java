@@ -208,8 +208,11 @@ public class LatexTeamEvents {
                             targetType, targetTeamName);
                 }
             } else {
-                // Move towards target at slower speed (only for Changed entities)
-                if (mob instanceof PathfinderMob pathfinderMob) {
+                // Don't override movement for Loose Behemoth Hand – let MeleeAttackGoal control speed (team AI was making it slow)
+                if ("furmutage:loose_behemoth_hand".equals(mobType)) {
+                    // Skip moveTo; hand uses its own goals for movement
+                } else if (mob instanceof PathfinderMob pathfinderMob) {
+                    // Move towards target at slower speed (only for Changed entities)
                     double movementSpeed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
                     
                     // Only apply speed nerf to Changed mod entities, exclude other modded mobs
