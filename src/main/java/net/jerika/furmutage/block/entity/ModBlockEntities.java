@@ -15,6 +15,11 @@ public class ModBlockEntities {
             BLOCK_ENTITIES.register("eugenics_crafting_block_entity",
                     () -> BlockEntityType.Builder.of(EugenicsCraftingBlockEntity::new,
                             net.jerika.furmutage.block.custom.ModBlocks.EUGENICS_CRAFTING_BLOCK.get()).build(null));
+
+    public static final RegistryObject<BlockEntityType<EugenicsSmelteryBlockEntity>> EUGENICS_SMELTERY_BLOCK_ENTITY =
+            BLOCK_ENTITIES.register("eugenics_smeltery_block_entity",
+                    () -> BlockEntityType.Builder.of(EugenicsSmelteryBlockEntity::new,
+                            net.jerika.furmutage.block.custom.ModBlocks.EUGENICS_SMELTERY_OVEN.get()).build(null));
     
     public static void register(IEventBus eventBus) {
         BLOCK_ENTITIES.register(eventBus);

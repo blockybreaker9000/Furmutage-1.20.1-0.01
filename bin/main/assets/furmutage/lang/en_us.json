@@ -8,6 +8,8 @@
   "item.furmutage.roselight_ingot": "Roselight Ingot",
   "item.furmutage.roselight_nugget": "Roselight Nugget",
   "item.furmutage.raw_roselight_nugget": "Raw Roselight Nugget",
+  "item.furmutage.tsc_plastic_waste_clump": "TSC Plastic Waste Clump",
+  "item.furmutage.tsc_plastic_bar": "TSC Plastic Bar",
 
   "item.furmutage.pealed_oranges": "Pealed Oranges",
   "item.furmutage.orange_pie": "Orange Pie",
@@ -78,6 +80,7 @@
 
   "block.furmutage.raw_thunderium": "Raw Thunderium",
   "block.furmutage.eugenics_crafting_block": "TSC Eugenics Crafting Block",
+  "block.furmutage.eugenics_smeltery_oven": "Eugenics Smeltery Oven",
   "block.furmutage.raw_roselight": "Raw Roselight",
   "block.furmutage.thunderium_ore": "Thunderium Ore",
   "block.furmutage.roselight_ore": "Roselight Ore",
@@ -114,6 +117,7 @@
   "subtitles.furmutage.deep_hypno_cat_stare": "Deep Cave Hypno Cat stare",
 
   "container.furmutage.eugenics_crafting": "TSC Eugenics Crafting",
+  "container.furmutage.eugenics_smeltery": "Eugenics Smeltery Oven",
 
   "creativetab.furmutage": "FurMutage"
 }

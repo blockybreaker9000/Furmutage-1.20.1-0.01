@@ -19,6 +19,16 @@ public class ModMenuTypes {
                     () -> IForgeMenuType.create((int containerId, Inventory inv, FriendlyByteBuf data) -> {
                         return new EugenicsCraftingMenu(containerId, inv);
                     }));
+
+    public static final RegistryObject<MenuType<EugenicsSmelteryMenu>> EUGENICS_SMELTERY_MENU =
+            MENUS.register("eugenics_smeltery_menu",
+                    () -> IForgeMenuType.create((int containerId, Inventory inv, FriendlyByteBuf data) -> {
+                        net.minecraft.core.BlockPos pos = data.readBlockPos();
+                        if (inv.player.level().getBlockEntity(pos) instanceof net.jerika.furmutage.block.entity.EugenicsSmelteryBlockEntity be) {
+                            return new EugenicsSmelteryMenu(containerId, inv, be, be.getDataAccess());
+                        }
+                        return new EugenicsSmelteryMenu(containerId, inv, new net.minecraft.world.SimpleContainer(3), new net.minecraft.world.inventory.SimpleContainerData(4));
+                    }));
     
     public static void register(IEventBus eventBus) {
         MENUS.register(eventBus);

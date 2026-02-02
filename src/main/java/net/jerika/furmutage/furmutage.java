@@ -79,6 +79,8 @@ public class furmutage {
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
         ModMenuTypes.register(modEventBus);
+        net.jerika.furmutage.recipe.ModRecipeTypes.RECIPE_TYPES.register(modEventBus);
+        net.jerika.furmutage.recipe.ModRecipeSerializers.SERIALIZERS.register(modEventBus);
 
         ModSounds.register(modEventBus);
 
@@ -155,6 +157,9 @@ public class furmutage {
                 net.jerika.furmutage.entity.custom.LooseBehemothHand::checkLooseBehemothHandSpawnRules
             );
 
+            // White latex spawn: simple Monster rules (surface at night, caves) - config-driven
+            net.jerika.furmutage.event.WhiteLatexSpawnEvents.registerSpawnPlacements();
+
             // Latex Mutant Family: no natural spawn (caused infinite "Saving world data"); use spawn eggs or commands.
         });
     }
@@ -176,6 +181,7 @@ public class furmutage {
         public static void onClientSetup(FMLClientSetupEvent event) {
             event.enqueueWork(() -> {
                 MenuScreens.register(ModMenuTypes.EUGENICS_CRAFTING_MENU.get(), EugenicsCraftingScreen::new);
+                MenuScreens.register(ModMenuTypes.EUGENICS_SMELTERY_MENU.get(), net.jerika.furmutage.menu.client.EugenicsSmelteryScreen::new);
             });
             
             EntityRenderers.register(ModEntities.MUGLING.get(), MuglingRenderer::new);

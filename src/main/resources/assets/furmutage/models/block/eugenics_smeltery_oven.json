@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "furmutage:block/eugenics_smeltery_oven_front",
+    "down": "furmutage:block/eugenics_smeltery_oven_bottom",
+    "up": "furmutage:block/eugenics_smeltery_oven_top",
+    "north": "furmutage:block/eugenics_smeltery_oven_front",
+    "south": "furmutage:block/eugenics_smeltery_oven_back",
+    "east": "furmutage:block/eugenics_smeltery_oven_side",
+    "west": "furmutage:block/eugenics_smeltery_oven_side"
+  }
+}

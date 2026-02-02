@@ -21,8 +21,11 @@ public class modcreativemodetabs {
 
 
                         output.accept(ModBlocks.EUGENICS_CRAFTING_BLOCK.get());
+                        output.accept(ModBlocks.EUGENICS_SMELTERY_OVEN.get());
                         output.accept(ModItems.DARK_TAINTED_SEEDS.get());
                         output.accept(ModItems.WHITE_TAINTED_SEEDS.get());
+                        output.accept(ModItems.TSC_PLASTIC_WASTE_CLUMP.get());
+                        output.accept(ModItems.TSC_PLASTIC_BAR.get());
                         output.accept(ModItems.DARK_LATEX_CLUMP.get());
                         output.accept(ModItems.WHITE_LATEX_CLUMP.get());
                         output.accept(ModItems.PEALED_ORANGES.get());
