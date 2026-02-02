@@ -233,13 +233,13 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
                 
                 EntityType<?> pureWhiteLatexType = null;
                 
+                // Try specific entity IDs first
                 if (spawnPup) {
                     // Try to find the Pure White Latex Pup entity type
                     pureWhiteLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
                             ResourceLocation.tryParse("changed:pure_white_latex_wolf_pup")
                     );
                     
-                    // Fallback: try alternative pup names
                     if (pureWhiteLatexType == null) {
                         pureWhiteLatexType = ForgeRegistries.ENTITY_TYPES.getValue(
                                 ResourceLocation.tryParse("changed:pure_white_latex_pup")
@@ -252,20 +252,27 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
                     );
                 }
                 
-                // Fallback: try to find any entity with "pure_white" in the name
+                // Fallback: search by registry key and description ID
                 if (pureWhiteLatexType == null) {
                     for (EntityType<?> entityType : ForgeRegistries.ENTITY_TYPES.getValues()) {
+                        ResourceLocation entityId = ForgeRegistries.ENTITY_TYPES.getKey(entityType);
+                        if (entityId == null) continue;
+                        
+                        String key = entityId.toString().toLowerCase();
                         String name = entityType.getDescriptionId().toLowerCase();
+                        
                         if (spawnPup) {
-                            if ((name.contains("pure_white") || name.contains("purewhite")) && 
-                                (name.contains("pup") || name.contains("puppy"))) {
+                            if ((key.contains("pure") && key.contains("white") && key.contains("pup")) ||
+                                (name.contains("pure") && name.contains("white") && name.contains("pup"))) {
                                 pureWhiteLatexType = entityType;
+                                furmutage.LOGGER.info("Found pure white latex pup entity: {}", entityId);
                                 break;
                             }
                         } else {
-                            if ((name.contains("pure_white") || name.contains("purewhite")) && 
-                                !name.contains("pup") && !name.contains("puppy")) {
+                            if ((key.contains("pure") && key.contains("white") && key.contains("wolf") && !key.contains("pup")) ||
+                                (name.contains("pure") && name.contains("white") && name.contains("wolf") && !name.contains("pup"))) {
                                 pureWhiteLatexType = entityType;
+                                furmutage.LOGGER.info("Found pure white latex wolf entity: {}", entityId);
                                 break;
                             }
                         }
@@ -292,6 +299,12 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
                             }
                         }
                         level.addFreshEntity(latexEntity);
+                        furmutage.LOGGER.debug("Spawned pure white latex entity at {}", abovePos);
+                    }
+                } else if (pureWhiteLatexType == null) {
+                    // Log once when entity type is not found
+                    if (random.nextInt(100) == 0) { // Only log 1% of the time to avoid spam
+                        furmutage.LOGGER.warn("Pure white latex {} entity type not found in registry", spawnPup ? "pup" : "wolf");
                     }
                 }
             }
