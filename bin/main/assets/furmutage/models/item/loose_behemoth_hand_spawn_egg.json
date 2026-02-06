@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "furmutage:entity/loose_behemoth_hand"
+    "layer0": "furmutage:item/loose_behemoth_hand_spawn_egg"
   }
 }

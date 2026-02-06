@@ -236,16 +236,16 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntities.LATEX_EXO_MUTANT, 0xDDEAEA, 0xDDEAEA,
                     new Item.Properties()));
     public static final RegistryObject<Item> DEEPSLATE_LATEX_SQUID_DOG_SPAWN_EGG = ITEMS.register("deepslate_latex_squid_dog_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.DEEPSLATE_LATEX_SQUID_DOG, 0x202020, 0x00FFFF,
+            () -> new ForgeSpawnEggItem(ModEntities.DEEPSLATE_LATEX_SQUID_DOG, 0x202020, 0x7E7E7E,
                     new Item.Properties()));
     public static final RegistryObject<Item> DEEP_CAVE_HYPNO_CAT_SPAWN_EGG = ITEMS.register("deep_cave_hypno_cat_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.DEEP_CAVE_HYPNO_CAT, 0x333333, 0xD7FF46,
+            () -> new ForgeSpawnEggItem(ModEntities.DEEP_CAVE_HYPNO_CAT, 0x333333, 0x7E7E7E,
                     new Item.Properties()));
     public static final RegistryObject<Item> LATEX_BLOOD_WORM_MUTANT_SPAWN_EGG = ITEMS.register("latex_blood_worm_mutant_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.LATEX_BLOOD_WORM_MUTANT, 0xFFFFFF, 0x7E7E7E,
                     new Item.Properties()));
     public static final RegistryObject<Item> LOOSE_BEHEMOTH_HAND_SPAWN_EGG = ITEMS.register("loose_behemoth_hand_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.LOOSE_BEHEMOTH_HAND, 0x888888, 0xDDDDDD,
+            () -> new ForgeSpawnEggItem(ModEntities.LOOSE_BEHEMOTH_HAND, 0x888888, 0x7E7E7E,
                     new Item.Properties()));
 
     // White latex infected animals - whiter spawn egg colors (base, spots)
