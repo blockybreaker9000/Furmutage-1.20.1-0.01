@@ -9,6 +9,8 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.SpawnPlacements;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.GrassBlock;
@@ -17,8 +19,18 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class TaintedDarkGrassBlock extends GrassBlock {
+    private static final ResourceLocation WOLF_CRYSTAL_ID = ResourceLocation.tryParse("changed:wolf_crystal");
+
     public TaintedDarkGrassBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    public boolean isValidSpawn(BlockState state, BlockGetter level, BlockPos pos, SpawnPlacements.Type placementType, net.minecraft.world.entity.EntityType<?> type) {
+        if (WOLF_CRYSTAL_ID != null && type != null && WOLF_CRYSTAL_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(type))) {
+            return true;
+        }
+        return super.isValidSpawn(state, level, pos, placementType, type);
     }
 
     @Override
@@ -41,6 +53,11 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         // Rarely spawn dark latex entities on top
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnDarkLatexEntity(level, pos, random);
+        }
+
+        // Rarely spawn Changed wolf_crystal entity on top
+        if (random.nextInt(400) == 0) { // ~0.25% chance per random tick
+            spawnWolfCrystalEntityOnTop(level, pos, random);
         }
         
         // Spawn Changed mod crystals on top (more naturally)
@@ -337,6 +354,58 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 }
             }
         }
+    }
+
+    /**
+     * Rarely spawns the Changed mod wolf_crystal entity on top of this block.
+     */
+    private void spawnWolfCrystalEntityOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+
+        if (!aboveState.isAir() || level.getMaxLocalRawBrightness(abovePos) < 9) {
+            return;
+        }
+        if (hasWolfCrystalNearby(level, abovePos, 12)) {
+            return;
+        }
+
+        EntityType<?> wolfCrystalType = ForgeRegistries.ENTITY_TYPES.getValue(WOLF_CRYSTAL_ID);
+        if (wolfCrystalType == null) {
+            return;
+        }
+        if (!(wolfCrystalType.create(level) instanceof PathfinderMob)) {
+            return;
+        }
+        PathfinderMob entity = (PathfinderMob) wolfCrystalType.create(level);
+        if (entity == null) {
+            return;
+        }
+        double x = abovePos.getX() + 0.5;
+        double y = abovePos.getY();
+        double z = abovePos.getZ() + 0.5;
+        entity.moveTo(x, y, z, random.nextFloat() * 360.0F, 0.0F);
+        try {
+            entity.finalizeSpawn(level, level.getCurrentDifficultyAt(abovePos), MobSpawnType.EVENT, null, null);
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod: {}", e.getMessage());
+            } else {
+                throw e;
+            }
+        }
+        level.addFreshEntity(entity);
+    }
+
+    private boolean hasWolfCrystalNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        var aabb = net.minecraft.world.phys.AABB.ofSize(
+                net.minecraft.world.phys.Vec3.atCenterOf(pos), maxDistance * 2.0, maxDistance * 2.0, maxDistance * 2.0);
+        for (var entity : level.getEntitiesOfClass(PathfinderMob.class, aabb)) {
+            if (WOLF_CRYSTAL_ID != null && WOLF_CRYSTAL_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()))) {
+                return true;
+            }
+        }
+        return false;
     }
     
     /**

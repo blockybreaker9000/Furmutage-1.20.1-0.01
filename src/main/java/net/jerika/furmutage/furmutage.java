@@ -160,6 +160,9 @@ public class furmutage {
             // White latex spawn: simple Monster rules (surface at night, caves) - config-driven
             net.jerika.furmutage.event.WhiteLatexSpawnEvents.registerSpawnPlacements();
 
+            // Changed wolf_crystal: allow spawn on tainted dark grass and allow spawn egg/command placement
+            net.jerika.furmutage.event.WolfCrystalSpawnEvents.registerSpawnPlacements();
+
             // Latex Mutant Family: no natural spawn (caused infinite "Saving world data"); use spawn eggs or commands.
         });
     }

@@ -227,6 +227,55 @@ public class ModItems {
     public static final RegistryObject<Item> LOOSE_BEHEMOTH_HAND_SPAWN_EGG = ITEMS.register("loose_behemoth_hand_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.LOOSE_BEHEMOTH_HAND, 0x888888, 0xDDDDDD,
                     new Item.Properties()));
+
+    // White latex infected animals - whiter spawn egg colors (base, spots)
+    private static final int WHITE_LATEX_EGG_BASE = 0xE8ECF0;
+    private static final int WHITE_LATEX_EGG_SPOTS = 0xF5F8FA;
+    public static final RegistryObject<Item> WHITE_LATEX_COW_SPAWN_EGG = ITEMS.register("white_latex_cow_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_COW, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_PIG_SPAWN_EGG = ITEMS.register("white_latex_pig_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_PIG, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_CHICKEN_SPAWN_EGG = ITEMS.register("white_latex_chicken_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_CHICKEN, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_SHEEP_SPAWN_EGG = ITEMS.register("white_latex_sheep_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_SHEEP, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_RABBIT_SPAWN_EGG = ITEMS.register("white_latex_rabbit_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_RABBIT, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_HORSE_SPAWN_EGG = ITEMS.register("white_latex_horse_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_HORSE, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_SQUID_SPAWN_EGG = ITEMS.register("white_latex_squid_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_SQUID, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_LLAMA_SPAWN_EGG = ITEMS.register("white_latex_llama_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_LLAMA, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_DOLPHIN_SPAWN_EGG = ITEMS.register("white_latex_dolphin_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_DOLPHIN, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_GOAT_SPAWN_EGG = ITEMS.register("white_latex_goat_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_GOAT, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+
+    // Dark latex infected animals - darker spawn egg colors (base, spots)
+    private static final int DARK_LATEX_EGG_BASE = 0x2A2A2A;
+    private static final int DARK_LATEX_EGG_SPOTS = 0x1A1A1A;
+    public static final RegistryObject<Item> DARK_LATEX_COW_SPAWN_EGG = ITEMS.register("dark_latex_cow_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_COW, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_PIG_SPAWN_EGG = ITEMS.register("dark_latex_pig_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_PIG, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_CHICKEN_SPAWN_EGG = ITEMS.register("dark_latex_chicken_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_CHICKEN, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_SHEEP_SPAWN_EGG = ITEMS.register("dark_latex_sheep_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_SHEEP, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_RABBIT_SPAWN_EGG = ITEMS.register("dark_latex_rabbit_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_RABBIT, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_HORSE_SPAWN_EGG = ITEMS.register("dark_latex_horse_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_HORSE, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_SQUID_SPAWN_EGG = ITEMS.register("dark_latex_squid_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_SQUID, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_LLAMA_SPAWN_EGG = ITEMS.register("dark_latex_llama_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_LLAMA, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_DOLPHIN_SPAWN_EGG = ITEMS.register("dark_latex_dolphin_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_DOLPHIN, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_GOAT_SPAWN_EGG = ITEMS.register("dark_latex_goat_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_GOAT, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)
