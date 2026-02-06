@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " W ",
+    " W ",
+    " B "
+  ],
+  "key": {
+    "W": {
+      "item": "furmutage:white_latex_clump"
+    },
+    "B": {
+      "item": "furmutage:plastic_bowl"
+    }
+  },
+  "result": {
+    "item": "furmutage:white_latex_plastic_bowl",
+    "count": 1
+  }
+}
+

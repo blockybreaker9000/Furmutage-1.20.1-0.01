@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "furmutage:item/white_coated_tsc_plastic_bar"
+  }
+}
+

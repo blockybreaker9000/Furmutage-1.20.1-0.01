@@ -134,6 +134,13 @@
   "item.furmutage.dark_latex_dolphin_spawn_egg": "Dark Latex Dolphin Spawn Egg",
   "block.furmutage.plastic_waste_sand": "Plastic Waste Sand",
   "block.furmutage.plastic_waste_gravel": "Plastic Waste Gravel",
+  "item.furmutage.plastic_bowl": "Plastic Bowl",
+  "item.furmutage.dark_latex_plastic_bowl": "Dark Latex Plastic Bowl",
+  "item.furmutage.white_latex_plastic_bowl": "White Latex Plastic Bowl",
+  "item.furmutage.cooked_dark_latex_plastic_bowl": "Cooked Dark Latex Plastic Bowl",
+  "item.furmutage.cooked_white_latex_plastic_bowl": "Cooked White Latex Plastic Bowl",
+  "item.furmutage.dark_coated_tsc_plastic_bar": "Dark-Coated TSC Plastic Bar",
+  "item.furmutage.white_coated_tsc_plastic_bar": "White-Coated TSC Plastic Bar",
 
   "subtitles.furmutage.night_ambient": "Night Ambience",
   "subtitles.furmutage.night_chime": "Night Chime",

@@ -59,6 +59,8 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> PLASTIC_WASTE = ITEMS.register("plastic_waste",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> PLASTIC_BOWL = ITEMS.register("plastic_bowl",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUBBER = ITEMS.register("rubber",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_GLOVES = ITEMS.register("tsc_gloves",
@@ -91,6 +93,18 @@ public class ModItems {
             () -> new DarkLatexClumpItem(new Item.Properties()));
     public static final RegistryObject<Item> WHITE_LATEX_CLUMP = ITEMS.register("white_latex_clump",
             () -> new WhiteLatexClumpItem(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_PLASTIC_BOWL = ITEMS.register("dark_latex_plastic_bowl",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_LATEX_PLASTIC_BOWL = ITEMS.register("white_latex_plastic_bowl",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> COOKED_DARK_LATEX_PLASTIC_BOWL = ITEMS.register("cooked_dark_latex_plastic_bowl",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> COOKED_WHITE_LATEX_PLASTIC_BOWL = ITEMS.register("cooked_white_latex_plastic_bowl",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_COATED_TSC_PLASTIC_BAR = ITEMS.register("dark_coated_tsc_plastic_bar",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_COATED_TSC_PLASTIC_BAR = ITEMS.register("white_coated_tsc_plastic_bar",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DARK_TAINTED_SEEDS = ITEMS.register("dark_tainted_seeds",
             () -> new DarkTaintedSeedsItem(new Item.Properties()));
     public static final RegistryObject<Item> WHITE_TAINTED_SEEDS = ITEMS.register("white_tainted_seeds",

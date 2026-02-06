@@ -5,15 +5,14 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.world.item.crafting.RecipeType;
 
 public class EugenicsSmelteryMenu extends AbstractFurnaceMenu {
 
     private final ContainerData data;
 
     public EugenicsSmelteryMenu(int containerId, Inventory playerInventory, Container container, ContainerData data) {
-        // Use vanilla blasting recipes so the Eugenics Smeltery can cook all blast-furnace-compatible items/blocks
-        super(ModMenuTypes.EUGENICS_SMELTERY_MENU.get(), RecipeType.BLASTING,
+        // Use custom Eugenics Smelting recipes (furmutage:eugenics_smelting)
+        super(ModMenuTypes.EUGENICS_SMELTERY_MENU.get(), net.jerika.furmutage.recipe.ModRecipeTypes.EUGENICS_SMELTING.get(),
                 RecipeBookType.BLAST_FURNACE, containerId, playerInventory, container, data);
         this.data = data;
     }

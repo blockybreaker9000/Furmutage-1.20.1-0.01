@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "furmutage:tsc_plastic_bar" },
+    { "item": "furmutage:cooked_dark_latex_plastic_bowl" }
+  ],
+  "result": {
+    "item": "furmutage:dark_coated_tsc_plastic_bar",
+    "count": 1
+  }
+}
+

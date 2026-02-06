@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "P P",
+    " P "
+  ],
+  "key": {
+    "P": {
+      "item": "furmutage:plastic_waste"
+    }
+  },
+  "result": {
+    "item": "furmutage:plastic_bowl",
+    "count": 1
+  }
+}
+
