@@ -90,6 +90,10 @@
   "block.furmutage.tainted_white_sapling": "White Latex Tainted Sapling",
   "block.furmutage.thunderium_block": "Thunderium Block",
   "block.furmutage.roselight_block": "Roselight block",
+  "block.furmutage.platinum_ore_block": "Platinum Ore Block",
+  "item.furmutage.platinum_ore": "Platinum Ore",
+  "item.furmutage.platinum_bar": "Platinum Bar",
+  "item.furmutage.platinum_rod": "Platinum Rod",
   "block.furmutage.tainted_white_leaf": "White Latex Tainted Leaf",
 
   "entity.furmutage.mugling": "Mugling",

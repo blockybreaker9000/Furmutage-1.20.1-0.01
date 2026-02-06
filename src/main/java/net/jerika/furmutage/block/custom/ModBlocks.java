@@ -30,6 +30,9 @@ public class ModBlocks {
     public static final RegistryObject<Block> THUNDERIUM_ORE = registerBlock("thunderium_ore",
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
                     .strength(3f).requiresCorrectToolForDrops(), UniformInt.of(5, 7)));
+    public static final RegistryObject<Block> PLATINUM_ORE_BLOCK = registerBlock("platinum_ore_block",
+            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
+                    .strength(3f).requiresCorrectToolForDrops(), UniformInt.of(2, 5)));
     public static final RegistryObject<Block> THUNDERIUM_BLOCK = registerBlock("thunderium_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
     public static final RegistryObject<Block> ROSELIGHT_BLOCK = registerBlock("roselight_block",
@@ -166,7 +169,7 @@ public class ModBlocks {
                     .strength(2.5f)));
 
     public static final RegistryObject<Block> EUGENICS_SMELTERY_OVEN = registerBlock("eugenics_smeltery_oven",
-            () -> new EugenicsSmelteryBlock(BlockBehaviour.Properties.copy(Blocks.FURNACE)
+            () -> new EugenicsSmelteryBlock(BlockBehaviour.Properties.copy(Blocks.BLAST_FURNACE)
                     .strength(3.5f)));
     
     // Tainted White Reed - declare as mutable to break circular dependency, then assign

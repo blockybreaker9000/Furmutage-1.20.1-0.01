@@ -1,6 +1,5 @@
 package net.jerika.furmutage.event;
 
-import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.furmutage;
 import net.jerika.furmutage.item.ModItems;
 import net.jerika.furmutage.recipe.EugenicsSmeltingRecipe;
@@ -17,7 +16,7 @@ import java.util.List;
 
 /**
  * Unlocks Eugenics Smeltery recipes in the recipe book when the player picks up
- * raw roselight, raw thunderium, roselight, thunderium, their raw nuggets, or TSC plastic.
+ * raw_roselight_nugget, raw thunderium nugget, roselight, or thunderium (the only items smeltable in the Eugenics Smeltery).
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EugenicsSmelteryRecipeBookEvents {
@@ -50,12 +49,9 @@ public class EugenicsSmelteryRecipeBookEvents {
     private static boolean isEugenicsSmelteryTriggerItem(ItemStack stack) {
         if (stack.isEmpty()) return false;
         var item = stack.getItem();
-        return item == ModBlocks.RAW_ROSELIGHT.get().asItem()
-                || item == ModBlocks.RAW_THUNDERIUM.get().asItem()
-                || item == ModItems.ROSELIGHT.get()
-                || item == ModItems.THUNDERIUM.get()
-                || item == ModItems.RAW_ROSELIGHT_NUGGET.get()
+        return item == ModItems.RAW_ROSELIGHT_NUGGET.get()
                 || item == ModItems.THUNDERIUM_RAW_NUGGET.get()
-                || item == ModItems.TSC_PLASTIC_WASTE_CLUMP.get();
+                || item == ModItems.ROSELIGHT.get()
+                || item == ModItems.THUNDERIUM.get();
     }
 }

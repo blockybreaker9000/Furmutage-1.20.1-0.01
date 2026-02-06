@@ -11,7 +11,7 @@
       "item": "minecraft:iron_ingot"
     },
     "S": {
-      "item": "furmutage:roselight_glass_rod"
+      "tag": "furmutage:tool_rods"
     }
   },
   "result": {

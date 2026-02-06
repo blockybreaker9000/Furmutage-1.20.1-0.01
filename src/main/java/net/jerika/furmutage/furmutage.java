@@ -157,6 +157,14 @@ public class furmutage {
                 net.jerika.furmutage.entity.custom.LooseBehemothHand::checkLooseBehemothHandSpawnRules
             );
 
+            // Giant Pure White Latex: very rare underground spawn, only where there is enough vertical space
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.GIANT_PURE_WHITE_LATEX.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.GiantPureWhiteLatexEntity::checkGiantPureWhiteLatexSpawnRules
+            );
+
             // White latex spawn: simple Monster rules (surface at night, caves) - config-driven
             net.jerika.furmutage.event.WhiteLatexSpawnEvents.registerSpawnPlacements();
 

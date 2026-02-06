@@ -28,6 +28,7 @@ public class TransfurCrystalBlockMixin {
             otherBlock.is(ModBlocks.TAINTED_DARK_LOG.get()) ||
             otherBlock.is(ModBlocks.TAINTED_DARK_PLANKS.get())) {
             cir.setReturnValue(true);
+            cir.cancel();
         }
     }
     
@@ -46,6 +47,7 @@ public class TransfurCrystalBlockMixin {
             belowState.is(ModBlocks.TAINTED_DARK_LOG.get()) ||
             belowState.is(ModBlocks.TAINTED_DARK_PLANKS.get())) {
             cir.setReturnValue(true);
+            cir.cancel();
         }
     }
 }

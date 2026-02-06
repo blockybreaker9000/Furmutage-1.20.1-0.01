@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "pattern": [
+    "DD",
+    " R",
+    " R"
+  ],
+  "key": {
+    "D": {
+      "item": "minecraft:diamond"
+    },
+    "R": {
+      "item": "furmutage:platinum_rod"
+    }
+  },
+  "result": {
+    "item": "minecraft:diamond_hoe"
+  }
+}
+

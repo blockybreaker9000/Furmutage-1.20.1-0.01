@@ -1,10 +1,1 @@
-{
-  "type": "furmutage:eugenics_smelting",
-  "category": "misc",
-  "cookingtime": 200,
-  "experience": 0.7,
-  "ingredient": {
-    "item": "furmutage:raw_roselight_nugget"
-  },
-  "result": "furmutage:roselight_nugget"
-}
+{"type":"furmutage:eugenics_smelting","category":"blast","cookingtime":100,"experience":0.7,"ingredient":{"item":"furmutage:raw_roselight_nugget"},"result":"furmutage:roselight_nugget"}

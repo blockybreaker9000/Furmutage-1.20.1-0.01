@@ -1,6 +1,11 @@
 {
   "variants": {
-    "": { "model": "furmutage:block/plastic_waste_sand" }
+    "": [
+      { "model": "furmutage:block/plastic_waste_sand1" },
+      { "model": "furmutage:block/plastic_waste_sand2" },
+      { "model": "furmutage:block/plastic_waste_sand3" },
+      { "model": "furmutage:block/plastic_waste_sand4" }
+    ]
   }
 }
 

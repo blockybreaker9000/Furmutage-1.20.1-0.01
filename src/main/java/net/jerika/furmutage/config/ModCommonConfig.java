@@ -21,6 +21,17 @@ public class ModCommonConfig {
     public static final ForgeConfigSpec.BooleanValue ENABLE_CREEPER_SPAWN;
     public static final ForgeConfigSpec.BooleanValue ENABLE_SPIDER_SPAWN;
     public static final ForgeConfigSpec.BooleanValue ENABLE_PILLAGER_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ENDERMAN_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_STRAY_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ZOMBIFIED_PIGLIN_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_PIGLIN_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_VINDICATOR_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_EVOKER_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_RAVAGER_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_GUARDIAN_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ELDER_GUARDIAN_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_HUSK_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_WITCH_SPAWN;
     
     static {
         BUILDER.push("World Generation Config");
@@ -78,6 +89,50 @@ public class ModCommonConfig {
         ENABLE_PILLAGER_SPAWN = BUILDER
                 .comment("Set to false to prevent pillagers (including patrols and outposts) from spawning naturally")
                 .define("enablePillagerSpawn", false);
+        
+        ENABLE_ENDERMAN_SPAWN = BUILDER
+                .comment("Set to false to prevent endermen from spawning naturally")
+                .define("enableEndermanSpawn", false);
+        
+        ENABLE_STRAY_SPAWN = BUILDER
+                .comment("Set to false to prevent strays from spawning naturally")
+                .define("enableStraySpawn", false);
+        
+        ENABLE_ZOMBIFIED_PIGLIN_SPAWN = BUILDER
+                .comment("Set to false to prevent zombified piglins (zombie pigmen) from spawning naturally")
+                .define("enableZombifiedPiglinSpawn", false);
+        
+        ENABLE_PIGLIN_SPAWN = BUILDER
+                .comment("Set to false to prevent piglins and piglin brutes from spawning naturally")
+                .define("enablePiglinSpawn", false);
+        
+        ENABLE_VINDICATOR_SPAWN = BUILDER
+                .comment("Set to false to prevent vindicators from spawning naturally")
+                .define("enableVindicatorSpawn", false);
+        
+        ENABLE_EVOKER_SPAWN = BUILDER
+                .comment("Set to false to prevent evokers from spawning naturally")
+                .define("enableEvokerSpawn", false);
+        
+        ENABLE_RAVAGER_SPAWN = BUILDER
+                .comment("Set to false to prevent ravagers from spawning naturally")
+                .define("enableRavagerSpawn", false);
+        
+        ENABLE_GUARDIAN_SPAWN = BUILDER
+                .comment("Set to false to prevent guardians from spawning naturally")
+                .define("enableGuardianSpawn", false);
+        
+        ENABLE_ELDER_GUARDIAN_SPAWN = BUILDER
+                .comment("Set to false to prevent elder guardians from spawning naturally")
+                .define("enableElderGuardianSpawn", false);
+        
+        ENABLE_HUSK_SPAWN = BUILDER
+                .comment("Set to false to prevent husks from spawning naturally")
+                .define("enableHuskSpawn", false);
+        
+        ENABLE_WITCH_SPAWN = BUILDER
+                .comment("Set to false to prevent witches from spawning naturally")
+                .define("enableWitchSpawn", false);
         
         BUILDER.pop();
         SPEC = BUILDER.build();

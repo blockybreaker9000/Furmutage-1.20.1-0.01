@@ -113,6 +113,9 @@ public class ModSounds {
     // Deep Cave Hypno Cat special stare sound
     public static final RegistryObject<SoundEvent> DEEP_HYPNO_CAT_STARE = registerSoundEvent("deep_hypno_cat_stare");
 
+    // Giant latex beast idle roar sound
+    public static final RegistryObject<SoundEvent> LATEX_BEAST_ROAR = registerSoundEvent("latex_beast_roar");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));

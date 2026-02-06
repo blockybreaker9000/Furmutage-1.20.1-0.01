@@ -45,6 +45,12 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RAW_ROSELIGHT_NUGGET = ITEMS.register("raw_roselight_nugget",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> PLATINUM_ORE = ITEMS.register("platinum_ore",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> PLATINUM_BAR = ITEMS.register("platinum_bar",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> PLATINUM_ROD = ITEMS.register("platinum_rod",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_FIBER = ITEMS.register("tsc_fiber",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> TSC_PLASTIC_WASTE_CLUMP = ITEMS.register("tsc_plastic_waste_clump",

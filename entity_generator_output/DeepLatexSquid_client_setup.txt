@@ -1,1 +1,0 @@
-            EntityRenderers.register(ModEntities.DEEP_LATEX_SQUID.get(), DeepLatexSquidEntityRenderer::new);

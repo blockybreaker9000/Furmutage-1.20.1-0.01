@@ -30,8 +30,8 @@ public class TaintedDarkSandBlock extends SandBlock {
             spawnDarkLatexEntity(level, pos, random);
         }
 
-        // Spawn Changed mod crystals on top (more naturally)
-        if (random.nextInt(50) == 0) { // 2% chance per random tick (more frequent spawning)
+        // Spawn Changed mod crystals on top (frequent on tainted dark sand)
+        if (random.nextInt(5) == 0) { // 20% chance per random tick
             spawnChangedCrystalOnTop(level, pos, random);
         }
         
@@ -272,8 +272,8 @@ public class TaintedDarkSandBlock extends SandBlock {
             return;
         }
         
-        // Determine cluster size (2-5 crystals)
-        int clusterSize = 2 + random.nextInt(4); // 2, 3, 4, or 5 crystals
+        // Determine cluster size (4-7 crystals)
+        int clusterSize = 4 + random.nextInt(4); // 4, 5, 6, or 7 crystals
         
         // Try to get Changed mod crystal blocks using reflection
         try {
@@ -285,6 +285,7 @@ public class TaintedDarkSandBlock extends SandBlock {
                 "LATEX_PUP_CRYSTAL",      // Pup crystal
                 "LATEX_CRYSTAL",          // Regular dark latex crystal
                 "WOLF_CRYSTAL",           // Wolf crystal
+                "WOLF_CRYSTAL_SMALL",     // Small wolf crystal
                 "DARK_LATEX_CRYSTAL_LARGE", // Large dark latex crystal
                 "BEIFENG_CRYSTAL",        // Beifeng crystal
                 "BEIFENG_CRYSTAL_SMALL",  // Small Beifeng crystal
@@ -316,9 +317,9 @@ public class TaintedDarkSandBlock extends SandBlock {
                 return; // No crystals available
             }
 
-            // Find valid positions in a small radius (2-3 blocks) for the cluster
+            // Find valid positions in a tight radius so crystals spawn close together
             java.util.List<BlockPos> validPositions = new java.util.ArrayList<>();
-            int clusterRadius = 3;
+            int clusterRadius = 1;
 
             for (int x = -clusterRadius; x <= clusterRadius; x++) {
                 for (int z = -clusterRadius; z <= clusterRadius; z++) {
@@ -404,6 +405,7 @@ public class TaintedDarkSandBlock extends SandBlock {
                 "LATEX_PUP_CRYSTAL",
                 "LATEX_CRYSTAL",
                 "WOLF_CRYSTAL",
+                "WOLF_CRYSTAL_SMALL",
                 "DARK_LATEX_CRYSTAL_LARGE",
                 "BEIFENG_CRYSTAL",
                 "BEIFENG_CRYSTAL_SMALL",

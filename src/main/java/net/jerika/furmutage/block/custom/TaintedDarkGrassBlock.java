@@ -70,6 +70,11 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             spawnRoselightCrystalShardsOnTop(level, pos, random);
         }
         
+        // If snow on top, slowly convert it to Changed latex_crystal
+        if (random.nextInt(100) == 0) {
+            convertSnowOnTopToLatexCrystal(level, pos, random);
+        }
+        
         // Convert nearby water to dark latex fluid
         if (random.nextInt(2) == 0) { // 50% chance per random tick (faster spreading)
             convertNearbyWaterToLatexFluid(level, pos, random, false);
@@ -473,6 +478,7 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 "LATEX_PUP_CRYSTAL",      // Pup crystal
                 "LATEX_CRYSTAL",          // Regular dark latex crystal
                 "WOLF_CRYSTAL",           // Wolf crystal
+                "WOLF_CRYSTAL_SMALL",     // Small wolf crystal
                 "DARK_LATEX_CRYSTAL_LARGE", // Large dark latex crystal
                 "BEIFENG_CRYSTAL",        // Beifeng crystal
                 "BEIFENG_CRYSTAL_SMALL",  // Small Beifeng crystal
@@ -592,6 +598,7 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 "LATEX_PUP_CRYSTAL",
                 "LATEX_CRYSTAL",
                 "WOLF_CRYSTAL",
+                "WOLF_CRYSTAL_SMALL",
                 "DARK_LATEX_CRYSTAL_LARGE",
                 "BEIFENG_CRYSTAL",
                 "BEIFENG_CRYSTAL_SMALL",
@@ -689,6 +696,33 @@ public class TaintedDarkGrassBlock extends GrassBlock {
             }
         }
         return false;
+    }
+    
+    /**
+     * If this block has snow on top, slowly converts the snow into Changed latex_crystal.
+     */
+    private void convertSnowOnTopToLatexCrystal(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        
+        if (!aboveState.is(Blocks.SNOW) && !aboveState.is(Blocks.SNOW_BLOCK)) {
+            return;
+        }
+        
+        try {
+            Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
+            java.lang.reflect.Field field = changedBlocksClass.getField("LATEX_CRYSTAL");
+            Object registryObject = field.get(null);
+            if (registryObject == null) return;
+            java.lang.reflect.Method getMethod = registryObject.getClass().getMethod("get");
+            net.minecraft.world.level.block.Block latexCrystalBlock = (net.minecraft.world.level.block.Block) getMethod.invoke(registryObject);
+            if (latexCrystalBlock == null) return;
+            level.setBlock(abovePos, latexCrystalBlock.defaultBlockState(), 3);
+        } catch (ClassNotFoundException e) {
+            // Changed mod not loaded
+        } catch (Exception e) {
+            furmutage.LOGGER.debug("Could not convert snow to latex_crystal: {}", e.getMessage());
+        }
     }
     
     /**

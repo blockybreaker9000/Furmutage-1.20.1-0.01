@@ -1,6 +1,11 @@
 {
   "variants": {
-    "": { "model": "furmutage:block/plastic_waste_gravel" }
+    "": [
+      { "model": "furmutage:block/plastic_waste_gravel1" },
+      { "model": "furmutage:block/plastic_waste_gravel2" },
+      { "model": "furmutage:block/plastic_waste_gravel3" },
+      { "model": "furmutage:block/plastic_waste_gravel4" }
+    ]
   }
 }
 

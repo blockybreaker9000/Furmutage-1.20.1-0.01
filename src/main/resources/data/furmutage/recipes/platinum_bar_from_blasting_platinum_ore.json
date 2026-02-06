@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 0.7,
+  "group": "platinum_bar",
+  "ingredient": {
+    "item": "furmutage:platinum_ore"
+  },
+  "result": "furmutage:platinum_bar"
+}
+

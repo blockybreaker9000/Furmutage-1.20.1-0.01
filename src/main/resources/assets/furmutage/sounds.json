@@ -184,6 +184,12 @@
       "furmutage:deep_hypno_cat_stare"
     ],
     "subtitle": "subtitles.furmutage.deep_hypno_cat_stare"
+  },
+  "latex_beast_roar": {
+    "sounds": [
+      "furmutage:latex_beast_roar"
+    ],
+    "subtitle": "subtitles.furmutage.latex_beast_roar"
   }
 }
 

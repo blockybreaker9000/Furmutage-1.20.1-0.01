@@ -1,10 +1,1 @@
-{
-  "type": "furmutage:eugenics_smelting",
-  "category": "misc",
-  "cookingtime": 200,
-  "experience": 0.7,
-  "ingredient": {
-    "item": "furmutage:thunderium_raw_nugget"
-  },
-  "result": "furmutage:thunderium_nugget"
-}
+{"type":"furmutage:eugenics_smelting","category":"blast","cookingtime":100,"experience":0.7,"ingredient":{"item":"furmutage:thunderium_raw_nugget"},"result":"furmutage:thunderium_nugget"}

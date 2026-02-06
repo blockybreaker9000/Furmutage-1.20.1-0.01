@@ -24,6 +24,10 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.EUGENICS_SMELTERY_OVEN.get());
                         output.accept(ModItems.DARK_TAINTED_SEEDS.get());
                         output.accept(ModItems.WHITE_TAINTED_SEEDS.get());
+                        output.accept(ModItems.PLASTIC_WASTE.get());
+                        output.accept(ModItems.PLATINUM_ROD.get());
+                        output.accept(ModItems.PLATINUM_ORE.get());
+                        output.accept(ModItems.PLATINUM_BAR.get());
                         output.accept(ModItems.TSC_PLASTIC_WASTE_CLUMP.get());
                         output.accept(ModItems.TSC_PLASTIC_BAR.get());
                         output.accept(ModItems.DARK_LATEX_CLUMP.get());
@@ -42,6 +46,8 @@ public class modcreativemodetabs {
                         output.accept(ModItems.THUNDERIUM_NUGGET.get());
                         output.accept(ModItems.THUNDERIUM_RAW_NUGGET.get());
                         output.accept(ModItems.THUNDERIUM_CHUNK.get());
+                        output.accept(ModItems.THUNDERIUM_GLASS_SHARD.get());
+                        output.accept(ModItems.THUNDERIUM_GLASS_ROD.get());
 
 
 
@@ -50,6 +56,8 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ROSELIGHT_NUGGET.get());
                         output.accept(ModItems.ROSELIGHT_INGOT.get());
                         output.accept(ModItems.ROSELIGHT_CHUNK.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_SHARD.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_ROD.get());
 
                         output.accept(ModItems.TSC_FIBER.get());
                         output.accept(ModItems.RUBBER.get());
@@ -136,6 +144,10 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_DARK_GRASS.get());
                         output.accept(ModBlocks.ROSELIGHT_BLOCK.get());
                         output.accept(ModBlocks.THUNDERIUM_BLOCK.get());
+                        output.accept(ModBlocks.PLASTIC_WASTE_SAND.get());
+                        output.accept(ModBlocks.PLASTIC_WASTE_GRAVEL.get());
+                        output.accept(ModBlocks.PLATINUM_ORE_BLOCK.get());
+
 
 
 

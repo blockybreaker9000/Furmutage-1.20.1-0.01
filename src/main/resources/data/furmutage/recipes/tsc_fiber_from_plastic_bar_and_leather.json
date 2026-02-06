@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "BBB",
+    "LLL"
+  ],
+  "key": {
+    "B": {
+      "item": "furmutage:tsc_plastic_bar"
+    },
+    "L": {
+      "item": "minecraft:leather"
+    }
+  },
+  "result": {
+    "item": "furmutage:tsc_fiber",
+    "count": 2
+  }
+}
+

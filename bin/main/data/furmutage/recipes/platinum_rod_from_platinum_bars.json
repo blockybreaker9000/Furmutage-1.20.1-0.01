@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    "P",
+    "P",
+    "P"
+  ],
+  "key": {
+    "P": {
+      "item": "furmutage:platinum_bar"
+    }
+  },
+  "result": {
+    "item": "furmutage:platinum_rod",
+    "count": 1
+  }
+}
+
