@@ -13,31 +13,28 @@ import net.minecraft.world.level.biome.*;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-public class WastelandMountainBiome {
-    public static final ResourceKey<Biome> WASTELAND_MOUNTAIN_KEY = ResourceKey.create(Registries.BIOME, 
-            new ResourceLocation(furmutage.MOD_ID, "wasteland_mountain"));
-    
-    public static RegistryObject<Biome> WASTELAND_MOUNTAIN = ModBiomes.BIOMES.register("wasteland_mountain", WastelandMountainBiome::createMountainBiome);
-    
-    private static Biome createMountainBiome() {
+public class WastelandHillsBiome {
+    public static final ResourceKey<Biome> WASTELAND_HILLS_KEY = ResourceKey.create(Registries.BIOME,
+            ResourceLocation.fromNamespaceAndPath(furmutage.MOD_ID, "wasteland_hills"));
+
+    public static RegistryObject<Biome> WASTELAND_HILLS = ModBiomes.BIOMES.register("wasteland_hills", WastelandHillsBiome::createBiome);
+
+    private static Biome createBiome() {
         MobSpawnSettings.Builder spawnSettings = new MobSpawnSettings.Builder();
-        
-        // Fewer mobs in mountains
-        spawnSettings.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 5, 1, 2));
-        
-        // Use empty generation settings (defined in JSON)
+        spawnSettings.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.SKELETON, 8, 1, 2));
+        spawnSettings.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(EntityType.CREEPER, 5, 1, 2));
+
         BiomeGenerationSettings generationSettings = BiomeGenerationSettings.EMPTY;
-        
-        // Foggy sky colors - slightly darker for mountains
-        int skyColor = calculateSkyColor(0.4f);
-        int fogColor = 0xA0A0A0; // Darker gray fog
-        
+
+        int skyColor = calculateSkyColor(0.35f);
+        int fogColor = 0x909090;
+
         return new Biome.BiomeBuilder()
                 .hasPrecipitation(false)
-                .temperature(0.3f) // Colder in mountains
+                .temperature(0.35f)
                 .downfall(0.0f)
                 .specialEffects(new BiomeSpecialEffects.Builder()
-                        .waterColor(0xFFFFFF) // White for latex fluid
+                        .waterColor(0xFFFFFF)
                         .waterFogColor(0xFFFFFF)
                         .fogColor(fogColor)
                         .skyColor(skyColor)
@@ -48,7 +45,7 @@ public class WastelandMountainBiome {
                 .generationSettings(generationSettings)
                 .build();
     }
-    
+
     private static int calculateSkyColor(float temperature) {
         float f = temperature / 3.0F;
         f = Mth.clamp(f, -1.0F, 1.0F);

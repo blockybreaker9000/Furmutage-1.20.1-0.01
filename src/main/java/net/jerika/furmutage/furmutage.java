@@ -157,6 +157,14 @@ public class furmutage {
                 net.jerika.furmutage.entity.custom.LooseBehemothHand::checkLooseBehemothHandSpawnRules
             );
 
+            // Loose Squid Dog Limb: underground natural spawn (ceiling hanger)
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.LOOSE_SQUID_DOG_LIMB.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.LooseSquidDogLimbEntity::checkLooseSquidDogLimbSpawnRules
+            );
+
             // Giant Pure White Latex: very rare underground spawn, only where there is enough vertical space
             net.minecraft.world.entity.SpawnPlacements.register(
                 ModEntities.GIANT_PURE_WHITE_LATEX.get(),
@@ -247,6 +255,7 @@ public class furmutage {
             
             EntityRenderers.register(ModEntities.LATEX_BLOOD_WORM_MUTANT.get(), net.jerika.furmutage.entity.client.renderer.LatexBloodWormMutantRenderer::new);
             EntityRenderers.register(ModEntities.LOOSE_BEHEMOTH_HAND.get(), net.jerika.furmutage.entity.client.renderer.LooseBehemothHandRenderer::new);
+            EntityRenderers.register(ModEntities.LOOSE_SQUID_DOG_LIMB.get(), net.jerika.furmutage.entity.client.renderer.LooseSquidDogLimbRenderer::new);
 
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());

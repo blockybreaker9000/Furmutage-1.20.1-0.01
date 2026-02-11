@@ -41,6 +41,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ORANGE_SMOOTHY.get());
                         output.accept(ModItems.BOTTLED_ORANGE_JUICE.get());
 
+                        output.accept(ModItems.WHITE_COATED_TSC_PLASTIC_BAR.get());
                         output.accept(ModItems.THUNDERIUM.get());
                         output.accept(ModItems.THUNDERIUM_INGOT.get());
                         output.accept(ModItems.THUNDERIUM_NUGGET.get());
@@ -51,6 +52,7 @@ public class modcreativemodetabs {
 
 
 
+                        output.accept(ModItems.DARK_COATED_TSC_PLASTIC_BAR.get());
                         output.accept(ModItems.ROSELIGHT.get());
                         output.accept(ModItems.RAW_ROSELIGHT_NUGGET.get());
                         output.accept(ModItems.ROSELIGHT_NUGGET.get());
@@ -110,6 +112,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.TSC_DRONE_BOSS_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_BACTERIA_SPAWN_EGG.get());
                         output.accept(ModItems.LOOSE_BEHEMOTH_HAND_SPAWN_EGG.get());
+                        output.accept(ModItems.LOOSE_SQUID_DOG_LIMB_SPAWN_EGG.get());
                         output.accept(ModItems.DEEP_CAVE_HYPNO_CAT_SPAWN_EGG.get());
                         output.accept(ModItems.DEEPSLATE_LATEX_SQUID_DOG_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_BLOOD_WORM_MUTANT_SPAWN_EGG.get());

@@ -30,6 +30,14 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         if (WOLF_CRYSTAL_ID != null && type != null && WOLF_CRYSTAL_ID.equals(ForgeRegistries.ENTITY_TYPES.getKey(type))) {
             return true;
         }
+        // Block vanilla passive animals (pig, cow, chicken, etc.) from spawning on tainted dark grass
+        if (type == EntityType.PIG || type == EntityType.COW || type == EntityType.CHICKEN || type == EntityType.SHEEP
+                || type == EntityType.RABBIT || type == EntityType.HORSE || type == EntityType.DONKEY || type == EntityType.LLAMA
+                || type == EntityType.GOAT || type == EntityType.POLAR_BEAR || type == EntityType.WOLF || type == EntityType.CAT
+                || type == EntityType.FOX || type == EntityType.PANDA || type == EntityType.BEE || type == EntityType.TURTLE
+                || type == EntityType.OCELOT || type == EntityType.MOOSHROOM) {
+            return false;
+        }
         return super.isValidSpawn(state, level, pos, placementType, type);
     }
 
@@ -436,8 +444,8 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                         for (var entity : entities) {
                             String name = entity.getType().getDescriptionId().toLowerCase();
                             String key = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString().toLowerCase();
-                            if (name.contains("dark_latex_wolf") || key.contains("dark_latex_wolf") ||
-                                name.contains("darklatexwolf") || key.contains("darklatexwolf")) {
+                            if (name.contains("dark_latex_wolf_female") || key.contains("dark_latex_wolf_male") ||
+                                name.contains("dark_latex_wolf_female") || key.contains("dark_latex_wolf_male")) {
                                 return true;
                             }
                         }

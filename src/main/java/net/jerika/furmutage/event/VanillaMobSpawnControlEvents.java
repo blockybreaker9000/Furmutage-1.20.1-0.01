@@ -57,6 +57,8 @@ public class VanillaMobSpawnControlEvents {
             shouldRemove = !ModCommonConfig.ENABLE_ELDER_GUARDIAN_SPAWN.get();
         } else if (entityType == EntityType.WITCH) {
             shouldRemove = !ModCommonConfig.ENABLE_WITCH_SPAWN.get();
+        } else if (entityType == EntityType.DROWNED) {
+            shouldRemove = !ModCommonConfig.ENABLE_DROWNED_SPAWN.get();
         }
         
         if (shouldRemove && event.getEntity() instanceof net.minecraft.world.entity.LivingEntity livingEntity) {

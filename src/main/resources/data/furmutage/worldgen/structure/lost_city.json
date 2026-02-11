@@ -2,7 +2,9 @@
   "type": "furmutage:lost_city",
   "biomes": [
     "furmutage:wasteland",
-    "furmutage:wasteland_mountain",
+    "furmutage:wasteland_tainted_dark_grove",
+    "furmutage:wasteland_hills",
+    "furmutage:wasteland_scrubland",
     "furmutage:wasteland_tainted_flat"
   ],
   "step": "surface_structures",

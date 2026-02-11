@@ -33,10 +33,6 @@ import net.jerika.furmutage.sound.ModSounds;
  */
 public class GiantPureWhiteLatexEntity extends ChangedEntity {
 
-    // Simple \"stuck\" tracker so we can decide when to crawl
-    private double lastPosX, lastPosY, lastPosZ;
-    private int stuckTicks;
-
     public GiantPureWhiteLatexEntity(EntityType<? extends ChangedEntity> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
         // Allow stepping over 3 blocks high
@@ -69,10 +65,8 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         }
 
         if (!this.level().isClientSide) {
-            // Try to crouch in tight 2-block-high spaces when near a target player
-            updateCrouchForTightSpaces();
-            // If movement is blocked in very tight spaces, try crawling (1-block-high gaps)
-            updateCrawlWhenStuck();
+            // Crawl when chasing a target – use SWIMMING pose to get to the player
+            updateCrawlToPlayer();
         }
     }
 
@@ -102,138 +96,10 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
     }
 
     /**
-     * If the giant is close to its target but not moving for a short time and only has
-     * about 1 block of headroom, switch to SWIMMING pose to simulate crawling through
-     * 1-block-high tunnels.
+     * Keep the giant crawling (SWIMMING pose) at all times.
      */
-    private void updateCrawlWhenStuck() {
-        LivingEntity target = this.getTarget();
-        if (target == null) {
-            // No target – stand up if we were crawling
-            if (this.getPose() == Pose.SWIMMING) {
-                this.setPose(Pose.STANDING);
-            }
-            stuckTicks = 0;
-            return;
-        }
-
-        // Only care when fairly close to the target
-        double maxDistanceSq = 25.0D; // 5 blocks
-        if (this.distanceToSqr(target) > maxDistanceSq) {
-            if (this.getPose() == Pose.SWIMMING) {
-                this.setPose(Pose.STANDING);
-            }
-            stuckTicks = 0;
-            lastPosX = this.getX();
-            lastPosY = this.getY();
-            lastPosZ = this.getZ();
-            return;
-        }
-
-        // Check horizontal movement since last tick
-        double dx = this.getX() - lastPosX;
-        double dz = this.getZ() - lastPosZ;
-        double horizSq = dx * dx + dz * dz;
-
-        // Update last position for next tick
-        lastPosX = this.getX();
-        lastPosY = this.getY();
-        lastPosZ = this.getZ();
-
-        // If barely moving while pathfinding toward a nearby target, count as \"stuck\"
-        if (horizSq < 0.0005D && this.getNavigation().isInProgress()) {
-            stuckTicks++;
-        } else {
-            stuckTicks = 0;
-            // If we were crawling due to being stuck and we're moving again, stand up or crouch as other logic dictates
-            if (this.getPose() == Pose.SWIMMING) {
-                this.setPose(Pose.STANDING);
-            }
-            return;
-        }
-
-        // Need to be stuck for a short time before we decide to crawl
-        if (stuckTicks < 20) { // about 1 second
-            return;
-        }
-
-        // Measure very tight headroom (about 1 block) above the giant's feet
-        BlockPos basePos = this.blockPosition();
-        int airAbove = 0;
-        int maxCheck = 4; // just a few blocks above
-
-        for (int dy = 1; dy <= maxCheck; dy++) {
-            BlockPos checkPos = basePos.above(dy);
-            BlockState state = this.level().getBlockState(checkPos);
-            if (state.isAir() || state.getCollisionShape(this.level(), checkPos).isEmpty()) {
-                airAbove++;
-            } else {
-                break;
-            }
-        }
-
-        boolean veryTightCeiling = airAbove <= 1;
-
-        if (veryTightCeiling) {
-            // Use SWIMMING pose for a crawling-sized hitbox
-            if (this.getPose() != Pose.SWIMMING) {
-                this.setPose(Pose.SWIMMING);
-            }
-        } else if (this.getPose() == Pose.SWIMMING) {
-            // Plenty of headroom again – stand up, crouch logic will re-apply if needed
-            this.setPose(Pose.STANDING);
-        }
-    }
-
-    /**
-     * When this giant is close to its target but under a low ceiling (about 2 blocks of headroom),
-     * switch to CROUCHING pose so it can fit through 2x2 tunnels.
-     */
-    private void updateCrouchForTightSpaces() {
-        LivingEntity target = this.getTarget();
-        if (target == null) {
-            // No target – stand up if we were crouching specifically for tight spaces
-            if (this.getPose() == Pose.CROUCHING) {
-                this.setPose(Pose.STANDING);
-            }
-            return;
-        }
-
-        // Only bother when reasonably close to the target
-        double maxDistanceSq = 16.0D; // 4 blocks
-        if (this.distanceToSqr(target) > maxDistanceSq) {
-            if (this.getPose() == Pose.CROUCHING) {
-                this.setPose(Pose.STANDING);
-            }
-            return;
-        }
-
-        // Measure vertical headroom above the giant's feet
-        BlockPos basePos = this.blockPosition();
-        int airAbove = 0;
-        int maxCheck = 6; // up to 6 blocks above feet
-
-        for (int dy = 1; dy <= maxCheck; dy++) {
-            BlockPos checkPos = basePos.above(dy);
-            BlockState state = this.level().getBlockState(checkPos);
-            if (state.isAir() || state.getCollisionShape(this.level(), checkPos).isEmpty()) {
-                airAbove++;
-            } else {
-                break;
-            }
-        }
-
-        // If there's only about 2 blocks of clear headroom, crouch
-        boolean tightCeiling = airAbove <= 2;
-
-        if (tightCeiling) {
-            if (this.getPose() != Pose.CROUCHING) {
-                this.setPose(Pose.CROUCHING);
-            }
-        } else if (this.getPose() == Pose.CROUCHING) {
-            // Plenty of space again – stand back up
-            this.setPose(Pose.STANDING);
-        }
+    private void updateCrawlToPlayer() {
+        this.setPose(Pose.SWIMMING);
     }
 
     @Override
@@ -292,16 +158,16 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         }
 
         // Must not be exposed to sky and must be dark
-        if (world.getBrightness(LightLayer.SKY, pos) > random.nextInt(32)) {
+        if (world.getBrightness(LightLayer.SKY, pos) > random.nextInt(50)) {
             return false;
         }
         if (world.getBrightness(LightLayer.BLOCK, pos) > 0) {
             return false;
         }
 
-        // Require at least 10 blocks of clear vertical space above
+        // Require at least 5 blocks of clear vertical space (giant crawls, so smaller height needed)
         int clear = 0;
-        for (int dy = 1; dy <= 12; dy++) {
+        for (int dy = 1; dy <= 8; dy++) {
             BlockPos check = pos.above(dy);
             BlockState state = world.getBlockState(check);
             if (state.isAir() || state.getCollisionShape(world, check).isEmpty()) {
@@ -310,7 +176,7 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
                 break;
             }
         }
-        if (clear < 10) {
+        if (clear < 5) {
             return false;
         }
 

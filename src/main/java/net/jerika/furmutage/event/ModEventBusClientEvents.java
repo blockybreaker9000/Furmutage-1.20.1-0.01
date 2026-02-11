@@ -24,6 +24,7 @@ public class ModEventBusClientEvents {
         event.registerLayerDefinition(ModModelLayers.DEEP_CAVE_HYPNO_CAT_LAYER, DeepCaveHypnoCatModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LATEX_BLOOD_WORM_MUTANT_LAYER, LatexBloodWormMutantModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LOOSE_BEHEMOTH_HAND_LAYER, LooseBehemothHandModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.LOOSE_SQUID_DOG_LIMB_LAYER, LooseSquidDogLimbModel::createBodyLayer);
     }
 
 }

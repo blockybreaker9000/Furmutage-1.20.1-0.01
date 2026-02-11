@@ -32,6 +32,7 @@ public class ModCommonConfig {
     public static final ForgeConfigSpec.BooleanValue ENABLE_ELDER_GUARDIAN_SPAWN;
     public static final ForgeConfigSpec.BooleanValue ENABLE_HUSK_SPAWN;
     public static final ForgeConfigSpec.BooleanValue ENABLE_WITCH_SPAWN;
+    public static final ForgeConfigSpec.BooleanValue ENABLE_DROWNED_SPAWN;
     
     static {
         BUILDER.push("World Generation Config");
@@ -133,6 +134,10 @@ public class ModCommonConfig {
         ENABLE_WITCH_SPAWN = BUILDER
                 .comment("Set to false to prevent witches from spawning naturally")
                 .define("enableWitchSpawn", false);
+        
+        ENABLE_DROWNED_SPAWN = BUILDER
+                .comment("Set to false to prevent drowned from spawning naturally")
+                .define("enableDrownedSpawn", false);
         
         BUILDER.pop();
         SPEC = BUILDER.build();

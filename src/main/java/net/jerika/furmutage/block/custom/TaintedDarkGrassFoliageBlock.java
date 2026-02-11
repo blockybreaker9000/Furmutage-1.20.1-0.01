@@ -259,8 +259,8 @@ public class TaintedDarkGrassFoliageBlock extends BushBlock {
                         for (var entity : entities) {
                             String name = entity.getType().getDescriptionId().toLowerCase();
                             String key = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString().toLowerCase();
-                            if (name.contains("dark_latex_wolf") || key.contains("dark_latex_wolf") ||
-                                name.contains("darklatexwolf") || key.contains("darklatexwolf")) {
+                            if (name.contains("dark_latex_wolf_male") || key.contains("dark_latex_wolf_female") ||
+                                name.contains("dark_latex_wolf_male") || key.contains("dark_latex_wolf_female")) {
                                 return true;
                             }
                         }

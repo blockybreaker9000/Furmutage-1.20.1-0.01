@@ -3,6 +3,9 @@
   "category": "misc",
   "ingredients": [
     { "item": "furmutage:tsc_plastic_bar" },
+    { "item": "furmutage:thunderium_nugget" },
+    { "item": "furmutage:thunderium_glass_shard" },
+    { "item": "changed:latex_base" },
     { "item": "furmutage:cooked_white_latex_plastic_bowl" }
   ],
   "result": {

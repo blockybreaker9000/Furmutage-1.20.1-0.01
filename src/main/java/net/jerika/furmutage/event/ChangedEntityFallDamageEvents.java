@@ -88,7 +88,8 @@ public class ChangedEntityFallDamageEvents {
         String className = entity.getClass().getName();
         return className.contains("TSCDrone") || // TSCDroneEntity and TSCDroneBossEntity
                className.contains("LatexBacteria") || // LatexBacteriaEntity
-               className.contains("LatexExoMutant"); // LatexExoMutantEntity
+               className.contains("LatexExoMutant") || // LatexExoMutantEntity
+               className.contains("LooseSquidDogLimb"); // LooseSquidDogLimbEntity
     }
 }
 

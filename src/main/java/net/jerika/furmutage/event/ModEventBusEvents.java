@@ -35,6 +35,7 @@ import net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog;
 import net.jerika.furmutage.entity.custom.DeepCaveHypnoCat;
 import net.jerika.furmutage.entity.custom.LatexBloodWormMutant;
 import net.jerika.furmutage.entity.custom.LooseBehemothHand;
+import net.jerika.furmutage.entity.custom.LooseSquidDogLimbEntity;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -85,5 +86,6 @@ public class ModEventBusEvents {
         event.put(ModEntities.DEEP_CAVE_HYPNO_CAT.get(), DeepCaveHypnoCat.createAttributes().build());
         event.put(ModEntities.LATEX_BLOOD_WORM_MUTANT.get(), LatexBloodWormMutant.createAttributes().build());
         event.put(ModEntities.LOOSE_BEHEMOTH_HAND.get(), LooseBehemothHand.createAttributes().build());
+        event.put(ModEntities.LOOSE_SQUID_DOG_LIMB.get(), LooseSquidDogLimbEntity.createAttributes().build());
     }
 }

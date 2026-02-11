@@ -1,0 +1,10 @@
+{
+  "replace": true,
+  "values": [
+    "furmutage:wasteland",
+    "furmutage:wasteland_tainted_dark_grove",
+    "furmutage:wasteland_hills",
+    "furmutage:wasteland_scrubland",
+    "furmutage:wasteland_tainted_flat"
+  ]
+}

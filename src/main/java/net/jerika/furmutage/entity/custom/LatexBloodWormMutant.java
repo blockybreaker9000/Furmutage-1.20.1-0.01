@@ -102,8 +102,8 @@ public class LatexBloodWormMutant extends ChangedEntity {
     protected void setAttributes(AttributeMap attributes) {
         super.setAttributes(attributes);
         attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(128.0D); // Much longer follow range for persistent targeting
-        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(1.0);
-        attributes.getInstance(ForgeMod.SWIM_SPEED.get()).setBaseValue(1.5);
+        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.5);
+        attributes.getInstance(ForgeMod.SWIM_SPEED.get()).setBaseValue(0.8);
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(26);
     }
 
@@ -112,7 +112,7 @@ public class LatexBloodWormMutant extends ChangedEntity {
         super.registerGoals();
         // Changed mod style AI goals - matching priority order with other Furmutage entities
         // Priority 1: Melee attack goal
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, false));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 0.6D, false));
         
         // Priority 2: Improved pathfinding for jumping onto blocks
         this.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(this));

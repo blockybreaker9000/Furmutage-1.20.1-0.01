@@ -7,6 +7,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.NoiseColumn;
@@ -20,8 +21,19 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
+import net.minecraft.world.level.levelgen.feature.featuresize.TwoLayersFeatureSize;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.AcaciaFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.foliageplacers.FancyFoliagePlacer;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.ForkingTrunkPlacer;
+import net.minecraft.world.level.levelgen.feature.trunkplacers.MegaJungleTrunkPlacer;
 import net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraftforge.registries.DeferredRegister;
@@ -83,7 +95,77 @@ public class WastelandChunkGenerator extends ChunkGenerator {
     
     @Override
     public void buildSurface(WorldGenRegion region, StructureManager structures, RandomState randomState, ChunkAccess chunk) {
-        // Surface building is handled in fillFromNoise
+        int chunkX = chunk.getPos().x * 16;
+        int chunkZ = chunk.getPos().z * 16;
+        RandomSource random = RandomSource.create(region.getSeed() + chunkX * 7919L + chunkZ * 71993L);
+
+        for (int x = 0; x < 16; x++) {
+            for (int z = 0; z < 16; z++) {
+                int worldX = chunkX + x;
+                int worldZ = chunkZ + z;
+                BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(worldX, region.getMaxBuildHeight(), worldZ);
+
+                int surfaceY = findSurfaceY(region, worldX, worldZ);
+                if (surfaceY < region.getMinBuildHeight()) continue;
+
+                pos.setY(surfaceY + 1);
+                Holder<Biome> biomeHolder = region.getBiome(pos);
+                ResourceLocation biomeId = biomeHolder.unwrapKey().map(k -> k.location()).orElse(null);
+                if (biomeId == null) continue;
+
+                String biomePath = biomeId.getPath();
+                if (biomePath.equals("wasteland_tainted_flat")) {
+                    if (random.nextDouble() < 0.025) {
+                        tryPlaceTaintedWhiteTree(region, pos, random);
+                    } else if (random.nextDouble() < 0.12 && region.getBlockState(pos).isAir()) {
+                        region.setBlock(pos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get().defaultBlockState(), 3);
+                    }
+                } else if (biomePath.equals("wasteland_tainted_dark_grove")) {
+                    if (random.nextDouble() < 0.02) {
+                        tryPlaceTaintedDarkTree(region, pos, random);
+                    } else if (random.nextDouble() < 0.15 && region.getBlockState(pos).isAir()) {
+                        region.setBlock(pos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_DARK_GRASS_FOLIAGE.get().defaultBlockState(), 3);
+                    }
+                }
+            }
+        }
+    }
+
+    private int findSurfaceY(WorldGenRegion region, int x, int z) {
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos(x, region.getMaxBuildHeight() - 1, z);
+        while (pos.getY() > region.getMinBuildHeight()) {
+            if (!region.getBlockState(pos).isAir()) {
+                return pos.getY();
+            }
+            pos.move(0, -1, 0);
+        }
+        return region.getMinBuildHeight() - 1;
+    }
+
+    private void tryPlaceTaintedWhiteTree(WorldGenRegion region, BlockPos pos, RandomSource random) {
+        TreeConfiguration config = new TreeConfiguration.TreeConfigurationBuilder(
+                BlockStateProvider.simple(net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_LOG.get().defaultBlockState()),
+                new ForkingTrunkPlacer(5, 3, 3),
+                BlockStateProvider.simple(net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_LEAF.get().defaultBlockState()),
+                new AcaciaFoliagePlacer(ConstantInt.of(3), ConstantInt.of(3)),
+                new TwoLayersFeatureSize(2, 2, 2)
+        ).dirt(BlockStateProvider.simple(net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_DIRT.get().defaultBlockState())).build();
+
+        FeaturePlaceContext<TreeConfiguration> context = new FeaturePlaceContext<>(Optional.empty(), region, this, random, pos, config);
+        Feature.TREE.place(context);
+    }
+
+    private void tryPlaceTaintedDarkTree(WorldGenRegion region, BlockPos pos, RandomSource random) {
+        TreeConfiguration config = new TreeConfiguration.TreeConfigurationBuilder(
+                BlockStateProvider.simple(net.jerika.furmutage.block.custom.ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState()),
+                new MegaJungleTrunkPlacer(10, 2, 19),
+                BlockStateProvider.simple(net.jerika.furmutage.block.custom.ModBlocks.TAINTED_DARK_LEAF.get().defaultBlockState()),
+                new FancyFoliagePlacer(ConstantInt.of(2), ConstantInt.of(4), 4),
+                new TwoLayersFeatureSize(0, 0, 0)
+        ).dirt(BlockStateProvider.simple(net.jerika.furmutage.block.custom.ModBlocks.TAINTED_DARK_DIRT.get().defaultBlockState())).build();
+
+        FeaturePlaceContext<TreeConfiguration> context = new FeaturePlaceContext<>(Optional.empty(), region, this, random, pos, config);
+        Feature.TREE.place(context);
     }
     
     @Override
@@ -190,9 +272,15 @@ public class WastelandChunkGenerator extends ChunkGenerator {
                         } else if (biomeType.equals("tainted_flat")) {
                             // Tainted flat - use tainted white grass
                             chunk.setBlockState(mutablePos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_GRASS.get().defaultBlockState(), false);
-                        } else if (biomeType.equals("mountain")) {
-                            // Mountain - stone surface
+                        } else if (biomeType.equals("tainted_dark_grove")) {
+                            // Tainted dark grove - tainted dark grass surface
+                            chunk.setBlockState(mutablePos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_DARK_GRASS.get().defaultBlockState(), false);
+                        } else if (biomeType.equals("hills")) {
+                            // Hills - rocky stone/gravel surface
                             chunk.setBlockState(mutablePos, Blocks.STONE.defaultBlockState(), false);
+                        } else if (biomeType.equals("scrubland")) {
+                            // Scrubland - coarse dirt
+                            chunk.setBlockState(mutablePos, Blocks.COARSE_DIRT.defaultBlockState(), false);
                         } else {
                             // Regular wasteland - dirt surface
                             chunk.setBlockState(mutablePos, Blocks.DIRT.defaultBlockState(), false);
@@ -201,13 +289,16 @@ public class WastelandChunkGenerator extends ChunkGenerator {
                         // Middle layers - biome dependent (only if not in ravine/pit)
                         if (biomeType.equals("tainted_flat")) {
                             chunk.setBlockState(mutablePos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_DIRT.get().defaultBlockState(), false);
-                        } else if (biomeType.equals("mountain")) {
-                            // Mountains use more stone
+                        } else if (biomeType.equals("tainted_dark_grove")) {
+                            chunk.setBlockState(mutablePos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_DARK_DIRT.get().defaultBlockState(), false);
+                        } else if (biomeType.equals("hills")) {
                             if (y > baseHeight - 2) {
                                 chunk.setBlockState(mutablePos, Blocks.STONE.defaultBlockState(), false);
                             } else {
                                 chunk.setBlockState(mutablePos, Blocks.DIRT.defaultBlockState(), false);
                             }
+                        } else if (biomeType.equals("scrubland")) {
+                            chunk.setBlockState(mutablePos, Blocks.DIRT.defaultBlockState(), false);
                         } else {
                             chunk.setBlockState(mutablePos, Blocks.DIRT.defaultBlockState(), false);
                         }
@@ -230,19 +321,34 @@ public class WastelandChunkGenerator extends ChunkGenerator {
                         }
                     }
                 }
-                
-                // Add very minimal obstacles for tainted flat biome (almost none for ultra smooth terrain)
+
+                // Trees are placed in buildSurface using Feature.TREE (same as sapling growth)
+                // Foliage only placed here for tainted dark grove and tainted flat
+                if (biomeType.equals("tainted_dark_grove")) {
+                    long groveSeed = (long)worldX * 7919L + (long)worldZ * 9973L + seed;
+                    java.util.Random groveRandom = new java.util.Random(groveSeed);
+                    if (groveRandom.nextDouble() < 0.15) {
+                        BlockPos.MutableBlockPos foliagePos = new BlockPos.MutableBlockPos(worldX, baseHeight + 1, worldZ);
+                        if (chunk.getBlockState(foliagePos).isAir()) {
+                            chunk.setBlockState(foliagePos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_DARK_GRASS_FOLIAGE.get().defaultBlockState(), false);
+                        }
+                    }
+                }
                 if (biomeType.equals("tainted_flat")) {
-                    long obstacleSeed = (long)worldX * 7919L + (long)worldZ * 9973L + seed;
-                    java.util.Random obstacleRandom = new java.util.Random(obstacleSeed);
-                    if (obstacleRandom.nextDouble() < 0.01) { // Reduced to 1% chance for obstacles (was 5%)
-                        // Add small obstacles like tainted white grass foliage
-                        BlockPos.MutableBlockPos obstaclePos = new BlockPos.MutableBlockPos(worldX, baseHeight + 1, worldZ);
-                        chunk.setBlockState(obstaclePos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get().defaultBlockState(), false);
+                    long flatSeed = (long)worldX * 7919L + (long)worldZ * 9973L + seed;
+                    java.util.Random flatRandom = new java.util.Random(flatSeed);
+                    if (flatRandom.nextDouble() < 0.12) {
+                        BlockPos.MutableBlockPos foliagePos = new BlockPos.MutableBlockPos(worldX, baseHeight + 1, worldZ);
+                        if (chunk.getBlockState(foliagePos).isAir()) {
+                            chunk.setBlockState(foliagePos, net.jerika.furmutage.block.custom.ModBlocks.TAINTED_WHITE_GRASS_FOLIAGE.get().defaultBlockState(), false);
+                        }
                     }
                 }
             }
         }
+        
+        // Place oak trunk trees (no leaves) in small groups for all wasteland biomes
+        placeWastelandOakTrunkGroups(chunk, chunkX, chunkZ, smoothedHeights, randomState);
         
         return CompletableFuture.completedFuture(chunk);
     }
@@ -275,13 +381,23 @@ public class WastelandChunkGenerator extends ChunkGenerator {
             return baseHeight - riverDepth;
         }
         
-        // Generate terrain based on separate biome regions - more varied and dangerous
-        if (biomeType.equals("mountain")) {
-            // Generate varied mountain ranges with steeper slopes and more variation
-            double mountainNoise = Math.sin(x * 0.012) * Math.cos(z * 0.012) * 25; // Higher peaks
-            double detailNoise = Math.sin(x * 0.035) * Math.cos(z * 0.035) * 5; // More detail
-            double cliffNoise = Math.sin(x * 0.08) * Math.cos(z * 0.08) * 8; // Steep cliffs
-            return baseHeight + (int)Math.round(mountainNoise + detailNoise + cliffNoise);
+        // Generate terrain based on separate biome regions
+        if (biomeType.equals("tainted_dark_grove")) {
+            // Wooded grove - gentle rolling hills
+            double groveNoise = Math.sin(x * 0.02) * Math.cos(z * 0.02) * 5;
+            double detailNoise = Math.sin(x * 0.05) * Math.cos(z * 0.05) * 2;
+            return baseHeight + (int)Math.round(groveNoise + detailNoise);
+        } else if (biomeType.equals("hills")) {
+            // Rocky hills - steeper terrain
+            double hillsNoise = Math.sin(x * 0.012) * Math.cos(z * 0.012) * 20;
+            double detailNoise = Math.sin(x * 0.035) * Math.cos(z * 0.035) * 5;
+            double cliffNoise = Math.sin(x * 0.08) * Math.cos(z * 0.08) * 6;
+            return baseHeight + (int)Math.round(hillsNoise + detailNoise + cliffNoise);
+        } else if (biomeType.equals("scrubland")) {
+            // Dry scrubland - moderate variation
+            double scrubNoise = Math.sin(x * 0.018) * Math.cos(z * 0.018) * 6;
+            double detailNoise = Math.sin(x * 0.04) * Math.cos(z * 0.04) * 2;
+            return baseHeight + (int)Math.round(scrubNoise + detailNoise);
         } else if (biomeType.equals("tainted_flat")) {
             // More varied terrain with hills and depressions
             double smoothVariation = Math.sin(x * 0.02) * Math.cos(z * 0.02) * 3; // Moderate hills
@@ -311,16 +427,20 @@ public class WastelandChunkGenerator extends ChunkGenerator {
     // Helper method to determine biome type at a position (matches biome source logic)
     private String getBiomeType(int x, int z) {
         // Use same logic as biome source for consistency
-        double scaledX = x / 400.0;
-        double scaledZ = z / 400.0;
+        double scaledX = x / 150.0;
+        double scaledZ = z / 150.0;
         double biomeNoise = Math.sin(scaledX * 0.3 + seed * 0.001) * Math.cos(scaledZ * 0.3 + seed * 0.001);
         
         // Check for rivers first
         if (isRiverPosition(x, z)) return "river";
         
         // Determine biome based on noise (matches biome source)
-        if (biomeNoise < -0.3) {
-            return "mountain";
+        if (biomeNoise < -0.4) {
+            return "tainted_dark_grove";
+        } else if (biomeNoise < -0.2) {
+            return "hills";
+        } else if (biomeNoise < 0.0) {
+            return "scrubland";
         } else if (biomeNoise < 0.2) {
             return "tainted_flat";
         } else {
@@ -328,9 +448,7 @@ public class WastelandChunkGenerator extends ChunkGenerator {
         }
     }
     
-    // Check if position is part of a river (winding paths)
     private boolean isRiverPosition(int x, int z) {
-        // Create winding river paths using sine waves
         // Multiple river branches that wind through the landscape
         double riverWidth = 4.0; // River width in blocks
         
@@ -365,7 +483,6 @@ public class WastelandChunkGenerator extends ChunkGenerator {
             return 0;
         }
         
-        // Create winding ravine paths - more varied widths
         double ravineWidth = 2.0 + ravineRandom.nextDouble() * 6.0; // 2-8 blocks wide (more varied)
         
         // Ravine 1: Winding north-south
@@ -381,7 +498,6 @@ public class WastelandChunkGenerator extends ChunkGenerator {
         double ravine3Z = Math.cos((x - z) * 0.015 + seed * 0.0005) * 180.0;
         double dist3 = Math.sqrt((x - ravine3X) * (x - ravine3X) + (z - ravine3Z) * (z - ravine3Z));
         
-        // Ravine 4: Additional winding path for more danger
         double ravine4X = Math.sin(z * 0.025 + seed * 0.0003) * 120.0;
         double ravine4Z = Math.cos(x * 0.025 + seed * 0.0003) * 120.0;
         double dist4 = Math.sqrt((x - ravine4X) * (x - ravine4X) + (z - ravine4Z) * (z - ravine4Z));
@@ -500,6 +616,44 @@ public class WastelandChunkGenerator extends ChunkGenerator {
         info.add("Wasteland Dimension");
     }
     
+    private void placeWastelandOakTrunkGroups(ChunkAccess chunk, int chunkX, int chunkZ, int[][] smoothedHeights, RandomState randomState) {
+        for (int gi = -1; gi <= 2; gi++) {
+            for (int gj = -1; gj <= 2; gj++) {
+                int cx = chunkX + 8 + gi * 24;
+                int cz = chunkZ + 8 + gj * 24;
+                String biomeType = getBiomeType(cx, cz);
+                if (biomeType.equals("river") || biomeType.equals("tainted_flat") || biomeType.equals("tainted_dark_grove")) continue;
+                long groupSeed = (long)cx * 31991L + (long)cz * 71993L + seed;
+                java.util.Random groupRandom = new java.util.Random(groupSeed);
+                if (groupRandom.nextDouble() >= 0.35) continue;
+                int treeCount = 2 + groupRandom.nextInt(3);
+                for (int t = 0; t < treeCount; t++) {
+                    int tx = cx + groupRandom.nextInt(5) - 2;
+                    int tz = cz + groupRandom.nextInt(5) - 2;
+                    int localX = tx - chunkX;
+                    int localZ = tz - chunkZ;
+                    if (localX < 0 || localX >= 16 || localZ < 0 || localZ >= 16) continue;
+                    int baseHeight = smoothedHeights[localX + 2][localZ + 2];
+                    BlockPos.MutableBlockPos checkPos = new BlockPos.MutableBlockPos(tx, baseHeight, tz);
+                    if (chunk.getBlockState(checkPos).isAir()) continue;
+                    placeOakTrunkTree(chunk, tx, baseHeight + 1, tz, groupRandom);
+                }
+            }
+        }
+    }
+
+    private void placeOakTrunkTree(ChunkAccess chunk, int baseX, int baseY, int baseZ, java.util.Random random) {
+        BlockState logState = Blocks.OAK_LOG.defaultBlockState();
+        int height = 4 + random.nextInt(4);
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        for (int y = 0; y < height; y++) {
+            pos.set(baseX, baseY + y, baseZ);
+            if (chunk.getBlockState(pos).canBeReplaced()) {
+                chunk.setBlockState(pos, logState, false);
+            }
+        }
+    }
+
     private static Block getWhiteLatexFluidBlock() {
         try {
             Class<?> changedBlocksClass = Class.forName("net.ltxprogrammer.changed.init.ChangedBlocks");
