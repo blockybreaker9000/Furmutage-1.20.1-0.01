@@ -135,7 +135,7 @@ public class ModItems {
     public static final RegistryObject<Item> ORANGE_PIE = ITEMS.register("orange_pie",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(8)
-                    .saturationMod(2.5f)
+                    .saturationMod(0.4f)
                     .build())));
     public static final RegistryObject<Item> ORANGE_MUFFIN = ITEMS.register("orange_muffin",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
@@ -145,22 +145,22 @@ public class ModItems {
     public static final RegistryObject<Item> ORANGE_FOXYAS = ITEMS.register("orange_foxyas_cookie",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(6)
-                    .saturationMod(2.5f)
+                    .saturationMod(0.2f)
                     .build())));
     public static final RegistryObject<Item> ORANGE_SWEETROLL = ITEMS.register("orange_sweetroll",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(6)
-                    .saturationMod(2.5f)
+                    .saturationMod(0.4f)
                     .build())));
     public static final RegistryObject<Item> ORANGE_ICECREAM = ITEMS.register("orange_icecream",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(6)
-                    .saturationMod(2.5f)
+                    .saturationMod(0.4f)
                     .build())));
     public static final RegistryObject<Item> ORANGE_SMOOTHY = ITEMS.register("orange_smoothy",
             () -> new OrangeSmoothy(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(6)
-                    .saturationMod(2.5f)
+                    .saturationMod(0.4f)
                     .build())));
 
 
