@@ -190,6 +190,30 @@
       "furmutage:latex_beast_roar"
     ],
     "subtitle": "subtitles.furmutage.latex_beast_roar"
+  },
+  "latex_jumpscare": {
+    "sounds": [
+      "furmutage:latex_jumpscare"
+    ],
+    "subtitle": "subtitles.furmutage.latex_jumpscare"
+  },
+  "latex_jumpscare_2": {
+    "sounds": [
+      "furmutage:latex_jumpscare_2"
+    ],
+    "subtitle": "subtitles.furmutage.latex_jumpscare"
+  },
+  "latex_jumpscare_3": {
+    "sounds": [
+      "furmutage:latex_jumpscare_3"
+    ],
+    "subtitle": "subtitles.furmutage.latex_jumpscare"
+  },
+  "latex_jumpscare_4": {
+    "sounds": [
+      "furmutage:latex_jumpscare_4"
+    ],
+    "subtitle": "subtitles.furmutage.latex_jumpscare"
   }
 }
 

@@ -1,6 +1,7 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.furmutage;
+import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -9,6 +10,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -37,6 +40,12 @@ public class ChangedStalkerSneakEvents {
     private static final String TAG_SNEAKING = "furmutage_changed_sneaking";
     // Last tick when this entity was \"seen\" (had line of sight) by its target player
     private static final String TAG_LAST_SEEN_TICK = "furmutage_changed_last_seen_tick";
+    // Whether this stalker AI has been activated at least once for this entity
+    private static final String TAG_AI_ACTIVATED = "furmutage_changed_ai_activated";
+    // Player persistent data key for jumpscare cooldown (game time when last played)
+    private static final String PLAYER_TAG_LAST_JUMPSCARE = "furmutage_last_jumpscare_tick";
+    // Cooldown: 5 minutes = 6000 ticks
+    private static final long JUMPSCARE_COOLDOWN_TICKS = 6000;
     private static final double MIN_FOLLOW_RANGE = 30.0D;
 
     /**
@@ -127,6 +136,8 @@ public class ChangedStalkerSneakEvents {
             entity.setPose(Pose.CROUCHING);
 
             data.putBoolean(TAG_SNEAKING, true);
+            // Mark that this entity has had its stalker AI activated at least once
+            data.putBoolean(TAG_AI_ACTIVATED, true);
         }
         // Stop sneaking: restore speed and pose
         else if (!shouldSneak && wasSneaking) {
@@ -136,6 +147,23 @@ public class ChangedStalkerSneakEvents {
             entity.setPose(Pose.STANDING);
             data.putBoolean(TAG_SNEAKING, false);
 
+            // Play jumpscare sound only for the target player that activated the AI, once per 5 minutes
+            LivingEntity currentTarget = mob.getTarget();
+            if (currentTarget instanceof ServerPlayer serverPlayer && data.getBoolean(TAG_AI_ACTIVATED)) {
+                long now = entity.level().getGameTime();
+                long lastPlayed = serverPlayer.getPersistentData().getLong(PLAYER_TAG_LAST_JUMPSCARE);
+                if (now - lastPlayed >= JUMPSCARE_COOLDOWN_TICKS) {
+                    var jumpscares = new net.minecraft.sounds.SoundEvent[] {
+                        ModSounds.LATEX_JUMPSCARE.get(),
+                        ModSounds.LATEX_JUMPSCARE_2.get(),
+                        ModSounds.LATEX_JUMPSCARE_3.get(),
+                        ModSounds.LATEX_JUMPSCARE_4.get()
+                    };
+                    var sound = jumpscares[entity.level().getRandom().nextInt(jumpscares.length)];
+                    serverPlayer.playNotifySound(sound, SoundSource.HOSTILE, 1.0F, 1.0F);
+                    serverPlayer.getPersistentData().putLong(PLAYER_TAG_LAST_JUMPSCARE, now);
+                }
+            }
         }
     }
 

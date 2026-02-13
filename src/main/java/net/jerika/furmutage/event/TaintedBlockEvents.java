@@ -118,11 +118,11 @@ public class TaintedBlockEvents {
             return;
         }
         
-        java.util.Iterator<LivingEntity> it = transfurTargets.iterator();
-        while (it.hasNext()) {
-            LivingEntity entity = it.next();
+        // Iterate over a copy to avoid ConcurrentModificationException when entity replacement
+        // triggers EntityJoinLevelEvent and adds to transfurTargets during iteration
+        for (LivingEntity entity : new java.util.ArrayList<>(transfurTargets)) {
             if (entity == null || !entity.isAlive() || entity.isInvulnerable()) {
-                it.remove();
+                transfurTargets.remove(entity);
                 exposureTime.remove(entity);
                 continue;
             }
@@ -133,7 +133,7 @@ public class TaintedBlockEvents {
             }
             
             if (isTransfurred(entity)) {
-                it.remove();
+                transfurTargets.remove(entity);
                 exposureTime.remove(entity);
                 continue;
             }
@@ -348,7 +348,7 @@ public class TaintedBlockEvents {
                     
                     // If entity was replaced, we're done with this entity
                     if (wasReplaced) {
-                        it.remove();
+                        transfurTargets.remove(entity);
                         continue;
                     }
                 }
@@ -402,7 +402,7 @@ public class TaintedBlockEvents {
                     
                     // If entity was replaced, we're done with this entity
                     if (wasReplaced) {
-                        it.remove();
+                        transfurTargets.remove(entity);
                         continue;
                     }
                 }

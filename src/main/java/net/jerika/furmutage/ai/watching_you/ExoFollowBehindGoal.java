@@ -19,8 +19,8 @@ public class ExoFollowBehindGoal extends Goal {
     private Player targetPlayer;
     private final double speedModifier;
     private static final double MIN_RANGE = 4.0D;
-    private static final double MAX_RANGE = 16.0D;
-    private static final double ACTIVATION_CHANCE = 0.001D; // 0.1% chance per tick when conditions are met
+    private static final double MAX_RANGE = 26.0D;
+    private static final double ACTIVATION_CHANCE = 0.01D; // 0.1% chance per tick when conditions are met
 
     public ExoFollowBehindGoal(PathfinderMob mob, double speedModifier) {
         this.mob = mob;

@@ -92,17 +92,17 @@ public class LatexTeamEvents {
             return;
         }
         
-        java.util.Iterator<Mob> it = teamEntities.iterator();
-        while (it.hasNext()) {
-            Mob mob = it.next();
+        // Iterate over a snapshot to avoid ConcurrentModificationException when other
+        // events add/remove team entities during this tick.
+        for (Mob mob : new java.util.ArrayList<>(teamEntities)) {
             if (mob == null || !mob.isAlive()) {
-                it.remove();
+                teamEntities.remove(mob);
                 continue;
             }
             
             String mobType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
             if (!LatexTeamConfig.isEntityInTeam(mobType)) {
-                it.remove();
+                teamEntities.remove(mob);
                 continue;
             }
             int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);

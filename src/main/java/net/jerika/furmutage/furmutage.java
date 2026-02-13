@@ -167,6 +167,9 @@ public class furmutage {
             // Changed wolf_crystal: allow spawn on tainted dark grass and allow spawn egg/command placement
             net.jerika.furmutage.event.WolfCrystalSpawnEvents.registerSpawnPlacements();
 
+            // Latex night spawners: register spawn placements for Changed entities (night/dark caves, Y>=34)
+            net.jerika.furmutage.event.LatexNightSpawnEvents.registerSpawnPlacements();
+
             // Latex Mutant Family: no natural spawn (caused infinite "Saving world data"); use spawn eggs or commands.
         });
     }

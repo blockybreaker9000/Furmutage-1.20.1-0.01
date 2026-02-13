@@ -116,6 +116,12 @@ public class ModSounds {
     // Giant latex beast idle roar sound
     public static final RegistryObject<SoundEvent> LATEX_BEAST_ROAR = registerSoundEvent("latex_beast_roar");
 
+    // Jumpscare sounds for Changed stalker uncrouch (4 variants, picked at random)
+    public static final RegistryObject<SoundEvent> LATEX_JUMPSCARE = registerSoundEvent("latex_jumpscare");
+    public static final RegistryObject<SoundEvent> LATEX_JUMPSCARE_2 = registerSoundEvent("latex_jumpscare_2");
+    public static final RegistryObject<SoundEvent> LATEX_JUMPSCARE_3 = registerSoundEvent("latex_jumpscare_3");
+    public static final RegistryObject<SoundEvent> LATEX_JUMPSCARE_4 = registerSoundEvent("latex_jumpscare_4");
+
     private static RegistryObject<SoundEvent> registerSoundEvent(String name) {
         ResourceLocation id = new ResourceLocation(furmutage.MOD_ID, name);
         return SOUND_EVENTS.register(name, () -> SoundEvent.createVariableRangeEvent(id));
