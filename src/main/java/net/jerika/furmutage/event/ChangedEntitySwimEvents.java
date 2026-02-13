@@ -8,9 +8,10 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -85,6 +86,15 @@ public class ChangedEntitySwimEvents {
         entitiesWithSprintReduction.clear();
     }
 
+    /** Clear on server stop so entities can be released before save. */
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
+        fastSwimEntities.clear();
+        improvedPathfindingEntities.clear();
+        changedEntities.clear();
+        entitiesWithSprintReduction.clear();
+    }
+
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
         // Only process on server side
@@ -141,48 +151,48 @@ public class ChangedEntitySwimEvents {
     }
     
     /**
-     * Reduces sprint speed for Changed entities by applying a modifier when they're sprinting.
+     * Reduces sprint speed for Changed entities. Uses ServerTickEvent to iterate
+     * only tracked entities instead of LivingTickEvent for every living entity.
      */
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
-        
-        // Only process on server side
-        if (entity.level().isClientSide()) {
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        if (changedEntities.isEmpty()) {
             return;
         }
         
-        // Only process Changed entities
-        if (!changedEntities.contains(entity)) {
-            return;
-        }
-        
-        // Get movement speed attribute
-        AttributeInstance movementSpeed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
-        if (movementSpeed == null) {
-            return;
-        }
-        
-        // Check if entity is sprinting
-        boolean isSprinting = entity.isSprinting();
-        
-        // Check if modifier is already applied
-        boolean hasModifier = entitiesWithSprintReduction.contains(entity);
-        
-        if (isSprinting && !hasModifier) {
-            // Apply sprint speed reduction modifier (multiplicative, reduces by 30%)
-            AttributeModifier sprintReduction = new AttributeModifier(
-                SPRINT_SPEED_REDUCTION_UUID,
-                "Changed Entity Sprint Speed Reduction",
-                SPRINT_SPEED_REDUCTION,
-                AttributeModifier.Operation.MULTIPLY_TOTAL
-            );
-            movementSpeed.addTransientModifier(sprintReduction);
-            entitiesWithSprintReduction.add(entity);
-        } else if (!isSprinting && hasModifier) {
-            // Remove sprint speed reduction modifier when not sprinting
-            movementSpeed.removeModifier(SPRINT_SPEED_REDUCTION_UUID);
-            entitiesWithSprintReduction.remove(entity);
+        java.util.Iterator<LivingEntity> it = changedEntities.iterator();
+        while (it.hasNext()) {
+            LivingEntity entity = it.next();
+            if (entity == null || !entity.isAlive()) {
+                it.remove();
+                entitiesWithSprintReduction.remove(entity);
+                continue;
+            }
+            
+            AttributeInstance movementSpeed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
+            if (movementSpeed == null) {
+                continue;
+            }
+            
+            boolean isSprinting = entity.isSprinting();
+            boolean hasModifier = entitiesWithSprintReduction.contains(entity);
+            
+            if (isSprinting && !hasModifier) {
+                AttributeModifier sprintReduction = new AttributeModifier(
+                    SPRINT_SPEED_REDUCTION_UUID,
+                    "Changed Entity Sprint Speed Reduction",
+                    SPRINT_SPEED_REDUCTION,
+                    AttributeModifier.Operation.MULTIPLY_TOTAL
+                );
+                movementSpeed.addTransientModifier(sprintReduction);
+                entitiesWithSprintReduction.add(entity);
+            } else if (!isSprinting && hasModifier) {
+                movementSpeed.removeModifier(SPRINT_SPEED_REDUCTION_UUID);
+                entitiesWithSprintReduction.remove(entity);
+            }
         }
     }
 }

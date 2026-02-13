@@ -85,15 +85,6 @@ public class furmutage {
         ModSounds.register(modEventBus);
 
         ModEntities.register(modEventBus);
-        
-        // Register dimension components
-        net.jerika.furmutage.worldgen.dimension.ModBiomes.BIOMES.register(modEventBus);
-        net.jerika.furmutage.worldgen.dimension.WastelandBiomeSource.BIOME_SOURCES.register(modEventBus);
-        net.jerika.furmutage.worldgen.dimension.WastelandChunkGenerator.CHUNK_GENERATORS.register(modEventBus);
-        net.jerika.furmutage.worldgen.dimension.ModDimensions.LEVEL_STEMS.register(modEventBus);
-        
-        // Register structures
-        net.jerika.furmutage.worldgen.structure.LostCityStructure.STRUCTURE_TYPES.register(modEventBus);
 
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, ModCommonConfig.SPEC, "furmutage-common.toml");
 
@@ -172,9 +163,6 @@ public class furmutage {
                 net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 net.jerika.furmutage.entity.custom.GiantPureWhiteLatexEntity::checkGiantPureWhiteLatexSpawnRules
             );
-
-            // White latex spawn: simple Monster rules (surface at night, caves) - config-driven
-            net.jerika.furmutage.event.WhiteLatexSpawnEvents.registerSpawnPlacements();
 
             // Changed wolf_crystal: allow spawn on tainted dark grass and allow spawn egg/command placement
             net.jerika.furmutage.event.WolfCrystalSpawnEvents.registerSpawnPlacements();

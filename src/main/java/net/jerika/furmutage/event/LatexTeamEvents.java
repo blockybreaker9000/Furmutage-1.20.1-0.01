@@ -9,10 +9,11 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.AABB;
+import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
-import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -23,7 +24,7 @@ import java.util.WeakHashMap;
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LatexTeamEvents {
     private static final Set<Mob> teamEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
-    private static final int TARGET_CHECK_INTERVAL = 10; // Check every 10 ticks (0.5 seconds)
+    private static final int TARGET_CHECK_INTERVAL = 20; // Check every 20 ticks (1 second)
     private static final int ATTACK_COOLDOWN = 20; // Attack every 20 ticks (1 second)
     private static final double HORDE_RADIUS = 32.0D; // 32 block radius for horde aggro (like zombie pigmen)
     
@@ -53,6 +54,12 @@ public class LatexTeamEvents {
         teamEntities.clear();
     }
 
+    /** Clear on server stop so entities can be released before save. */
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
+        teamEntities.clear();
+    }
+
     @SubscribeEvent
     public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
         if (event.getLevel().isClientSide()) {
@@ -63,33 +70,45 @@ public class LatexTeamEvents {
             String entityType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
             
             if (LatexTeamConfig.isEntityInTeam(entityType)) {
-                teamEntities.add(mob);
-                int team = LatexTeamConfig.getTeamForEntity(entityType);
-                String teamName = team == 1 ? "White Latex" : "Dark Latex";
-                furmutage.LOGGER.info("[LatexTeamEvents] Registered {} ({})", entityType, teamName);
+                if (teamEntities.add(mob)) {
+                    int team = LatexTeamConfig.getTeamForEntity(entityType);
+                    String teamName = team == 1 ? "White Latex" : "Dark Latex";
+                    furmutage.LOGGER.debug("[LatexTeamEvents] Registered {} ({})", entityType, teamName);
+                }
             }
         }
     }
     
+    /**
+     * Process team AI via ServerTickEvent - iterates only tracked team entities
+     * instead of receiving LivingTickEvent for every living entity.
+     */
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        if (event.getEntity().level().isClientSide) {
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        if (teamEntities.isEmpty()) {
             return;
         }
         
-        if (!(event.getEntity() instanceof Mob mob)) {
-            return;
-        }
-        
-        String mobType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
-        if (!LatexTeamConfig.isEntityInTeam(mobType)) {
-            return;
-        }
-        int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
-        
-        // Hard rule: entities on the same team are always passive toward each other.
-        // If this mob is currently targeting a same-team entity, clear the target.
-        LivingEntity currentTarget = mob.getTarget();
+        java.util.Iterator<Mob> it = teamEntities.iterator();
+        while (it.hasNext()) {
+            Mob mob = it.next();
+            if (mob == null || !mob.isAlive()) {
+                it.remove();
+                continue;
+            }
+            
+            String mobType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
+            if (!LatexTeamConfig.isEntityInTeam(mobType)) {
+                it.remove();
+                continue;
+            }
+            int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
+            
+            // Hard rule: entities on the same team are always passive toward each other.
+            LivingEntity currentTarget = mob.getTarget();
         if (currentTarget != null) {
             String targetType = ForgeRegistries.ENTITY_TYPES.getKey(currentTarget.getType()).toString();
             if (LatexTeamConfig.isEntityInTeam(targetType)) {
@@ -97,21 +116,14 @@ public class LatexTeamEvents {
                 if (mobTeam != 0 && mobTeam == targetTeam) {
                     mob.setTarget(null);
                     mob.setLastHurtByMob(null);
-                    return; // Don't process further AI this tick for friendly target
+                    continue; // Don't process further AI this tick for friendly target
                 }
             }
         }
         
-        if (!mob.isAlive()) {
-            teamEntities.remove(mob);
-            return;
-        }
-        
-        teamEntities.add(mob);
-        
         // Check for targets and attack every N ticks
         if (mob.tickCount % TARGET_CHECK_INTERVAL != 0) {
-            return;
+            continue;
         }
         
         currentTarget = mob.getTarget();
@@ -130,7 +142,7 @@ public class LatexTeamEvents {
                 mob.setTarget(attacker);
                 String attackerType = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
                 String mobTeamName = mobTeam == 1 ? "White" : "Dark";
-                furmutage.LOGGER.info("[LatexTeamEvents] {} ({}) -> ATTACKER {} distance: {}", 
+                furmutage.LOGGER.debug("[LatexTeamEvents] {} ({}) -> ATTACKER {} distance: {}", 
                         mobType, mobTeamName,
                         attackerType,
                         String.format("%.1f", mob.distanceTo(attacker)));
@@ -176,7 +188,7 @@ public class LatexTeamEvents {
                     int enemyTeam = LatexTeamConfig.getTeamForEntity(enemyType);
                     String mobTeamName = mobTeam == 1 ? "White" : "Dark";
                     String enemyTeamName = enemyTeam == 1 ? "White" : "Dark";
-                    furmutage.LOGGER.info("[LatexTeamEvents] {} ({}) -> {} ({}) distance: {}", 
+                    furmutage.LOGGER.debug("[LatexTeamEvents] {} ({}) -> {} ({}) distance: {}", 
                             mobType, mobTeamName,
                             enemyType, enemyTeamName,
                             String.format("%.1f", mob.distanceTo(nearestEnemy)));
@@ -203,7 +215,7 @@ public class LatexTeamEvents {
                     int targetTeam = LatexTeamConfig.getTeamForEntity(targetType);
                     String mobTeamName = mobTeam == 1 ? "White" : "Dark";
                     String targetTeamName = targetTeam == 1 ? "White" : "Dark";
-                    furmutage.LOGGER.info("[LatexTeamEvents] ATTACK: {} ({}) -> {} ({})", 
+                    furmutage.LOGGER.debug("[LatexTeamEvents] ATTACK: {} ({}) -> {} ({})", 
                             mobType, mobTeamName,
                             targetType, targetTeamName);
                 }
@@ -234,6 +246,7 @@ public class LatexTeamEvents {
                 }
             }
         }
+        } // end while (it.hasNext())
     }
     
     /**

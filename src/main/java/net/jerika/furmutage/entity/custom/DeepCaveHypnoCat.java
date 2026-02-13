@@ -307,9 +307,9 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
             return false;
         }
 
-        // Must be between Y level 0 and -60
+        // Must be between Y level -20 and -64
         int y = pos.getY();
-        if (y > 0 || y < -60) {
+        if (y > -20 || y < -64) {
             return false;
         }
 

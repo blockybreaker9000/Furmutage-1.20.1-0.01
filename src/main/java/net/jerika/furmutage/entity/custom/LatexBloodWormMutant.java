@@ -212,16 +212,23 @@ public class LatexBloodWormMutant extends ChangedEntity {
         return ChangedEntity.createLatexAttributes();
     }
 
-    // Custom spawn rule - must be between Y level 0 and -60
+    // Custom spawn rule - must be between Y level -20 and -64, in darkness
     public static boolean checkLatexBloodWormMutantSpawnRules(EntityType<LatexBloodWormMutant> entityType, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, RandomSource random) {
-        // Allow spawning via spawn eggs and other non-natural methods
         if (reason != MobSpawnType.NATURAL) {
             return true;
         }
+        if (world instanceof net.minecraft.server.level.WorldGenRegion) {
+            return false;
+        }
 
-        // Must be between Y level 0 and -60
         int y = pos.getY();
-        if (y > 0 || y < -60) {
+        if (y > -20 || y < -64) {
+            return false;
+        }
+        if (world.getBrightness(net.minecraft.world.level.LightLayer.SKY, pos) > random.nextInt(50)) {
+            return false;
+        }
+        if (world.getBrightness(net.minecraft.world.level.LightLayer.BLOCK, pos) > 0) {
             return false;
         }
 

@@ -1,10 +1,16 @@
 {
-  "replace": true,
+  "replace": false,
   "values": [
-    "furmutage:wasteland",
-    "furmutage:wasteland_tainted_dark_grove",
-    "furmutage:wasteland_hills",
-    "furmutage:wasteland_scrubland",
-    "furmutage:wasteland_tainted_flat"
+    "minecraft:plains",
+    "minecraft:meadow",
+    "minecraft:snowy_plains",
+    "minecraft:forest",
+    "minecraft:birch_forest",
+    "minecraft:taiga",
+    "minecraft:savanna",
+    "minecraft:savanna_plateau",
+    "minecraft:windswept_hills",
+    "minecraft:sparse_jungle",
+    "minecraft:desert"
   ]
 }

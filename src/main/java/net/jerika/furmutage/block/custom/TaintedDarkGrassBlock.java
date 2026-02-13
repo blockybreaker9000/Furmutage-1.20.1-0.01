@@ -62,11 +62,6 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnDarkLatexEntity(level, pos, random);
         }
-
-        // Rarely spawn Changed wolf_crystal entity on top
-        if (random.nextInt(400) == 0) { // ~0.25% chance per random tick
-            spawnWolfCrystalEntityOnTop(level, pos, random);
-        }
         
         // Spawn Changed mod crystals on top (more naturally)
         if (random.nextInt(50) == 0) { // 2% chance per random tick (more frequent spawning)
@@ -367,47 +362,6 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 }
             }
         }
-    }
-
-    /**
-     * Rarely spawns the Changed mod wolf_crystal entity on top of this block.
-     */
-    private void spawnWolfCrystalEntityOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos abovePos = pos.above();
-        BlockState aboveState = level.getBlockState(abovePos);
-
-        if (!aboveState.isAir() || level.getMaxLocalRawBrightness(abovePos) < 9) {
-            return;
-        }
-        if (hasWolfCrystalNearby(level, abovePos, 12)) {
-            return;
-        }
-
-        EntityType<?> wolfCrystalType = ForgeRegistries.ENTITY_TYPES.getValue(WOLF_CRYSTAL_ID);
-        if (wolfCrystalType == null) {
-            return;
-        }
-        if (!(wolfCrystalType.create(level) instanceof PathfinderMob)) {
-            return;
-        }
-        PathfinderMob entity = (PathfinderMob) wolfCrystalType.create(level);
-        if (entity == null) {
-            return;
-        }
-        double x = abovePos.getX() + 0.5;
-        double y = abovePos.getY();
-        double z = abovePos.getZ() + 0.5;
-        entity.moveTo(x, y, z, random.nextFloat() * 360.0F, 0.0F);
-        try {
-            entity.finalizeSpawn(level, level.getCurrentDifficultyAt(abovePos), MobSpawnType.EVENT, null, null);
-        } catch (IllegalArgumentException e) {
-            if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
-                furmutage.LOGGER.debug("Ignoring attack_knockback attribute error from Changed mod: {}", e.getMessage());
-            } else {
-                throw e;
-            }
-        }
-        level.addFreshEntity(entity);
     }
 
     private boolean hasWolfCrystalNearby(ServerLevel level, BlockPos pos, int maxDistance) {

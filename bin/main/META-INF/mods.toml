@@ -32,7 +32,7 @@ description="cool description"
     modId="changed"
     mandatory=true
     versionRange="[0.15.0,)"
-    ordering="NONE"
+    ordering="AFTER"
     side="BOTH"
 
 [[dependencies.furmutage]]
@@ -71,16 +71,3 @@ description="cool description"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.furmutage]]
-    modId="lostcities"
-    mandatory=false
-    versionRange="[0,)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.furmutage]]
-    modId="legendarysurvivaloverhaul"
-    mandatory=false
-    versionRange="[0,)"
-    ordering="NONE"
-    side="BOTH"

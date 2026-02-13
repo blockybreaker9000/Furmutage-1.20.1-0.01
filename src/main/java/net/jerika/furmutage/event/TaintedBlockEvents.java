@@ -27,8 +27,10 @@ import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -38,6 +40,9 @@ import net.minecraftforge.fml.common.Mod;
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TaintedBlockEvents {
+    // Track entities that can be transfurred (populated on join, iterated in ServerTickEvent)
+    private static final java.util.Set<LivingEntity> transfurTargets = java.util.Collections.newSetFromMap(new java.util.WeakHashMap<>());
+    
     // Track exposure time for each entity (ticks spent on tainted blocks)
     private static final java.util.Map<LivingEntity, Integer> exposureTime = new java.util.WeakHashMap<>();
     
@@ -53,58 +58,87 @@ public class TaintedBlockEvents {
         if (event.getLevel().isClientSide()) {
             return;
         }
+        transfurTargets.clear();
+        exposureTime.clear();
+    }
+
+    /** Clear on server stop so entities can be released before save. */
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
+        transfurTargets.clear();
         exposureTime.clear();
     }
     
+    /** Track entities that can be transfurred when they join the level. */
     @SubscribeEvent
-    public static void onLivingTick(LivingEvent.LivingTickEvent event) {
-        LivingEntity entity = event.getEntity();
-        Level level = entity.level();
-        
-        // Only process on server side
-        if (level.isClientSide()) {
+    public static void onEntityJoinLevel(EntityJoinLevelEvent event) {
+        if (event.getLevel().isClientSide()) {
             return;
         }
-        
-        // Skip if entity is dead or invulnerable
-        if (!entity.isAlive() || entity.isInvulnerable()) {
+        if (!(event.getEntity() instanceof LivingEntity entity)) {
             return;
         }
-        
-        // Check if entity is untransfurred
-        if (isTransfurred(entity)) {
-            // Remove from tracking if already transfurred
-            exposureTime.remove(entity);
-            return; // Skip transfurred entities
+        if (!isTargetEntityType(entity)) {
+            return;
         }
-        
-        // Process players, villagers, pillagers, zombies, skeletons, ravagers, and vanilla passive mobs
-        // Check for Ravager by entity type ID (since import path may vary)
+        transfurTargets.add(entity);
+    }
+    
+    private static boolean isTargetEntityType(LivingEntity entity) {
         boolean isRavager = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()) != null &&
                             ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString().equals("minecraft:ravager");
-        
-        boolean isTargetEntity = entity instanceof Player ||
-                                 entity instanceof Villager ||
-                                 entity instanceof Zombie ||
-                                 entity instanceof Skeleton ||
-                                 entity instanceof Raider ||
-                                 isRavager ||
-                                 entity instanceof Cow ||
-                                 entity instanceof Pig ||
-                                 entity instanceof Chicken ||
-                                 entity instanceof Sheep ||
-                                 entity instanceof Rabbit ||
-                                 entity instanceof Horse ||
-                                 entity instanceof Squid ||
-                                 entity instanceof Llama ||
-                                 entity instanceof Dolphin ||
-                                 entity instanceof Goat;
-        
-        if (!isTargetEntity) {
+        return entity instanceof Player ||
+               entity instanceof Villager ||
+               entity instanceof Zombie ||
+               entity instanceof Skeleton ||
+               entity instanceof Raider ||
+               isRavager ||
+               entity instanceof Cow ||
+               entity instanceof Pig ||
+               entity instanceof Chicken ||
+               entity instanceof Sheep ||
+               entity instanceof Rabbit ||
+               entity instanceof Horse ||
+               entity instanceof Squid ||
+               entity instanceof Llama ||
+               entity instanceof Dolphin ||
+               entity instanceof Goat;
+    }
+    
+    /**
+     * Process tainted block transfur via ServerTickEvent - iterates only tracked transfur targets
+     * instead of receiving LivingTickEvent for every living entity.
+     */
+    @SubscribeEvent
+    public static void onServerTick(TickEvent.ServerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) {
+            return;
+        }
+        if (transfurTargets.isEmpty()) {
             return;
         }
         
-        // Check if entity's bounding box is actually touching/intersecting with a tainted block
+        java.util.Iterator<LivingEntity> it = transfurTargets.iterator();
+        while (it.hasNext()) {
+            LivingEntity entity = it.next();
+            if (entity == null || !entity.isAlive() || entity.isInvulnerable()) {
+                it.remove();
+                exposureTime.remove(entity);
+                continue;
+            }
+            
+            Level level = entity.level();
+            if (level.isClientSide()) {
+                continue;
+            }
+            
+            if (isTransfurred(entity)) {
+                it.remove();
+                exposureTime.remove(entity);
+                continue;
+            }
+            
+            // Check if entity's bounding box is actually touching/intersecting with a tainted block
         boolean isTouchingTaintedWhiteBlock = false;
         boolean isTouchingTaintedDarkTallGrass = false;
         boolean isTouchingTaintedDarkFoliage = false;
@@ -312,9 +346,10 @@ public class TaintedBlockEvents {
                         wasReplaced = true;
                     }
                     
-                    // If entity was replaced, we're done
+                    // If entity was replaced, we're done with this entity
                     if (wasReplaced) {
-                        return;
+                        it.remove();
+                        continue;
                     }
                 }
                 
@@ -365,9 +400,10 @@ public class TaintedBlockEvents {
                         wasReplaced = true;
                     }
                     
-                    // If entity was replaced, we're done
+                    // If entity was replaced, we're done with this entity
                     if (wasReplaced) {
-                        return;
+                        it.remove();
+                        continue;
                     }
                 }
                 
@@ -389,6 +425,7 @@ public class TaintedBlockEvents {
         // If not touching any tainted block, clear exposure time
         if (!isTouchingTaintedWhiteBlock && !isTouchingDarkBlock) {
             exposureTime.remove(entity);
+        }
         }
     }
     

@@ -5,6 +5,7 @@ import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.Mob;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -39,6 +40,12 @@ public class YufengFlyingEvents {
         if (event.getLevel().isClientSide()) {
             return;
         }
+        processedEntities.clear();
+    }
+
+    /** Clear on server stop so entities can be released before save. */
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
         processedEntities.clear();
     }
 

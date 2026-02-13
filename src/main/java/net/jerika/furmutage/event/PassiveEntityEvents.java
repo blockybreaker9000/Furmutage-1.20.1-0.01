@@ -6,6 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.level.LevelEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -23,6 +24,12 @@ public class PassiveEntityEvents {
         if (event.getLevel().isClientSide()) {
             return;
         }
+        processedEntities.clear();
+    }
+
+    /** Clear on server stop so entities can be released before save. */
+    @SubscribeEvent
+    public static void onServerStopping(ServerStoppingEvent event) {
         processedEntities.clear();
     }
 

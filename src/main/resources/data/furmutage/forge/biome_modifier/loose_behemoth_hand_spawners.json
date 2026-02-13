@@ -2,6 +2,11 @@
   "type": "forge:add_spawns",
   "biomes": "#minecraft:is_overworld",
   "spawners": [
-    { "type": "furmutage:loose_behemoth_hand", "weight": 50, "minCount": 1, "maxCount": 2 }
+    {
+      "type": "furmutage:loose_behemoth_hand",
+      "weight": 8,
+      "minCount": 1,
+      "maxCount": 2
+    }
   ]
 }

@@ -1,0 +1,41 @@
+{
+  "zone": "changed:general",
+  "available": 200,
+  "spawns": [
+    {
+      "type": "furmutage:loose_behemoth_hand",
+      "weight": 20,
+      "minimum": 0,
+      "maximum": 15,
+      "cost": 10
+    },
+    {
+      "type": "furmutage:white_latex_cow",
+      "weight": 20,
+      "minimum": 0,
+      "maximum": 15,
+      "cost": 10
+    },
+    {
+      "type": "changed:headless_knight",
+      "weight": 20,
+      "minimum": 0,
+      "maximum": 15,
+      "cost": 10
+    },
+    {
+      "type": "changed:latex_mutant_bloodcell_wolf",
+      "weight": 40,
+      "minimum": 0,
+      "maximum": 15,
+      "cost": 10
+    },
+    {
+      "type": "changed:milk_pudding",
+      "weight": 20,
+      "minimum": 0,
+      "maximum": 15,
+      "cost": 10
+    }
+  ]
+}

@@ -153,8 +153,8 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         }
 
         int y = pos.getY();
-        if (y > 10 || y < -64) {
-            return false; // underground band only
+        if (y > -20 || y < -64) {
+            return false; // deep underground only
         }
 
         // Must not be exposed to sky and must be dark
@@ -165,9 +165,9 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
             return false;
         }
 
-        // Require at least 5 blocks of clear vertical space (giant crawls, so smaller height needed)
+        // Require at least 10 blocks of clear vertical space (cave must be 10 blocks or higher)
         int clear = 0;
-        for (int dy = 1; dy <= 8; dy++) {
+        for (int dy = 1; dy <= 12; dy++) {
             BlockPos check = pos.above(dy);
             BlockState state = world.getBlockState(check);
             if (state.isAir() || state.getCollisionShape(world, check).isEmpty()) {
@@ -176,7 +176,7 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
                 break;
             }
         }
-        if (clear < 5) {
+        if (clear < 10) {
             return false;
         }
 

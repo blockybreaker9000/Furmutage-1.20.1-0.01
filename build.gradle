@@ -169,7 +169,7 @@ repositories {
     // If you have mod jar dependencies in ./libs, you can declare them as a repository like so.
     // See https://docs.gradle.org/current/userguide/declaring_repositories.html#sub:flat_dir_resolver
     flatDir {
-        dirs 'libs/net/ltxprogrammer/changed/Changed-m1.20.1-f47.4.0/v0.15.0'
+        dirs "libs/net/ltxprogrammer/changed/Changed-m1.20.1-f47.4.0/${changed_version}"
     }
 
     // Mods Location
@@ -227,9 +227,10 @@ dependencies {
         jarJar.ranged(it, "[0.4.1,)")
     }
 
-    // Changed mod dependency - latest v0.15.0 from 1.20.1-dev branch (GitHub)
+    // Changed mod dependency - from 1.20.1-dev branch (GitHub)
+    // Update changed_version in gradle.properties when a newer version is available
     // Falls back to local JAR in libs/ if GitHub is inaccessible
-    implementation fg.deobf("net.ltxprogrammer.changed:Changed-m1.20.1-f47.4.0:v0.15.0") {
+    implementation fg.deobf("net.ltxprogrammer.changed:Changed-m1.20.1-f47.4.0:${changed_version}") {
         changing = true
     }
 
