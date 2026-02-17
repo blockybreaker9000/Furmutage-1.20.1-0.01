@@ -222,7 +222,7 @@ public class DeepSlateLatexSquidDog extends AbstractLatexSquidDog {
         return ChangedEntity.createLatexAttributes()
                 .add(Attributes.FOLLOW_RANGE, 128.0D) // Much longer follow range for persistent targeting
                 .add(Attributes.ATTACK_DAMAGE, 6.0D) // Increased attack damage
-                .add(Attributes.MOVEMENT_SPEED, 0.35D); // Faster movement
+                .add(Attributes.MOVEMENT_SPEED, 0.175D); // Half speed (0.35 / 2)
     }
 
     // Spawn rules that allow non-natural spawning (spawn eggs, /summon)

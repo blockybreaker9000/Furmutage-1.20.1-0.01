@@ -12,6 +12,7 @@ public class ModTags {
     public static class Blocks {
         public static final TagKey<Block> NEEDS_ROSELIGHT_TOOL = tag("needs_roselight_tool");
         public static final TagKey<Block> NEEDS_THUNDERIUM_TOOL = tag("needs_thunderium_tool");
+        public static final TagKey<Block> NEEDS_TSC_EMERGENCY_TOOL = tag("needs_tsc_emergency_tool");
 
         private static TagKey<Block> tag(String name) {
             return BlockTags.create(new ResourceLocation(furmutage.MOD_ID, name));

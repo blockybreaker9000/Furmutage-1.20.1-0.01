@@ -116,6 +116,19 @@ public class ModSounds {
     // Giant latex beast idle roar sound
     public static final RegistryObject<SoundEvent> LATEX_BEAST_ROAR = registerSoundEvent("latex_beast_roar");
 
+    // Latex hello - played rarely when latex is crouched and following player (11 variants)
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_1 = registerSoundEvent("latex_hello_1");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_2 = registerSoundEvent("latex_hello_2");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_3 = registerSoundEvent("latex_hello_3");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_4 = registerSoundEvent("latex_hello_4");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_5 = registerSoundEvent("latex_hello_5");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_6 = registerSoundEvent("latex_hello_6");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_7 = registerSoundEvent("latex_hello_7");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_8 = registerSoundEvent("latex_hello_8");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_9 = registerSoundEvent("latex_hello_9");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_10 = registerSoundEvent("latex_hello_10");
+    public static final RegistryObject<SoundEvent> LATEX_HELLO_11 = registerSoundEvent("latex_hello_11");
+
     // Jumpscare sounds for Changed stalker uncrouch (4 variants, picked at random)
     public static final RegistryObject<SoundEvent> LATEX_JUMPSCARE = registerSoundEvent("latex_jumpscare");
     public static final RegistryObject<SoundEvent> LATEX_JUMPSCARE_2 = registerSoundEvent("latex_jumpscare_2");

@@ -21,4 +21,10 @@ public class ModToolTiers {
                     ModTags.Blocks.NEEDS_THUNDERIUM_TOOL, () -> Ingredient.of(ModItems.THUNDERIUM.get())),
             new  ResourceLocation(furmutage.MOD_ID, "thunderium"), List.of(Tiers.DIAMOND), List.of());
 
+    // TSC Emergency: 20% less durability than iron (200), 20% slower than gold pickaxe (9.6 speed), can mine iron (level 2), cannot mine diamond
+    public static final Tier TSC_EMERGENCY = TierSortingRegistry.registerTier(
+            new ForgeTier(2, 200, 9.6f, 1f, 12,
+                    ModTags.Blocks.NEEDS_TSC_EMERGENCY_TOOL, () -> Ingredient.of(ModItems.TSC_PLASTIC_BAR.get())),
+            new ResourceLocation(furmutage.MOD_ID, "tsc_emergency"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
+
 }

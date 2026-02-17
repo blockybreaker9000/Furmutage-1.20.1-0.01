@@ -10,6 +10,7 @@
   "item.furmutage.raw_roselight_nugget": "Raw Roselight Nugget",
   "item.furmutage.tsc_plastic_waste_clump": "TSC Plastic Waste Clump",
   "item.furmutage.tsc_plastic_bar": "TSC Plastic Bar",
+  "item.furmutage.plastic_bar": "Plastic Bar",
 
   "item.furmutage.pealed_oranges": "Pealed Oranges",
   "item.furmutage.orange_pie": "Orange Pie",
@@ -17,6 +18,9 @@
   "item.furmutage.orange_foxyas_cookie": "Orange Fox Cookie",
   "item.furmutage.orange_icecream": "Orange IceCream",
   "item.furmutage.bottled_orange_juice": "Bottled Orange Juice",
+  "item.furmutage.empty_tsc_branded_water_bottle": "Empty TSC Branded Water Bottle",
+  "item.furmutage.untreated_tsc_branded_water_bottle": "Untreated TSC Branded Water Bottle",
+  "item.furmutage.tsc_branded_water_bottle": "TSC Branded Water Bottle",
   "item.furmutage.orange_smoothy": "Orange Smoothy",
   "item.furmutage.orange_muffin": "Orange Muffin",
 
@@ -65,6 +69,12 @@
   "item.furmutage.roselight_shovel": "Roselight Shovel",
   "item.furmutage.roselight_hoe": "Roselight Hoe",
   "item.furmutage.roselight_shears": "Roselight Shears",
+
+  "item.furmutage.tsc_emergency_pickaxe": "TSC Emergency Pickaxe",
+  "item.furmutage.tsc_emergency_axe": "TSC Emergency Axe",
+  "item.furmutage.tsc_emergency_shovel": "TSC Emergency Shovel",
+  "item.furmutage.tsc_emergency_sword": "TSC Emergency Sword",
+  "item.furmutage.tsc_emergency_hoe": "TSC Emergency Hoe",
 
   "item.furmutage.mugling_spawn_egg": "Mugling Spawn Egg",
   "item.furmutage.latex_bacteria_spawn_egg": "Latex Bacteria Spawn Egg",
@@ -147,6 +157,7 @@
   "subtitles.furmutage.morning_chime": "Morning Chime",
   "subtitles.furmutage.deep_hypno_cat_stare": "Deep Cave Hypno Cat stare",
   "subtitles.furmutage.latex_jumpscare": "Latex jumpscare",
+  "subtitles.furmutage.latex_hello": "Latex hello",
 
   "container.furmutage.eugenics_crafting": "TSC Eugenics Crafting",
   "container.furmutage.eugenics_smeltery": "Eugenics Smeltery Oven",

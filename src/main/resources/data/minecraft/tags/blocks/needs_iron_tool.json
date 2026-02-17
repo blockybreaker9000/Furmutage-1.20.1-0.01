@@ -1,8 +1,1 @@
-{
-  "values": [
-    "furmutage:raw_roselight",
-    "furmutage:raw_thunderium",
-    "furmutage:roselight_block",
-    "furmutage:thunderium_block"
-  ]
-}
+{"values":["minecraft:iron_ore","minecraft:deepslate_iron_ore","furmutage:raw_roselight","furmutage:raw_thunderium","furmutage:roselight_block","furmutage:thunderium_block","furmutage:platinum_ore_block"]}

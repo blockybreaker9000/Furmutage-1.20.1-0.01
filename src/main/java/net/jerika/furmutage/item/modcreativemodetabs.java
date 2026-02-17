@@ -25,6 +25,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.DARK_TAINTED_SEEDS.get());
                         output.accept(ModItems.WHITE_TAINTED_SEEDS.get());
                         output.accept(ModItems.PLASTIC_WASTE.get());
+                        output.accept(ModItems.PLASTIC_BAR.get());
                         output.accept(ModItems.PLATINUM_ROD.get());
                         output.accept(ModItems.PLATINUM_ORE.get());
                         output.accept(ModItems.PLATINUM_BAR.get());
@@ -40,6 +41,9 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ORANGE_ICECREAM.get());
                         output.accept(ModItems.ORANGE_SMOOTHY.get());
                         output.accept(ModItems.BOTTLED_ORANGE_JUICE.get());
+                        output.accept(ModItems.EMPTY_TSC_BRANDED_WATER_BOTTLE.get());
+                        output.accept(ModItems.UNTREATED_TSC_BRANDED_WATER_BOTTLE.get());
+                        output.accept(ModItems.TSC_BRANDED_WATER_BOTTLE.get());
 
                         output.accept(ModItems.WHITE_COATED_TSC_PLASTIC_BAR.get());
                         output.accept(ModItems.THUNDERIUM.get());
@@ -138,6 +142,12 @@ public class modcreativemodetabs {
                         output.accept(ModItems.THUNDERIUMTHORNBAT.get());
                         output.accept(ModItems.THUNDERIUMSPIKEBAT.get());
                         output.accept(ModItems.THUNDERIUMSCYTHE.get());
+
+                        output.accept(ModItems.TSC_EMERGENCY_PICKAXE.get());
+                        output.accept(ModItems.TSC_EMERGENCY_AXE.get());
+                        output.accept(ModItems.TSC_EMERGENCY_SHOVEL.get());
+                        output.accept(ModItems.TSC_EMERGENCY_SWORD.get());
+                        output.accept(ModItems.TSC_EMERGENCY_HOE.get());
 
                         output.accept(ModBlocks.RAW_THUNDERIUM.get());
                         output.accept(ModBlocks.RAW_ROSELIGHT.get());

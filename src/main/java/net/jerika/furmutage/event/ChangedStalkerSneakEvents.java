@@ -19,6 +19,7 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 /**
  * Makes Changed entities crouch and move slower when stalking a player target
@@ -44,8 +45,28 @@ public class ChangedStalkerSneakEvents {
     private static final String TAG_AI_ACTIVATED = "furmutage_changed_ai_activated";
     // Player persistent data key for jumpscare cooldown (game time when last played)
     private static final String PLAYER_TAG_LAST_JUMPSCARE = "furmutage_last_jumpscare_tick";
-    // Cooldown: 5 minutes = 6000 ticks
+    // Cooldown: 5 minutes = 6000 ticks keeps it from being annoying and ruining the scare
     private static final long JUMPSCARE_COOLDOWN_TICKS = 6000;
+    // Max distance (blocks) for jumpscare sound - only plays when entity is close for an extra fright
+    private static final double JUMPSCARE_MAX_DISTANCE = 6.0D;
+    // Latex hello: play when crouched following - 1/5000 chance per tick, 4000 tick cooldown
+    private static final String TAG_LAST_LATEX_HELLO_TICK = "furmutage_last_latex_hello_tick";
+    private static final long LATEX_HELLO_COOLDOWN_TICKS = 4000L;
+    private static final double LATEX_HELLO_CHANCE = 1.0 / 5000.0;
+    @SuppressWarnings("unchecked")
+    private static final RegistryObject<net.minecraft.sounds.SoundEvent>[] LATEX_HELLO_SOUNDS = new RegistryObject[] {
+        ModSounds.LATEX_HELLO_1,
+        ModSounds.LATEX_HELLO_2,
+        ModSounds.LATEX_HELLO_3,
+        ModSounds.LATEX_HELLO_4,
+        ModSounds.LATEX_HELLO_5,
+        ModSounds.LATEX_HELLO_6,
+        ModSounds.LATEX_HELLO_7,
+        ModSounds.LATEX_HELLO_8,
+        ModSounds.LATEX_HELLO_9,
+        ModSounds.LATEX_HELLO_10,
+        ModSounds.LATEX_HELLO_11
+    };
     private static final double MIN_FOLLOW_RANGE = 30.0D;
 
     /**
@@ -124,6 +145,19 @@ public class ChangedStalkerSneakEvents {
             shouldSneak = !seenNow && enoughTimeSinceSeen;
         }
 
+        // When crouched and following: rarely play latex_hello (1 of 11 variants)
+        if (shouldSneak && wasSneaking && target != null) {
+            long now = entity.level().getGameTime();
+            long lastHello = data.getLong(TAG_LAST_LATEX_HELLO_TICK);
+            if (now - lastHello >= LATEX_HELLO_COOLDOWN_TICKS && entity.getRandom().nextDouble() < LATEX_HELLO_CHANCE) {
+                var sound = LATEX_HELLO_SOUNDS[entity.getRandom().nextInt(LATEX_HELLO_SOUNDS.length)].get();
+                if (sound != null) {
+                    entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), sound, SoundSource.HOSTILE, 0.8F, 0.9F + entity.getRandom().nextFloat() * 0.2F);
+                    data.putLong(TAG_LAST_LATEX_HELLO_TICK, now);
+                }
+            }
+        }
+
         // Start sneaking: slow down and crouch
         if (shouldSneak && !wasSneaking) {
             if (!data.contains(TAG_ORIG_SPEED)) {
@@ -147,21 +181,23 @@ public class ChangedStalkerSneakEvents {
             entity.setPose(Pose.STANDING);
             data.putBoolean(TAG_SNEAKING, false);
 
-            // Play jumpscare sound only for the target player that activated the AI, once per 5 minutes
+            // Play jumpscare sound only for the target player that activated the AI, once per 5 minutes, and only if within 6 blocks
             LivingEntity currentTarget = mob.getTarget();
             if (currentTarget instanceof ServerPlayer serverPlayer && data.getBoolean(TAG_AI_ACTIVATED)) {
-                long now = entity.level().getGameTime();
-                long lastPlayed = serverPlayer.getPersistentData().getLong(PLAYER_TAG_LAST_JUMPSCARE);
-                if (now - lastPlayed >= JUMPSCARE_COOLDOWN_TICKS) {
-                    var jumpscares = new net.minecraft.sounds.SoundEvent[] {
-                        ModSounds.LATEX_JUMPSCARE.get(),
-                        ModSounds.LATEX_JUMPSCARE_2.get(),
-                        ModSounds.LATEX_JUMPSCARE_3.get(),
-                        ModSounds.LATEX_JUMPSCARE_4.get()
-                    };
-                    var sound = jumpscares[entity.level().getRandom().nextInt(jumpscares.length)];
-                    serverPlayer.playNotifySound(sound, SoundSource.HOSTILE, 1.0F, 1.0F);
-                    serverPlayer.getPersistentData().putLong(PLAYER_TAG_LAST_JUMPSCARE, now);
+                if (entity.distanceTo(serverPlayer) <= JUMPSCARE_MAX_DISTANCE) {
+                    long now = entity.level().getGameTime();
+                    long lastPlayed = serverPlayer.getPersistentData().getLong(PLAYER_TAG_LAST_JUMPSCARE);
+                    if (now - lastPlayed >= JUMPSCARE_COOLDOWN_TICKS) {
+                        var jumpscares = new net.minecraft.sounds.SoundEvent[] {
+                            ModSounds.LATEX_JUMPSCARE.get(),
+                            ModSounds.LATEX_JUMPSCARE_2.get(),
+                            ModSounds.LATEX_JUMPSCARE_3.get(),
+                            ModSounds.LATEX_JUMPSCARE_4.get()
+                        };
+                        var sound = jumpscares[entity.level().getRandom().nextInt(jumpscares.length)];
+                        serverPlayer.playNotifySound(sound, SoundSource.HOSTILE, 1.0F, 1.0F);
+                        serverPlayer.getPersistentData().putLong(PLAYER_TAG_LAST_JUMPSCARE, now);
+                    }
                 }
             }
         }

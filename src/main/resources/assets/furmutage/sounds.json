@@ -214,6 +214,17 @@
       "furmutage:latex_jumpscare_4"
     ],
     "subtitle": "subtitles.furmutage.latex_jumpscare"
-  }
+  },
+  "latex_hello_1": {"sounds":["furmutage:latex_hello_1"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_2": {"sounds":["furmutage:latex_hello_2"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_3": {"sounds":["furmutage:latex_hello_3"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_4": {"sounds":["furmutage:latex_hello_4"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_5": {"sounds":["furmutage:latex_hello_5"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_6": {"sounds":["furmutage:latex_hello_6"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_7": {"sounds":["furmutage:latex_hello_7"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_8": {"sounds":["furmutage:latex_hello_8"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_9": {"sounds":["furmutage:latex_hello_9"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_10": {"sounds":["furmutage:latex_hello_10"],"subtitle":"subtitles.furmutage.latex_hello"},
+  "latex_hello_11": {"sounds":["furmutage:latex_hello_11"],"subtitle":"subtitles.furmutage.latex_hello"}
 }
 

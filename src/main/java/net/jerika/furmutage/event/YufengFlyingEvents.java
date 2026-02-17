@@ -21,19 +21,6 @@ public class YufengFlyingEvents {
     private static final String YUFENG_ENTITY_1 = "changed:dark_latex_yufeng";
     private static final String YUFENG_ENTITY_2 = "changed:dark_latex_double_yufeng";
     
-    // Dragon entities from Changed mod
-    private static final String[] DRAGON_ENTITIES = {
-        "changed:dark_latex_dragon",
-        "changed:dark_latex_dragon_head",
-        "changed:dark_latex_dragon_part",
-        "changed:dark_latex_red_dragon",
-        "changed:dark_latex_red_dragon_head",
-        "changed:dark_latex_red_dragon_part",
-        "changed:white_latex_dragon",
-        "changed:white_latex_dragon_head",
-        "changed:white_latex_dragon_part"
-    };
-    
     /** Clear static set when a level unloads to avoid hang during save. */
     @SubscribeEvent
     public static void onLevelUnload(LevelEvent.Unload event) {
@@ -60,24 +47,10 @@ public class YufengFlyingEvents {
         if (event.getEntity() instanceof Mob mob) {
             String entityType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
             
-            // Check if it's a Yufeng entity or a dragon entity
+            // Check if it's a Yufeng entity (dragons no longer get Yufeng flying - Changed mod handles their flight)
             boolean isYufeng = entityType.equals(YUFENG_ENTITY_1) || entityType.equals(YUFENG_ENTITY_2);
-            boolean isDragon = false;
             
-            // Check if it's a dragon entity
-            for (String dragonEntity : DRAGON_ENTITIES) {
-                if (entityType.equals(dragonEntity)) {
-                    isDragon = true;
-                    break;
-                }
-            }
-            
-            // Also check if entity name contains "dragon" (case-insensitive) as a fallback
-            if (!isDragon && entityType.toLowerCase().contains("dragon")) {
-                isDragon = true;
-            }
-            
-            if (isYufeng || isDragon) {
+            if (isYufeng) {
                 // Skip if we've already processed this entity
                 if (processedEntities.contains(mob)) {
                     return;

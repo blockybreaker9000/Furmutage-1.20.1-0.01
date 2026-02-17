@@ -59,6 +59,8 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> PLASTIC_WASTE = ITEMS.register("plastic_waste",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> PLASTIC_BAR = ITEMS.register("plastic_bar",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> PLASTIC_BOWL = ITEMS.register("plastic_bowl",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> RUBBER = ITEMS.register("rubber",
@@ -132,6 +134,18 @@ public class ModItems {
                             .nutrition(6)
                             .saturationMod(0.8f)
                             .build())));
+    public static final RegistryObject<Item> EMPTY_TSC_BRANDED_WATER_BOTTLE = ITEMS.register("empty_tsc_branded_water_bottle",
+            () -> new EmptyTscBrandedWaterBottleItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> UNTREATED_TSC_BRANDED_WATER_BOTTLE = ITEMS.register("untreated_tsc_branded_water_bottle",
+            () -> new Item(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> TSC_BRANDED_WATER_BOTTLE = ITEMS.register("tsc_branded_water_bottle",
+            () -> new TscBrandedWaterBottleItem(new Item.Properties()
+                    .stacksTo(16)
+                    .food(new FoodProperties.Builder()
+                            .nutrition(0)
+                            .saturationMod(0)
+                            .alwaysEat()
+                            .build())));
     public static final RegistryObject<Item> ORANGE_PIE = ITEMS.register("orange_pie",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(8)
@@ -203,6 +217,17 @@ public class ModItems {
             () -> new HoeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
     public static final RegistryObject<Item> ROSELIGHT_SHEARS = ITEMS.register("roselight_shears",
             () -> new net.jerika.furmutage.item.custom.RoselightShears());
+
+    public static final RegistryObject<Item> TSC_EMERGENCY_PICKAXE = ITEMS.register("tsc_emergency_pickaxe",
+            () -> new PickaxeItem(ModToolTiers.TSC_EMERGENCY, 1, -2.8f, new Item.Properties()));
+    public static final RegistryObject<Item> TSC_EMERGENCY_AXE = ITEMS.register("tsc_emergency_axe",
+            () -> new AxeItem(ModToolTiers.TSC_EMERGENCY, 6, -3f, new Item.Properties()));
+    public static final RegistryObject<Item> TSC_EMERGENCY_SHOVEL = ITEMS.register("tsc_emergency_shovel",
+            () -> new ShovelItem(ModToolTiers.TSC_EMERGENCY, 1.5f, -3f, new Item.Properties()));
+    public static final RegistryObject<Item> TSC_EMERGENCY_SWORD = ITEMS.register("tsc_emergency_sword",
+            () -> new SwordItem(ModToolTiers.TSC_EMERGENCY, 3, -2.4f, new Item.Properties()));
+    public static final RegistryObject<Item> TSC_EMERGENCY_HOE = ITEMS.register("tsc_emergency_hoe",
+            () -> new HoeItem(ModToolTiers.TSC_EMERGENCY, -1, 0f, new Item.Properties()));
 
 
     public static final RegistryObject<Item> MUGLING_SPAWN_EGG = ITEMS.register("mugling_spawn_egg",

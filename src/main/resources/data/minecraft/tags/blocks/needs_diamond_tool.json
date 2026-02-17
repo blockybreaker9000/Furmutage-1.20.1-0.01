@@ -1,11 +1,1 @@
-{
-  "values": [
-    "furmutage:raw_roselight",
-    "furmutage:raw_thunderium",
-    "furmutage:thunderium_ore",
-    "furmutage:roselight_ore",
-    "furmutage:roselight_block",
-    "furmutage:thunderium_block",
-    "furmutage:platinum_ore_block"
-  ]
-}
+{"values":["furmutage:raw_roselight","furmutage:raw_thunderium","furmutage:thunderium_ore","furmutage:roselight_ore","furmutage:roselight_block","furmutage:thunderium_block"]}
