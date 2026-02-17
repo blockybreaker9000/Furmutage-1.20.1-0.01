@@ -857,7 +857,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     }
 
     /**
-     * Make the mob climb towards a climbable block
+     * Make the mob climb towards a climbable block to get to their target, this sorta works but idunno might be removed soon
      */
     private void performClimb(BlockPos climbablePos) {
         Vec3 mobPos = this.mob.position();
@@ -953,7 +953,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     }
 
     /**
-     * Check if the entity is currently in a 1-block tall space (crawl space)
+     * Check if the entity is currently in a 1-block tall space (crawl space aka the crawl zone)
      */
     private boolean isInCrawlSpace() {
         BlockPos mobPos = this.mob.blockPosition();
@@ -963,7 +963,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     }
 
     /**
-     * Make the entity crawl through a 1-block gap
+     * Make the entity crawl through a 1-block gap for a surprise
      */
     private void performCrawling() {
         // Always set pose to SWIMMING (crawling pose in Minecraft) - 100% of the time
@@ -994,7 +994,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     
     /**
      * Check if there's any block obstruction between the entity and the target
-     * This makes entities crouch 100% of the time when there's any block in the way
+     * This makes entities crouch 100% of the time when there's any block in the way, this is a big wip as of right now
      */
     private boolean isBlockBetweenEntityAndTarget() {
         if (this.target == null) {
@@ -1141,7 +1141,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     }
     
     /**
-     * Make the entity climb up a block when in crawl mode.
+     * Make the entity climb up a block when in crawl mode. so they can climb into holes the player forgot to patch
      */
     private void performCrawlClimb(BlockPos climbPos) {
         Vec3 mobPos = this.mob.position();

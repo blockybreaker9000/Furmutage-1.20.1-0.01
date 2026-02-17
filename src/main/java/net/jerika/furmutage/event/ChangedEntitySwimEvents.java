@@ -22,7 +22,7 @@ import java.util.WeakHashMap;
 
 /**
  * Adds swim animation and fast swim speed to Changed mod entities,
- * excluding aquatic entities that already have their own swimming behavior.
+ * excluding aquatic entities that already have their own swimming behavior cause they can ya know already swim.
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ChangedEntitySwimEvents {
@@ -69,9 +69,10 @@ public class ChangedEntitySwimEvents {
             "furmutage:withered_latex_pudding"
     );
     
-    // Entities to exclude from follow range modifications (roomba)
+    // Entities to exclude from follow range modifications
     private static final Set<String> EXCLUDED_FOLLOW_RANGE_ENTITIES = Set.of(
-            "changed:roomba"
+            "changed:roomba",
+            "changed:exoskeleton"
     );
     
     /** Clear static entity sets when a level unloads to avoid infinite "Saving world data" hang. */

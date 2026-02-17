@@ -26,7 +26,7 @@ public class ChangedEntityFallDamageEvents {
         }
         
         // Apply to Changed mod entities or furmutage entities
-        // Skip entities that already have fall damage immunity (like flying entities)
+        // Skip entities that already have fall damage immunity (like flying entities durrr)
         if (isFurmutageEntityWithFallImmunity(entity)) {
             return; // These entities already have fall damage immunity
         }
@@ -45,7 +45,7 @@ public class ChangedEntityFallDamageEvents {
             // If the fall distance is more than 10 blocks, reduce the damage by 10 blocks
             float reducedDistance = distance - FALL_DAMAGE_RESISTANCE_BLOCKS;
             event.setDistance(reducedDistance);
-            // Removed debug log to reduce spam
+            // Removed debug log to reduce spammy spam
         }
     }
     

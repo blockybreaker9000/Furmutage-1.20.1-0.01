@@ -8,7 +8,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * Event handler that prevents Changed mod entities and Furmutage entities from taking suffocation damage.
+ * Event handler that prevents Changed mod entities and Furmutage entities from taking suffocation damage. this might be removed later on
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ChangedEntitySuffocationEvents {
