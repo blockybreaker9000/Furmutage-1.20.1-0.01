@@ -103,22 +103,22 @@ public class RoselightShearsAreaShearingEvents {
     
     private static ItemStack getWoolStackForColor(DyeColor color) {
         return switch (color) {
-            case WHITE -> new ItemStack(Items.WHITE_WOOL, 1);
-            case ORANGE -> new ItemStack(Items.ORANGE_WOOL, 1);
-            case MAGENTA -> new ItemStack(Items.MAGENTA_WOOL, 1);
-            case LIGHT_BLUE -> new ItemStack(Items.LIGHT_BLUE_WOOL, 1);
-            case YELLOW -> new ItemStack(Items.YELLOW_WOOL, 1);
-            case LIME -> new ItemStack(Items.LIME_WOOL, 1);
-            case PINK -> new ItemStack(Items.PINK_WOOL, 1);
-            case GRAY -> new ItemStack(Items.GRAY_WOOL, 1);
-            case LIGHT_GRAY -> new ItemStack(Items.LIGHT_GRAY_WOOL, 1);
-            case CYAN -> new ItemStack(Items.CYAN_WOOL, 1);
-            case PURPLE -> new ItemStack(Items.PURPLE_WOOL, 1);
-            case BLUE -> new ItemStack(Items.BLUE_WOOL, 1);
-            case BROWN -> new ItemStack(Items.BROWN_WOOL, 1);
-            case GREEN -> new ItemStack(Items.GREEN_WOOL, 1);
-            case RED -> new ItemStack(Items.RED_WOOL, 1);
-            case BLACK -> new ItemStack(Items.BLACK_WOOL, 1);
+            case WHITE -> new ItemStack(Items.WHITE_WOOL, 2);
+            case ORANGE -> new ItemStack(Items.ORANGE_WOOL, 2);
+            case MAGENTA -> new ItemStack(Items.MAGENTA_WOOL, 2);
+            case LIGHT_BLUE -> new ItemStack(Items.LIGHT_BLUE_WOOL, 2);
+            case YELLOW -> new ItemStack(Items.YELLOW_WOOL, 2);
+            case LIME -> new ItemStack(Items.LIME_WOOL, 2);
+            case PINK -> new ItemStack(Items.PINK_WOOL, 2);
+            case GRAY -> new ItemStack(Items.GRAY_WOOL, 2);
+            case LIGHT_GRAY -> new ItemStack(Items.LIGHT_GRAY_WOOL, 2);
+            case CYAN -> new ItemStack(Items.CYAN_WOOL, 2);
+            case PURPLE -> new ItemStack(Items.PURPLE_WOOL, 2);
+            case BLUE -> new ItemStack(Items.BLUE_WOOL, 2);
+            case BROWN -> new ItemStack(Items.BROWN_WOOL, 2);
+            case GREEN -> new ItemStack(Items.GREEN_WOOL, 2);
+            case RED -> new ItemStack(Items.RED_WOOL, 2);
+            case BLACK -> new ItemStack(Items.BLACK_WOOL, 2);
         };
     }
 }

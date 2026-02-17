@@ -68,23 +68,13 @@ public class RoselightShovelChainMiningEvents {
     private static boolean isWhiteLatexBlock(Block block) {
         return block == ModBlocks.TAINTED_WHITE_DIRT.get() ||
                block == ModBlocks.TAINTED_WHITE_GRASS.get() ||
-               block == ModBlocks.TAINTED_WHITE_SAND.get() ||
-               block == ModBlocks.TAINTED_WHITE_LOG.get() ||
-               block == ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get() ||
-               block == ModBlocks.TAINTED_WHITE_PLANKS.get() ||
-               block == ModBlocks.TAINTED_WHITE_SLAB.get() ||
-               block == ModBlocks.TAINTED_WHITE_STAIRS.get();
+               block == ModBlocks.TAINTED_WHITE_SAND.get();
     }
     
     private static boolean isDarkLatexBlock(Block block) {
         return block == ModBlocks.TAINTED_DARK_DIRT.get() ||
                block == ModBlocks.TAINTED_DARK_GRASS.get() ||
-               block == ModBlocks.TAINTED_DARK_SAND.get() ||
-               block == ModBlocks.TAINTED_DARK_LOG.get() ||
-               block == ModBlocks.STRIPPED_TAINTED_DARK_LOG.get() ||
-               block == ModBlocks.TAINTED_DARK_PLANKS.get() ||
-               block == ModBlocks.TAINTED_DARK_SLAB.get() ||
-               block == ModBlocks.TAINTED_DARK_STAIRS.get();
+               block == ModBlocks.TAINTED_DARK_SAND.get();
     }
     
     private static void chainMineBlocks(Level level, BlockPos startPos, Block targetBlock, Player player, ItemStack tool) {
