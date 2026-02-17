@@ -29,8 +29,8 @@ public class EntityGenerator {
     
     public static class EntityConfig {
         // Basic Information
-        public String entityName;              // e.g., "DarkLatexWolf" -> "DarkLatexWolfEntity"
-        public String displayName;             // e.g., "Dark Latex Wolf"
+        public String entityName;              // e.g., "LatexWolf" -> "LatexWolfEntity"
+        public String displayName;             // e.g., "Latex Wolf"
         public String description;             // Optional description for javadoc
         
         // Entity Type

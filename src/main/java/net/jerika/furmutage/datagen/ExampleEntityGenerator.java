@@ -15,8 +15,8 @@ public class ExampleEntityGenerator {
         System.out.println("=== Furmutage Entity Generator ===\n");
         
         // Example 1: Simple Monster Entity
-        EntityConfig darkWolf = new EntityConfigBuilder("DarkLatexWolf")
-            .description("A dark latex wolf that hunts players")
+        EntityConfig Wolf = new EntityConfigBuilder("LatexWolf")
+            .description("A latex wolf that hunts players")
             .monster()
             .size(0.7f, 1.93f)
             .health(30.0)
@@ -29,9 +29,9 @@ public class ExampleEntityGenerator {
             .addImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
             .build();
         
-        EntityGenerator.generateEntity(darkWolf);
+        EntityGenerator.generateEntity(Wolf);
         
-        // Example 2: Passive Animal Entity
+        // Example 2: Passive Latex Animal Entity
         EntityConfig peacefulCreature = new EntityConfigBuilder("LatexRabbit")
             .description("A peaceful latex rabbit")
             .animal()
@@ -47,7 +47,7 @@ public class ExampleEntityGenerator {
         // Uncomment to generate:
         // EntityGenerator.generateEntity(peacefulCreature);
         
-        // Example 3: Hostile Variant of Vanilla Mob
+        // Example 3: Hostile Variant of Vanilla Mob aka the Dark Latex Cow
         EntityConfig infectedCow = new EntityConfigBuilder("DarkLatexCow")
             .description("Dark latex infected cow - now hostile")
             .extendsClass("Cow")
@@ -69,7 +69,7 @@ public class ExampleEntityGenerator {
         // Uncomment to generate:
         // EntityGenerator.generateEntity(infectedCow);
         
-        // Example 4: Aquatic Creature
+        // Example 4: Aquatic Creature for Aquatic things
         EntityConfig aquaticEntity = new EntityConfigBuilder("LatexSquid")
             .description("A latex squid that lives underwater")
             .creature()

@@ -11,10 +11,10 @@ import java.io.IOException;
 public class ExampleHumanoidEntityGenerator {
     
     public static void main(String[] args) throws IOException {
-        // Example 1: Dark Latex Wolf - Hostile entity with all animations
-        HumanoidLatexEntityGenerator.HumanoidEntityConfig darkWolf = 
-            new HumanoidEntityConfigBuilder("DarkLatexWolf")
-                .description("A dark latex wolf entity with full animations")
+        // Example 1: Latex Wolf - Hostile entity with all animations
+        HumanoidLatexEntityGenerator.HumanoidEntityConfig Wolf =
+            new HumanoidEntityConfigBuilder("LatexWolf")
+                .description("A latex wolf entity with full animations")
                 .size(0.7f, 1.93f)
                 .attributes(30.0, 0.3, 5.0, 32.0)
                 .category(EntityGenerator.MobCategory.MONSTER)
@@ -26,11 +26,11 @@ public class ExampleHumanoidEntityGenerator {
                 .addCustomImport("net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal")
                 .build();
         
-        HumanoidLatexEntityGenerator.generateHumanoidEntity(darkWolf);
+        HumanoidLatexEntityGenerator.generateHumanoidEntity(Wolf);
         
-        System.out.println("\n=== Generated Dark Latex Wolf ===");
+        System.out.println("\n=== Generated Latex Wolf ===");
         
-        // Example 2: Pure White Latex Deer - Peaceful entity
+        // Example 2: Random food for though a Pure White Latex Deer - Peaceful entity
         HumanoidLatexEntityGenerator.HumanoidEntityConfig whiteDeer = 
             new HumanoidEntityConfigBuilder("PureWhiteLatexDeer")
                 .description("A pure white latex deer - peaceful and graceful")
@@ -46,7 +46,7 @@ public class ExampleHumanoidEntityGenerator {
         // Uncomment to generate:
         // HumanoidLatexEntityGenerator.generateHumanoidEntity(whiteDeer);
         
-        // Example 3: Latex Tiger - Hostile predator with wall climbing
+        // Example 3: Another one Latex Tiger - Hostile predator with wall climbing abilities
         HumanoidLatexEntityGenerator.HumanoidEntityConfig latexTiger = 
             new HumanoidEntityConfigBuilder("LatexTiger")
                 .description("A latex tiger with wall climbing abilities")
@@ -64,7 +64,7 @@ public class ExampleHumanoidEntityGenerator {
         // Uncomment to generate:
         // HumanoidLatexEntityGenerator.generateHumanoidEntity(latexTiger);
         
-        // Example 4: Custom entity with additional model parts
+        // Example 4: Custom entity with additional model parts for dergins
         HumanoidLatexEntityGenerator.HumanoidEntityConfig latexDragon = 
             new HumanoidEntityConfigBuilder("LatexDragon")
                 .description("A latex dragon with wings and horns")

@@ -7,8 +7,8 @@ import java.util.List;
  * Builder pattern for creating ChangedEntityConfig objects easily
  * 
  * Usage:
- * ChangedEntityConfig config = new ChangedEntityConfigBuilder("DarkLatexWolf")
- *     .description("A dark latex wolf using Changed animations")
+ * ChangedEntityConfig config = new ChangedEntityConfigBuilder("LatexWolf")
+ *     .description("A latex wolf using Changed animations")
  *     .size(0.7f, 1.93f)
  *     .attributes(30.0, 0.3, 5.0, 32.0)
  *     .wolfLike()  // Uses wolfLike animator preset

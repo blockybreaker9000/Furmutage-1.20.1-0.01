@@ -17,10 +17,10 @@ import java.io.IOException;
 public class ExampleChangedStyleGenerator {
     
     public static void main(String[] args) throws IOException {
-        // Example 1: Dark Latex Wolf - Using wolfLike preset
-        ChangedStyleHumanoidGenerator.ChangedEntityConfig darkWolf = 
-            new ChangedEntityConfigBuilder("DarkLatexWolf")
-                .description("A dark latex wolf using Changed mod's animation system")
+        // Example 1: Latex Wolf - Using wolfLike preset
+        ChangedStyleHumanoidGenerator.ChangedEntityConfig Wolf =
+            new ChangedEntityConfigBuilder("LatexWolf")
+                .description("A latex wolf using Changed mod's animation system")
                 .size(0.7f, 1.93f)
                 .attributes(30.0, 0.3, 5.0, 32.0)
                 .category(EntityGenerator.MobCategory.MONSTER)
@@ -29,11 +29,11 @@ public class ExampleChangedStyleGenerator {
                 .shadowRadius(0.5f)
                 .build();
         
-        ChangedStyleHumanoidGenerator.generateChangedStyleEntity(darkWolf);
+        ChangedStyleHumanoidGenerator.generateChangedStyleEntity(Wolf);
         
-        System.out.println("\n=== Generated Dark Latex Wolf ===");
+        System.out.println("\n=== Generated Latex Wolf ===");
         
-        // Example 2: Pure White Latex Cat - Using catLike preset
+        // Example 2: Pure White Latex Cat - Using catLike preset meow
         ChangedStyleHumanoidGenerator.ChangedEntityConfig whiteCat = 
             new ChangedEntityConfigBuilder("PureWhiteLatexCat")
                 .description("A pure white latex cat - graceful and agile")
@@ -47,7 +47,7 @@ public class ExampleChangedStyleGenerator {
         // Uncomment to generate:
         // ChangedStyleHumanoidGenerator.generateChangedStyleEntity(whiteCat);
         
-        // Example 3: Latex Dragon - Using dragonLike preset
+        // Example 3: Latex Dragon - Using dragonLike preset rawr
         ChangedStyleHumanoidGenerator.ChangedEntityConfig latexDragon = 
             new ChangedEntityConfigBuilder("LatexDragon")
                 .description("A powerful latex dragon")
@@ -62,7 +62,7 @@ public class ExampleChangedStyleGenerator {
         // Uncomment to generate:
         // ChangedStyleHumanoidGenerator.generateChangedStyleEntity(latexDragon);
         
-        // Example 4: Latex Human - Using humanLike preset (no tail, no ears, plantigrade legs)
+        // Example 4: Latex Human - Using humanLike preset (no tail, no ears, plantigrade legs) human sounds
         ChangedStyleHumanoidGenerator.ChangedEntityConfig latexHuman = 
             new ChangedEntityConfigBuilder("LatexHuman")
                 .description("A latex entity with human-like proportions")

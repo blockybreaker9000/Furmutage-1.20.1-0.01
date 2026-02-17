@@ -7,7 +7,7 @@ import net.jerika.furmutage.datagen.EntityGenerator.MobCategory;
  * Builder class for creating EntityConfig easily
  * 
  * Example:
- * EntityConfig config = new EntityConfigBuilder("DarkLatexWolf")
+ * EntityConfig config = new EntityConfigBuilder("LatexWolf")
  *     .monster()
  *     .size(0.7f, 1.93f)
  *     .health(30.0)
