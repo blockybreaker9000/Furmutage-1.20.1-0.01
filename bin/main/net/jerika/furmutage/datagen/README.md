@@ -166,5 +166,6 @@ public class MyEntityGenerator {
         EntityGenerator.generateEntity(yourConfig);
     }
 }
+//anybody is free to use this generator so you can make your own latex entity only works for humanoids so it wont generate animations magically it uses the base changed mods animations to save alot of time so remember to only use this for changed mod models not for any wacky creature you add you'll have to animate that yourself!!!
 ```
 
