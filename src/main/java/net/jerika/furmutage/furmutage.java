@@ -43,6 +43,7 @@ import net.jerika.furmutage.entity.client.renderer.DarkLatexHorseRenderer;
 import net.jerika.furmutage.entity.client.renderer.DarkLatexSquidRenderer;
 import net.jerika.furmutage.entity.client.renderer.DarkLatexLlamaRenderer;
 import net.jerika.furmutage.entity.client.renderer.DarkLatexDolphinRenderer;
+import net.jerika.furmutage.entity.client.renderer.DarkLatexChargerMutantRenderer;
 import net.jerika.furmutage.entity.client.renderer.DarkLatexGoatRenderer;
 import net.jerika.furmutage.entity.client.renderer.DeepSlateLatexSquidDogRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
@@ -196,6 +197,7 @@ public class furmutage {
             
             EntityRenderers.register(ModEntities.MUGLING.get(), MuglingRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_MUTANT_FAMILY.get(), MutantFamilyRenderer::new);
+            EntityRenderers.register(ModEntities.DARK_LATEX_CHARGER_MUTANT.get(), DarkLatexChargerMutantRenderer::new);
             EntityRenderers.register(ModEntities.WITHERED_LATEX_PUDDING.get(), WitheredLatexPuddingRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT.get(), LatexTenticleLimbsMutantRenderer::new);
             EntityRenderers.register(ModEntities.TSC_DRONE.get(), TSCDroneRenderer::new);

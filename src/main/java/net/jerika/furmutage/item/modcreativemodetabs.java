@@ -109,6 +109,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.DARK_LATEX_RABBIT_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_HORSE_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_GOAT_SPAWN_EGG.get());
+                        output.accept(ModItems.DARK_LATEX_CHARGER_MUTANT_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_LLAMA_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_SQUID_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_DOLPHIN_SPAWN_EGG.get());

@@ -28,6 +28,7 @@ import net.jerika.furmutage.entity.custom.DarkLatexHorseEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexSquidEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexDolphinEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexChargerMutantEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexGoatEntity;
 import net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog;
 import net.jerika.furmutage.entity.custom.DeepCaveHypnoCat;
@@ -54,6 +55,10 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexMutantFamilyEntity>> LATEX_MUTANT_FAMILY =
                 ENTITY_TYPES.register("latex_mutant_family", () -> EntityType.Builder.of(LatexMutantFamilyEntity::new, MobCategory.CREATURE)
             .sized(2.4f, 3.1f).build("latex_mutant_family"));
+
+    public static final RegistryObject<EntityType<DarkLatexChargerMutantEntity>> DARK_LATEX_CHARGER_MUTANT =
+            ENTITY_TYPES.register("dark_latex_charger_mutant", () -> EntityType.Builder.of(DarkLatexChargerMutantEntity::new, MobCategory.MONSTER)
+                    .sized(2.4f, 3.1f).build("dark_latex_charger_mutant"));
 
     public static final RegistryObject<EntityType<WitheredLatexPuddingEntity>> WITHERED_LATEX_PUDDING =
             ENTITY_TYPES.register("withered_latex_pudding", () -> EntityType.Builder.of(WitheredLatexPuddingEntity::new, MobCategory.CREATURE)

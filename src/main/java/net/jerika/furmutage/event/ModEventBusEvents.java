@@ -5,6 +5,7 @@ import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.entity.custom.LatexBacteriaEntity;
 import net.jerika.furmutage.entity.custom.LatexExoMutantEntity;
 import net.jerika.furmutage.entity.custom.LatexMutantBomberEntity;
+import net.jerika.furmutage.entity.custom.DarkLatexChargerMutantEntity;
 import net.jerika.furmutage.entity.custom.LatexMutantFamilyEntity;
 import net.jerika.furmutage.entity.custom.LatexTenticleLimbsMutantEntity;
 import net.jerika.furmutage.entity.custom.MuglingEntity;
@@ -48,6 +49,7 @@ public class ModEventBusEvents {
     public static void registerAttributes(EntityAttributeCreationEvent event) {
         event.put(ModEntities.MUGLING.get(), MuglingEntity.createMobAttributes().build());
         event.put(ModEntities.LATEX_MUTANT_FAMILY.get(), LatexMutantFamilyEntity.createMobAttributes().build());
+        event.put(ModEntities.DARK_LATEX_CHARGER_MUTANT.get(), DarkLatexChargerMutantEntity.createMobAttributes().build());
         event.put(ModEntities.WITHERED_LATEX_PUDDING.get(), WitheredLatexPuddingEntity.createMobAttributes().build());
         event.put(ModEntities.LATEX_TENTICLE_LIMBS_MUTANT.get(), LatexTenticleLimbsMutantEntity.createMobAttributes().build());
         event.put(ModEntities.TSC_DRONE.get(), TSCDroneEntity.createMobAttributes().build());

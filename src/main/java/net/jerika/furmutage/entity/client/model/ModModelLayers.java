@@ -33,6 +33,8 @@ public class ModModelLayers {
             new ResourceLocation(furmutage.MOD_ID, "loose_behemoth_hand"), "main");
     public static final ModelLayerLocation LOOSE_SQUID_DOG_LIMB_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "loose_squid_dog_limb"), "main");
+    public static final ModelLayerLocation DARK_LATEX_CHARGER_MUTANT_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "dark_latex_charger_mutant"), "main");
 
     // Roselight Armor Model Layers (separate for each piece)
     public static final ModelLayerLocation ROSELIGHT_HELMET_LAYER = new ModelLayerLocation(

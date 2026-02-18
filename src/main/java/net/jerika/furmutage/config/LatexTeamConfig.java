@@ -197,6 +197,7 @@ public class LatexTeamConfig {
             "changed:phage_latex_wolf_male",
             "changed:dark_latex_double_yufeng",
             "changed:latex_crow",
+            "furmutage:dark_latex_charger_mutant",
             "furmutage:latex_bacteria",
             "furmutage:dark_latex_bottle_projectile",
             "furmutage:dark_latex_cow",

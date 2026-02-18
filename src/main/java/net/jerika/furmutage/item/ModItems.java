@@ -323,6 +323,8 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_DOLPHIN, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
     public static final RegistryObject<Item> DARK_LATEX_GOAT_SPAWN_EGG = ITEMS.register("dark_latex_goat_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_GOAT, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
+    public static final RegistryObject<Item> DARK_LATEX_CHARGER_MUTANT_SPAWN_EGG = ITEMS.register("dark_latex_charger_mutant_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_CHARGER_MUTANT, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
 
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()

@@ -25,6 +25,7 @@ public class ModEventBusClientEvents {
         event.registerLayerDefinition(ModModelLayers.LATEX_BLOOD_WORM_MUTANT_LAYER, LatexBloodWormMutantModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LOOSE_BEHEMOTH_HAND_LAYER, LooseBehemothHandModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LOOSE_SQUID_DOG_LIMB_LAYER, LooseSquidDogLimbModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.DARK_LATEX_CHARGER_MUTANT_LAYER, DarkLatexChargerMutantModel::createBodyLayer);
     }
 
 }
