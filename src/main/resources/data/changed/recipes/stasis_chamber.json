@@ -7,16 +7,16 @@
   ],
   "key": {
     "#": {
-      "item": "minecraft:iron_block"
+      "item": "furmutage:roselight_block"
     },
     "G": {
-      "item": "minecraft:glass"
+      "item": "furmutage:thunderium_block"
     },
     "M": {
-      "item": "minecraft:comparator"
+      "item": "furmutage:tsc_advanced_tech"
     },
     "C": {
-      "item": "changed:computer"
+      "item": "furmutage:tsc_gears"
     }
   },
   "result": {

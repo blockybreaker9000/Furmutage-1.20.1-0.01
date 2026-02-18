@@ -2,15 +2,16 @@ package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.ai.latex_beast_ai.ChangedStyleLeapAtTargetGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.DarkLatexChargerMutantAi;
+import net.jerika.furmutage.sound.ModSounds;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -45,6 +46,25 @@ public class DarkLatexChargerMutantEntity extends Monster {
 
         if (this.level().isClientSide()) {
             setupAnimationStates();
+        }
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity pTarget) {
+        LivingEntity previousTarget = this.getTarget();
+        super.setTarget(pTarget);
+
+        if (!this.level().isClientSide()
+                && pTarget != null
+                && previousTarget == null) {
+            this.level().playSound(
+                    null,
+                    this.getX(), this.getY(), this.getZ(),
+                    ModSounds.LATEX_CHARGER_TARGETS.get(),
+                    this.getSoundSource(),
+                    1.0f,
+                    1.0f
+            );
         }
     }
 
@@ -121,19 +141,19 @@ public class DarkLatexChargerMutantEntity extends Monster {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ZOGLIN_AMBIENT;
+        return ModSounds.LATEX_CHARGER_AMBIENT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return SoundEvents.ZOGLIN_HURT;
+        return ModSounds.LATEX_CHARGER_HURT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getDeathSound() {
-        return SoundEvents.ZOGLIN_DEATH;
+        return ModSounds.LATEX_CHARGER_DEATH.get();
     }
 
     @Override

@@ -106,6 +106,12 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_AMBIENT = registerSoundEvent("latex_mutant_bomber_ambient");
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_HURT = registerSoundEvent("latex_mutant_bomber_hurt");
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_DEATH = registerSoundEvent("latex_mutant_bomber_death");
+
+    // Dark Latex Charger Mutant sounds
+    public static final RegistryObject<SoundEvent> LATEX_CHARGER_AMBIENT = registerSoundEvent("latex_charger_ambient");
+    public static final RegistryObject<SoundEvent> LATEX_CHARGER_HURT = registerSoundEvent("latex_charger_hurt");
+    public static final RegistryObject<SoundEvent> LATEX_CHARGER_DEATH = registerSoundEvent("latex_charger_death");
+    public static final RegistryObject<SoundEvent> LATEX_CHARGER_TARGETS = registerSoundEvent("latex_charger_targets");
     
     // Tainted grass placement sound
     public static final RegistryObject<SoundEvent> TAINTED_HORROR_GRASS_PLACE = registerSoundEvent("tainted_horror_grass_place");

@@ -173,6 +173,30 @@
     ],
     "subtitle": "subtitles.furmutage.latex_mutant_bomber_death"
   },
+  "latex_charger_ambient": {
+    "sounds": [
+      "furmutage:latex_charger_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.latex_charger_ambient"
+  },
+  "latex_charger_hurt": {
+    "sounds": [
+      "furmutage:latex_charger_hurt"
+    ],
+    "subtitle": "subtitles.furmutage.latex_charger_hurt"
+  },
+  "latex_charger_death": {
+    "sounds": [
+      "furmutage:latex_charger_death"
+    ],
+    "subtitle": "subtitles.furmutage.latex_charger_death"
+  },
+  "latex_charger_targets": {
+    "sounds": [
+      "furmutage:latex_charger_targets"
+    ],
+    "subtitle": "subtitles.furmutage.latex_charger_targets"
+  },
   "tainted_horror_grass_place": {
     "sounds": [
       "furmutage:tainted_horror_grass_place"
