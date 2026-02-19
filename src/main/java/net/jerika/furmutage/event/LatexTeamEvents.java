@@ -27,6 +27,7 @@ public class LatexTeamEvents {
     private static final int TARGET_CHECK_INTERVAL = 20; // Check every 20 ticks (1 second)
     private static final int ATTACK_COOLDOWN = 20; // Attack every 20 ticks (1 second)
     private static final double HORDE_RADIUS = 32.0D; // 32 block radius for horde aggro (like zombie pigmen)
+    private static int serverTickCounter = 0;
     
     /**
      * Check if two entities are on different teams
@@ -91,7 +92,8 @@ public class LatexTeamEvents {
         if (teamEntities.isEmpty()) {
             return;
         }
-        
+        serverTickCounter++;
+
         // Iterate over a snapshot to avoid ConcurrentModificationException when other
         // events add/remove team entities during this tick.
         for (Mob mob : new java.util.ArrayList<>(teamEntities)) {
@@ -99,35 +101,22 @@ public class LatexTeamEvents {
                 teamEntities.remove(mob);
                 continue;
             }
-            
+
             String mobType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
             if (!LatexTeamConfig.isEntityInTeam(mobType)) {
                 teamEntities.remove(mob);
                 continue;
             }
             int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
-            
-            // Hard rule: entities on the same team are always passive toward each other.
-            LivingEntity currentTarget = mob.getTarget();
-        if (currentTarget != null) {
-            String targetType = ForgeRegistries.ENTITY_TYPES.getKey(currentTarget.getType()).toString();
-            if (LatexTeamConfig.isEntityInTeam(targetType)) {
-                int targetTeam = LatexTeamConfig.getTeamForEntity(targetType);
-                if (mobTeam != 0 && mobTeam == targetTeam) {
-                    mob.setTarget(null);
-                    mob.setLastHurtByMob(null);
-                    continue; // Don't process further AI this tick for friendly target
-                }
+
+            // Spread expensive work (target scan + moveTo) across ticks to avoid lag spikes
+            int bucket = Math.floorMod(serverTickCounter + mob.getId(), TARGET_CHECK_INTERVAL);
+            if (bucket != 0) {
+                continue;
             }
-        }
-        
-        // Check for targets and attack every N ticks
-        if (mob.tickCount % TARGET_CHECK_INTERVAL != 0) {
-            continue;
-        }
-        
-        currentTarget = mob.getTarget();
-        
+
+            LivingEntity currentTarget = mob.getTarget();
+
         // Priority 1: Check if entity has an attacker (lastHurtByMob) - prioritize attacker over team targeting
         LivingEntity attacker = mob.getLastHurtByMob();
         double followRange = mob.getAttributeValue(Attributes.FOLLOW_RANGE);
@@ -224,23 +213,9 @@ public class LatexTeamEvents {
                 if ("furmutage:loose_behemoth_hand".equals(mobType)) {
                     // Skip moveTo; hand uses its own goals for movement
                 } else if (mob instanceof PathfinderMob pathfinderMob) {
-                    // Move towards target at slower speed (only for Changed entities)
                     double movementSpeed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
-                    
-                    // Only apply speed nerf to Changed mod entities, exclude other modded mobs
-                    if (mobType.startsWith("changed:")) {
-                        // Use slower movement speed (0.25 instead of normal) for Changed entities
-                        if (movementSpeed <= 0) {
-                            movementSpeed = 0.25D; // Default speed
-                        } else {
-                            movementSpeed = movementSpeed * 0.25; // Quarter of normal speed
-                        }
-                    } else {
-                        // Other modded mobs use normal movement speed
-                        if (movementSpeed <= 0) {
-                            movementSpeed = 1.0D; // Default speed
-                        }
-                        // Use normal speed multiplier (no reduction)
+                    if (movementSpeed <= 0) {
+                        movementSpeed = 1.0D;
                     }
                     pathfinderMob.getNavigation().moveTo(currentTarget, movementSpeed);
                 }
