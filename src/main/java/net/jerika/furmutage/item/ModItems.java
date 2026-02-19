@@ -115,6 +115,8 @@ public class ModItems {
             () -> new TSCShockGrenadeItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> TSC_EXPLOSIVE_GRENADE = ITEMS.register("tsc_explosive_grenade",
             () -> new TSCExplosiveGrenadeItem(new Item.Properties().stacksTo(4)));
+    public static final RegistryObject<Item> TSC_PIPE_BOMB = ITEMS.register("tsc_pipe_bomb",
+            () -> new TSCPipeBombItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> TSC_DRONE_BULLET = ITEMS.register("tsc_drone_bullet",
             () -> new TSCDroneBulletItem(new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> DARKLATEXBOTTLED = ITEMS.register("darklatex_bottle",

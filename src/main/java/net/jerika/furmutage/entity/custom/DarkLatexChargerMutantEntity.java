@@ -23,6 +23,10 @@ import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -46,6 +50,28 @@ public class DarkLatexChargerMutantEntity extends Monster {
 
         if (this.level().isClientSide()) {
             setupAnimationStates();
+        } else {
+            if (this.tickCount % 5 == 0) {
+                destroyNearbyLeaves();
+            }
+        }
+    }
+
+    /** Leaf breaking AI (same as giant): destroy leaves within 1 block of hitbox. */
+    private void destroyNearbyLeaves() {
+        AABB boundingBox = this.getBoundingBox().inflate(1.0);
+        BlockPos minPos = BlockPos.containing(boundingBox.minX, boundingBox.minY, boundingBox.minZ);
+        BlockPos maxPos = BlockPos.containing(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ);
+        for (int x = minPos.getX(); x <= maxPos.getX(); x++) {
+            for (int y = minPos.getY(); y <= maxPos.getY(); y++) {
+                for (int z = minPos.getZ(); z <= maxPos.getZ(); z++) {
+                    BlockPos checkPos = new BlockPos(x, y, z);
+                    BlockState blockState = this.level().getBlockState(checkPos);
+                    if (blockState.is(BlockTags.LEAVES)) {
+                        this.level().destroyBlock(checkPos, true);
+                    }
+                }
+            }
         }
     }
 
@@ -70,7 +96,7 @@ public class DarkLatexChargerMutantEntity extends Monster {
 
     private void setupAnimationStates() {
         if (isChargerAttack() && attackAnimationTimeout <= 0) {
-            attackAnimationTimeout = 10;
+            attackAnimationTimeout = 20; // doubled so attack animation (now half speed) stays in sync
             attackAnimationState.start(this.tickCount);
         } else {
             --this.attackAnimationTimeout;
@@ -110,7 +136,7 @@ public class DarkLatexChargerMutantEntity extends Monster {
     @Override
     protected void registerGoals() {
         this.goalSelector.addGoal(1, new DarkLatexChargerMutantAi(this, 1.4, true));
-        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.4, 120, false));
+        this.goalSelector.addGoal(2, new RandomStrollGoal(this, 0.8, 120, false));
         this.goalSelector.addGoal(3, new ChangedStyleLeapAtTargetGoal(this, 0.5f));
         if (GoalUtils.hasGroundPathNavigation(this)) {
             this.goalSelector.addGoal(4, new OpenDoorGoal(this, true));

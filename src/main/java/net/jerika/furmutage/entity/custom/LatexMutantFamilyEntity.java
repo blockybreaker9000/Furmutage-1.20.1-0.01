@@ -3,12 +3,12 @@ package net.jerika.furmutage.entity.custom;
 import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.ChangedStyleLeapAtTargetGoal;
 import net.jerika.furmutage.ai.latex_beast_ai.MutantFamilyAi;
+import net.jerika.furmutage.sound.ModSounds;
 import net.ltxprogrammer.changed.entity.beast.WhiteLatexEntity;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
@@ -31,6 +31,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,8 +61,30 @@ public class LatexMutantFamilyEntity extends Monster {
     public void tick() {
         super.tick();
 
-        if(this.level().isClientSide()) {
-        setupAnimationStates();
+        if (this.level().isClientSide()) {
+            setupAnimationStates();
+        } else {
+            if (this.tickCount % 5 == 0) {
+                destroyNearbyLeaves();
+            }
+        }
+    }
+
+    /** Leaf breaking AI (same as giant): destroy leaves within 1 block of hitbox. */
+    private void destroyNearbyLeaves() {
+        AABB boundingBox = this.getBoundingBox().inflate(1.0);
+        BlockPos minPos = BlockPos.containing(boundingBox.minX, boundingBox.minY, boundingBox.minZ);
+        BlockPos maxPos = BlockPos.containing(boundingBox.maxX, boundingBox.maxY, boundingBox.maxZ);
+        for (int x = minPos.getX(); x <= maxPos.getX(); x++) {
+            for (int y = minPos.getY(); y <= maxPos.getY(); y++) {
+                for (int z = minPos.getZ(); z <= maxPos.getZ(); z++) {
+                    BlockPos checkPos = new BlockPos(x, y, z);
+                    BlockState blockState = this.level().getBlockState(checkPos);
+                    if (blockState.is(BlockTags.LEAVES)) {
+                        this.level().destroyBlock(checkPos, true);
+                    }
+                }
+            }
         }
     }
 
@@ -173,17 +198,29 @@ public class LatexMutantFamilyEntity extends Monster {
 
     @Override
     protected SoundEvent getAmbientSound() {
-        return SoundEvents.ZOGLIN_AMBIENT;
+        return ModSounds.LATEX_MUTANT_FAMILY_AMBIENT.get();
     }
 
     @Nullable
     @Override
     protected SoundEvent getHurtSound(@NotNull DamageSource pDamageSource) {
-        return SoundEvents.ZOGLIN_HURT;
+        return ModSounds.LATEX_MUTANT_FAMILY_HURT.get();
     }
-    @Nullable
-    protected SoundEvent getDeathSound() { return SoundEvents.ZOGLIN_DEATH;
 
+    @Nullable
+    @Override
+    protected SoundEvent getDeathSound() {
+        return ModSounds.LATEX_MUTANT_FAMILY_DEATH.get();
+    }
+
+    @Override
+    public void setTarget(@Nullable LivingEntity pTarget) {
+        LivingEntity previousTarget = this.getTarget();
+        super.setTarget(pTarget);
+        if (!this.level().isClientSide() && pTarget != null && previousTarget == null) {
+            this.level().playSound(null, this.getX(), this.getY(), this.getZ(),
+                    ModSounds.LATEX_MUTANT_FAMILY_TARGETS.get(), this.getSoundSource(), 1.0f, 1.0f);
+        }
     }
 
     @Override

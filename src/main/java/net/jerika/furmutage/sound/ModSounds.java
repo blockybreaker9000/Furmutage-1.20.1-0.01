@@ -107,6 +107,12 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_HURT = registerSoundEvent("latex_mutant_bomber_hurt");
     public static final RegistryObject<SoundEvent> LATEX_MUTANT_BOMBER_DEATH = registerSoundEvent("latex_mutant_bomber_death");
 
+    // Latex Mutant Family sounds
+    public static final RegistryObject<SoundEvent> LATEX_MUTANT_FAMILY_AMBIENT = registerSoundEvent("latex_mutant_family_ambient");
+    public static final RegistryObject<SoundEvent> LATEX_MUTANT_FAMILY_HURT = registerSoundEvent("latex_mutant_family_hurt");
+    public static final RegistryObject<SoundEvent> LATEX_MUTANT_FAMILY_DEATH = registerSoundEvent("latex_mutant_family_death");
+    public static final RegistryObject<SoundEvent> LATEX_MUTANT_FAMILY_TARGETS = registerSoundEvent("latex_mutant_family_targets");
+
     // Dark Latex Charger Mutant sounds
     public static final RegistryObject<SoundEvent> LATEX_CHARGER_AMBIENT = registerSoundEvent("latex_charger_ambient");
     public static final RegistryObject<SoundEvent> LATEX_CHARGER_HURT = registerSoundEvent("latex_charger_hurt");

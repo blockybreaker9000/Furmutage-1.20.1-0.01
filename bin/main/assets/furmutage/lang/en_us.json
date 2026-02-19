@@ -87,6 +87,7 @@
   "item.furmutage.whitelatex_bottle": "Bottled WhiteLatex",
   "item.furmutage.tsc_shock_grenade": "TSC Shock Grenade",
   "item.furmutage.tsc_explosive_grenade": "TSC Explosive Grenade",
+  "item.furmutage.tsc_pipe_bomb": "TSC Pipe Bomb",
 
   "block.furmutage.raw_thunderium": "Raw Thunderium",
   "block.furmutage.eugenics_crafting_block": "TSC Eugenics Crafting Block",
@@ -160,6 +161,10 @@
   "subtitles.furmutage.deep_hypno_cat_stare": "Deep Cave Hypno Cat stare",
   "subtitles.furmutage.latex_jumpscare": "Latex jumpscare",
   "subtitles.furmutage.latex_hello": "Latex hello",
+  "subtitles.furmutage.latex_mutant_family_ambient": "Latex Mutant Family growls",
+  "subtitles.furmutage.latex_mutant_family_hurt": "Latex Mutant Family hurts",
+  "subtitles.furmutage.latex_mutant_family_death": "Latex Mutant Family dies",
+  "subtitles.furmutage.latex_mutant_family_targets": "Latex Mutant Family targets",
 
   "container.furmutage.eugenics_crafting": "TSC Eugenics Crafting",
   "container.furmutage.eugenics_smeltery": "Eugenics Smeltery Oven",

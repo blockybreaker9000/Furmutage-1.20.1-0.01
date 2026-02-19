@@ -28,7 +28,7 @@ public class LatexTeamEvents {
     private static final int ATTACK_COOLDOWN = 20; // Attack every 20 ticks (1 second)
     private static final double HORDE_RADIUS = 32.0D; // 32 block radius for horde aggro (like zombie pigmen)
     private static int serverTickCounter = 0;
-    
+
     /**
      * Check if two entities are on different teams
      */

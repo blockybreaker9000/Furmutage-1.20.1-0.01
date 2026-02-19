@@ -173,6 +173,30 @@
     ],
     "subtitle": "subtitles.furmutage.latex_mutant_bomber_death"
   },
+  "latex_mutant_family_ambient": {
+    "sounds": [
+      "furmutage:latex_mutant_family_ambient"
+    ],
+    "subtitle": "subtitles.furmutage.latex_mutant_family_ambient"
+  },
+  "latex_mutant_family_hurt": {
+    "sounds": [
+      "furmutage:latex_mutant_family_hurt"
+    ],
+    "subtitle": "subtitles.furmutage.latex_mutant_family_hurt"
+  },
+  "latex_mutant_family_death": {
+    "sounds": [
+      "furmutage:latex_mutant_family_death"
+    ],
+    "subtitle": "subtitles.furmutage.latex_mutant_family_death"
+  },
+  "latex_mutant_family_targets": {
+    "sounds": [
+      "furmutage:latex_mutant_family_targets"
+    ],
+    "subtitle": "subtitles.furmutage.latex_mutant_family_targets"
+  },
   "latex_charger_ambient": {
     "sounds": [
       "furmutage:latex_charger_ambient"

@@ -388,19 +388,19 @@ public class DarkLatexChargerMutantModel extends HierarchicalModel<DarkLatexChar
 	public void setupAnim(DarkLatexChargerMutantEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
 		this.root().getAllParts().forEach(ModelPart::resetPose);
 
-		boolean isMoving = limbSwingAmount > 0.00001f;
-		boolean isBarelyMoving = limbSwingAmount > 0.00001f && limbSwingAmount < 0.04f;
+		boolean isMoving = limbSwingAmount > 0.01f;
+		boolean isBarelyMoving = limbSwingAmount > 0.01f && limbSwingAmount < 0.04f;
 		boolean isAttacking = entity.attackAnimationState.isStarted();
 
-		// Attack takes priority - full attack animation when melee attacking
+		// Attack takes priority - full attack animation when melee attacking (speeds halved for slower animations)
 		if (isAttacking) {
-			this.animate(entity.attackAnimationState, DarkLatexChargerMutantAnimations.ATTACK, ageInTicks, 1.2f);
+			this.animate(entity.attackAnimationState, DarkLatexChargerMutantAnimations.ATTACK, ageInTicks, 0.6f);
 		} else if (isBarelyMoving) {
-			this.animateWalk(DarkLatexChargerMutantAnimations.WALK, limbSwing, limbSwingAmount, 2f, 2f);
+			this.animateWalk(DarkLatexChargerMutantAnimations.WALK, limbSwing, limbSwingAmount, 1f, 1f);
 		} else if (isMoving) {
-			this.animateWalk(DarkLatexChargerMutantAnimations.SPRINT, limbSwing, limbSwingAmount, 2f, 2f);
+			this.animateWalk(DarkLatexChargerMutantAnimations.SPRINT, limbSwing, limbSwingAmount, 0.5f, 1f);
 		} else {
-			this.animate(entity.idleAnimationState, DarkLatexChargerMutantAnimations.IDLE, ageInTicks, 1f);
+			this.animate(entity.idleAnimationState, DarkLatexChargerMutantAnimations.IDLE, ageInTicks, 0.5f);
 		}
 	}
 

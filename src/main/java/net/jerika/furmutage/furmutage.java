@@ -215,6 +215,8 @@ public class furmutage {
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
             EntityRenderers.register(ModEntities.TSC_EXPLOSIVE_GRENADE_PROJECTILE.get(),
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
+            EntityRenderers.register(ModEntities.TSC_PIPE_BOMB_PROJECTILE.get(),
+                    (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
             
             // Register renderers for White Latex infected passive mobs (using custom renderers with custom textures)
             EntityRenderers.register(ModEntities.WHITE_LATEX_COW.get(), WhiteLatexCowRenderer::new);

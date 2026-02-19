@@ -224,6 +224,14 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("tsc_explosive_grenade_projectile"));
+
+    public static final RegistryObject<EntityType<TSCPipeBombProjectile>> TSC_PIPE_BOMB_PROJECTILE =
+            ENTITY_TYPES.register("tsc_pipe_bomb_projectile", () -> EntityType.Builder.<TSCPipeBombProjectile>of(
+                    TSCPipeBombProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("tsc_pipe_bomb_projectile"));
     
     public static final RegistryObject<EntityType<TSCDroneBulletProjectile>> TSC_DRONE_BULLET_PROJECTILE =
             ENTITY_TYPES.register("tsc_drone_bullet_projectile", () -> EntityType.Builder.<TSCDroneBulletProjectile>of(

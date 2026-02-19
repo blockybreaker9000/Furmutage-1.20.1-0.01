@@ -18,7 +18,7 @@ public class ChangedEntityDaytimeSlownessEvents {
     private static final String EXCLUDED_EXOSKELETON = "changed:exoskeleton";
     private static final long NIGHT_START = 13000;
     private static final long NIGHT_END = 23000;
-    private static final int LIGHT_THRESHOLD = 5;
+    private static final int LIGHT_THRESHOLD = 15;
     private static final int CHECK_INTERVAL = 60;
 
     @SubscribeEvent

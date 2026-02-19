@@ -49,8 +49,9 @@ public class DarkLatexChargerMutantAi extends MeleeAttackGoal {
         }
     }
 
+    /** Only melee when in actual reach (vanilla-style: mob width * 2 + target width). */
     private boolean isEnemyWithinAttackDistance(LivingEntity pEnemy, double pDistToEnemySqr) {
-        double attackReach = this.mob.getBbWidth() * 2.0F + 4.0D;
+        double attackReach = this.mob.getBbWidth() * 2.0 + pEnemy.getBbWidth();
         return pDistToEnemySqr <= attackReach * attackReach;
     }
 

@@ -12,8 +12,8 @@
     "minecraft:windswept_hills",
     "minecraft:sparse_jungle",
     "minecraft:desert",
-    "tsp:mars_landscape",
-    "tsp:moon_landscape_1",
-    "tsp:moonwastelandlandscape"
+    {"id": "tsp:mars_landscape", "required": false},
+    {"id": "tsp:moon_landscape_1", "required": false},
+    {"id": "tsp:moonwastelandlandscape", "required": false}
   ]
 }

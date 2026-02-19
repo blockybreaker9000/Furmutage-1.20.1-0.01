@@ -3,10 +3,11 @@ package net.jerika.furmutage.event;
 import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -21,29 +22,21 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 
 /**
- * Adds swim animation and fast swim speed to Changed mod entities,
- * excluding aquatic entities that already have their own swimming behavior cause they can ya know already swim.
+ * Registers Changed/Furmutage entities for improved pathfinding and follow range.
+ * When in water, gives Dolphin's Grace II for 200 ticks (replaces previous fast water movement).
+ * Excludes aquatic entities that already have their own swimming behavior.
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class ChangedEntitySwimEvents {
-    // Track entities that should have fast swimming
+    /** Duration (ticks) for Dolphin's Grace when entity touches water. 200 ticks = 10 seconds. */
+    private static final int DOLPHINS_GRACE_WATER_TICKS = 5000;
+
+    // Track entities that get Dolphin's Grace in water (formerly fast swim)
     private static final Set<LivingEntity> fastSwimEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
     
     // Track entities that have been given improved pathfinding
     private static final Set<PathfinderMob> improvedPathfindingEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
-    
-    // Track Changed entities for sprint speed reduction
-    private static final Set<LivingEntity> changedEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
-    
-    // Track entities that currently have the sprint speed reduction modifier applied
-    private static final Set<LivingEntity> entitiesWithSprintReduction = java.util.Collections.newSetFromMap(new WeakHashMap<>());
-    
-    // UUID for the sprint speed reduction modifier
-    private static final UUID SPRINT_SPEED_REDUCTION_UUID = UUID.fromString("a1b2c3d4-e5f6-7890-abcd-ef1234567890");
-    
-    // Sprint speed reduction multiplier (0.7 = 70% of normal sprint speed, so 30% reduction)
-    private static final double SPRINT_SPEED_REDUCTION = -0.3D; // Negative value reduces speed
-    
+
     // Entities to exclude from swim speed/animation modifications
     private static final Set<String> EXCLUDED_ENTITIES = Set.of(
             "changed:latex_shark",
@@ -83,8 +76,7 @@ public class ChangedEntitySwimEvents {
         }
         fastSwimEntities.clear();
         improvedPathfindingEntities.clear();
-        changedEntities.clear();
-        entitiesWithSprintReduction.clear();
+
     }
 
     /** Clear on server stop so entities can be released before save. */
@@ -92,8 +84,6 @@ public class ChangedEntitySwimEvents {
     public static void onServerStopping(ServerStoppingEvent event) {
         fastSwimEntities.clear();
         improvedPathfindingEntities.clear();
-        changedEntities.clear();
-        entitiesWithSprintReduction.clear();
     }
 
     @SubscribeEvent
@@ -116,7 +106,6 @@ public class ChangedEntitySwimEvents {
             // Check if it's a Changed mod entity and not excluded
             if (entityId.startsWith("changed:") && !EXCLUDED_ENTITIES.contains(entityId)) {
                 fastSwimEntities.add(livingEntity);
-                changedEntities.add(livingEntity);
                 
                 // Add improved pathfinding goal for Changed entities
                 if (livingEntity instanceof PathfinderMob pathfinderMob && !improvedPathfindingEntities.contains(pathfinderMob)) {
@@ -144,57 +133,25 @@ public class ChangedEntitySwimEvents {
     }
     
     /**
-     * Check if an entity should have fast swimming enabled.
-     * This is called by the mixin to determine if travel() should be modified.
-     */
-    public static boolean shouldHaveFastSwimming(LivingEntity entity) {
-        return fastSwimEntities.contains(entity);
-    }
-    
-    /**
-     * Reduces sprint speed for Changed entities. Uses ServerTickEvent to iterate
-     * only tracked entities instead of LivingTickEvent for every living entity.
+     * Applies Dolphin's Grace II in water
+     * for Changed/Furmutage entities (same set as fastSwimEntities).
      */
     @SubscribeEvent
     public static void onServerTick(TickEvent.ServerTickEvent event) {
         if (event.phase != TickEvent.Phase.END) {
             return;
         }
-        if (changedEntities.isEmpty()) {
-            return;
-        }
-        
-        java.util.Iterator<LivingEntity> it = changedEntities.iterator();
-        while (it.hasNext()) {
-            LivingEntity entity = it.next();
+
+        // Dolphin's Grace II for 5000 ticks when any Changed/Furmutage entity is in water
+        for (LivingEntity entity : new java.util.HashSet<>(fastSwimEntities)) {
             if (entity == null || !entity.isAlive()) {
-                it.remove();
-                entitiesWithSprintReduction.remove(entity);
+                fastSwimEntities.remove(entity);
                 continue;
             }
-            
-            AttributeInstance movementSpeed = entity.getAttribute(Attributes.MOVEMENT_SPEED);
-            if (movementSpeed == null) {
-                continue;
+            if (entity.isInWater()) {
+                entity.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, DOLPHINS_GRACE_WATER_TICKS, 3, false, true, true));
             }
-            
-            boolean isSprinting = entity.isSprinting();
-            boolean hasModifier = entitiesWithSprintReduction.contains(entity);
-            
-            if (isSprinting && !hasModifier) {
-                AttributeModifier sprintReduction = new AttributeModifier(
-                    SPRINT_SPEED_REDUCTION_UUID,
-                    "Changed Entity Sprint Speed Reduction",
-                    SPRINT_SPEED_REDUCTION,
-                    AttributeModifier.Operation.MULTIPLY_TOTAL
-                );
-                movementSpeed.addTransientModifier(sprintReduction);
-                entitiesWithSprintReduction.add(entity);
-            } else if (!isSprinting && hasModifier) {
-                movementSpeed.removeModifier(SPRINT_SPEED_REDUCTION_UUID);
-                entitiesWithSprintReduction.remove(entity);
-            }
+        }
         }
     }
-}
 
