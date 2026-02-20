@@ -49,7 +49,7 @@ public class ModBlocks {
             () -> new StairBlock(() -> TAINTED_WHITE_PLANKS.get().defaultBlockState(),
                     BlockBehaviour.Properties.copy(Blocks.OAK_STAIRS).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_FENCE = registerBlock("tainted_white_fence",
-            () -> new FenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE).requiresCorrectToolForDrops()));
+            () -> new TaintedWhiteFenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_FENCE_GATE = registerBlock("tainted_white_fence_gate",
             () -> new FenceGateBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE_GATE).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.WoodType.OAK));
@@ -92,7 +92,7 @@ public class ModBlocks {
             () -> new StairBlock(() -> TAINTED_DARK_PLANKS.get().defaultBlockState(),
                     BlockBehaviour.Properties.copy(Blocks.OAK_STAIRS).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_DARK_FENCE = registerBlock("tainted_dark_fence",
-            () -> new FenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE).requiresCorrectToolForDrops()));
+            () -> new TaintedDarkFenceBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_DARK_FENCE_GATE = registerBlock("tainted_dark_fence_gate",
             () -> new FenceGateBlock(BlockBehaviour.Properties.copy(Blocks.OAK_FENCE_GATE).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.WoodType.OAK));

@@ -1,5 +1,5 @@
 {
-  "parent": "minecraft:block/door_top_rh",
+  "parent": "minecraft:block/door_bottom_right_open",
   "textures": {
     "bottom": "furmutage:block/tainted_white_door_bottom",
     "top": "furmutage:block/tainted_white_door_top"

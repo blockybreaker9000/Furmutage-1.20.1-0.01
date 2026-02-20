@@ -3,9 +3,8 @@ package net.jerika.furmutage.entity.projectiles;
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.item.ModItems;
 import net.ltxprogrammer.changed.init.ChangedEffects;
-import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
-import org.joml.Vector3f;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.AreaEffectCloud;
@@ -88,36 +87,23 @@ public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
                 }
             }
             
-            // Spawn explosion particles and sound (without block damage)
+            // Spawn explosion sound (without block damage)
             serverLevel.explode(this, this.owner != null ? this.owner.getLastDamageSource() : null, null, impactPos.x, impactPos.y, impactPos.z,
                     2.0F, false, Level.ExplosionInteraction.NONE);
 
-            // Spawn cyan colored explosion particles
-            // Cyan color: RGB(0, 255, 255) normalized to 0-2 range
-            DustParticleOptions cyanParticle = new DustParticleOptions(
-                    new Vector3f(0.0f, 1.0f, 1.0f), // Cyan color (R=0, G=1, B=1)
-                    2.0f // Scale
-            );
-
-            // Spawn multiple cyan particles in a sphere pattern around explosion
-            for (int i = 0; i < 200; i++) {
-                double angleX = serverLevel.random.nextDouble() * Math.PI * 2;
-                double angleY = serverLevel.random.nextDouble() * Math.PI;
-                double distance = serverLevel.random.nextDouble() * radius;
-                double offsetX = Math.sin(angleY) * Math.cos(angleX) * distance;
-                double offsetY = Math.cos(angleY) * distance;
-                double offsetZ = Math.sin(angleY) * Math.sin(angleX) * distance;
-
-                // Spawn cyan dust particles
-                serverLevel.sendParticles(cyanParticle,
-                        impactPos.x + offsetX, impactPos.y + offsetY, impactPos.z + offsetZ,
-                        1, 0, 0, 0, 0);
-            }
-
-            // Also spawn cyan splash particles
-            this.level().levelEvent(6002, this.blockPosition(), 65535);
+            // Campfire smoke particles instead of cyan
+            spawnCampfireSmoke(serverLevel, impactPos.x, impactPos.y, impactPos.z, radius);
 
             this.discard();
+        }
+    }
+
+    private static void spawnCampfireSmoke(ServerLevel level, double x, double y, double z, float radius) {
+        for (int i = 0; i < 120; i++) {
+            double ox = (level.random.nextDouble() - 0.5) * 2 * radius;
+            double oy = level.random.nextDouble() * radius;
+            double oz = (level.random.nextDouble() - 0.5) * 2 * radius;
+            level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x + ox, y + oy, z + oz, 1, 0.02, 0.1, 0.02, 0.02);
         }
     }
 }

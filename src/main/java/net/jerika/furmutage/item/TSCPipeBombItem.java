@@ -42,7 +42,7 @@ public class TSCPipeBombItem extends Item {
             itemstack.shrink(1);
         }
 
-        player.getCooldowns().addCooldown(this, 40);
+        player.getCooldowns().addCooldown(this, 20);
 
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }

@@ -5,7 +5,6 @@ import net.jerika.furmutage.furmutage;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.AABB;
@@ -208,17 +207,7 @@ public class LatexTeamEvents {
                             mobType, mobTeamName,
                             targetType, targetTeamName);
                 }
-            } else {
-                // Don't override movement for Loose Behemoth Hand – let MeleeAttackGoal control speed (team AI was making it slow)
-                if ("furmutage:loose_behemoth_hand".equals(mobType)) {
-                    // Skip moveTo; hand uses its own goals for movement
-                } else if (mob instanceof PathfinderMob pathfinderMob) {
-                    double movementSpeed = mob.getAttributeValue(Attributes.MOVEMENT_SPEED);
-                    if (movementSpeed <= 0) {
-                        movementSpeed = 1.0D;
-                    }
-                    pathfinderMob.getNavigation().moveTo(currentTarget, movementSpeed);
-                }
+
             }
         }
         } // end while (it.hasNext())

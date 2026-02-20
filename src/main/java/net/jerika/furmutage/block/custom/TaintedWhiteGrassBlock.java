@@ -9,6 +9,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.GrassBlock;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraftforge.registries.ForgeRegistries;
 
 public class TaintedWhiteGrassBlock extends GrassBlock {
+    private static final ResourceLocation WHITE_LATEX_FLUID_ID = new ResourceLocation("changed", "white_latex_fluid");
     public TaintedWhiteGrassBlock(Properties properties) {
         super(properties);
     }
@@ -48,7 +50,7 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
             spawnMushroomOnTop(level, pos, random);
         }
         
-        // Spawn tainted white reeds if there's water adjacent
+        // Spawn tainted white reeds if there's white latex fluid adjacent
         if (random.nextInt(50) == 0) { // 2% chance per random tick
             spawnReedIfWaterNearby(level, pos, random);
         }
@@ -416,41 +418,37 @@ public class TaintedWhiteGrassBlock extends GrassBlock {
     }
     
     /**
-     * Spawns a tainted white reed on top of this block if there's water adjacent.
+     * Spawns a tainted white reed on top of this block if there's changed:white_latex_fluid adjacent.
      */
     private void spawnReedIfWaterNearby(ServerLevel level, BlockPos pos, RandomSource random) {
+        Block whiteLatexFluid = ForgeRegistries.BLOCKS.getValue(WHITE_LATEX_FLUID_ID);
+        if (whiteLatexFluid == null) {
+            return;
+        }
+
         BlockPos abovePos = pos.above();
         BlockState aboveState = level.getBlockState(abovePos);
-        
+
         // Only spawn if the space above is air
         if (!aboveState.isAir()) {
             return;
         }
-        
-        // Check if there's water adjacent to this grass block (horizontally or below)
-        boolean hasWaterNearby = false;
-        
-        // Check horizontal directions
+
+        // Check if there's white latex fluid adjacent (horizontally or below)
+        boolean hasFluidNearby = false;
+
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             BlockPos adjacentPos = pos.relative(direction);
-            BlockState adjacentState = level.getBlockState(adjacentPos);
-            if (adjacentState.is(Blocks.WATER)) {
-                hasWaterNearby = true;
+            if (level.getBlockState(adjacentPos).is(whiteLatexFluid)) {
+                hasFluidNearby = true;
                 break;
             }
         }
-        
-        // Also check below (water source block)
-        if (!hasWaterNearby) {
-            BlockPos belowPos = pos.below();
-            BlockState belowState = level.getBlockState(belowPos);
-            if (belowState.is(Blocks.WATER)) {
-                hasWaterNearby = true;
-            }
+        if (!hasFluidNearby && level.getBlockState(pos.below()).is(whiteLatexFluid)) {
+            hasFluidNearby = true;
         }
-        
-        // Only spawn if water is nearby and no reed already exists nearby
-        if (hasWaterNearby && !hasReedNearby(level, abovePos, 3)) {
+
+        if (hasFluidNearby && !hasReedNearby(level, abovePos, 3)) {
             level.setBlock(abovePos, ModBlocks.TAINTED_WHITE_REED.get().defaultBlockState(), 3);
         }
     }

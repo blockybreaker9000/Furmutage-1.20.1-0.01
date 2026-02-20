@@ -1,54 +1,9 @@
 {
   "multipart": [
-    {
-      "when": {
-        "north": "true"
-      },
-      "apply": {
-        "model": "furmutage:block/tainted_white_fence_post",
-        "uvlock": true
-      }
-    },
-    {
-      "when": {
-        "east": "true"
-      },
-      "apply": {
-        "model": "furmutage:block/tainted_white_fence_post",
-        "uvlock": true,
-        "y": 90
-      }
-    },
-    {
-      "when": {
-        "south": "true"
-      },
-      "apply": {
-        "model": "furmutage:block/tainted_white_fence_post",
-        "uvlock": true,
-        "y": 180
-      }
-    },
-    {
-      "when": {
-        "west": "true"
-      },
-      "apply": {
-        "model": "furmutage:block/tainted_white_fence_post",
-        "uvlock": true,
-        "y": 270
-      }
-    },
-    {
-      "when": {
-        "north": "false",
-        "east": "false",
-        "south": "false",
-        "west": "false"
-      },
-      "apply": {
-        "model": "furmutage:block/tainted_white_fence_inventory"
-      }
-    }
+    {"apply": {"model": "furmutage:block/tainted_white_fence_post"}},
+    {"when": {"north": "true"}, "apply": {"model": "furmutage:block/tainted_white_fence_side", "uvlock": true}},
+    {"when": {"east": "true"}, "apply": {"model": "furmutage:block/tainted_white_fence_side", "uvlock": true, "y": 90}},
+    {"when": {"south": "true"}, "apply": {"model": "furmutage:block/tainted_white_fence_side", "uvlock": true, "y": 180}},
+    {"when": {"west": "true"}, "apply": {"model": "furmutage:block/tainted_white_fence_side", "uvlock": true, "y": 270}}
   ]
 }

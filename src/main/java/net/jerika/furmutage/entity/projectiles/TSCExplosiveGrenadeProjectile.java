@@ -2,6 +2,7 @@ package net.jerika.furmutage.entity.projectiles;
 
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.item.ModItems;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,6 +53,9 @@ public class TSCExplosiveGrenadeProjectile extends ThrowableItemProjectile {
             float explosionRadius = 4.0F;
             serverLevel.explode(this, x, y, z, explosionRadius, false, ExplosionInteraction.NONE);
 
+            // Campfire smoke particles
+            spawnCampfireSmoke(serverLevel, x, y, z, explosionRadius);
+
             // Spawn 5 shock grenades flying in random directions
             for (int i = 0; i < 5; i++) {
                 TSCShockGrenadeProjectile shock = new TSCShockGrenadeProjectile(serverLevel, x, y, z);
@@ -75,6 +79,15 @@ public class TSCExplosiveGrenadeProjectile extends ThrowableItemProjectile {
             }
 
             this.discard();
+        }
+    }
+
+    private static void spawnCampfireSmoke(ServerLevel level, double x, double y, double z, float radius) {
+        for (int i = 0; i < 150; i++) {
+            double ox = (level.random.nextDouble() - 0.5) * 2 * radius;
+            double oy = level.random.nextDouble() * radius;
+            double oz = (level.random.nextDouble() - 0.5) * 2 * radius;
+            level.sendParticles(ParticleTypes.CAMPFIRE_COSY_SMOKE, x + ox, y + oy, z + oz, 1, 0.02, 0.1, 0.02, 0.02);
         }
     }
 }
