@@ -16,7 +16,7 @@ import net.minecraft.world.phys.HitResult;
 /**
  * Explosive grenade projectile:
  * - Creates a relatively large explosion that does NOT destroy blocks.
- * - On detonation, spawns 5 TSC shock grenades that fly off in random directions.
+ * - On detonation, spawns 6 TSC shock grenades that fly off in random directions.
  */
 public class TSCExplosiveGrenadeProjectile extends ThrowableItemProjectile {
 
@@ -49,24 +49,24 @@ public class TSCExplosiveGrenadeProjectile extends ThrowableItemProjectile {
             double y = this.getY();
             double z = this.getZ();
 
-            // "Somewhat big" explosion, no block damage
-            float explosionRadius = 4.0F;
+            // explosion boom boom, no block damage
+            float explosionRadius = 4.0F; //4 block boom boom radius
             serverLevel.explode(this, x, y, z, explosionRadius, false, ExplosionInteraction.NONE);
 
             // Campfire smoke particles
             spawnCampfireSmoke(serverLevel, x, y, z, explosionRadius);
 
-            // Spawn 5 shock grenades flying in random directions
-            for (int i = 0; i < 5; i++) {
+            // Spawn 6 shock grenades flying in random directions
+            for (int i = 0; i < 6; i++) {
                 TSCShockGrenadeProjectile shock = new TSCShockGrenadeProjectile(serverLevel, x, y, z);
                 shock.setItem(new ItemStack(ModItems.TSC_SHOCK_GRENADE.get()));
 
                 // Random direction and speed
                 double vx = serverLevel.random.nextGaussian();
-                double vy = serverLevel.random.nextGaussian() * 0.5D + 0.2D; // bias slightly upward
+                double vy = serverLevel.random.nextGaussian() * 0.3D + 0.1D; // bias slightly upward
                 double vz = serverLevel.random.nextGaussian();
 
-                double speed = 0.8D;
+                double speed = 0.4D;
                 double length = Math.sqrt(vx * vx + vy * vy + vz * vz);
                 if (length > 0.0D) {
                     vx = vx / length * speed;

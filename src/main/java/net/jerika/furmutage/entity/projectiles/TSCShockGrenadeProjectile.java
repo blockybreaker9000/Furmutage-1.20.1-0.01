@@ -21,14 +21,19 @@ import java.util.List;
 
 public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
     private LivingEntity owner;
-    
-    public TSCShockGrenadeProjectile(EntityType<? extends TSCShockGrenadeProjectile> entityType, Level level) {
+
+
+    private static final int CLOUD_DURATION_TICKS = 800;  // 30 seconds
+    private static final int EFFECT_DURATION_TICKS = 300; // 15 seconds
+    private static final float CLOUD_RADIUS = 6.0F;
+    private static final float EXPLOSION_RADIUS = 4.0F;   // Explosion (sound + pooticles, no block damage)
+
+    public TSCShockGrenadeProjectile(EntityType<? extends ThrowableItemProjectile> entityType, Level level) {
         super(entityType, level);
     }
 
     public TSCShockGrenadeProjectile(Level level, LivingEntity shooter) {
         super(ModEntities.TSC_SHOCK_GRENADE_PROJECTILE.get(), shooter, level);
-        this.owner = shooter;
     }
 
     public TSCShockGrenadeProjectile(Level level, double x, double y, double z) {
@@ -37,69 +42,42 @@ public class TSCShockGrenadeProjectile extends ThrowableItemProjectile {
 
     @Override
     protected Item getDefaultItem() {
-        return ModItems.TSC_SHOCK_GRENADE.get();
+        return ModItems.TSC_PIPE_BOMB.get();
     }
 
     @Override
     protected void onHit(HitResult result) {
         super.onHit(result);
-        
+
         if (!this.level().isClientSide && this.level() instanceof ServerLevel serverLevel) {
             Vec3 impactPos = result.getLocation();
-            float radius = 3.0F; // 3 block radius
-            
-            // Create area effect cloud with shock and slowness effects
-            AreaEffectCloud cloud = new AreaEffectCloud(serverLevel, impactPos.x, impactPos.y, impactPos.z);
-            cloud.setRadius(radius);
-            cloud.setRadiusOnUse(-0.5F); // Shrinks over time
-            cloud.setWaitTime(10); // Wait 10 ticks before applying effects
-            cloud.setDuration(300); // 30 seconds (600 ticks)
-            cloud.setRadiusPerTick(-cloud.getRadius() / (float)cloud.getDuration());
-            
-            // Add shock effect from Changed mod
-            cloud.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), 60, 0, false, true, true));
-            
-            // Add slowness 2 effect
-            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 2, false, true, true));
-            cloud.addEffect(new MobEffectInstance(MobEffects.WITHER, 50, 1, false, true, true));
-            serverLevel.addFreshEntity(cloud);
-            
-            // Do explosive damage without breaking blocks
-            AABB damageArea = new AABB(
-                    impactPos.x - radius, impactPos.y - radius, impactPos.z - radius,
-                    impactPos.x + radius, impactPos.y + radius, impactPos.z + radius
-            );
-            
-            List<LivingEntity> entities = serverLevel.getEntitiesOfClass(LivingEntity.class, damageArea, 
-                    (entity) -> entity != this.owner && entity.isAlive());
-            
-            for (LivingEntity entity : entities) {
-                // Don't damage TSCDroneEntity (immune to shock grenades)
-                if (entity instanceof net.jerika.furmutage.entity.custom.TSCDroneEntity) {
-                    continue;
-                }
-                
-                double distance = entity.distanceToSqr(impactPos.x, impactPos.y, impactPos.z);
-                if (distance <= radius * radius) {
-                    // Damage decreases with distance
-                    float damage = 4.0F * (1.0F - (float)(Math.sqrt(distance) / radius));
-                    entity.hurt(serverLevel.damageSources().explosion(this, this.owner), damage);
-                }
-            }
-            
-            // Spawn explosion sound (without block damage)
-            serverLevel.explode(this, this.owner != null ? this.owner.getLastDamageSource() : null, null, impactPos.x, impactPos.y, impactPos.z,
-                    2.0F, false, Level.ExplosionInteraction.NONE);
 
-            // Campfire smoke particles instead of cyan
-            spawnCampfireSmoke(serverLevel, impactPos.x, impactPos.y, impactPos.z, radius);
+            AreaEffectCloud cloud = new AreaEffectCloud(serverLevel, impactPos.x, impactPos.y, impactPos.z);
+            cloud.setRadius(CLOUD_RADIUS);
+            cloud.setRadiusOnUse(0F);
+            cloud.setWaitTime(10);
+            cloud.setDuration(CLOUD_DURATION_TICKS);
+            cloud.setRadiusPerTick(-cloud.getRadius() / (float) cloud.getDuration());
+
+            // Slowness I and Weakness I for 10 seconds
+            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION_TICKS, 2, false, true, true));
+            cloud.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, EFFECT_DURATION_TICKS, 2, false, true, true));
+            cloud.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), EFFECT_DURATION_TICKS, 2, false, true, true));
+
+            serverLevel.addFreshEntity(cloud);
+
+            // Small explosion (no block damage) for sound and particles
+            serverLevel.explode(this, impactPos.x, impactPos.y, impactPos.z, EXPLOSION_RADIUS, false, Level.ExplosionInteraction.NONE);
+
+            // Campfire smoke particles
+            spawnCampfireSmoke(serverLevel, impactPos.x, impactPos.y, impactPos.z, CLOUD_RADIUS);
 
             this.discard();
         }
     }
 
     private static void spawnCampfireSmoke(ServerLevel level, double x, double y, double z, float radius) {
-        for (int i = 0; i < 120; i++) {
+        for (int i = 0; i < 80; i++) {
             double ox = (level.random.nextDouble() - 0.5) * 2 * radius;
             double oy = level.random.nextDouble() * radius;
             double oz = (level.random.nextDouble() - 0.5) * 2 * radius;

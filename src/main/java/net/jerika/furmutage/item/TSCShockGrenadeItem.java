@@ -26,7 +26,7 @@ public class TSCShockGrenadeItem extends Item {
         if (!level.isClientSide) {
             TSCShockGrenadeProjectile projectile = new TSCShockGrenadeProjectile(level, player);
             projectile.setItem(itemstack);
-            // Lower velocity for shorter range (0.8F instead of 1.5F)
+            //velocity
             projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 
                     0.0F, 0.8F, 0.5F);
             level.addFreshEntity(projectile);
@@ -37,7 +37,7 @@ public class TSCShockGrenadeItem extends Item {
             itemstack.shrink(1);
         }
         
-        // Add 15 second cooldown (300 ticks)
+        //second cooldown
         player.getCooldowns().addCooldown(this, 50);
 
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());

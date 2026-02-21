@@ -2,6 +2,7 @@ package net.jerika.furmutage.entity.projectiles;
 
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.item.ModItems;
+import net.ltxprogrammer.changed.init.ChangedEffects;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -21,10 +22,10 @@ import net.minecraft.world.phys.Vec3;
  */
 public class TSCPipeBombProjectile extends ThrowableItemProjectile {
 
-    private static final int CLOUD_DURATION_TICKS = 600;  // 30 seconds
+    private static final int CLOUD_DURATION_TICKS = 600;  // 35 seconds
     private static final int EFFECT_DURATION_TICKS = 200; // 10 seconds
-    private static final float CLOUD_RADIUS = 3.0F;
-    private static final float EXPLOSION_RADIUS = 3.0F;   // Explosion (sound + particles, no block damage)
+    private static final float CLOUD_RADIUS = 4.0F;
+    private static final float EXPLOSION_RADIUS = 2.5F;   // Explosion (sound + pooticles, no block damage)
 
     public TSCPipeBombProjectile(EntityType<? extends TSCPipeBombProjectile> entityType, Level level) {
         super(entityType, level);
@@ -58,8 +59,9 @@ public class TSCPipeBombProjectile extends ThrowableItemProjectile {
             cloud.setRadiusPerTick(-cloud.getRadius() / (float) cloud.getDuration());
 
             // Slowness I and Weakness I for 10 seconds
-            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION_TICKS, 0, false, true, true));
-            cloud.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, EFFECT_DURATION_TICKS, 0, false, true, true));
+            cloud.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, EFFECT_DURATION_TICKS, 2, false, true, true));
+            cloud.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, EFFECT_DURATION_TICKS, 1, false, true, true));
+            cloud.addEffect(new MobEffectInstance(ChangedEffects.SHOCK.get(), EFFECT_DURATION_TICKS, 1, false, true, true));
 
             serverLevel.addFreshEntity(cloud);
 

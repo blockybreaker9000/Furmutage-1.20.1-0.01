@@ -46,15 +46,15 @@ public class ChangedEntityDaytimeSlownessEvents {
         long dayTime = entity.level().getLevelData().getDayTime() % 24000;
         boolean isDaytime = dayTime < NIGHT_START || dayTime >= NIGHT_END;
 
-        if (!isDaytime) {
-            return;
+        if (isDaytime) {
+            BlockPos pos = entity.blockPosition();
+            int brightness = entity.level().getMaxLocalRawBrightness(pos);
+            boolean inLight = brightness >= LIGHT_THRESHOLD;
+            int amplifier = inLight ? 0 : 1;
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 2, false, false, false));
+        } else {
+            // Nighttime: give Changed entities Speed I
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 0, false, false, false));
         }
-
-        BlockPos pos = entity.blockPosition();
-        int brightness = entity.level().getMaxLocalRawBrightness(pos);
-        boolean inLight = brightness >= LIGHT_THRESHOLD;
-
-        int amplifier = inLight ? 0 : 1;
-        entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 2, false, false, false));
     }
 }
