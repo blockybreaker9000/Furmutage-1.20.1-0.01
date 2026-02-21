@@ -65,7 +65,16 @@ public class ChangedStalkerSneakEvents {
         ModSounds.LATEX_HELLO_8,
         ModSounds.LATEX_HELLO_9,
         ModSounds.LATEX_HELLO_10,
-        ModSounds.LATEX_HELLO_11
+        ModSounds.LATEX_HELLO_11,
+        ModSounds.LATEX_HELLO_12,
+        ModSounds.LATEX_HELLO_13,
+        ModSounds.LATEX_HELLO_14,
+        ModSounds.LATEX_HELLO_15,
+        ModSounds.LATEX_HELLO_16,
+        ModSounds.LATEX_HELLO_17,
+        ModSounds.LATEX_HELLO_18,
+        ModSounds.LATEX_HELLO_19,
+        ModSounds.LATEX_HELLO_20
     };
     private static final double MIN_FOLLOW_RANGE = 30.0D;
 
@@ -145,7 +154,7 @@ public class ChangedStalkerSneakEvents {
             shouldSneak = !seenNow && enoughTimeSinceSeen;
         }
 
-        // When crouched and following: rarely play latex_hello (1 of 11 variants)
+        // When crouched and following: rarely play latex_hello (1 of 20 variants)
         if (shouldSneak && wasSneaking && target != null) {
             long now = entity.level().getGameTime();
             long lastHello = data.getLong(TAG_LAST_LATEX_HELLO_TICK);

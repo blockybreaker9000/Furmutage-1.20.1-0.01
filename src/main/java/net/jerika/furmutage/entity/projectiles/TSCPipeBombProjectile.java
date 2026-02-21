@@ -24,7 +24,7 @@ public class TSCPipeBombProjectile extends ThrowableItemProjectile {
     private static final int CLOUD_DURATION_TICKS = 600;  // 30 seconds
     private static final int EFFECT_DURATION_TICKS = 200; // 10 seconds
     private static final float CLOUD_RADIUS = 3.0F;
-    private static final float EXPLOSION_RADIUS = 1.0F;   // Small explosion (sound + particles only)
+    private static final float EXPLOSION_RADIUS = 3.0F;   // Explosion (sound + particles, no block damage)
 
     public TSCPipeBombProjectile(EntityType<? extends TSCPipeBombProjectile> entityType, Level level) {
         super(entityType, level);
