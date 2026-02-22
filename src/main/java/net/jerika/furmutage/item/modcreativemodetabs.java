@@ -31,6 +31,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.PLATINUM_BAR.get());
                         output.accept(ModItems.TSC_PLASTIC_WASTE_CLUMP.get());
                         output.accept(ModItems.TSC_PLASTIC_BAR.get());
+                        output.accept(ModItems.REINFORCED_TSC_PLASTIC_BAR.get());
                         output.accept(ModItems.DARK_LATEX_CLUMP.get());
                         output.accept(ModItems.WHITE_LATEX_CLUMP.get());
                         output.accept(ModItems.PEALED_ORANGES.get());

@@ -54,7 +54,7 @@ public class ChangedEntityDaytimeSlownessEvents {
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 2, false, false, false));
         } else {
             // Nighttime: give Changed entities Speed I
-            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 0, false, false, false));
+            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 1, false, false, false));
         }
     }
 }

@@ -107,6 +107,8 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> WHITE_COATED_TSC_PLASTIC_BAR = ITEMS.register("white_coated_tsc_plastic_bar",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> REINFORCED_TSC_PLASTIC_BAR = ITEMS.register("reinforced_tsc_plastic_bar",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DARK_TAINTED_SEEDS = ITEMS.register("dark_tainted_seeds",
             () -> new DarkTaintedSeedsItem(new Item.Properties()));
     public static final RegistryObject<Item> WHITE_TAINTED_SEEDS = ITEMS.register("white_tainted_seeds",
