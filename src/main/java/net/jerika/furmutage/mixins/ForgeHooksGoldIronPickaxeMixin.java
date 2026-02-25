@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Makes gold pickaxe count as correct tool for diamond ore/block (so it gets drops and speed).
- * Makes only iron pickaxe count as correct tool for gold ore.
+ * Makes iron pickaxe NOT correct for gold ore (so iron can't get drops; diamond/netherite can).
  */
 @Mixin(ForgeHooks.class)
 public class ForgeHooksGoldIronPickaxeMixin {
@@ -30,9 +30,9 @@ public class ForgeHooksGoldIronPickaxeMixin {
             return;
         }
 
-        // Gold ore: only iron pickaxe is correct
+        // Gold ore: iron pickaxe is NOT correct (diamond/netherite remain correct)
         if (state.is(Blocks.GOLD_ORE) || state.is(Blocks.DEEPSLATE_GOLD_ORE) || state.is(Blocks.NETHER_GOLD_ORE)) {
-            if (!tool.is(Items.IRON_PICKAXE)) {
+            if (tool.is(Items.IRON_PICKAXE)) {
                 cir.setReturnValue(false);
             }
         }

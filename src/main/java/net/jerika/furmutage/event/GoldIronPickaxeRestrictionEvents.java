@@ -1,6 +1,7 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.furmutage;
+import net.jerika.furmutage.item.ModItems;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -10,8 +11,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 /**
- * Restricts pickaxe usage: gold pickaxe can only break diamond (ore/block);
- * only iron pickaxe can break gold ore.
+ * Restricts pickaxe usage: gold pickaxe can only break diamond (ore/block) and gold ore;
+ * iron tools cannot break gold ore (diamond/netherite can);
+ * iron and roselight glass pickaxes cannot break diamond (ore/block).
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class GoldIronPickaxeRestrictionEvents {
@@ -22,6 +24,10 @@ public class GoldIronPickaxeRestrictionEvents {
 
     private static boolean isIronPickaxe(ItemStack stack) {
         return stack.is(Items.IRON_PICKAXE);
+    }
+
+    private static boolean isRoselightGlassPickaxe(ItemStack stack) {
+        return stack.is(ModItems.ROSELIGHT_GLASS_PICKAXE.get());
     }
 
     private static boolean isDiamondBreakable(BlockState state) {
@@ -41,19 +47,22 @@ public class GoldIronPickaxeRestrictionEvents {
         ItemStack tool = event.getPlayer().getMainHandItem();
         BlockState state = event.getState();
 
-        // Gold pickaxe: can only break diamond ore/block
+        // Gold pickaxe: can only break diamond ore/block and gold ore
         if (isGoldPickaxe(tool)) {
-            if (!isDiamondBreakable(state)) {
+            if (!isDiamondBreakable(state) && !isGoldOre(state)) {
                 event.setCanceled(true);
             }
             return;
         }
 
-        // Gold ore: only iron pickaxe can break it
-        if (isGoldOre(state)) {
-            if (!isIronPickaxe(tool)) {
-                event.setCanceled(true);
-            }
+        // Gold ore: iron pickaxe cannot break it (diamond/netherite can)
+        if (isGoldOre(state) && isIronPickaxe(tool)) {
+            event.setCanceled(true);
+        }
+
+        // Iron or roselight glass pickaxe: cannot break diamond ore/block
+        if ((isIronPickaxe(tool) || isRoselightGlassPickaxe(tool)) && isDiamondBreakable(state)) {
+            event.setCanceled(true);
         }
     }
 }

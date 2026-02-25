@@ -27,4 +27,10 @@ public class ModToolTiers {
                     ModTags.Blocks.NEEDS_TSC_EMERGENCY_TOOL, () -> Ingredient.of(ModItems.TSC_PLASTIC_BAR.get())),
             new ResourceLocation(furmutage.MOD_ID, "tsc_emergency"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
 
+    // Roselight Glass: can mine gold (level 2), 20% more durability than iron (300), 10% faster than iron (6.6 speed)
+    public static final Tier ROSELIGHT_GLASS = TierSortingRegistry.registerTier(
+            new ForgeTier(2, 300, 6.6f, 2f, 14,
+                    ModTags.Blocks.NEEDS_ROSELIGHT_GLASS_TOOL, () -> Ingredient.of(ModItems.ROSELIGHT_GLASS_ROD.get())),
+            new ResourceLocation(furmutage.MOD_ID, "roselight_glass"), List.of(Tiers.IRON), List.of(Tiers.DIAMOND));
+
 }

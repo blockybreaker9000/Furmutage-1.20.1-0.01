@@ -53,7 +53,9 @@ public class modcreativemodetabs {
                         output.accept(ModItems.THUNDERIUM_RAW_NUGGET.get());
                         output.accept(ModItems.THUNDERIUM_CHUNK.get());
                         output.accept(ModItems.THUNDERIUM_GLASS_SHARD.get());
-                        output.accept(ModItems.THUNDERIUM_GLASS_ROD.get());
+                        output.accept(ModItems.THUNDERIUM_GLASS_GEM.get());
+                        output.accept(ModItems.THUNDERIUM_JADE.get());
+                        output.accept(ModItems.THUNDERIUM_DIAMOND.get());
 
 
 
@@ -65,6 +67,9 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ROSELIGHT_CHUNK.get());
                         output.accept(ModItems.ROSELIGHT_GLASS_SHARD.get());
                         output.accept(ModItems.ROSELIGHT_GLASS_ROD.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_GEM.get());
+                        output.accept(ModItems.ROSELIGHT_JADE.get());
+                        output.accept(ModItems.ROSELIGHT_DIAMOND.get());
 
                         output.accept(ModItems.TSC_FIBER.get());
                         output.accept(ModItems.RUBBER.get());
@@ -132,6 +137,11 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ROSELIGHT_HOE.get());
                         output.accept(ModItems.ROSELIGHT_SHOVEL.get());
                         output.accept(ModItems.ROSELIGHT_SHEARS.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_PICKAXE.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_AXE.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_SHOVEL.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_HOE.get());
+                        output.accept(ModItems.ROSELIGHT_GLASS_SWORD.get());
                         output.accept(ModItems.THUNDERIUMBATTLEAXE.get());
                         output.accept(ModItems.THUNDERIUMDOOMSABER.get());
                         output.accept(ModItems.THUNDERIUMBATTLEMACE.get());

@@ -109,6 +109,19 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> REINFORCED_TSC_PLASTIC_BAR = ITEMS.register("reinforced_tsc_plastic_bar",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_GLASS_GEM = ITEMS.register("thunderium_glass_gem",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_GEM = ITEMS.register("roselight_glass_gem",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_JADE = ITEMS.register("roselight_jade",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_JADE = ITEMS.register("thunderium_jade",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_DIAMOND = ITEMS.register("roselight_diamond",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_DIAMOND = ITEMS.register("thunderium_diamond",
+            () -> new Item(new Item.Properties()));
+
     public static final RegistryObject<Item> DARK_TAINTED_SEEDS = ITEMS.register("dark_tainted_seeds",
             () -> new DarkTaintedSeedsItem(new Item.Properties()));
     public static final RegistryObject<Item> WHITE_TAINTED_SEEDS = ITEMS.register("white_tainted_seeds",
@@ -221,6 +234,17 @@ public class ModItems {
             () -> new HoeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));
     public static final RegistryObject<Item> ROSELIGHT_SHEARS = ITEMS.register("roselight_shears",
             () -> new net.jerika.furmutage.item.custom.RoselightShears());
+
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_PICKAXE = ITEMS.register("roselight_glass_pickaxe",
+            () -> new PickaxeItem(ModToolTiers.ROSELIGHT_GLASS, 1, -2.8f, new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_AXE = ITEMS.register("roselight_glass_axe",
+            () -> new AxeItem(ModToolTiers.ROSELIGHT_GLASS, 6, -3f, new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_SHOVEL = ITEMS.register("roselight_glass_shovel",
+            () -> new ShovelItem(ModToolTiers.ROSELIGHT_GLASS, 1.5f, -3f, new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_HOE = ITEMS.register("roselight_glass_hoe",
+            () -> new HoeItem(ModToolTiers.ROSELIGHT_GLASS, -1, 0f, new Item.Properties()));
+    public static final RegistryObject<Item> ROSELIGHT_GLASS_SWORD = ITEMS.register("roselight_glass_sword",
+            () -> new SwordItem(ModToolTiers.ROSELIGHT_GLASS, 3, -2.4f, new Item.Properties()));
 
     public static final RegistryObject<Item> TSC_EMERGENCY_PICKAXE = ITEMS.register("tsc_emergency_pickaxe",
             () -> new PickaxeItem(ModToolTiers.TSC_EMERGENCY, 1, -2.8f, new Item.Properties()));
