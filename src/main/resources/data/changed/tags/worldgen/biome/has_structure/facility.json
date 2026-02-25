@@ -1,17 +1,6 @@
 {
   "replace": false,
   "values": [
-    "minecraft:plains",
-    "minecraft:meadow",
-    "minecraft:snowy_plains",
-    "minecraft:forest",
-    "minecraft:birch_forest",
-    "minecraft:taiga",
-    "minecraft:savanna",
-    "minecraft:savanna_plateau",
-    "minecraft:windswept_hills",
-    "minecraft:sparse_jungle",
-    "minecraft:desert",
     {"id": "tsp:mars_landscape", "required": false},
     {"id": "tsp:moon_landscape_1", "required": false},
     {"id": "tsp:moonwastelandlandscape", "required": false}
