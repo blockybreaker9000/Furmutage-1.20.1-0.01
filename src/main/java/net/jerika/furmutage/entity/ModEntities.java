@@ -35,6 +35,9 @@ import net.jerika.furmutage.entity.custom.DeepCaveHypnoCat;
 import net.jerika.furmutage.entity.custom.LatexBloodWormMutant;
 import net.jerika.furmutage.entity.custom.LooseBehemothHand;
 import net.jerika.furmutage.entity.custom.LooseSquidDogLimbEntity;
+import net.jerika.furmutage.entity.custom.TwoHeadedWhiteLatexMutantUnifiedEntity;
+import net.jerika.furmutage.entity.custom.LatexNetherMantaRayMaleEntity;
+import net.jerika.furmutage.entity.custom.LatexHumanFleshEntity;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -193,6 +196,16 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LooseSquidDogLimbEntity>> LOOSE_SQUID_DOG_LIMB =
             ENTITY_TYPES.register("loose_squid_dog_limb", () -> EntityType.Builder.of(LooseSquidDogLimbEntity::new, MobCategory.MONSTER)
                     .sized(0.6f, 0.8f).clientTrackingRange(10).build("loose_squid_dog_limb"));
+
+    public static final RegistryObject<EntityType<TwoHeadedWhiteLatexMutantUnifiedEntity>> TWO_HEADED_WHITE_LATEX_MUTANT_UNIFIED =
+            ENTITY_TYPES.register("two_headed_white_latex_mutant_unified", () -> EntityType.Builder.of(TwoHeadedWhiteLatexMutantUnifiedEntity::new, MobCategory.MONSTER)
+                    .sized(0.6f, 1.8f).clientTrackingRange(10).build("two_headed_white_latex_mutant_unified"));
+    public static final RegistryObject<EntityType<LatexNetherMantaRayMaleEntity>> LATEX_NETHER_MANTA_RAY_MALE =
+            ENTITY_TYPES.register("latex_nether_manta_ray_male", () -> EntityType.Builder.of(LatexNetherMantaRayMaleEntity::new, MobCategory.MONSTER)
+                    .sized(0.6f, 1.8f).clientTrackingRange(10).build("latex_nether_manta_ray_male"));
+    public static final RegistryObject<EntityType<LatexHumanFleshEntity>> LATEX_HUMAN_FLESH =
+            ENTITY_TYPES.register("latex_human_flesh", () -> EntityType.Builder.of(LatexHumanFleshEntity::new, MobCategory.MONSTER)
+                    .sized(0.6f, 1.8f).clientTrackingRange(10).build("latex_human_flesh"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

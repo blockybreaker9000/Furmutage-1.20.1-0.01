@@ -37,6 +37,9 @@ import net.jerika.furmutage.entity.custom.DeepCaveHypnoCat;
 import net.jerika.furmutage.entity.custom.LatexBloodWormMutant;
 import net.jerika.furmutage.entity.custom.LooseBehemothHand;
 import net.jerika.furmutage.entity.custom.LooseSquidDogLimbEntity;
+import net.jerika.furmutage.entity.custom.TwoHeadedWhiteLatexMutantUnifiedEntity;
+import net.jerika.furmutage.entity.custom.LatexNetherMantaRayMaleEntity;
+import net.jerika.furmutage.entity.custom.LatexHumanFleshEntity;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -89,5 +92,8 @@ public class ModEventBusEvents {
         event.put(ModEntities.LATEX_BLOOD_WORM_MUTANT.get(), LatexBloodWormMutant.createAttributes().build());
         event.put(ModEntities.LOOSE_BEHEMOTH_HAND.get(), LooseBehemothHand.createAttributes().build());
         event.put(ModEntities.LOOSE_SQUID_DOG_LIMB.get(), LooseSquidDogLimbEntity.createAttributes().build());
+        event.put(ModEntities.TWO_HEADED_WHITE_LATEX_MUTANT_UNIFIED.get(), TwoHeadedWhiteLatexMutantUnifiedEntity.createAttributes().build());
+        event.put(ModEntities.LATEX_NETHER_MANTA_RAY_MALE.get(), LatexNetherMantaRayMaleEntity.createAttributes().build());
+        event.put(ModEntities.LATEX_HUMAN_FLESH.get(), LatexHumanFleshEntity.createAttributes().build());
     }
 }

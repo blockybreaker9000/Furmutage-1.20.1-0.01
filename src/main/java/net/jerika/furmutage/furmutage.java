@@ -97,8 +97,8 @@ public class furmutage {
 
     private void commonSetup(final FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // Register axe stripping interaction for tainted logs using reflection.
-            // Find field by type (Map<Block, Block>) so it works in both dev and production JAR (obfuscated names).
+            // Register axe stripping interaction for tainted logs.
+            // AxeItem.STRIPPABLES may be immutable in some environments, so we replace it with a mutable copy.
             try {
                 for (java.lang.reflect.Field field : AxeItem.class.getDeclaredFields()) {
                     if (Map.class.isAssignableFrom(field.getType())) {
@@ -106,9 +106,11 @@ public class furmutage {
                         Object map = field.get(null);
                         if (map instanceof Map<?, ?> m) {
                             @SuppressWarnings("unchecked")
-                            Map<Block, Block> strippables = (Map<Block, Block>) map;
+                            Map<Block, Block> existing = (Map<Block, Block>) m;
+                            Map<Block, Block> strippables = new java.util.HashMap<>(existing);
                             strippables.put(ModBlocks.TAINTED_WHITE_LOG.get(), ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get());
                             strippables.put(ModBlocks.TAINTED_DARK_LOG.get(), ModBlocks.STRIPPED_TAINTED_DARK_LOG.get());
+                            field.set(null, strippables);
                             break;
                         }
                     }
@@ -155,6 +157,26 @@ public class furmutage {
                 net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
                 net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 net.jerika.furmutage.entity.custom.LooseSquidDogLimbEntity::checkLooseSquidDogLimbSpawnRules
+            );
+
+            // Nether latex entities: spawn only in Nether
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.TWO_HEADED_WHITE_LATEX_MUTANT_UNIFIED.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.TwoHeadedWhiteLatexMutantUnifiedEntity::checkSpawnRules
+            );
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.LATEX_NETHER_MANTA_RAY_MALE.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.LatexNetherMantaRayMaleEntity::checkSpawnRules
+            );
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.LATEX_HUMAN_FLESH.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.LatexHumanFleshEntity::checkSpawnRules
             );
 
             // Giant Pure White Latex: very rare underground spawn, only where there is enough vertical space
@@ -251,6 +273,9 @@ public class furmutage {
             EntityRenderers.register(ModEntities.LATEX_BLOOD_WORM_MUTANT.get(), net.jerika.furmutage.entity.client.renderer.LatexBloodWormMutantRenderer::new);
             EntityRenderers.register(ModEntities.LOOSE_BEHEMOTH_HAND.get(), net.jerika.furmutage.entity.client.renderer.LooseBehemothHandRenderer::new);
             EntityRenderers.register(ModEntities.LOOSE_SQUID_DOG_LIMB.get(), net.jerika.furmutage.entity.client.renderer.LooseSquidDogLimbRenderer::new);
+            EntityRenderers.register(ModEntities.TWO_HEADED_WHITE_LATEX_MUTANT_UNIFIED.get(), net.jerika.furmutage.entity.client.renderer.TwoHeadedWhiteLatexMutantUnifiedRenderer::new);
+            EntityRenderers.register(ModEntities.LATEX_NETHER_MANTA_RAY_MALE.get(), net.jerika.furmutage.entity.client.renderer.LatexNetherMantaRayMaleRenderer::new);
+            EntityRenderers.register(ModEntities.LATEX_HUMAN_FLESH.get(), net.jerika.furmutage.entity.client.renderer.LatexHumanFleshRenderer::new);
 
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());

@@ -36,6 +36,13 @@ public class ModModelLayers {
     public static final ModelLayerLocation DARK_LATEX_CHARGER_MUTANT_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "dark_latex_charger_mutant"), "main");
 
+    public static final ModelLayerLocation TWO_HEADED_WHITE_LATEX_MUTANT_UNIFIED_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "two_headed_white_latex_mutant_unified"), "main");
+    public static final ModelLayerLocation LATEX_NETHER_MANTA_RAY_MALE_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "latex_nether_manta_ray_male"), "main");
+    public static final ModelLayerLocation LATEX_HUMAN_FLESH_LAYER = new ModelLayerLocation(
+            new ResourceLocation(furmutage.MOD_ID, "latex_human_flesh"), "main");
+
     // Roselight Armor Model Layers (separate for each piece)
     public static final ModelLayerLocation ROSELIGHT_HELMET_LAYER = new ModelLayerLocation(
             new ResourceLocation(furmutage.MOD_ID, "roselight_helmet_layer"), "main");

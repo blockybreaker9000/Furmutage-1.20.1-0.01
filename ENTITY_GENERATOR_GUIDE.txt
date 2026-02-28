@@ -17,8 +17,8 @@ EXAMPLE CODE:
 import net.jerika.furmutage.datagen.*;
 
 // Create a monster entity
-EntityConfig config = new EntityConfigBuilder("DarkLatexWolf")
-    .description("A dark latex wolf")
+EntityConfig config = new EntityConfigBuilder("LatexWolf")
+    .description("A latex wolf")
     .monster()
     .size(0.7f, 1.93f)
     .health(30.0)
