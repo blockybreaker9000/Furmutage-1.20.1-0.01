@@ -286,6 +286,14 @@ public class ModEntities {
                     .updateInterval(10)
                     .build("tsc_drone_bullet_projectile"));
 
+    public static final RegistryObject<EntityType<EmptyCanProjectile>> EMPTY_CAN_PROJECTILE =
+            ENTITY_TYPES.register("empty_can_projectile", () -> EntityType.Builder.<EmptyCanProjectile>of(
+                    EmptyCanProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("empty_can_projectile"));
+
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);
     }

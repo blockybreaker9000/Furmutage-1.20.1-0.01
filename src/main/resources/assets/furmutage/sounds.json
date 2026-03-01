@@ -263,6 +263,12 @@
     ],
     "subtitle": "subtitles.furmutage.large_dark_latex_gunk_splat"
   },
+  "empty_can_hit": {
+    "sounds": [
+      "furmutage:empty_can_hit"
+    ],
+    "subtitle": "subtitles.furmutage.empty_can_hit"
+  },
   "deep_hypno_cat_stare": {
     "sounds": [
       "furmutage:deep_hypno_cat_stare"

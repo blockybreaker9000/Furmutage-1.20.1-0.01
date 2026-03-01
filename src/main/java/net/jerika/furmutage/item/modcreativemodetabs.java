@@ -26,6 +26,13 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.CANNED_DOG_FOOD.get());
                         output.accept(ModBlocks.CANNED_BEANS.get());
                         output.accept(ModBlocks.CANNED_HAM.get());
+                        output.accept(ModItems.CAN_OPENER.get());
+                        output.accept(ModItems.OPEN_CANNED_CAT_FOOD.get());
+                        output.accept(ModItems.OPEN_CANNED_DOG_FOOD.get());
+                        output.accept(ModItems.OPEN_CANNED_BEANS.get());
+                        output.accept(ModItems.OPEN_CANNED_HAM.get());
+                        output.accept(ModItems.OPEN_CANNED_SOUP.get());
+                        output.accept(ModItems.EMPTY_CAN.get());
                         output.accept(ModItems.DARK_TAINTED_SEEDS.get());
                         output.accept(ModItems.WHITE_TAINTED_SEEDS.get());
                         output.accept(ModItems.PLASTIC_WASTE.get());

@@ -1,0 +1,11 @@
+{
+  "type": "furmutage:can_opening",
+  "category": "misc",
+  "ingredients": [
+    { "item": "furmutage:can_opener" },
+    { "item": "changed:canned_soup" }
+  ],
+  "result": {
+    "item": "furmutage:open_canned_soup"
+  }
+}

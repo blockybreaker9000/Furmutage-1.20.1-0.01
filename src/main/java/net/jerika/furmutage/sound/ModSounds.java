@@ -133,6 +133,9 @@ public class ModSounds {
     public static final RegistryObject<SoundEvent> LARGE_DARK_LATEX_GUNK_SPIT = registerSoundEvent("large_dark_latex_gunk_spit");
     public static final RegistryObject<SoundEvent> LARGE_DARK_LATEX_GUNK_SPLAT = registerSoundEvent("large_dark_latex_gunk_splat");
 
+    // Empty can projectile hit/land sound
+    public static final RegistryObject<SoundEvent> EMPTY_CAN_HIT = registerSoundEvent("empty_can_hit");
+
     // Deep Cave Hypno Cat special stare sound
     public static final RegistryObject<SoundEvent> DEEP_HYPNO_CAT_STARE = registerSoundEvent("deep_hypno_cat_stare");
 

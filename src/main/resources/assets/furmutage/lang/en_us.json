@@ -141,6 +141,14 @@
   "block.furmutage.canned_beans": "Canned Beans",
   "block.furmutage.canned_ham": "Canned Ham",
 
+  "item.furmutage.can_opener": "Can Opener",
+  "item.furmutage.open_canned_cat_food": "Open Canned Cat Food",
+  "item.furmutage.open_canned_dog_food": "Open Canned Dog Food",
+  "item.furmutage.open_canned_beans": "Open Canned Beans",
+  "item.furmutage.open_canned_ham": "Open Canned Ham",
+  "item.furmutage.open_canned_soup": "Open Canned Tomato Soup",
+  "item.furmutage.empty_can": "Empty Can",
+
   "block.furmutage.raw_thunderium": "Raw Thunderium",
   "block.furmutage.raw_roselight": "Raw Roselight",
   "block.furmutage.thunderium_ore": "Thunderium Ore",
@@ -245,6 +253,7 @@
   "subtitles.furmutage.large_white_latex_gunk_splat": "Large white latex gunk splats",
   "subtitles.furmutage.large_dark_latex_gunk_spit": "Large dark latex gunk spit",
   "subtitles.furmutage.large_dark_latex_gunk_splat": "Large dark latex gunk splats",
+  "subtitles.furmutage.empty_can_hit": "Empty can hits",
   "subtitles.furmutage.latex_jumpscare": "Latex jumpscare",
   "subtitles.furmutage.latex_hello": "Latex hello",
   "subtitles.furmutage.latex_mutant_family_ambient": "Latex Mutant Family growls",

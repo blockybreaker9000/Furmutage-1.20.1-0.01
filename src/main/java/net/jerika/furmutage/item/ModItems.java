@@ -148,6 +148,35 @@ public class ModItems {
             () -> new LargeDarkLatexGunkSpitItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> TSC_METAL_DETECTOR = ITEMS.register("tsc_metal_detector",
             () -> new TSCMetalDetectorItem(new Item.Properties().durability(100)));
+    public static final RegistryObject<Item> CAN_OPENER = ITEMS.register("can_opener",
+            () -> new CanOpenerItem(new Item.Properties()));
+    public static final RegistryObject<Item> OPEN_CANNED_CAT_FOOD = ITEMS.register("open_canned_cat_food",
+            () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(3)
+                    .saturationMod(0.33333334f) // 1 saturation point
+                    .build())));
+    public static final RegistryObject<Item> OPEN_CANNED_DOG_FOOD = ITEMS.register("open_canned_dog_food",
+            () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(3)
+                    .saturationMod(0.6666667f) // 2 saturation
+                    .build())));
+    public static final RegistryObject<Item> OPEN_CANNED_BEANS = ITEMS.register("open_canned_beans",
+            () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(4)
+                    .saturationMod(0.25f) // 2 saturation
+                    .build())));
+    public static final RegistryObject<Item> OPEN_CANNED_HAM = ITEMS.register("open_canned_ham",
+            () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(8)
+                    .saturationMod(0.25f) // 4 saturation
+                    .build())));
+    public static final RegistryObject<Item> OPEN_CANNED_SOUP = ITEMS.register("open_canned_soup",
+            () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
+                    .nutrition(6)   // same as chicken
+                    .saturationMod(0.3f) // half of chicken's saturation
+                    .build())));
+    public static final RegistryObject<Item> EMPTY_CAN = ITEMS.register("empty_can",
+            () -> new EmptyCanItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> PEALED_ORANGES = ITEMS.register("pealed_oranges",
             () -> new Item(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)

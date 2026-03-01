@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    { "item": "furmutage:plastic_bar" },
+    { "item": "furmutage:plastic_bar" },
+    { "item": "furmutage:tsc_plastic_bar" },
+    { "item": "furmutage:tsc_plastic_bar" }
+  ],
+  "result": {
+    "item": "furmutage:can_opener"
+  }
+}
