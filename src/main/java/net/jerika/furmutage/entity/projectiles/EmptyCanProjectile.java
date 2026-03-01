@@ -19,7 +19,7 @@ import net.minecraft.world.phys.HitResult;
 
 /**
  * Throwable empty can projectile. Deals half a heart (1 damage) on entity hit.
- * On land/hit: plays sound, spawns item-texture particles, drops the can as an item.
+ * On land/hit: plays sound, spawns item-texture particles. 60% chance to drop the can; 40% chance it is lost.
  */
 public class EmptyCanProjectile extends ThrowableItemProjectile {
 
@@ -75,10 +75,12 @@ public class EmptyCanProjectile extends ThrowableItemProjectile {
             }
         }
 
-        // Drop the can as item
-        ItemEntity itemEntity = new ItemEntity(level, getX(), getY(), getZ(), canStack);
-        itemEntity.setDefaultPickUpDelay();
-        level.addFreshEntity(itemEntity);
+        // Drop the can as item (60% chance; 40% chance it doesn't drop)
+        if (level.getRandom().nextFloat() < 0.6f) {
+            ItemEntity itemEntity = new ItemEntity(level, getX(), getY(), getZ(), canStack);
+            itemEntity.setDefaultPickUpDelay();
+            level.addFreshEntity(itemEntity);
+        }
 
         discard();
     }
