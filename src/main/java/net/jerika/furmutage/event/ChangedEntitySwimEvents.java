@@ -23,7 +23,7 @@ import java.util.WeakHashMap;
 
 /**
  * Registers Changed/Furmutage entities for improved pathfinding and follow range.
- * When in water, gives Dolphin's Grace II for 200 ticks (replaces previous fast water movement).
+ * When in water, gives Dolphin's Grace 3 for 200 ticks (replaces previous fast water movement).
  * Excludes aquatic entities that already have their own swimming behavior.
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -133,7 +133,7 @@ public class ChangedEntitySwimEvents {
     }
     
     /**
-     * Applies Dolphin's Grace II in water
+     * Applies Dolphin's Grace 3 in water
      * for Changed/Furmutage entities (same set as fastSwimEntities).
      */
     @SubscribeEvent
@@ -142,14 +142,14 @@ public class ChangedEntitySwimEvents {
             return;
         }
 
-        // Dolphin's Grace II for 5000 ticks when any Changed/Furmutage entity is in water
+        // Dolphin's Grace 3 for 5000 ticks when any Changed/Furmutage entity is in water
         for (LivingEntity entity : new java.util.HashSet<>(fastSwimEntities)) {
             if (entity == null || !entity.isAlive()) {
                 fastSwimEntities.remove(entity);
                 continue;
             }
             if (entity.isInWater()) {
-                entity.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, DOLPHINS_GRACE_WATER_TICKS, 3, false, true, true));
+                entity.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, DOLPHINS_GRACE_WATER_TICKS, 4, false, true, true));
             }
         }
         }
