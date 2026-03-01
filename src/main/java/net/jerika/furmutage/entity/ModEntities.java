@@ -221,6 +221,38 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("white_latex_bottle_projectile"));
+
+    public static final RegistryObject<EntityType<WhiteLatexGunkSpitProjectile>> WHITE_LATEX_GUNK_SPIT_PROJECTILE =
+            ENTITY_TYPES.register("white_latex_gunk_spit_projectile", () -> EntityType.Builder.<WhiteLatexGunkSpitProjectile>of(
+                    WhiteLatexGunkSpitProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("white_latex_gunk_spit_projectile"));
+
+    public static final RegistryObject<EntityType<DarkLatexGunkSpitProjectile>> DARK_LATEX_GUNK_SPIT_PROJECTILE =
+            ENTITY_TYPES.register("dark_latex_gunk_spit_projectile", () -> EntityType.Builder.<DarkLatexGunkSpitProjectile>of(
+                    DarkLatexGunkSpitProjectile::new, MobCategory.MISC)
+                    .sized(0.25f, 0.25f)
+                    .clientTrackingRange(4)
+                    .updateInterval(10)
+                    .build("dark_latex_gunk_spit_projectile"));
+
+    public static final RegistryObject<EntityType<LargeWhiteLatexGunkSpitProjectile>> LARGE_WHITE_LATEX_GUNK_SPIT_PROJECTILE =
+            ENTITY_TYPES.register("large_white_latex_gunk_spit_projectile", () -> EntityType.Builder.<LargeWhiteLatexGunkSpitProjectile>of(
+                    LargeWhiteLatexGunkSpitProjectile::new, MobCategory.MISC)
+                    .sized(0.35f, 0.35f)
+                    .clientTrackingRange(6)
+                    .updateInterval(10)
+                    .build("large_white_latex_gunk_spit_projectile"));
+
+    public static final RegistryObject<EntityType<LargeDarkLatexGunkSpitProjectile>> LARGE_DARK_LATEX_GUNK_SPIT_PROJECTILE =
+            ENTITY_TYPES.register("large_dark_latex_gunk_spit_projectile", () -> EntityType.Builder.<LargeDarkLatexGunkSpitProjectile>of(
+                    LargeDarkLatexGunkSpitProjectile::new, MobCategory.MISC)
+                    .sized(0.35f, 0.35f)
+                    .clientTrackingRange(6)
+                    .updateInterval(10)
+                    .build("large_dark_latex_gunk_spit_projectile"));
     
     public static final RegistryObject<EntityType<TSCShockGrenadeProjectile>> TSC_SHOCK_GRENADE_PROJECTILE =
             ENTITY_TYPES.register("tsc_shock_grenade_projectile", () -> EntityType.Builder.<TSCShockGrenadeProjectile>of(

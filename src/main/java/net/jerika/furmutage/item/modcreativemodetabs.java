@@ -22,6 +22,10 @@ public class modcreativemodetabs {
 
                         output.accept(ModBlocks.EUGENICS_CRAFTING_BLOCK.get());
                         output.accept(ModBlocks.EUGENICS_SMELTERY_OVEN.get());
+                        output.accept(ModBlocks.CANNED_CAT_FOOD.get());
+                        output.accept(ModBlocks.CANNED_DOG_FOOD.get());
+                        output.accept(ModBlocks.CANNED_BEANS.get());
+                        output.accept(ModBlocks.CANNED_HAM.get());
                         output.accept(ModItems.DARK_TAINTED_SEEDS.get());
                         output.accept(ModItems.WHITE_TAINTED_SEEDS.get());
                         output.accept(ModItems.PLASTIC_WASTE.get());
@@ -130,6 +134,10 @@ public class modcreativemodetabs {
                         output.accept(ModItems.LATEX_BLOOD_WORM_MUTANT_SPAWN_EGG.get());
                         output.accept(ModItems.DARKLATEXBOTTLED.get());
                         output.accept(ModItems.WHITELATEXBOTTLED.get());
+                        output.accept(ModItems.WHITE_LATEX_GUNK_SPIT.get());
+                        output.accept(ModItems.DARK_LATEX_GUNK_SPIT.get());
+                        output.accept(ModItems.LARGE_WHITE_LATEX_GUNK_SPIT.get());
+                        output.accept(ModItems.LARGE_DARK_LATEX_GUNK_SPIT.get());
 
                         output.accept(ModItems.THUNDERIUM_SABER.get());
                         output.accept(ModItems.ROSELIGHT_PIC.get());

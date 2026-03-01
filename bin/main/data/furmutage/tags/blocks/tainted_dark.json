@@ -1,0 +1,27 @@
+{
+  "replace": false,
+  "values": [
+    "furmutage:tainted_dark_log",
+    "furmutage:stripped_tainted_dark_log",
+    "furmutage:tainted_dark_planks",
+    "furmutage:tainted_dark_slab",
+    "furmutage:tainted_dark_stairs",
+    "furmutage:tainted_dark_fence",
+    "furmutage:tainted_dark_fence_gate",
+    "furmutage:tainted_dark_door",
+    "furmutage:tainted_dark_trapdoor",
+    "furmutage:tainted_dark_button",
+    "furmutage:tainted_dark_pressure_plate",
+    "furmutage:tainted_dark_ladder",
+    "furmutage:tainted_dark_leaf",
+    "furmutage:tainted_dark_grass",
+    "furmutage:tainted_dark_dirt",
+    "furmutage:tainted_dark_sand",
+    "furmutage:tainted_dark_tall_grass",
+    "furmutage:tainted_dark_grass_foliage",
+    "furmutage:tainted_dark_roselight_flower",
+    "furmutage:tainted_dark_crystal_blue_flower",
+    "furmutage:tainted_dark_sapling",
+    "furmutage:tainted_dark_vine"
+  ]
+}

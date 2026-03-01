@@ -1,26 +1,21 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.furmutage;
-import net.jerika.furmutage.item.ModItems;
-import net.jerika.furmutage.recipe.EugenicsSmeltingRecipe;
-import net.jerika.furmutage.recipe.ModRecipeTypes;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
- * Unlocks Eugenics Smeltery recipes in the recipe book when the player picks up
- * raw_roselight_nugget, raw thunderium nugget, roselight, or thunderium (the only items smeltable in the Eugenics Smeltery).
+ * Previously unlocked Eugenics Smeltery recipes in the recipe book when the player picked up
+ * trigger items. Disabled to avoid "Unknown recipe category" warnings from ClientRecipeBook
+ * (custom recipe types are not fully integrated with the recipe book category system).
+ * Recipes still work in the Eugenics Smeltery; they just won't appear as "unlocked" in the book.
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EugenicsSmelteryRecipeBookEvents {
 
+    // Recipe book unlocking disabled to prevent "Unknown recipe category: furmutage:eugenics_smelting/..."
+    // warnings. Eugenics smelting recipes still function in the smeltery.
+
+    /*
     @SubscribeEvent
     public static void onItemPickup(EntityItemPickupEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer serverPlayer)) {
@@ -54,4 +49,5 @@ public class EugenicsSmelteryRecipeBookEvents {
                 || item == ModItems.ROSELIGHT.get()
                 || item == ModItems.THUNDERIUM.get();
     }
+    */
 }

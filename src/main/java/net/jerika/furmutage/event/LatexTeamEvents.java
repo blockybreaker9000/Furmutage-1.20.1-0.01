@@ -1,10 +1,14 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.config.LatexTeamConfig;
+import net.jerika.furmutage.config.TransfurTeamHelper;
 import net.jerika.furmutage.furmutage;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.AABB;
@@ -28,21 +32,43 @@ public class LatexTeamEvents {
     private static final double HORDE_RADIUS = 32.0D; // 32 block radius for horde aggro (like zombie pigmen)
     private static int serverTickCounter = 0;
 
-    /**
-     * Check if two entities are on different teams
-     */
+    /** Effective team for targeting: 0 = human/unknown, 1 = white, 2 = dark. Players use transfur form from Changed. */
+    private static int getEffectiveTeam(LivingEntity entity) {
+        if (entity == null) return 0;
+        if (entity instanceof Player player) return TransfurTeamHelper.getPlayerTransfurTeam(player);
+        String type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString();
+        return LatexTeamConfig.getTeamForEntity(type);
+    }
+
+    /** True only when both are on opposite teams (white vs dark). Not hostile to players or other mobs. */
     private static boolean areOnDifferentTeams(LivingEntity entity1, LivingEntity entity2) {
-        if (entity1 == null || entity2 == null || !entity1.isAlive() || !entity2.isAlive()) {
-            return false;
-        }
-        
-        String type1 = ForgeRegistries.ENTITY_TYPES.getKey(entity1.getType()).toString();
-        String type2 = ForgeRegistries.ENTITY_TYPES.getKey(entity2.getType()).toString();
-        
-        int team1 = LatexTeamConfig.getTeamForEntity(type1);
-        int team2 = LatexTeamConfig.getTeamForEntity(type2);
-        
-        return team1 != 0 && team2 != 0 && team1 != team2;
+        if (entity1 == null || entity2 == null || !entity1.isAlive() || !entity2.isAlive()) return false;
+        int team1 = getEffectiveTeam(entity1);
+        int team2 = getEffectiveTeam(entity2);
+        return team1 != 0 && team2 != 0 && team1 != team2 && LatexTeamConfig.areWhiteAndDarkHostile();
+    }
+
+    /** True if both have the same non-zero team (e.g. both white, or player transfurred white + white mob). */
+    private static boolean isSameTeam(LivingEntity entity1, LivingEntity entity2) {
+        if (entity1 == null || entity2 == null) return false;
+        int team1 = getEffectiveTeam(entity1);
+        int team2 = getEffectiveTeam(entity2);
+        return team1 != 0 && team2 != 0 && team1 == team2;
+    }
+
+    /**
+     * Resolve the living attacker from a damage source so player attacks (melee, bow, trident, etc.)
+     * are treated the same: the player is the attacker and latex AI will aggro/target them.
+     */
+    private static LivingEntity resolveAttacker(DamageSource source) {
+        if (source == null) return null;
+        var e = source.getEntity();
+        if (e instanceof Projectile proj && proj.getOwner() instanceof LivingEntity owner) return owner;
+        if (e instanceof LivingEntity living) return living;
+        e = source.getDirectEntity();
+        if (e instanceof Projectile proj && proj.getOwner() instanceof LivingEntity owner) return owner;
+        if (e instanceof LivingEntity living) return living;
+        return null;
     }
     
     /** Clear static entity set when a level unloads to avoid infinite "Saving world data" hang. */
@@ -108,14 +134,21 @@ public class LatexTeamEvents {
             }
             int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
 
+            // Every tick (lightweight): clear same-team target so teammates never chase or try to attack each other
+            LivingEntity currentTarget = mob.getTarget();
+            if (currentTarget != null && currentTarget.isAlive() && isSameTeam(mob, currentTarget) && !LatexTeamConfig.isSameTeamHostile()) {
+                mob.setTarget(null);
+                mob.setLastHurtByMob(null);
+                currentTarget = null;
+            }
+
             // Spread expensive work (target scan + moveTo) across ticks to avoid lag spikes
             int bucket = Math.floorMod(serverTickCounter + mob.getId(), TARGET_CHECK_INTERVAL);
             if (bucket != 0) {
                 continue;
             }
 
-            LivingEntity currentTarget = mob.getTarget();
-
+            currentTarget = mob.getTarget();
         // Priority 1: Check if entity has an attacker (lastHurtByMob) - prioritize attacker over team targeting
         LivingEntity attacker = mob.getLastHurtByMob();
         double followRange = mob.getAttributeValue(Attributes.FOLLOW_RANGE);
@@ -124,8 +157,10 @@ public class LatexTeamEvents {
         }
         double followRangeSq = followRange * followRange;
         
-        if (attacker != null && attacker.isAlive() && attacker.distanceToSqr(mob) <= followRangeSq) {
-            // If we have an attacker and it's within range, target them instead of team-based targeting
+        // Only target attacker if they're on the opposite team OR if they're a player who attacked us (pigmen-style: any player who hits gets targeted)
+        boolean shouldTargetAttacker = attacker != null && attacker.isAlive() && attacker.distanceToSqr(mob) <= followRangeSq
+                && (areOnDifferentTeams(mob, attacker) || attacker instanceof Player);
+        if (shouldTargetAttacker && attacker != null) {
             if (currentTarget != attacker) {
                 mob.setTarget(attacker);
                 String attackerType = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
@@ -150,36 +185,30 @@ public class LatexTeamEvents {
                 for (LivingEntity entity : mob.level().getEntitiesOfClass(
                         LivingEntity.class, 
                         mob.getBoundingBox().inflate(range, range / 2, range))) {
-                    
-                    if (!(entity instanceof Mob otherMob) || !otherMob.isAlive() || otherMob == mob) {
-                        continue;
-                    }
-                    
-                    String otherType = ForgeRegistries.ENTITY_TYPES.getKey(otherMob.getType()).toString();
-                    if (!LatexTeamConfig.isEntityInTeam(otherType)) {
-                        continue;
-                    }
-                    
-                    if (areOnDifferentTeams(mob, otherMob)) {
-                        double distanceSq = mob.distanceToSqr(otherMob);
-                        if (distanceSq < nearestDistance) {
-                            nearestDistance = distanceSq;
-                            nearestEnemy = otherMob;
-                        }
+                    if (!entity.isAlive() || entity == mob) continue;
+                    if (!areOnDifferentTeams(mob, entity)) continue;
+                    double distanceSq = mob.distanceToSqr(entity);
+                    if (distanceSq < nearestDistance) {
+                        nearestDistance = distanceSq;
+                        nearestEnemy = entity;
                     }
                 }
                 
                 if (nearestEnemy != null) {
                     mob.setTarget(nearestEnemy);
                     mob.setLastHurtByMob(nearestEnemy);
-                    String enemyType = ForgeRegistries.ENTITY_TYPES.getKey(nearestEnemy.getType()).toString();
-                    int enemyTeam = LatexTeamConfig.getTeamForEntity(enemyType);
+                    int enemyTeam = getEffectiveTeam(nearestEnemy);
                     String mobTeamName = mobTeam == 1 ? "White" : "Dark";
-                    String enemyTeamName = enemyTeam == 1 ? "White" : "Dark";
+                    String enemyTeamName = enemyTeam == 1 ? "White" : (enemyTeam == 2 ? "Dark" : "Human");
                     furmutage.LOGGER.debug("[LatexTeamEvents] {} ({}) -> {} ({}) distance: {}", 
                             mobType, mobTeamName,
-                            enemyType, enemyTeamName,
+                            nearestEnemy instanceof Player ? "player" : ForgeRegistries.ENTITY_TYPES.getKey(nearestEnemy.getType()).toString(),
+                            enemyTeamName,
                             String.format("%.1f", mob.distanceTo(nearestEnemy)));
+                } else if (currentTarget != null && isSameTeam(mob, currentTarget)) {
+                    // Only clear when current target is same team; keep player/other target so not passive when hit
+                    mob.setTarget(null);
+                    mob.setLastHurtByMob(null);
                 }
             }
         }
@@ -199,13 +228,13 @@ public class LatexTeamEvents {
                 if (mob.tickCount % ATTACK_COOLDOWN == 0) {
                     mob.swing(InteractionHand.MAIN_HAND);
                     mob.doHurtTarget(currentTarget);
-                    String targetType = ForgeRegistries.ENTITY_TYPES.getKey(currentTarget.getType()).toString();
-                    int targetTeam = LatexTeamConfig.getTeamForEntity(targetType);
+                    int targetTeam = getEffectiveTeam(currentTarget);
                     String mobTeamName = mobTeam == 1 ? "White" : "Dark";
-                    String targetTeamName = targetTeam == 1 ? "White" : "Dark";
+                    String targetTeamName = targetTeam == 1 ? "White" : (targetTeam == 2 ? "Dark" : "Human");
                     furmutage.LOGGER.debug("[LatexTeamEvents] ATTACK: {} ({}) -> {} ({})", 
                             mobType, mobTeamName,
-                            targetType, targetTeamName);
+                            currentTarget instanceof Player ? "player" : ForgeRegistries.ENTITY_TYPES.getKey(currentTarget.getType()).toString(),
+                            targetTeamName);
                 }
 
             }
@@ -226,43 +255,42 @@ public class LatexTeamEvents {
             return;
         }
         
-        // Check if the attacked entity is in a team
-        if (!(attackedEntity instanceof Mob)) {
+        // Process when attacked is a team mob or a player (transfur team used for players)
+        boolean attackedIsTeamMob = attackedEntity instanceof Mob && LatexTeamConfig.isEntityInTeam(
+                ForgeRegistries.ENTITY_TYPES.getKey(attackedEntity.getType()).toString());
+        if (!attackedIsTeamMob && !(attackedEntity instanceof Player)) {
             return;
         }
         
-        String attackedType = ForgeRegistries.ENTITY_TYPES.getKey(attackedEntity.getType()).toString();
-        if (!LatexTeamConfig.isEntityInTeam(attackedType)) {
-            return;
-        }
-        
-        // Get the attacker
-        LivingEntity attacker = null;
-        if (event.getSource().getEntity() instanceof LivingEntity livingAttacker) {
-            attacker = livingAttacker;
-        } else if (event.getSource().getDirectEntity() instanceof LivingEntity directAttacker) {
-            attacker = directAttacker;
-        }
+        // Get the attacker (resolve projectile owner so player bow/trident/etc. counts as player attacking)
+        LivingEntity attacker = resolveAttacker(event.getSource());
         
         if (attacker == null || !attacker.isAlive() || attacker == attackedEntity) {
             return;
         }
         
-        // Don't aggro or allow damage if attacker is on the same team
-        String attackerType = ForgeRegistries.ENTITY_TYPES.getKey(attacker.getType()).toString();
-        if (LatexTeamConfig.isEntityInTeam(attackerType)) {
-            int attackedTeam = LatexTeamConfig.getTeamForEntity(attackedType);
-            int attackerTeam = LatexTeamConfig.getTeamForEntity(attackerType);
-            if (attackedTeam == attackerTeam) {
-                // Same team: cancel the attack entirely so team members are always passive
+        // Enforce latex_team_relations.json; use effective team (transfur team for players)
+        int attackedTeam = getEffectiveTeam(attackedEntity);
+        int attackerTeam = getEffectiveTeam(attacker);
+        if (attackerTeam != 0 || attackedTeam != 0) {
+            if (attackedTeam == attackerTeam && attackedTeam != 0 && !LatexTeamConfig.isSameTeamHostile()) {
+                event.setCanceled(true);
+                if (attacker instanceof Mob attackerMob && attackerMob.getTarget() == attackedEntity) {
+                    attackerMob.setTarget(null);
+                    attackerMob.setLastHurtByMob(null);
+                }
+                return;
+            }
+            if (attackedTeam != attackerTeam && attackedTeam != 0 && attackerTeam != 0 && !LatexTeamConfig.areWhiteAndDarkHostile()) {
                 event.setCanceled(true);
                 return;
             }
         }
         
-        // Find nearby teammates and make them hostile to the attacker
-        if (attackedEntity.level() instanceof ServerLevel serverLevel) {
-            int attackedTeam = LatexTeamConfig.getTeamForEntity(attackedType);
+        // Horde aggro: when a team mob is attacked, nearby teammates target the attacker. Allow when attacker is opposite team OR untransfurred (e.g. player with team 0), so pigmen-style group aggro works.
+        boolean attackerIsValidForHorde = attackerTeam != attackedTeam || attackerTeam == 0;
+        if (attackedEntity.level() instanceof ServerLevel serverLevel && attackedTeam != 0
+                && attacker != null && attacker.isAlive() && attackerIsValidForHorde) {
             double hordeRadiusSq = HORDE_RADIUS * HORDE_RADIUS;
             
             // Search for nearby teammates
@@ -286,8 +314,7 @@ public class LatexTeamEvents {
                     
                     // Check if within horde radius
                     if (distanceSq <= hordeRadiusSq) {
-                        // Make the nearby teammate hostile to the attacker
-                        // Set the attacker as their target and also as lastHurtByMob
+                        // Make the nearby teammate hostile to the attacker (opposite team only)
                         nearbyMob.setTarget(attacker);
                         nearbyMob.setLastHurtByMob(attacker);
                     }

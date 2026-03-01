@@ -171,6 +171,15 @@ public class ModBlocks {
     public static final RegistryObject<Block> EUGENICS_SMELTERY_OVEN = registerBlock("eugenics_smeltery_oven",
             () -> new EugenicsSmelteryBlock(BlockBehaviour.Properties.copy(Blocks.BLAST_FURNACE)
                     .strength(3.5f)));
+
+    public static final RegistryObject<Block> CANNED_CAT_FOOD = registerBlock("canned_cat_food",
+            () -> new CannedBlock());
+    public static final RegistryObject<Block> CANNED_DOG_FOOD = registerBlock("canned_dog_food",
+            () -> new CannedBlock());
+    public static final RegistryObject<Block> CANNED_BEANS = registerBlock("canned_beans",
+            () -> new CannedBlock());
+    public static final RegistryObject<Block> CANNED_HAM = registerBlock("canned_ham",
+            () -> new CannedBlock());
     
     // Tainted White Reed - declare as mutable to break circular dependency, then assign
     public static RegistryObject<Block> TAINTED_WHITE_REED;

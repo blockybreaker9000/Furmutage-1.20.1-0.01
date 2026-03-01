@@ -2,6 +2,10 @@
   "replace": false,
   "values": [
     "minecraft:cactus",
+    "minecraft:is_drowning",
+    "minecraft:is_fall",
+    "minecraft:is_fire",
+    "minecraft:is_freezing",
     "minecraft:sweet_berry_bush",
     "minecraft:sting"
   ]

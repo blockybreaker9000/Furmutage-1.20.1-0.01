@@ -138,6 +138,14 @@ public class ModItems {
             () -> new DarkLatexBottleItem(new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> WHITELATEXBOTTLED = ITEMS.register("whitelatex_bottle",
             () -> new WhiteLatexBottleItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> WHITE_LATEX_GUNK_SPIT = ITEMS.register("white_latex_gunk_spit",
+            () -> new WhiteLatexGunkSpitItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> DARK_LATEX_GUNK_SPIT = ITEMS.register("dark_latex_gunk_spit",
+            () -> new DarkLatexGunkSpitItem(new Item.Properties().stacksTo(16)));
+    public static final RegistryObject<Item> LARGE_WHITE_LATEX_GUNK_SPIT = ITEMS.register("large_white_latex_gunk_spit",
+            () -> new LargeWhiteLatexGunkSpitItem(new Item.Properties().stacksTo(8)));
+    public static final RegistryObject<Item> LARGE_DARK_LATEX_GUNK_SPIT = ITEMS.register("large_dark_latex_gunk_spit",
+            () -> new LargeDarkLatexGunkSpitItem(new Item.Properties().stacksTo(8)));
     public static final RegistryObject<Item> TSC_METAL_DETECTOR = ITEMS.register("tsc_metal_detector",
             () -> new TSCMetalDetectorItem(new Item.Properties().durability(100)));
     public static final RegistryObject<Item> PEALED_ORANGES = ITEMS.register("pealed_oranges",

@@ -227,6 +227,42 @@
     ],
     "subtitle": "subtitles.furmutage.tainted_horror_grass_place"
   },
+  "latex_gunk_splat": {
+    "sounds": [
+      "furmutage:latex_gunk_splat"
+    ],
+    "subtitle": "subtitles.furmutage.latex_gunk_splat"
+  },
+  "latex_gunk_spit": {
+    "sounds": [
+      "furmutage:latex_gunk_spit"
+    ],
+    "subtitle": "subtitles.furmutage.latex_gunk_spit"
+  },
+  "large_white_latex_gunk_spit": {
+    "sounds": [
+      "furmutage:large_white_latex_gunk_spit"
+    ],
+    "subtitle": "subtitles.furmutage.large_white_latex_gunk_spit"
+  },
+  "large_white_latex_gunk_splat": {
+    "sounds": [
+      "furmutage:large_white_latex_gunk_splat"
+    ],
+    "subtitle": "subtitles.furmutage.large_white_latex_gunk_splat"
+  },
+  "large_dark_latex_gunk_spit": {
+    "sounds": [
+      "furmutage:large_dark_latex_gunk_spit"
+    ],
+    "subtitle": "subtitles.furmutage.large_dark_latex_gunk_spit"
+  },
+  "large_dark_latex_gunk_splat": {
+    "sounds": [
+      "furmutage:large_dark_latex_gunk_splat"
+    ],
+    "subtitle": "subtitles.furmutage.large_dark_latex_gunk_splat"
+  },
   "deep_hypno_cat_stare": {
     "sounds": [
       "furmutage:deep_hypno_cat_stare"

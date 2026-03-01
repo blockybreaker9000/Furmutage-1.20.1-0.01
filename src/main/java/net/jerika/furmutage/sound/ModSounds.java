@@ -122,6 +122,17 @@ public class ModSounds {
     // Tainted grass placement sound
     public static final RegistryObject<SoundEvent> TAINTED_HORROR_GRASS_PLACE = registerSoundEvent("tainted_horror_grass_place");
 
+    // Latex gunk spit landing sound
+    public static final RegistryObject<SoundEvent> LATEX_GUNK_SPLAT = registerSoundEvent("latex_gunk_splat");
+    // Latex gunk spit throw sound
+    public static final RegistryObject<SoundEvent> LATEX_GUNK_SPIT = registerSoundEvent("latex_gunk_spit");
+
+    // Large latex gunk - unique throw and landing sounds
+    public static final RegistryObject<SoundEvent> LARGE_WHITE_LATEX_GUNK_SPIT = registerSoundEvent("large_white_latex_gunk_spit");
+    public static final RegistryObject<SoundEvent> LARGE_WHITE_LATEX_GUNK_SPLAT = registerSoundEvent("large_white_latex_gunk_splat");
+    public static final RegistryObject<SoundEvent> LARGE_DARK_LATEX_GUNK_SPIT = registerSoundEvent("large_dark_latex_gunk_spit");
+    public static final RegistryObject<SoundEvent> LARGE_DARK_LATEX_GUNK_SPLAT = registerSoundEvent("large_dark_latex_gunk_splat");
+
     // Deep Cave Hypno Cat special stare sound
     public static final RegistryObject<SoundEvent> DEEP_HYPNO_CAT_STARE = registerSoundEvent("deep_hypno_cat_stare");
 

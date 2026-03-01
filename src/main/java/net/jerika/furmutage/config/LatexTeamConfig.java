@@ -1,5 +1,11 @@
 package net.jerika.furmutage.config;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import net.minecraftforge.fml.loading.FMLPaths;
+
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 public class LatexTeamConfig {
@@ -257,6 +263,46 @@ public class LatexTeamConfig {
     
     public static boolean isEntityInTeam(String entityTypeId) {
         return getTeamForEntity(entityTypeId) != 0;
+    }
+
+    // --- JSON team relations: config/furmutage/latex_team_relations.json (no per-tick loop) ---
+    private static volatile boolean sameTeamHostile = false;
+    private static volatile boolean whiteVsDarkHostile = true;
+    private static boolean relationsLoaded = false;
+    private static final String RELATIONS_FILENAME = "latex_team_relations.json";
+    private static final String DEFAULT_JSON = "{\"same_team_hostile\":false,\"white_vs_dark_hostile\":true}";
+
+    public static void loadRelations() {
+        Path configDir = FMLPaths.CONFIGDIR.get().resolve("furmutage");
+        Path file = configDir.resolve(RELATIONS_FILENAME);
+        try {
+            if (!Files.exists(file)) {
+                Files.createDirectories(configDir);
+                Files.writeString(file, DEFAULT_JSON);
+            }
+            String json = Files.readString(file);
+            JsonObject obj = new Gson().fromJson(json, JsonObject.class);
+            if (obj != null) {
+                if (obj.has("same_team_hostile")) sameTeamHostile = obj.get("same_team_hostile").getAsBoolean();
+                if (obj.has("white_vs_dark_hostile")) whiteVsDarkHostile = obj.get("white_vs_dark_hostile").getAsBoolean();
+            }
+        } catch (Exception e) {
+            sameTeamHostile = false;
+            whiteVsDarkHostile = true;
+        }
+        relationsLoaded = true;
+    }
+
+    /** When false (default), teammates never attack each other. Set true in JSON to allow same-team hostility. */
+    public static boolean isSameTeamHostile() {
+        if (!relationsLoaded) loadRelations();
+        return sameTeamHostile;
+    }
+
+    /** When true (default), white and dark teams are hostile. Set false in JSON to make them passive. */
+    public static boolean areWhiteAndDarkHostile() {
+        if (!relationsLoaded) loadRelations();
+        return whiteVsDarkHostile;
     }
 }
 

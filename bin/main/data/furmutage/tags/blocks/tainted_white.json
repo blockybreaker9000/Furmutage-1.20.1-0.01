@@ -1,0 +1,31 @@
+{
+  "replace": false,
+  "values": [
+    "furmutage:tainted_white_log",
+    "furmutage:stripped_tainted_white_log",
+    "furmutage:tainted_white_planks",
+    "furmutage:tainted_white_slab",
+    "furmutage:tainted_white_stairs",
+    "furmutage:tainted_white_fence",
+    "furmutage:tainted_white_fence_gate",
+    "furmutage:tainted_white_door",
+    "furmutage:tainted_white_trapdoor",
+    "furmutage:tainted_white_button",
+    "furmutage:tainted_white_pressure_plate",
+    "furmutage:tainted_white_ladder",
+    "furmutage:tainted_white_leaf",
+    "furmutage:tainted_white_sapling",
+    "furmutage:tainted_white_grass",
+    "furmutage:tainted_white_dirt",
+    "furmutage:tainted_white_sand",
+    "furmutage:tainted_white_vine",
+    "furmutage:tainted_white_grass_foliage",
+    "furmutage:tainted_white_tall_grass",
+    "furmutage:tainted_white_spotted_mushroom",
+    "furmutage:tainted_white_drip_mushroom",
+    "furmutage:tainted_white_roselight_flower",
+    "furmutage:tainted_white_crystal_blue_flower",
+    "furmutage:tainted_white_reed",
+    "furmutage:tainted_white_reed_plant"
+  ]
+}

@@ -233,6 +233,14 @@ public class furmutage {
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
             EntityRenderers.register(ModEntities.WHITE_LATEX_BOTTLE_PROJECTILE.get(),
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
+            EntityRenderers.register(ModEntities.WHITE_LATEX_GUNK_SPIT_PROJECTILE.get(),
+                    (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
+            EntityRenderers.register(ModEntities.DARK_LATEX_GUNK_SPIT_PROJECTILE.get(),
+                    (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
+            EntityRenderers.register(ModEntities.LARGE_WHITE_LATEX_GUNK_SPIT_PROJECTILE.get(),
+                    (context) -> new ThrownItemRenderer<>(context, 1.2f, true));
+            EntityRenderers.register(ModEntities.LARGE_DARK_LATEX_GUNK_SPIT_PROJECTILE.get(),
+                    (context) -> new ThrownItemRenderer<>(context, 1.2f, true));
             EntityRenderers.register(ModEntities.TSC_SHOCK_GRENADE_PROJECTILE.get(), 
                     (context) -> new ThrownItemRenderer<>(context, 1.0f, true));
             EntityRenderers.register(ModEntities.TSC_EXPLOSIVE_GRENADE_PROJECTILE.get(),
