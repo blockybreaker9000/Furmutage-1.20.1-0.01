@@ -1,20 +1,15 @@
 {
   "type": "furmutage:eugenics_crafting",
   "category": "misc",
-  "ingredients": [
-    {
-      "item": "changed:dark_latex_goo"
-    },
-    {
-      "item": "changed:dark_latex_goo"
-    },
-    {
-      "item": "changed:dark_latex_goo"
-    },
-    {
+  "pattern": [
+    "GG",
+    "GG"
+  ],
+  "key": {
+    "G": {
       "item": "changed:dark_latex_goo"
     }
-  ],
+  },
   "result": {
     "item": "furmutage:dark_latex_clump"
   }
