@@ -259,6 +259,20 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> THUNDERIUM_GLASS_ROD = ITEMS.register("thunderium_glass_rod",
             () -> new Item(new Item.Properties()));
+
+    // Digested mob drops
+    public static final RegistryObject<Item> WHITE_DIGESTED_GUNPOWDER = ITEMS.register("white_digested_gunpowder",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_DIGESTED_GUNPOWDER = ITEMS.register("dark_digested_gunpowder",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_DIGESTED_ROTTEN_FLESH = ITEMS.register("white_digested_rotten_flesh",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_DIGESTED_ROTTEN_FLESH = ITEMS.register("dark_digested_rotten_flesh",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> WHITE_DIGESTED_BONES = ITEMS.register("white_digested_bones",
+            () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> DARK_DIGESTED_BONES = ITEMS.register("dark_digested_bones",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> ROSELIGHT_CHUNK = ITEMS.register("roselight_chunk",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> THUNDERIUM_CHUNK = ITEMS.register("thunderium_chunk",

@@ -31,8 +31,8 @@ public class ModBlocks {
             () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
                     .strength(3f).requiresCorrectToolForDrops(), UniformInt.of(5, 7)));
     public static final RegistryObject<Block> PLATINUM_ORE_BLOCK = registerBlock("platinum_ore_block",
-            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.DEEPSLATE)
-                    .strength(3f).requiresCorrectToolForDrops(), UniformInt.of(2, 5)));
+            () -> new DropExperienceBlock(BlockBehaviour.Properties.copy(Blocks.OBSIDIAN)
+                    .requiresCorrectToolForDrops(), UniformInt.of(2, 5)));
     public static final RegistryObject<Block> THUNDERIUM_BLOCK = registerBlock("thunderium_block",
             () -> new Block(BlockBehaviour.Properties.copy(Blocks.IRON_BLOCK)));
     public static final RegistryObject<Block> ROSELIGHT_BLOCK = registerBlock("roselight_block",

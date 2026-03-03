@@ -1,5 +1,6 @@
 package net.jerika.furmutage.menu;
 
+import net.jerika.furmutage.recipe.ModRecipeTypes;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -8,7 +9,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
@@ -59,9 +59,12 @@ public class EugenicsCraftingMenu extends AbstractContainerMenu {
         
         ServerPlayer serverPlayer = (ServerPlayer) player;
         ItemStack result = ItemStack.EMPTY;
-        
-        Optional<CraftingRecipe> optional = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, craftSlots, level);
-        
+
+        // Only use Eugenics Crafting recipes; vanilla crafting table handles normal recipes
+        Optional<CraftingRecipe> optional = level.getServer().getRecipeManager()
+                .getRecipeFor(ModRecipeTypes.EUGENICS_CRAFTING.get(), craftSlots, level)
+                .map(r -> (CraftingRecipe) r);
+
         if (optional.isPresent()) {
             CraftingRecipe recipe = optional.get();
             if (resultSlots.setRecipeUsed(level, serverPlayer, recipe)) {

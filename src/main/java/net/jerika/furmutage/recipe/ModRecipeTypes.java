@@ -17,4 +17,13 @@ public class ModRecipeTypes {
                     return "eugenics_smelting";
                 }
             });
+
+    public static final RegistryObject<RecipeType<EugenicsCraftingRecipe>> EUGENICS_CRAFTING =
+            RECIPE_TYPES.register("eugenics_crafting", () -> new RecipeType<>() {
+                @Override
+                public String toString() {
+                    return "eugenics_crafting";
+                }
+            });
 }
+

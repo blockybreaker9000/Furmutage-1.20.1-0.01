@@ -1,14 +1,15 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "furmutage:eugenics_crafting",
   "category": "equipment",
   "pattern": [
-    "GG ",
+    "GC ",
     " S ",
     " S "
   ],
   "key": {
     "G": {"item": "furmutage:roselight_glass_rod"},
-    "S": {"item": "minecraft:stick"}
+    "C": {"item": "furmutage:roselight_glass_gem"},
+    "S": {"item": "furmutage:dark_coated_tsc_plastic_bar"}
   },
   "result": {"item": "furmutage:roselight_glass_hoe"}
 }

@@ -1,0 +1,19 @@
+{
+  "type": "furmutage:eugenics_crafting",
+  "category": "equipment",
+  "pattern": [
+    "GGC",
+    " S ",
+    " S "
+  ],
+  "key": {
+    "G": { "item": "furmutage:thunderium_glass_gem" },
+    "C": { "item": "furmutage:thunderium_glass_rod" },
+    "S": { "item": "furmutage:white_coated_tsc_plastic_bar" }
+  },
+  "result": {
+    "item": "furmutage:thunderium_hammer",
+    "count": 1
+  }
+}
+

@@ -1,17 +1,16 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "furmutage:eugenics_crafting",
   "category": "misc",
-  "ingredients": [
-    {
-      "item": "furmutage:thunderium_glass_shard"
-    },
-    {
-      "item": "furmutage:thunderium_glass_shard"
-    },
-    {
+  "pattern": [
+    "#",
+    "#",
+    "#"
+  ],
+  "key": {
+    "#": {
       "item": "furmutage:thunderium_glass_shard"
     }
-  ],
+  },
   "result": {
     "item": "furmutage:thunderium_glass_rod"
   }

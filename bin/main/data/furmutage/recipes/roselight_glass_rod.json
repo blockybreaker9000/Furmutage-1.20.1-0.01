@@ -1,17 +1,16 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "furmutage:eugenics_crafting",
   "category": "misc",
-  "ingredients": [
-    {
-      "item": "furmutage:roselight_glass_shard"
-    },
-    {
-      "item": "furmutage:roselight_glass_shard"
-    },
-    {
+  "pattern": [
+    "#",
+    "#",
+    "#"
+  ],
+  "key": {
+    "#": {
       "item": "furmutage:roselight_glass_shard"
     }
-  ],
+  },
   "result": {
     "item": "furmutage:roselight_glass_rod"
   }

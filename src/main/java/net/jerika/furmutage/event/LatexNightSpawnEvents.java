@@ -37,7 +37,8 @@ public class LatexNightSpawnEvents {
             "changed:white_latex_knight",
             "changed:white_latex_centaur",
             "changed:milk_pudding",
-            "changed:custom_latex"
+            "changed:custom_latex",
+            "furmutage:latex_mutant_bomber"
     );
 
     private static final long NIGHT_START = 13000;

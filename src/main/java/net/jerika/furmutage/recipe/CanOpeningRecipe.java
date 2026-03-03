@@ -38,11 +38,12 @@ public class CanOpeningRecipe extends ShapelessRecipe {
                 ItemStack opener = stack.copy();
                 int damage = opener.getDamageValue() + DURABILITY_COST;
                 if (damage >= opener.getMaxDamage()) {
-                    remaining.set(i, ItemStack.EMPTY);
+                    remaining.set(i, ItemStack.EMPTY); // Opener breaks
                 } else {
                     opener.setDamageValue(damage);
-                    remaining.set(i, opener);
+                    remaining.set(i, opener); // Return damaged opener
                 }
+                // For this recipe it's 1 opener + 1 can, so we can break.
                 break;
             }
         }
@@ -54,3 +55,4 @@ public class CanOpeningRecipe extends ShapelessRecipe {
         return ModRecipeSerializers.CAN_OPENING.get();
     }
 }
+

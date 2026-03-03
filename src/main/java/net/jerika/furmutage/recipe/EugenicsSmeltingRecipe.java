@@ -15,3 +15,4 @@ public class EugenicsSmeltingRecipe extends AbstractCookingRecipe {
         return ModRecipeSerializers.EUGENICS_SMELTING.get();
     }
 }
+

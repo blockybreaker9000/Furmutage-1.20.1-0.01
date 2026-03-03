@@ -20,36 +20,15 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.Optional;
 
 /**
- * Event handler that prevents crafting Changed and Furmutage items in normal crafting tables and player inventory.
+ * Previously prevented crafting Changed and Furmutage items in normal crafting tables and player inventory.
+ * Restrictions are now disabled so all items can be crafted in vanilla grids; the Eugenics
+ * Crafting Block instead acts as a tier-2 table that can have exclusive recipes.
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class CraftingRestrictionEvents {
     
-    /**
-     * Prevents restricted items from appearing in result slots of normal crafting tables.
-     */
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END || event.player.level().isClientSide) {
-            return;
-        }
-        
-        Player player = event.player;
-        AbstractContainerMenu container = player.containerMenu;
-        
-        // Only check normal crafting tables and inventory crafting
-        if (container instanceof CraftingMenu || container instanceof InventoryMenu) {
-            // Find the result slot and check if it has a restricted item
-            for (int i = 0; i < container.slots.size(); i++) {
-                var slot = container.slots.get(i);
-                if (slot instanceof ResultSlot) {
-                    ItemStack result = slot.getItem();
-                    if (!result.isEmpty() && CraftingRestrictions.isRestrictedItem(result)) {
-                        // Clear the restricted item from the result slot
-                        slot.set(ItemStack.EMPTY);
-                    }
-                }
-            }
-        }
+        // Restrictions disabled: do nothing.
     }
 }

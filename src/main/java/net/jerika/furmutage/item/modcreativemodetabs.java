@@ -82,6 +82,14 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ROSELIGHT_JADE.get());
                         output.accept(ModItems.ROSELIGHT_DIAMOND.get());
 
+                        // Digested drops
+                        output.accept(ModItems.WHITE_DIGESTED_GUNPOWDER.get());
+                        output.accept(ModItems.DARK_DIGESTED_GUNPOWDER.get());
+                        output.accept(ModItems.WHITE_DIGESTED_ROTTEN_FLESH.get());
+                        output.accept(ModItems.DARK_DIGESTED_ROTTEN_FLESH.get());
+                        output.accept(ModItems.WHITE_DIGESTED_BONES.get());
+                        output.accept(ModItems.DARK_DIGESTED_BONES.get());
+
                         output.accept(ModItems.TSC_FIBER.get());
                         output.accept(ModItems.RUBBER.get());
                         output.accept(ModItems.TSC_GLOVES.get());

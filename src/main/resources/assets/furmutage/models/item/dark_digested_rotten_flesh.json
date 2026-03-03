@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "furmutage:item/dark_digested_rotten_flesh"
+  }
+}
+

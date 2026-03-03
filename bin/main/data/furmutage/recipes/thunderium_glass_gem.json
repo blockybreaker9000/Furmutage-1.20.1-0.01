@@ -1,0 +1,19 @@
+{
+  "type": "furmutage:eugenics_crafting",
+  "category": "misc",
+  "pattern": [
+    "SLS",
+    "LCL",
+    "SLS"
+  ],
+  "key": {
+    "S": { "item": "furmutage:thunderium_glass_shard" },
+    "L": { "item": "changed:white_latex_goo" },
+    "C": { "item": "furmutage:thunderium_chunk" }
+  },
+  "result": {
+    "item": "furmutage:thunderium_glass_gem",
+    "count": 1
+  }
+}
+

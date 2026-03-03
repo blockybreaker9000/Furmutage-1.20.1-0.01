@@ -1,0 +1,17 @@
+{
+  "type": "furmutage:eugenics_crafting",
+  "category": "equipment",
+  "pattern": [
+    " G ",
+    " S "
+  ],
+  "key": {
+    "G": { "item": "furmutage:thunderium_glass_gem" },
+    "S": { "item": "furmutage:white_coated_tsc_plastic_bar" }
+  },
+  "result": {
+    "item": "furmutage:thunderium_shank_knife",
+    "count": 1
+  }
+}
+

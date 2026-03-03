@@ -202,6 +202,12 @@ repositories {
         name = "McJty"
         url = "https://maven.k-4u.nl/"
     }
+
+    // JEI (Just Enough Items) maven
+    maven {
+        name = "BlameJared"
+        url = "https://maven.blamejared.com"
+    }
 }
 
 mixin {
@@ -234,11 +240,11 @@ dependencies {
         changing = true
     }
 
-    // Curios API - compileOnly so runClient doesn't load Curios (Changed's Curios mixin is
-    // broken: targets getEntitySlots(EntityType) but wrapper expects LivingEntity; no version works).
-    // If you need Curios at runtime, add the JAR to run/mods/ manually and remove Curios when using Changed.
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:${curios_version}:api")
-    
+    // JEI (Just Enough Items) - compileOnly so the correct JEI runs from run/mods/
+    // The Maven JAR uses different mappings than Forge at runtime, causing NoSuchMethodError (I18n).
+    // Add JEI to run/mods/ yourself (e.g. from CurseForge/Modrinth for 1.20.1 Forge).
+    compileOnly "mezz.jei:jei-1.20.1-forge:15.20.0.102"
+
     // LostCities mod dependency
     // Using local JAR approach (similar to Changed mod)
     // 

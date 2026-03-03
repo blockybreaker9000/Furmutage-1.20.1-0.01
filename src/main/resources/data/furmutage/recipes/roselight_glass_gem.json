@@ -1,0 +1,19 @@
+{
+  "type": "furmutage:eugenics_crafting",
+  "category": "misc",
+  "pattern": [
+    "SLS",
+    "LCL",
+    "SLS"
+  ],
+  "key": {
+    "S": { "item": "furmutage:roselight_glass_shard" },
+    "L": { "item": "changed:dark_latex_goo" },
+    "C": { "item": "furmutage:roselight_chunk" }
+  },
+  "result": {
+    "item": "furmutage:roselight_glass_gem",
+    "count": 1
+  }
+}
+

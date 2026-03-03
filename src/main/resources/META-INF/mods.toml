@@ -42,13 +42,6 @@ description="cool description"
     ordering="NONE"
     side="BOTH"
 
-[[dependencies.furmutage]]
-    modId="curios"
-    mandatory=false
-    versionRange="[5.0,)"
-    ordering="NONE"
-    side="BOTH"
-
 
 [[dependencies.furmutage]]
     modId="bettercombat"

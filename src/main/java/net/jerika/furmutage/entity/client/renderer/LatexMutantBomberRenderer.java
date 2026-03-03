@@ -5,10 +5,10 @@ import net.jerika.furmutage.entity.client.model.LatexBomberMutantModel;
 import net.jerika.furmutage.entity.client.model.ModModelLayers;
 import net.jerika.furmutage.entity.custom.LatexMutantBomberEntity;
 import net.jerika.furmutage.furmutage;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class LatexMutantBomberRenderer extends MobRenderer<LatexMutantBomberEntity, LatexBomberMutantModel<LatexMutantBomberEntity>> {
     public LatexMutantBomberRenderer(EntityRendererProvider.Context pContext) {
@@ -21,13 +21,26 @@ public class LatexMutantBomberRenderer extends MobRenderer<LatexMutantBomberEnti
     }
 
     @Override
-    public void render(LatexMutantBomberEntity pEntity, float pEntityYaw, float pPartialTicks, PoseStack pMatrixStack,
-                       MultiBufferSource pBuffer, int pPackedLight) {
-        if(pEntity.isBaby()) {
-            pMatrixStack.scale(0.5f, 0.5f, 0.5f);
+    protected void scale(LatexMutantBomberEntity entity, PoseStack poseStack, float partialTickTime) {
+        // Base baby scale
+        if (entity.isBaby()) {
+            poseStack.scale(0.5F, 0.5F, 0.5F);
         }
 
-        super.render(pEntity, pEntityYaw, pPartialTicks, pMatrixStack, pBuffer, pPackedLight);
+        // Strong creeper-style swelling, based directly on fuse progress
+        float swell = entity.getSwelling(partialTickTime);
+        if (swell > 0.0F) {
+            swell = Mth.clamp(swell, 0.0F, 1.0F);
+
+            // Creeper formula, but a bit stronger so it's very visible
+            float f1 = 1.0F + Mth.sin(swell * 100.0F) * swell * 0.15F;
+            swell = swell * swell;
+            swell = swell * swell;
+            float xz = (1.0F + swell * 0.9F) * f1; // up to ~1.9x on X/Z
+            float y  = (1.0F + swell * 0.4F) / f1; // a bit less on Y so it looks like bulging
+
+            poseStack.scale(xz, y, xz);
+        }
     }
 }
 
