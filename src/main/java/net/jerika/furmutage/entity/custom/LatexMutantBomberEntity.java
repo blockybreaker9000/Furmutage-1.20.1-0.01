@@ -1,15 +1,22 @@
 package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.sound.ModSounds;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Creeper;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.tags.FluidTags;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -69,6 +76,41 @@ public class LatexMutantBomberEntity extends Creeper {
         builder.add(Attributes.ARMOR, 2.0D);
         builder.add(Attributes.ATTACK_KNOCKBACK, 0.0D);
         return builder;
+    }
+
+    /**
+     * Custom spawn rules so the bomber:
+     * - Only naturally spawns at night
+     * - Never spawns in water (no ocean/river floor spawns)
+     */
+    public static boolean checkLatexMutantBomberSpawnRules(EntityType<LatexMutantBomberEntity> type,
+                                                           ServerLevelAccessor level,
+                                                           MobSpawnType reason,
+                                                           BlockPos pos,
+                                                           RandomSource random) {
+        if (reason != MobSpawnType.NATURAL) {
+            return true; // allow eggs/commands
+        }
+
+        // Don't spawn in water or with water directly above
+        if (level.getFluidState(pos).is(FluidTags.WATER) || level.getFluidState(pos.above()).is(FluidTags.WATER)) {
+            return false;
+        }
+
+        // Use standard monster rules first (valid floor, mob cap, etc.)
+        if (!Monster.checkMonsterSpawnRules(type, level, reason, pos, random)) {
+            return false;
+        }
+
+        long dayTime = level.getLevelData().getDayTime() % 24000L;
+        boolean isNight = dayTime >= 13000L && dayTime < 23000L;
+        if (!isNight) {
+            return false;
+        }
+
+        int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
+        int skyLight = level.getBrightness(LightLayer.SKY, pos);
+        return blockLight <= 7 && skyLight <= 7;
     }
 
     @Override

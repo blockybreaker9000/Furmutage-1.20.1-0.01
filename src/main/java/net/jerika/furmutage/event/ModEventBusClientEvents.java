@@ -20,6 +20,7 @@ public class ModEventBusClientEvents {
         event.registerLayerDefinition(ModModelLayers.LATEX_BOMBER_MUTANT_LAYER, LatexBomberMutantModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LATEX_EXO_MUTANT_LAYER, LatexExoMutantModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.GIANT_PURE_WHITE_LATEX_LAYER, GiantPureWhiteLatexModel::createBodyLayer);
+        event.registerLayerDefinition(ModModelLayers.PURE_WHITE_LATEX_CRAWLER_LAYER, PureWhiteLatexCrawlerModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.DEEPSLATE_LATEX_SQUID_DOG_FEMALE_LAYER, DeepSlateLatexSquidDogFemaleModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.DEEP_CAVE_HYPNO_CAT_LAYER, DeepCaveHypnoCatModel::createBodyLayer);
         event.registerLayerDefinition(ModModelLayers.LATEX_BLOOD_WORM_MUTANT_LAYER, LatexBloodWormMutantModel::createBodyLayer);

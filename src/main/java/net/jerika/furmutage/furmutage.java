@@ -47,6 +47,7 @@ import net.jerika.furmutage.entity.client.renderer.DarkLatexChargerMutantRendere
 import net.jerika.furmutage.entity.client.renderer.DarkLatexGoatRenderer;
 import net.jerika.furmutage.entity.client.renderer.DeepSlateLatexSquidDogRenderer;
 import net.jerika.furmutage.entity.client.renderer.WitheredLatexPuddingRenderer;
+import net.jerika.furmutage.entity.client.renderer.PureWhiteLatexCrawlerRenderer;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.jerika.furmutage.item.modcreativemodetabs;
@@ -143,6 +144,14 @@ public class furmutage {
                 net.jerika.furmutage.entity.custom.LatexBloodWormMutant::checkLatexBloodWormMutantSpawnRules
             );
 
+            // Register spawn placement for Latex Mutant Bomber (no underwater spawning)
+            net.minecraft.world.entity.SpawnPlacements.register(
+                ModEntities.LATEX_MUTANT_BOMBER.get(),
+                net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                net.jerika.furmutage.entity.custom.LatexMutantBomberEntity::checkLatexMutantBomberSpawnRules
+            );
+
             // Loose Behemoth Hand: underground natural spawn (like zombies but rarer), vanilla spawn rules only
             net.minecraft.world.entity.SpawnPlacements.register(
                 ModEntities.LOOSE_BEHEMOTH_HAND.get(),
@@ -194,6 +203,14 @@ public class furmutage {
             net.jerika.furmutage.event.LatexNightSpawnEvents.registerSpawnPlacements();
 
             // Latex Mutant Family: no natural spawn (caused infinite "Saving world data"); use spawn eggs or commands.
+
+            // Pure White Latex Crawler: surface (dark) and deep cave crawler
+            net.minecraft.world.entity.SpawnPlacements.register(
+                    ModEntities.PURE_WHITE_LATEX_CRAWLER.get(),
+                    net.minecraft.world.entity.SpawnPlacements.Type.ON_GROUND,
+                    net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    net.jerika.furmutage.entity.custom.PureWhiteLatexCrawlerEntity::checkPureWhiteLatexCrawlerSpawnRules
+            );
         });
     }
 
@@ -286,6 +303,7 @@ public class furmutage {
             EntityRenderers.register(ModEntities.TWO_HEADED_WHITE_LATEX_MUTANT_UNIFIED.get(), net.jerika.furmutage.entity.client.renderer.TwoHeadedWhiteLatexMutantUnifiedRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_NETHER_MANTA_RAY_MALE.get(), net.jerika.furmutage.entity.client.renderer.LatexNetherMantaRayMaleRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_HUMAN_FLESH.get(), net.jerika.furmutage.entity.client.renderer.LatexHumanFleshRenderer::new);
+            EntityRenderers.register(ModEntities.PURE_WHITE_LATEX_CRAWLER.get(), PureWhiteLatexCrawlerRenderer::new);
 
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());

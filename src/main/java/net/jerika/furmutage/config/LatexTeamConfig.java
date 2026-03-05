@@ -47,6 +47,7 @@ public class LatexTeamConfig {
             "furmutage:loose_behemoth_hand",
             "furmutage:loose_squid_dog_limb",
             "furmutage:latex_tenticle_limbs_mutant",
+            "furmutage:pure_white_latex_crawler",
             "furmutage:white_latex_bottle_projectile",
             "spore:biobloob",
             "spore:bloater",

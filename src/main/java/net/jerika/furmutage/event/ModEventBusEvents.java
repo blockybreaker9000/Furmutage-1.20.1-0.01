@@ -39,6 +39,7 @@ import net.jerika.furmutage.entity.custom.LooseBehemothHand;
 import net.jerika.furmutage.entity.custom.LooseSquidDogLimbEntity;
 import net.jerika.furmutage.entity.custom.TwoHeadedWhiteLatexMutantUnifiedEntity;
 import net.jerika.furmutage.entity.custom.LatexNetherMantaRayMaleEntity;
+import net.jerika.furmutage.entity.custom.PureWhiteLatexCrawlerEntity;
 import net.jerika.furmutage.entity.custom.LatexHumanFleshEntity;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.furmutage;
@@ -95,5 +96,6 @@ public class ModEventBusEvents {
         event.put(ModEntities.TWO_HEADED_WHITE_LATEX_MUTANT_UNIFIED.get(), TwoHeadedWhiteLatexMutantUnifiedEntity.createAttributes().build());
         event.put(ModEntities.LATEX_NETHER_MANTA_RAY_MALE.get(), LatexNetherMantaRayMaleEntity.createAttributes().build());
         event.put(ModEntities.LATEX_HUMAN_FLESH.get(), LatexHumanFleshEntity.createAttributes().build());
+        event.put(ModEntities.PURE_WHITE_LATEX_CRAWLER.get(), PureWhiteLatexCrawlerEntity.createAttributes().build());
     }
 }

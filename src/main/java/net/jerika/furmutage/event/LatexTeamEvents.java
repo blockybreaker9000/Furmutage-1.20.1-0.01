@@ -134,7 +134,19 @@ public class LatexTeamEvents {
             }
             int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
 
-            // Every tick (lightweight): clear same-team target so teammates never chase or try to attack each other
+            try {
+                processTeamMobTick(mob, mobType, mobTeam);
+            } catch (IllegalArgumentException e) {
+                // Some mod entities (e.g. Spore UtilityEntity) have broken attribute setup
+                // (e.g. "Can't find attribute minecraft:generic.attack_damage"). Skip them to avoid crash.
+                teamEntities.remove(mob);
+                furmutage.LOGGER.debug("[LatexTeamEvents] Removed {} from team tracking due to attribute error: {}", mobType, e.getMessage());
+            }
+        }
+    }
+
+    /** Per-mob tick logic for team targeting and attacking. Isolated so one bad entity doesn't crash the server. */
+    private static void processTeamMobTick(Mob mob, String mobType, int mobTeam) {
             LivingEntity currentTarget = mob.getTarget();
             if (currentTarget != null && currentTarget.isAlive() && isSameTeam(mob, currentTarget) && !LatexTeamConfig.isSameTeamHostile()) {
                 mob.setTarget(null);
@@ -145,7 +157,7 @@ public class LatexTeamEvents {
             // Spread expensive work (target scan + moveTo) across ticks to avoid lag spikes
             int bucket = Math.floorMod(serverTickCounter + mob.getId(), TARGET_CHECK_INTERVAL);
             if (bucket != 0) {
-                continue;
+                return;
             }
 
             currentTarget = mob.getTarget();
@@ -239,7 +251,6 @@ public class LatexTeamEvents {
 
             }
         }
-        } // end while (it.hasNext())
     }
     
     /**

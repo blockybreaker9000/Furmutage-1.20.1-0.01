@@ -37,6 +37,7 @@ import net.jerika.furmutage.entity.custom.LooseBehemothHand;
 import net.jerika.furmutage.entity.custom.LooseSquidDogLimbEntity;
 import net.jerika.furmutage.entity.custom.TwoHeadedWhiteLatexMutantUnifiedEntity;
 import net.jerika.furmutage.entity.custom.LatexNetherMantaRayMaleEntity;
+import net.jerika.furmutage.entity.custom.PureWhiteLatexCrawlerEntity;
 import net.jerika.furmutage.entity.custom.LatexHumanFleshEntity;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
@@ -206,6 +207,10 @@ public class ModEntities {
     public static final RegistryObject<EntityType<LatexHumanFleshEntity>> LATEX_HUMAN_FLESH =
             ENTITY_TYPES.register("latex_human_flesh", () -> EntityType.Builder.of(LatexHumanFleshEntity::new, MobCategory.MONSTER)
                     .sized(0.6f, 1.8f).clientTrackingRange(10).build("latex_human_flesh"));
+
+    public static final RegistryObject<EntityType<PureWhiteLatexCrawlerEntity>> PURE_WHITE_LATEX_CRAWLER =
+            ENTITY_TYPES.register("pure_white_latex_crawler", () -> EntityType.Builder.of(PureWhiteLatexCrawlerEntity::new, MobCategory.MONSTER)
+                    .sized(0.9f, 1.0f).clientTrackingRange(10).build("pure_white_latex_crawler"));
 
     public static final RegistryObject<EntityType<DarkLatexBottleProjectile>> DARK_LATEX_BOTTLE_PROJECTILE =
             ENTITY_TYPES.register("dark_latex_bottle_projectile", () -> EntityType.Builder.<DarkLatexBottleProjectile>of(

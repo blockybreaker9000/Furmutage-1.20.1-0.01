@@ -147,6 +147,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.DEEP_CAVE_HYPNO_CAT_SPAWN_EGG.get());
                         output.accept(ModItems.DEEPSLATE_LATEX_SQUID_DOG_SPAWN_EGG.get());
                         output.accept(ModItems.LATEX_BLOOD_WORM_MUTANT_SPAWN_EGG.get());
+                        output.accept(ModItems.PURE_WHITE_LATEX_CRAWLER_SPAWN_EGG.get());
                         output.accept(ModItems.DARKLATEXBOTTLED.get());
                         output.accept(ModItems.WHITELATEXBOTTLED.get());
                         output.accept(ModItems.WHITE_LATEX_GUNK_SPIT.get());

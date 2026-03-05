@@ -379,6 +379,9 @@ public class ModItems {
     public static final RegistryObject<Item> WHITE_LATEX_GOAT_SPAWN_EGG = ITEMS.register("white_latex_goat_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_GOAT, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
 
+    public static final RegistryObject<Item> PURE_WHITE_LATEX_CRAWLER_SPAWN_EGG = ITEMS.register("pure_white_latex_crawler_spawn_egg",
+            () -> new ForgeSpawnEggItem(ModEntities.PURE_WHITE_LATEX_CRAWLER, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
+
     // Dark latex infected animals - darker spawn egg colors (base, spots)
     private static final int DARK_LATEX_EGG_BASE = 0x2A2A2A;
     private static final int DARK_LATEX_EGG_SPOTS = 0x1A1A1A;
