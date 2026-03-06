@@ -31,6 +31,8 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
     private boolean bookOpen = false;
     private List<EugenicsCraftingRecipe> eugenicsRecipes = Collections.emptyList();
     private EugenicsCraftingRecipe selectedRecipe = null;
+    private static final int RECIPES_PER_PAGE = 36;
+    private int currentPage = 0;
 
     public EugenicsCraftingScreen(EugenicsCraftingMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -80,6 +82,7 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
             return;
         }
         eugenicsRecipes = mc.level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.EUGENICS_CRAFTING.get());
+        currentPage = 0;
     }
 
     @Override
@@ -102,10 +105,11 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
         int guiLeft = this.leftPos;
         int guiTop = (this.height - this.imageHeight) / 2;
 
-        int panelX = guiLeft + this.imageWidth + 6;
-        int panelY = guiTop;
+        // Move the recipe panel to the left side of the main GUI
         int panelWidth = 90;
         int panelHeight = this.imageHeight;
+        int panelX = guiLeft - panelWidth - 6;
+        int panelY = guiTop;
 
         // Background panel
         int bgColor = 0xC0101010; // semi-transparent dark
@@ -118,10 +122,19 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
 
         ItemStack hovered = ItemStack.EMPTY;
 
-        for (int index = 0; index < eugenicsRecipes.size(); index++) {
+        int total = eugenicsRecipes.size();
+        int pageCount = (total + RECIPES_PER_PAGE - 1) / RECIPES_PER_PAGE;
+        if (currentPage >= pageCount) {
+            currentPage = Math.max(0, pageCount - 1);
+        }
+        int startIndex = currentPage * RECIPES_PER_PAGE;
+        int endIndex = Math.min(total, startIndex + RECIPES_PER_PAGE);
+
+        for (int index = startIndex; index < endIndex; index++) {
             EugenicsCraftingRecipe recipe = eugenicsRecipes.get(index);
-            int col = index % cols;
-            int row = index / cols;
+            int displayIndex = index - startIndex;
+            int col = displayIndex % cols;
+            int row = displayIndex / cols;
             int x = startX + col * cellSize;
             int y = startY + row * cellSize;
 
@@ -132,6 +145,19 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
             if (mouseX >= x && mouseX < x + 16 && mouseY >= y && mouseY < y + 16) {
                 hovered = stack;
             }
+        }
+
+        // Page controls (if more than one page)
+        if (pageCount > 1) {
+            String pageText = (currentPage + 1) + "/" + pageCount;
+            int textWidth = this.font.width(pageText);
+            int controlsY = panelY + panelHeight - 12;
+            int centerX = panelX + (panelWidth - textWidth) / 2;
+            guiGraphics.drawString(this.font, pageText, centerX, controlsY, 0xFFFFFF, false);
+
+            // Simple "<" and ">" markers for previous/next pages
+            guiGraphics.drawString(this.font, "<", panelX + 6, controlsY, 0xFFFFFF, false);
+            guiGraphics.drawString(this.font, ">", panelX + panelWidth - 10, controlsY, 0xFFFFFF, false);
         }
 
         if (!hovered.isEmpty()) {
@@ -145,10 +171,10 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
             int guiLeft = this.leftPos;
             int guiTop = (this.height - this.imageHeight) / 2;
 
-            int panelX = guiLeft + this.imageWidth + 6;
-            int panelY = guiTop;
             int panelWidth = 90;
             int panelHeight = this.imageHeight;
+            int panelX = guiLeft - panelWidth - 6;
+            int panelY = guiTop;
 
             if (mouseX >= panelX && mouseX < panelX + panelWidth && mouseY >= panelY && mouseY < panelY + panelHeight) {
                 int cellSize = 18;
@@ -156,15 +182,36 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
                 int startX = panelX + 6;
                 int startY = panelY + 6;
 
+                int total = eugenicsRecipes.size();
+                int pageCount = (total + RECIPES_PER_PAGE - 1) / RECIPES_PER_PAGE;
+
                 int relX = (int) mouseX - startX;
                 int relY = (int) mouseY - startY;
                 if (relX >= 0 && relY >= 0) {
                     int col = relX / cellSize;
                     int row = relY / cellSize;
                     if (col >= 0 && col < cols && row >= 0) {
-                        int index = row * cols + col;
-                        if (index >= 0 && index < eugenicsRecipes.size()) {
-                            selectedRecipe = eugenicsRecipes.get(index);
+                        int displayIndex = row * cols + col;
+                        int recipeIndex = currentPage * RECIPES_PER_PAGE + displayIndex;
+                        if (recipeIndex >= 0 && recipeIndex < total) {
+                            selectedRecipe = eugenicsRecipes.get(recipeIndex);
+                            return true;
+                        }
+                    }
+                }
+
+                // Handle page navigation clicks near the bottom of the panel
+                if (pageCount > 1) {
+                    int controlsY = panelY + panelHeight - 12;
+                    if (mouseY >= controlsY && mouseY < controlsY + 10) {
+                        // Previous page area ("<")
+                        if (mouseX >= panelX + 4 && mouseX < panelX + 20) {
+                            currentPage = (currentPage - 1 + pageCount) % pageCount;
+                            return true;
+                        }
+                        // Next page area (">")
+                        if (mouseX >= panelX + panelWidth - 20 && mouseX < panelX + panelWidth) {
+                            currentPage = (currentPage + 1) % pageCount;
                             return true;
                         }
                     }
