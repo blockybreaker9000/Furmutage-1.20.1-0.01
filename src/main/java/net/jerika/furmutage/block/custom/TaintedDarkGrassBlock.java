@@ -1,5 +1,7 @@
 package net.jerika.furmutage.block.custom;
 
+import net.jerika.furmutage.entity.ModEntities;
+import net.jerika.furmutage.entity.custom.LatexBacteriaEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -61,6 +63,11 @@ public class TaintedDarkGrassBlock extends GrassBlock {
         // Rarely spawn dark latex entities on top
         if (random.nextInt(300) == 0) { // ~0.33% chance per random tick (very rare)
             spawnDarkLatexEntity(level, pos, random);
+        }
+        
+        // Somewhat rarely spawn Furmutage latex bacteria on top
+        if (random.nextInt(500) == 0) { // ~0.2% chance per random tick
+            spawnBacteriaOnTop(level, pos, random);
         }
         
         // Spawn Changed mod crystals on top (more naturally)
@@ -362,6 +369,54 @@ public class TaintedDarkGrassBlock extends GrassBlock {
                 }
             }
         }
+    }
+    
+    /**
+     * Somewhat rarely spawns a Furmutage latex bacteria on top of this block.
+     */
+    private void spawnBacteriaOnTop(ServerLevel level, BlockPos pos, RandomSource random) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        
+        if (!aboveState.isAir() || level.getMaxLocalRawBrightness(abovePos) < 4) {
+            return;
+        }
+        if (hasBacteriaNearby(level, abovePos, 12)) {
+            return;
+        }
+        
+        LatexBacteriaEntity bacteria = ModEntities.LATEX_BACTERIA.get().create(level);
+        if (bacteria == null) {
+            return;
+        }
+        double spawnX = abovePos.getX() + 0.5;
+        double spawnY = abovePos.getY();
+        double spawnZ = abovePos.getZ() + 0.5;
+        bacteria.moveTo(spawnX, spawnY, spawnZ, random.nextFloat() * 360.0F, 0.0F);
+        try {
+            bacteria.finalizeSpawn(level, level.getCurrentDifficultyAt(abovePos), MobSpawnType.EVENT, null, null);
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage() != null && e.getMessage().contains("attack_knockback")) {
+                furmutage.LOGGER.debug("Ignoring attack_knockback attribute error: {}", e.getMessage());
+            } else {
+                throw e;
+            }
+        }
+        level.addFreshEntity(bacteria);
+    }
+    
+    /**
+     * Checks if there's a latex bacteria within the specified distance.
+     */
+    private boolean hasBacteriaNearby(ServerLevel level, BlockPos pos, int maxDistance) {
+        var aabb = net.minecraft.world.phys.AABB.ofSize(
+                net.minecraft.world.phys.Vec3.atCenterOf(pos), maxDistance * 2.0, maxDistance * 2.0, maxDistance * 2.0);
+        for (var entity : level.getEntitiesOfClass(LatexBacteriaEntity.class, aabb)) {
+            if (entity.distanceToSqr(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5) < maxDistance * maxDistance) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean hasWolfCrystalNearby(ServerLevel level, BlockPos pos, int maxDistance) {

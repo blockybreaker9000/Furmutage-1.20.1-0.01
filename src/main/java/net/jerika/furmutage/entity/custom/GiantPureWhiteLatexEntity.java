@@ -9,11 +9,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.*;
@@ -42,19 +41,6 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
     @Override
     public void tick() {
         super.tick();
-
-        // Permanent Slowness V so chase speed stays low (no particles)
-        if (!this.level().isClientSide) {
-            if (!this.hasEffect(MobEffects.MOVEMENT_SLOWDOWN)) {
-                this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 2, false, false, false));
-            } else {
-                MobEffectInstance existing = this.getEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                if (existing != null && existing.getDuration() < 999990) {
-                    this.removeEffect(MobEffects.MOVEMENT_SLOWDOWN);
-                    this.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 999999, 2, false, false, false));
-                }
-            }
-        }
 
         // Destroy leaves within 1 block of the entity's hitbox
         if (!this.level().isClientSide && this.tickCount % 5 == 0) { // Check every 5 ticks for performance
@@ -114,12 +100,17 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         this.targetSelector.addGoal(2, new HurtByTargetGoal(this));
     }
 
+    @Override
+    protected void setAttributes(AttributeMap attributes) {
+        super.setAttributes(attributes);
+        attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50.0D);
+        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.5D);
+        attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(3.0D);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(80.0D);
+    }
+
     public static AttributeSupplier.Builder createAttributes() {
-        return ChangedEntity.createLatexAttributes()
-                .add(Attributes.MAX_HEALTH, 200.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.5D)
-                .add(Attributes.ATTACK_DAMAGE, 10.0D)
-                .add(Attributes.FOLLOW_RANGE, 80.0D);
+        return ChangedEntity.createLatexAttributes();
     }
 
     @Override

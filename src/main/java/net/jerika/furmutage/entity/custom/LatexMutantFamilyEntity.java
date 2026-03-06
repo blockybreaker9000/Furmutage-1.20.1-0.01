@@ -183,16 +183,17 @@ public class LatexMutantFamilyEntity extends Monster {
         // Priority 4: Target iron golems and dark latex
         this.targetSelector.addGoal(4, new NearestAttackableTargetGoal<>(this, IronGolem.class, true, false));
     }
+
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 400)
-                .add(Attributes.MOVEMENT_SPEED, 0.15)
-                .add(Attributes.ARMOR_TOUGHNESS, 10)
-                .add(Attributes.ATTACK_DAMAGE, 10)
+                .add(Attributes.MAX_HEALTH, 400.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.15D)
+                .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
+                .add(Attributes.ATTACK_DAMAGE, 10.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
-                .add(Attributes.FOLLOW_RANGE, 60.0)
-                .add(Attributes.JUMP_STRENGTH, 5.0)
-                .add(Attributes.KNOCKBACK_RESISTANCE, 10.0);
+                .add(Attributes.FOLLOW_RANGE, 60.0D)
+                .add(Attributes.JUMP_STRENGTH, 5.0D)
+                .add(Attributes.KNOCKBACK_RESISTANCE, 10.0D);
     }
 
 
