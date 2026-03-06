@@ -30,9 +30,13 @@ public class ChangedEntityDaytimeSlownessEvents {
     private static final int CHECK_INTERVAL = 60;
     /** Speed applied when Changed mob is in light (instead of slowness potion). */
     private static final double SPEED_IN_LIGHT = 0.6D;
+    /** Speed applied when it's night and the Changed mob is not in light. */
+    private static final double SPEED_AT_NIGHT = 1.1D;
 
     /** Stores original MOVEMENT_SPEED base value per entity so we can restore when they leave light. */
     private static final Map<UUID, Double> storedSpeedWhenInLight = new ConcurrentHashMap<>();
+    /** Stores original MOVEMENT_SPEED base value per entity so we can restore when it's no longer night. */
+    private static final Map<UUID, Double> storedSpeedAtNight = new ConcurrentHashMap<>();
 
     @SubscribeEvent
     public static void onLivingTick(LivingEvent.LivingTickEvent event) {
@@ -63,23 +67,42 @@ public class ChangedEntityDaytimeSlownessEvents {
 
         long dayTime = entity.level().getLevelData().getDayTime() % 24000;
         boolean isDaytime = dayTime < NIGHT_START || dayTime >= NIGHT_END;
+        boolean isNight = !isDaytime;
 
         BlockPos pos = entity.blockPosition();
         boolean inSunlight = entity.level().canSeeSky(pos.above());
         int blockLight = entity.level().getBrightness(LightLayer.BLOCK, pos);
         boolean inTorchLight = blockLight >= TORCH_LIGHT_THRESHOLD;
 
-        boolean inLight = (isDaytime && (inSunlight || inTorchLight)) || (!isDaytime && inTorchLight);
+        boolean inLight = (isDaytime && (inSunlight || inTorchLight)) || (isNight && inTorchLight);
 
         if (inLight) {
-            // Store original speed the first time we apply in-light speed, then set to 0.7
-            storedSpeedWhenInLight.putIfAbsent(entity.getUUID(), moveAttr.getBaseValue());
+            // If we had applied a night speed boost, restore the original before applying light slowdown
+            Double originalNight = storedSpeedAtNight.remove(entity.getUUID());
+            double baseBeforeLight = originalNight != null ? originalNight : moveAttr.getBaseValue();
+
+            // Store original speed the first time we apply in-light speed, then set to SPEED_IN_LIGHT
+            storedSpeedWhenInLight.putIfAbsent(entity.getUUID(), baseBeforeLight);
             moveAttr.setBaseValue(SPEED_IN_LIGHT);
         } else {
-            // Not in light: restore original speed and stop tracking
-            Double original = storedSpeedWhenInLight.remove(entity.getUUID());
-            if (original != null) {
-                moveAttr.setBaseValue(original);
+            // Not in light: if we previously slowed them in light, restore that original speed first
+            Double originalInLight = storedSpeedWhenInLight.remove(entity.getUUID());
+            if (originalInLight != null) {
+                moveAttr.setBaseValue(originalInLight);
+            }
+
+            double currentBase = moveAttr.getBaseValue();
+
+            if (isNight) {
+                // At night (and not in light): boost speed, remembering original so we can restore later
+                storedSpeedAtNight.putIfAbsent(entity.getUUID(), currentBase);
+                moveAttr.setBaseValue(SPEED_AT_NIGHT);
+            } else {
+                // Daytime and not in light: if we had a night boost stored, restore it
+                Double originalNight = storedSpeedAtNight.remove(entity.getUUID());
+                if (originalNight != null) {
+                    moveAttr.setBaseValue(originalNight);
+                }
             }
         }
 
@@ -95,5 +118,6 @@ public class ChangedEntityDaytimeSlownessEvents {
     @SubscribeEvent
     public static void onLivingDeath(LivingDeathEvent event) {
         storedSpeedWhenInLight.remove(event.getEntity().getUUID());
+        storedSpeedAtNight.remove(event.getEntity().getUUID());
     }
 }
