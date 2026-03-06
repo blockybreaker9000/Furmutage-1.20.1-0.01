@@ -8,10 +8,10 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-/**
- * Prevents the TSC Emergency pickaxe from breaking diamond ore.
- * It can mine iron but not diamond.
- */
+    /**
+     * Prevents the TSC Emergency pickaxe from breaking gold/diamond ores (and diamond blocks).
+     * It can mine iron but not gold or diamond.
+     */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class TscEmergencyPickaxeEvents {
 
@@ -26,7 +26,9 @@ public class TscEmergencyPickaxeEvents {
         }
 
         BlockState state = event.getState();
-        if (state.is(Blocks.DIAMOND_ORE) || state.is(Blocks.DEEPSLATE_DIAMOND_ORE)) {
+        if (state.is(Blocks.DIAMOND_ORE) || state.is(Blocks.DEEPSLATE_DIAMOND_ORE)
+                || state.is(Blocks.DIAMOND_BLOCK)
+                || state.is(Blocks.GOLD_ORE) || state.is(Blocks.DEEPSLATE_GOLD_ORE) || state.is(Blocks.NETHER_GOLD_ORE)) {
             event.setCanceled(true);
         }
     }

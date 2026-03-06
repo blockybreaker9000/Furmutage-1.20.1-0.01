@@ -26,16 +26,28 @@ public class GoldIronPickaxeRestrictionEvents {
         return stack.is(Items.IRON_PICKAXE);
     }
 
+    private static boolean isStonePickaxe(ItemStack stack) {
+        return stack.is(Items.STONE_PICKAXE);
+    }
+
     private static boolean isRoselightGlassPickaxe(ItemStack stack) {
         return stack.is(ModItems.ROSELIGHT_GLASS_PICKAXE.get());
     }
 
-    private static boolean isDiamondBreakable(BlockState state) {
-        return state.is(Blocks.DIAMOND_ORE) || state.is(Blocks.DEEPSLATE_DIAMOND_ORE) || state.is(Blocks.DIAMOND_BLOCK);
+    private static boolean isDiamondOre(BlockState state) {
+        return state.is(Blocks.DIAMOND_ORE) || state.is(Blocks.DEEPSLATE_DIAMOND_ORE);
+    }
+
+    private static boolean isDiamondBlock(BlockState state) {
+        return state.is(Blocks.DIAMOND_BLOCK);
     }
 
     private static boolean isGoldOre(BlockState state) {
         return state.is(Blocks.GOLD_ORE) || state.is(Blocks.DEEPSLATE_GOLD_ORE) || state.is(Blocks.NETHER_GOLD_ORE);
+    }
+
+    private static boolean isIronOre(BlockState state) {
+        return state.is(Blocks.IRON_ORE) || state.is(Blocks.DEEPSLATE_IRON_ORE);
     }
 
     @SubscribeEvent
@@ -47,21 +59,33 @@ public class GoldIronPickaxeRestrictionEvents {
         ItemStack tool = event.getPlayer().getMainHandItem();
         BlockState state = event.getState();
 
+        // Stone pickaxe: cannot break iron ore (forces progression to iron pick).
+        if (isStonePickaxe(tool) && isIronOre(state)) {
+            event.setCanceled(true);
+            return;
+        }
+
         // Gold pickaxe: can only break diamond ore/block and gold ore
         if (isGoldPickaxe(tool)) {
-            if (!isDiamondBreakable(state) && !isGoldOre(state)) {
+            if (!isDiamondOre(state) && !isDiamondBlock(state) && !isGoldOre(state)) {
                 event.setCanceled(true);
             }
             return;
         }
 
-        // Gold ore: iron pickaxe cannot break it (diamond/netherite can)
+        // Gold ore: iron pickaxe cannot break it (diamond/gold/roselight glass can)
         if (isGoldOre(state) && isIronPickaxe(tool)) {
             event.setCanceled(true);
         }
 
-        // Iron or roselight glass pickaxe: cannot break diamond ore/block
-        if ((isIronPickaxe(tool) || isRoselightGlassPickaxe(tool)) && isDiamondBreakable(state)) {
+        // Diamond ore: iron pickaxe and roselight glass cannot break it; gold can.
+        if (isDiamondOre(state) && (isIronPickaxe(tool) || isRoselightGlassPickaxe(tool))) {
+            event.setCanceled(true);
+            return;
+        }
+
+        // Diamond block: iron or roselight glass pickaxe cannot break it; gold can.
+        if (isDiamondBlock(state) && (isIronPickaxe(tool) || isRoselightGlassPickaxe(tool))) {
             event.setCanceled(true);
         }
     }
