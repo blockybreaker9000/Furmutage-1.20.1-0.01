@@ -41,6 +41,12 @@ public class LatexDamageImmunityEvents {
         DamageSource source = event.getSource();
         if (source == null) return;
 
+        // Never interfere with Changed's own damage to players (including transfur kill logic).
+        // If the damage type's namespace is "changed" and the target is a player, let Changed handle it.
+        if (entity instanceof Player && isChangedDamage(source)) {
+            return;
+        }
+
         // Changed latex_immune_to tag: all latex/transfurred take no damage from those types
         if (isLatexEntity(entity) && isDamageInLatexImmuneTag(source, entity)) {
             event.setCanceled(true);
@@ -98,9 +104,21 @@ public class LatexDamageImmunityEvents {
         return tag.contains(source.typeHolder());
     }
 
+    private static boolean isChangedDamage(DamageSource source) {
+        return source.typeHolder().unwrapKey()
+                .map(ResourceKey::location)
+                .map(ResourceLocation::getNamespace)
+                .filter(ns -> "changed".equals(ns))
+                .isPresent();
+    }
+
     private static boolean isLatexEntity(LivingEntity entity) {
-        if (entity instanceof Player player) {
-            return TransfurTeamHelper.getPlayerTransfurTeam(player) != TransfurTeamHelper.TEAM_NONE;
+        // IMPORTANT: Do NOT treat players as "latex entities" for the latex_immune_to tag.
+        // Changed already handles player transfur and its own kill logic; if we treat
+        // players as latex here, we can accidentally cancel the damage that kills them
+        // at the end of a transfur. Limit this check to non-player latex mobs only.
+        if (entity instanceof Player) {
+            return false;
         }
         String type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString();
         return LatexTeamConfig.isEntityInTeam(type);

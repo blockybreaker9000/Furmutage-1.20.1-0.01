@@ -260,10 +260,22 @@ public class LatexTeamEvents {
     @SubscribeEvent
     public static void onLivingAttack(LivingAttackEvent event) {
         LivingEntity attackedEntity = event.getEntity();
-        
+        DamageSource source = event.getSource();
+
         // Only process on server side
         if (attackedEntity == null || attackedEntity.level().isClientSide) {
             return;
+        }
+
+        // Never interfere with Changed's own damage to players (including transfur kill logic).
+        if (attackedEntity instanceof Player && source != null) {
+            try {
+                var key = source.typeHolder().unwrapKey().orElse(null);
+                if (key != null && "changed".equals(key.location().getNamespace())) {
+                    return;
+                }
+            } catch (Exception ignored) {
+            }
         }
         
         // Process when attacked is a team mob or a player (transfur team used for players)
@@ -274,7 +286,7 @@ public class LatexTeamEvents {
         }
         
         // Get the attacker (resolve projectile owner so player bow/trident/etc. counts as player attacking)
-        LivingEntity attacker = resolveAttacker(event.getSource());
+        LivingEntity attacker = resolveAttacker(source);
         
         if (attacker == null || !attacker.isAlive() || attacker == attackedEntity) {
             return;

@@ -22,6 +22,18 @@ public class ChangedEntitySuffocationEvents {
         if (entity == null || entity.level().isClientSide) {
             return;
         }
+
+        // Never touch Changed's own damage to players (including any special transfur logic).
+        if (entity instanceof net.minecraft.world.entity.player.Player && source != null) {
+            try {
+                net.minecraft.resources.ResourceKey<net.minecraft.world.damagesource.DamageType> key =
+                        source.typeHolder().unwrapKey().orElse(null);
+                if (key != null && "changed".equals(key.location().getNamespace())) {
+                    return;
+                }
+            } catch (Exception ignored) {
+            }
+        }
         
         // Check if this is suffocation damage
         if (!isSuffocationDamage(source, entity)) {

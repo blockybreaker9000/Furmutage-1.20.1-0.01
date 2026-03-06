@@ -1,11 +1,11 @@
 package net.jerika.furmutage.config;
 
+import net.ltxprogrammer.changed.entity.latex.LatexType;
+import net.ltxprogrammer.changed.entity.variant.TransfurVariant;
+import net.ltxprogrammer.changed.init.ChangedLatexTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.ltxprogrammer.changed.entity.variant.TransfurVariant;
-import net.ltxprogrammer.changed.entity.latex.LatexType;
-import net.ltxprogrammer.changed.init.ChangedLatexTypes;
 
 import java.util.Set;
 
