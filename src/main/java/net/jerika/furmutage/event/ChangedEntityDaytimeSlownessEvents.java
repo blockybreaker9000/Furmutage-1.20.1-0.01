@@ -29,7 +29,7 @@ public class ChangedEntityDaytimeSlownessEvents {
     private static final int TORCH_LIGHT_THRESHOLD = 10;
     private static final int CHECK_INTERVAL = 60;
     /** Speed applied when Changed mob is in light (instead of slowness potion). */
-    private static final double SPEED_IN_LIGHT = 0.7D;
+    private static final double SPEED_IN_LIGHT = 0.6D;
 
     /** Stores original MOVEMENT_SPEED base value per entity so we can restore when they leave light. */
     private static final Map<UUID, Double> storedSpeedWhenInLight = new ConcurrentHashMap<>();
@@ -86,8 +86,8 @@ public class ChangedEntityDaytimeSlownessEvents {
         if (isDaytime) {
             // Daytime in light is handled above (speed 0.7). No potion.
         } else {
-            // Nighttime: keep Resistance I and Jump Boost I
-            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300, 0, false, false, false));
+            // Nighttime: keep Resistance I and Jump Boost II
+            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300, 1, false, false, false));
             entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 300, 0, false, false, false));
         }
     }
