@@ -2,7 +2,6 @@ package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.furmutage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,22 +48,30 @@ public class ChangedEntityDaytimeSlownessEvents {
         long dayTime = entity.level().getLevelData().getDayTime() % 24000;
         boolean isDaytime = dayTime < NIGHT_START || dayTime >= NIGHT_END;
 
-        if (isDaytime) {
-            BlockPos pos = entity.blockPosition();
-            // Sunlight: direct sky access.
-            boolean inSunlight = entity.level().canSeeSky(pos.above());
-            // Torch/cave light: strong block light near the entity.
-            int blockLight = entity.level().getBrightness(LightLayer.BLOCK, pos);
-            boolean inTorchLight = blockLight >= TORCH_LIGHT_THRESHOLD;
+        BlockPos pos = entity.blockPosition();
+        // Sunlight: direct sky access (used for daytime only).
+        boolean inSunlight = entity.level().canSeeSky(pos.above());
+        // Torch/cave light: strong block light near the entity.
+        int blockLight = entity.level().getBrightness(LightLayer.BLOCK, pos);
+        boolean inTorchLight = blockLight >= TORCH_LIGHT_THRESHOLD;
 
+        if (isDaytime) {
             // Only slow Changed entities during the day when they are actually in bright light
             // (sunlight on the surface or strong torch light in caves).
             if (inSunlight || inTorchLight) {
-                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 2, false, false, false));
+                // Slowness I (amplifier 0)
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 300, 0, false, false, false));
             }
         } else {
-            // Nighttime: give Changed entities Speed I; torch light has no slowing effect.
-            entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 80, 1, false, false, false));
+            // Nighttime: give Changed entities Resistance I and Jump Boost I
+            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 300, 0, false, false, false));
+            entity.addEffect(new MobEffectInstance(MobEffects.JUMP, 300, 0, false, false, false));
+
+            // Torches still bother them at night, but with a weaker slowdown:
+            // use a shorter duration so the effective impact is about half of daytime.
+            if (inTorchLight) {
+                entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 150, 0, false, false, false));
+            }
         }
     }
 }

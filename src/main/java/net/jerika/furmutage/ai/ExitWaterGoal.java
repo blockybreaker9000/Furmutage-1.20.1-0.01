@@ -2,6 +2,7 @@ package net.jerika.furmutage.ai;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
@@ -11,16 +12,29 @@ import java.util.EnumSet;
 /**
  * Goal that helps entities pathfind out of water by finding the nearest land block
  * and moving towards it when the entity is in water.
+ * If constructed with useEntitySpeed=true, uses the entity's MOVEMENT_SPEED attribute.
  */
 public class ExitWaterGoal extends Goal {
     private final PathfinderMob mob;
     private final double speedModifier;
+    private final boolean useEntitySpeed;
     private BlockPos targetPos;
     private int searchCooldown;
 
+    /** Use a fixed speed when pathing out of water. */
     public ExitWaterGoal(PathfinderMob mob, double speedModifier) {
         this.mob = mob;
         this.speedModifier = speedModifier;
+        this.useEntitySpeed = false;
+        this.setFlags(EnumSet.of(Goal.Flag.MOVE));
+        this.searchCooldown = 0;
+    }
+
+    /** Use the entity's MOVEMENT_SPEED attribute so speed modifiers affect this goal. */
+    public ExitWaterGoal(PathfinderMob mob, boolean useEntitySpeed) {
+        this.mob = mob;
+        this.speedModifier = 0.0;
+        this.useEntitySpeed = true;
         this.setFlags(EnumSet.of(Goal.Flag.MOVE));
         this.searchCooldown = 0;
     }
@@ -69,7 +83,8 @@ public class ExitWaterGoal extends Goal {
     @Override
     public void start() {
         if (this.targetPos != null) {
-            this.mob.getNavigation().moveTo(this.targetPos.getX() + 0.5D, this.targetPos.getY(), this.targetPos.getZ() + 0.5D, this.speedModifier);
+            double speed = useEntitySpeed ? this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED) : this.speedModifier;
+            this.mob.getNavigation().moveTo(this.targetPos.getX() + 0.5D, this.targetPos.getY(), this.targetPos.getZ() + 0.5D, speed);
         }
     }
 
@@ -80,7 +95,8 @@ public class ExitWaterGoal extends Goal {
             BlockPos newTarget = findNearestLand();
             if (newTarget != null) {
                 this.targetPos = newTarget;
-                this.mob.getNavigation().moveTo(this.targetPos.getX() + 0.5D, this.targetPos.getY(), this.targetPos.getZ() + 0.5D, this.speedModifier);
+                double speed = useEntitySpeed ? this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED) : this.speedModifier;
+                this.mob.getNavigation().moveTo(this.targetPos.getX() + 0.5D, this.targetPos.getY(), this.targetPos.getZ() + 0.5D, speed);
             }
         }
     }

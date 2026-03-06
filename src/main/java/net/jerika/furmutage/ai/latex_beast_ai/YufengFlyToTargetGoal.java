@@ -55,9 +55,15 @@ public class YufengFlyToTargetGoal extends Goal {
             return false;
         }
 
-        // Stop flying once we're sufficiently above the target
+        // Stop flying once we're sufficiently above or close to the target
         double targetY = target.getY();
         double mobY = mob.getY();
+        double distanceSq = mob.distanceToSqr(target);
+        
+        // If we're close to the target horizontally, stop flying so we can land and melee
+        if (distanceSq <= 4.0D) { // within 2 blocks
+            return false;
+        }
         
         // Continue flying until we reach the desired height above target
         return mobY < targetY + FLY_HEIGHT;

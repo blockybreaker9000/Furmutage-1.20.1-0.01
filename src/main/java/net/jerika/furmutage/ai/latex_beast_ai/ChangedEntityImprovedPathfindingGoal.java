@@ -29,8 +29,11 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private static final double MAX_OBSTACLE_HEIGHT = 6.0D; // Can jump over obstacles up to 6 blocks high
     private static final double MIN_TARGET_HEIGHT_DIFF = 2.0D; // Minimum height difference to trigger jump (2 blocks)
     private static final double MAX_JUMP_HEIGHT = 6.0D; // Maximum jump height (6 blocks)
+    /** Only jump towards elevated target when within this horizontal distance (squared). Stops long-range high jumps. */
+    private static final double MAX_JUMP_TOWARDS_TARGET_DISTANCE_SQR = 25.0D; // 5 blocks
     private int jumpCooldown = 0;
-    private static final int JUMP_COOLDOWN = 15; // Cooldown of 0.75 seconds (15 ticks)
+    private static final int JUMP_COOLDOWN_MIN = 500;  // 25 seconds
+    private static final int JUMP_COOLDOWN_MAX = 2000; // 100 seconds - random range makes jumps feel less predictable
     private boolean isJumping = false;
     private boolean isCrawling = false;
     private int crawlCheckCooldown = 0;
@@ -59,7 +62,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
 
     @Override
     public void start() {
-        jumpCooldown = 0;
+        // Do NOT reset jumpCooldown here - otherwise every time the goal restarts (e.g. target
+        // re-acquired or navigation toggles) the entity can jump again and spam high jumps
         isJumping = false;
         isCrawling = false;
         crawlCheckCooldown = 0;
@@ -189,10 +193,10 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         // Check for obstacles in the way - allow jumping even when crawling
         if (jumpCooldown <= 0 && this.mob.onGround() && distanceSqr > 6.0D) {
-            // Check if target is higher than 2 blocks - prioritize jumping towards elevated targets
+            // Check if target is higher than 2 blocks - only when close (within 5 blocks) to avoid long-range high jumps
             double heightDiff = this.target.getY() - this.mob.getY();
-            if (heightDiff > MIN_TARGET_HEIGHT_DIFF && heightDiff <= MAX_JUMP_HEIGHT) {
-                // Target is between 2 and 5 blocks higher - jump towards it (works while crawling)
+            if (heightDiff > MIN_TARGET_HEIGHT_DIFF && heightDiff <= MAX_JUMP_HEIGHT && distanceSqr <= MAX_JUMP_TOWARDS_TARGET_DISTANCE_SQR) {
+                // Target is between 2 and 5 blocks higher and we're close - jump towards it (works while crawling)
                 performJumpTowardsTarget();
             }
             // Check for 1-block gap one block above ground (crawl then jump through opening)
@@ -554,90 +558,26 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(jumpVec));
         this.mob.setJumping(true);
-        jumpCooldown = JUMP_COOLDOWN;
+        jumpCooldown = JUMP_COOLDOWN_MIN + this.mob.getRandom().nextInt(JUMP_COOLDOWN_MAX - JUMP_COOLDOWN_MIN + 1);
         isJumping = true;
     }
 
     private void performObstacleJump() {
         Vec3 lookVec = this.mob.getLookAngle();
-        
-        // Calculate wall height to adjust jump strength
-        BlockPos mobPos = this.mob.blockPosition();
-        BlockPos checkPos = mobPos.offset(
-            (int) Math.signum(lookVec.x),
-            0,
-            (int) Math.signum(lookVec.z)
-        );
-        BlockState frontBlock = this.mob.level().getBlockState(checkPos);
-        boolean isFence = isFenceBlock(frontBlock);
-        
-        // Measure wall height
-        double wallHeight = 1.0D; // Default to 1 block
-        if (!isFence) {
-            BlockPos currentCheck = checkPos;
-            double mobY = this.mob.getY();
-            int blocksHigh = 0;
-            
-            for (int y = 0; y <= 6; y++) {
-                BlockPos checkBlockPos = currentCheck.atY((int)Math.floor(mobY) + y);
-                BlockState blockState = this.mob.level().getBlockState(checkBlockPos);
-                boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
-                
-                if (isSolid) {
-                    blocksHigh++;
-                } else if (blocksHigh > 0) {
-                    wallHeight = blocksHigh;
-                    break;
-                }
-            }
-            
-            // Also check from ground level
-            BlockPos groundCheck = checkPos.below();
-            BlockState groundBlock = this.mob.level().getBlockState(groundCheck);
-            boolean hasGround = !groundBlock.isAir() && !groundBlock.getCollisionShape(this.mob.level(), groundCheck).isEmpty();
-            
-            if (hasGround) {
-                blocksHigh = 0;
-                for (int y = 0; y <= 6; y++) {
-                    BlockPos checkBlockPos = groundCheck.above(y + 1);
-                    BlockState blockState = this.mob.level().getBlockState(checkBlockPos);
-                    boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
-                    
-                    if (isSolid) {
-                        blocksHigh++;
-                    } else if (blocksHigh > 0) {
-                        if (blocksHigh > wallHeight) {
-                            wallHeight = blocksHigh;
-                        }
-                        break;
-                    }
-                }
-            }
-            
-            // Clamp wall height to valid range
-            wallHeight = Math.max(MIN_WALL_HEIGHT, Math.min(wallHeight, MAX_OBSTACLE_HEIGHT));
-        }
-        
-        // Calculate jump parameters based on wall height
-        // For 2 blocks: base jump, for 5 blocks: maximum jump
-        // Jump height scales with higher base and scaling for better wall clearance
-        // Increased jump heights: 2 blocks = 0.7, 3 blocks = 1.0, 4 blocks = 1.3, 5 blocks = 1.6
-        double jumpHeight = isFence ? 0.6D : 0.7D + (wallHeight - MIN_WALL_HEIGHT) * 0.3D;
-        jumpHeight = Math.min(jumpHeight, 1.6D); // Increased cap for 5-block walls
-        
-        // Forward momentum also scales with wall height (higher walls need more momentum)
-        double forwardMomentum = isFence ? 0.5D : 0.45D + (wallHeight - MIN_WALL_HEIGHT) * 0.04D;
-        forwardMomentum = Math.min(forwardMomentum, 0.6D); // Slightly increased forward momentum
-        
+
+        // Use a fixed jump height for all obstacles - no increased height for tall walls
+        double jumpHeight = 0.55D;
+        double forwardMomentum = 0.4D;
+
         Vec3 jumpVec = new Vec3(
             lookVec.x * forwardMomentum,
             jumpHeight,
             lookVec.z * forwardMomentum
         );
-        
+
         this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(jumpVec));
         this.mob.setJumping(true);
-        jumpCooldown = JUMP_COOLDOWN;
+        jumpCooldown = JUMP_COOLDOWN_MIN + this.mob.getRandom().nextInt(JUMP_COOLDOWN_MAX - JUMP_COOLDOWN_MIN + 1);
         isJumping = true;
     }
 
@@ -679,7 +619,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(jumpVec));
         this.mob.setJumping(true);
-        jumpCooldown = JUMP_COOLDOWN;
+        jumpCooldown = JUMP_COOLDOWN_MIN + this.mob.getRandom().nextInt(JUMP_COOLDOWN_MAX - JUMP_COOLDOWN_MIN + 1);
         isJumping = true;
     }
 
@@ -696,7 +636,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(jumpVec));
         this.mob.setJumping(true);
-        jumpCooldown = JUMP_COOLDOWN;
+        jumpCooldown = JUMP_COOLDOWN_MIN + this.mob.getRandom().nextInt(JUMP_COOLDOWN_MAX - JUMP_COOLDOWN_MIN + 1);
         isJumping = true;
     }
 
@@ -748,7 +688,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(jumpVec));
         this.mob.setJumping(true);
-        jumpCooldown = JUMP_COOLDOWN;
+        jumpCooldown = JUMP_COOLDOWN_MIN + this.mob.getRandom().nextInt(JUMP_COOLDOWN_MAX - JUMP_COOLDOWN_MIN + 1);
         isJumping = true;
     }
 
