@@ -1,5 +1,6 @@
 package net.jerika.furmutage.mixins;
 
+import net.jerika.furmutage.config.ModCommonConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -37,8 +38,8 @@ public class EntitySensingXRayMixin {
         // Check if this is a Changed entity (excluding roomba)
         LivingEntity livingEntity = this.mob;
         
-        // Check if entity should have x-ray vision
-        if (shouldHaveXRayVision(livingEntity)) {
+        // Check if entity should have x-ray vision (config must allow it)
+        if (ModCommonConfig.ENABLE_CHANGED_SEE_THROUGH_WALLS.get() && shouldHaveXRayVision(livingEntity)) {
             // Use custom x-ray vision check
             boolean canSee = hasXRayVision(livingEntity, target, XRAY_BLOCK_LIMIT);
             if (canSee) {

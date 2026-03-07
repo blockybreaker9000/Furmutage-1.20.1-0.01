@@ -121,6 +121,16 @@ public class ChangedStalkerSneakEvents {
             return;
         }
 
+        // Stalker pure_white_latex_wolf: do not attack players unless provoked (hurt by them)
+        ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        if (typeKey != null && "changed:pure_white_latex_wolf".equals(typeKey.toString())
+                && mob.getPersistentData().getBoolean("furmutage_stalker_wolf")) {
+            LivingEntity target = mob.getTarget();
+            if (target instanceof Player && mob.getLastHurtByMob() != target) {
+                mob.setTarget(null);
+            }
+        }
+
         AttributeInstance moveAttr = entity.getAttribute(Attributes.MOVEMENT_SPEED);
         if (moveAttr == null) {
             return;

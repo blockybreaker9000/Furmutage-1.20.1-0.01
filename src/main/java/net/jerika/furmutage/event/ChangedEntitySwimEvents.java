@@ -1,6 +1,7 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
+import net.jerika.furmutage.ai.scary.PureWhiteLatexWolfStalkPlayerGoal;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -67,6 +68,9 @@ public class ChangedEntitySwimEvents {
             "changed:roomba",
             "changed:exoskeleton"
     );
+
+    /** Rare chance (8%) for pure_white_latex_wolf to become a stalker that watches but does not attack unless provoked. */
+    private static final double PURE_WHITE_LATEX_WOLF_STALKER_CHANCE = 0.08D;
     
     /** Clear static entity sets when a level unloads to avoid infinite "Saving world data" hang. */
     @SubscribeEvent
@@ -107,11 +111,16 @@ public class ChangedEntitySwimEvents {
             if (entityId.startsWith("changed:") && !EXCLUDED_ENTITIES.contains(entityId)) {
                 fastSwimEntities.add(livingEntity);
                 
-                // Add improved pathfinding goal for Changed entities
                 if (livingEntity instanceof PathfinderMob pathfinderMob && !improvedPathfindingEntities.contains(pathfinderMob)) {
-                    // Add improved pathfinding goal with high priority (before most other goals)
                     pathfinderMob.goalSelector.addGoal(2, new ChangedEntityImprovedPathfindingGoal(pathfinderMob));
                     improvedPathfindingEntities.add(pathfinderMob);
+                }
+
+                // Rare chance: pure_white_latex_wolf gets stalking behavior (sneak, watch player, no attack unless provoked)
+                if ("changed:pure_white_latex_wolf".equals(entityId) && livingEntity instanceof PathfinderMob wolfMob
+                        && wolfMob.getRandom().nextDouble() < PURE_WHITE_LATEX_WOLF_STALKER_CHANCE) {
+                    wolfMob.getPersistentData().putBoolean("furmutage_stalker_wolf", true);
+                    wolfMob.goalSelector.addGoal(1, new PureWhiteLatexWolfStalkPlayerGoal(wolfMob));
                 }
             }
             
@@ -152,6 +161,6 @@ public class ChangedEntitySwimEvents {
                 entity.addEffect(new MobEffectInstance(MobEffects.DOLPHINS_GRACE, DOLPHINS_GRACE_WATER_TICKS, 4, false, true, true));
             }
         }
-        }
     }
+}
 

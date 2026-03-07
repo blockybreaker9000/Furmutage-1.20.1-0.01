@@ -42,7 +42,14 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private int crawlPrepTime = 0; // Time spent preparing to jump (crawling first)
     private static final int CRAWL_PREP_TIME = 5; // Crawl for 5 ticks before jumping
     private int crawlDuration = 0; // How long the entity has been crawling
-    private static final int MIN_CRAWL_DURATION = 30; // Must crawl for 30 ticks (1.5 seconds)
+    private static final int MIN_CRAWL_DURATION = 10; // Stay in crawl for ~0.5 seconds (10 ticks) minimum
+    /** After standing, don't re-enter crawl for this many ticks (~5 seconds) to avoid spam. */
+    private static final int CRAWL_REENTER_COOLDOWN_TICKS = 100;
+    /** Crawl speed multiplier for Changed/Furmutage entities (movement speed * this when crawling). */
+    private static final double CRAWL_SPEED_MULTIPLIER = 0.5;
+
+    /** Cooldown after standing before we can enter crawl again (ticks). */
+    private int crawlReenterCooldown = 0;
 
     public ChangedEntityImprovedPathfindingGoal(PathfinderMob mob) {
         this.mob = mob;
@@ -67,6 +74,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         isJumping = false;
         isCrawling = false;
         crawlCheckCooldown = 0;
+        crawlReenterCooldown = 0;
         needsCrawlJump = false;
         crawlPrepTime = 0;
         crawlDuration = 0;
@@ -79,8 +87,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         needsCrawlJump = false;
         crawlPrepTime = 0;
         crawlDuration = 0;
-        // Reset crawling pose when stopping
-        if (isCrawling) {
+        // Only stand when not in a 1-2 block hole (crawl space)
+        if (isCrawling && !isInCrawlSpace()) {
             this.mob.setPose(Pose.STANDING);
             isCrawling = false;
         }
@@ -96,18 +104,22 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         if (isCrawling && crawlDuration > 0) {
             crawlDuration--;
         }
+        if (crawlReenterCooldown > 0) {
+            crawlReenterCooldown--;
+        }
         
         // Reset jumping state when on ground
         if (this.mob.onGround() && isJumping && jumpCooldown <= 5) {
             this.mob.setJumping(false);
             isJumping = false;
             // Exit crawl mode after landing if we were crawling for a jump
-            // But only if we've been crawling for the minimum duration or we're in a crawl space
+            // Only stand when not in a 1-2 block hole (and after minimum 0.5 sec crawl)
             if (isCrawling && !needsCrawlJump) {
-                if (crawlDuration <= 0 || isInCrawlSpace()) {
+                if (crawlDuration <= 0 && !isInCrawlSpace()) {
                     this.mob.setPose(Pose.STANDING);
                     isCrawling = false;
                     crawlDuration = 0;
+                    crawlReenterCooldown = CRAWL_REENTER_COOLDOWN_TICKS;
                 }
             }
         }
@@ -134,20 +146,18 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         }
         
         // Always check for 1-block gaps that require crawling - check before jumping
-        // Crouch 100% of the time when there's any block obstruction between entity and target
         if (crawlCheckCooldown <= 0 && this.mob.onGround() && !isJumping) {
-            if (needsCrawling() || isBlockBetweenEntityAndTarget()) {
-                // Always crouch when there's any block obstruction
+            // Only enter crawl when needed and not on re-enter cooldown (or already crawling)
+            if ((needsCrawling() || isBlockBetweenEntityAndTarget()) && (isCrawling || crawlReenterCooldown <= 0)) {
+                // Enter or continue crawl when there's a low ceiling or block in the way
                 performCrawling();
-            } else if (isCrawling && !needsCrawlJump && !isBlockBetweenEntityAndTarget()) {
-                // Only stop crawling if:
-                // 1. We've been crawling for the minimum duration (30 ticks) OR
-                // 2. We're in a 1x1 block gap (crawl space)
-                if (crawlDuration <= 0 || isInCrawlSpace()) {
-                    this.mob.setPose(Pose.STANDING);
-                    isCrawling = false;
-                    crawlDuration = 0;
-                }
+            }
+            // Always consider standing when crawling: stand only when NOT in a 1-2 block hole (and after min 0.5 sec)
+            if (isCrawling && !needsCrawlJump && crawlDuration <= 0 && !isInCrawlSpace()) {
+                this.mob.setPose(Pose.STANDING);
+                isCrawling = false;
+                crawlDuration = 0;
+                crawlReenterCooldown = CRAWL_REENTER_COOLDOWN_TICKS;
             }
             crawlCheckCooldown = CRAWL_CHECK_COOLDOWN;
         } else if (crawlCheckCooldown > 0) {
@@ -182,7 +192,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             }
             // Continue moving towards the gap while crawling
             double baseSpeed = this.mob.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
-            double crawlSpeed = baseSpeed * 0.7;
+            double crawlSpeed = baseSpeed * CRAWL_SPEED_MULTIPLIER;
             Path path = this.mob.getNavigation().createPath(this.target, 0);
             if (path != null && path.canReach()) {
                 this.mob.getNavigation().moveTo(path, crawlSpeed);
@@ -851,18 +861,11 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             (int) Math.signum(lookVec.z)
         );
         
-        // Check if there's a solid block at head height (1 block above entity's feet)
-        // This means only 1 block of vertical space available
-        BlockPos headPos = aheadPos.above(1);
-        BlockState headBlock = this.mob.level().getBlockState(headPos);
-        boolean hasBlockAbove = !headBlock.isAir() && !headBlock.getCollisionShape(this.mob.level(), headPos).isEmpty();
+        // Low ceiling = 1 or 2 block space (solid at y+1 or y+2) - need to crawl
+        boolean hasBlockAbove = hasLowCeiling(aheadPos);
+        boolean currentlyHasBlockAbove = hasLowCeiling(mobPos);
         
-        // Also check the current position to see if we're already in a crawl space
-        BlockPos currentHeadPos = mobPos.above(1);
-        BlockState currentHeadBlock = this.mob.level().getBlockState(currentHeadPos);
-        boolean currentlyHasBlockAbove = !currentHeadBlock.isAir() && !currentHeadBlock.getCollisionShape(this.mob.level(), currentHeadPos).isEmpty();
-        
-        // Check if the space ahead is passable (ground exists) but has a block above (1-block gap)
+        // Check if the space ahead is passable (ground exists) but has a low ceiling (1- or 2-block gap)
         BlockPos groundPos = aheadPos.below();
         BlockState groundBlock = this.mob.level().getBlockState(groundPos);
         boolean hasGround = !groundBlock.isAir() && !groundBlock.getCollisionShape(this.mob.level(), groundPos).isEmpty();
@@ -872,7 +875,7 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         boolean spaceIsPassable = spaceBlock.isAir() || spaceBlock.getCollisionShape(this.mob.level(), aheadPos).isEmpty();
         
         // We need to crawl if:
-        // 1. There's a block above at head height (1-block gap) OR we're already in a crawl space
+        // 1. There's a low ceiling ahead (1- or 2-block space) OR we're already in a crawl space
         // 2. The space ahead is passable (air at entity level)
         // 3. There's ground below
         // 4. The target is in that direction (or we're already crawling)
@@ -893,13 +896,24 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     }
 
     /**
-     * Check if the entity is currently in a 1-block tall space (crawl space aka the crawl zone)
+     * True if there is a low ceiling at this position: solid block at y+1 or y+2 (1- or 2-block-tall space).
+     */
+    private boolean hasLowCeiling(BlockPos basePos) {
+        BlockPos oneAbove = basePos.above(1);
+        BlockState one = this.mob.level().getBlockState(oneAbove);
+        if (!one.isAir() && !one.getCollisionShape(this.mob.level(), oneAbove).isEmpty()) {
+            return true;
+        }
+        BlockPos twoAbove = basePos.above(2);
+        BlockState two = this.mob.level().getBlockState(twoAbove);
+        return !two.isAir() && !two.getCollisionShape(this.mob.level(), twoAbove).isEmpty();
+    }
+
+    /**
+     * Check if the entity is currently in a 1- or 2-block tall space (crawl space)
      */
     private boolean isInCrawlSpace() {
-        BlockPos mobPos = this.mob.blockPosition();
-        BlockPos headPos = mobPos.above(1);
-        BlockState headBlock = this.mob.level().getBlockState(headPos);
-        return !headBlock.isAir() && !headBlock.getCollisionShape(this.mob.level(), headPos).isEmpty();
+        return hasLowCeiling(this.mob.blockPosition());
     }
 
     /**
@@ -912,12 +926,12 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         // If we're just entering crawl mode, set the duration timer
         if (!isCrawling) {
             isCrawling = true;
-            crawlDuration = MIN_CRAWL_DURATION; // Must crawl for 30 ticks
+            crawlDuration = MIN_CRAWL_DURATION; // Stay in crawl for ~0.5 seconds
         }
         
         // Move towards the target while crawling
         double baseSpeed = this.mob.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED);
-        double crawlSpeed = baseSpeed * 0.7; // Slightly slower when crawling
+        double crawlSpeed = baseSpeed * CRAWL_SPEED_MULTIPLIER;
         
         // Continue pathfinding towards target
         Path path = this.mob.getNavigation().createPath(this.target, 0);
@@ -968,16 +982,11 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
                 (int) Math.round(direction.z * i)
             );
             
-            // Check if there's a solid block at head height (1 block above ground)
-            BlockPos headPos = checkPos.above(1);
-            BlockState headBlock = this.mob.level().getBlockState(headPos);
-            boolean hasBlockAtHeadHeight = !headBlock.isAir() && !headBlock.getCollisionShape(this.mob.level(), headPos).isEmpty();
-            
-            // Check if there's a solid block at entity level
+            // Low ceiling (1- or 2-block space) or block at entity level = need to crawl
+            boolean hasBlockAtHeadHeight = hasLowCeiling(checkPos);
             BlockState levelBlock = this.mob.level().getBlockState(checkPos);
             boolean hasBlockAtLevel = !levelBlock.isAir() && !levelBlock.getCollisionShape(this.mob.level(), checkPos).isEmpty();
             
-            // If there's a block at head height OR entity level, we need to crouch
             if (hasBlockAtHeadHeight || hasBlockAtLevel) {
                 return true;
             }
@@ -991,15 +1000,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             (int) Math.signum(lookVec.z)
         );
         
-        // Check if there's a block at head height ahead
-        BlockPos aheadHeadPos = aheadPos.above(1);
-        BlockState aheadHeadBlock = this.mob.level().getBlockState(aheadHeadPos);
-        boolean hasBlockAhead = !aheadHeadBlock.isAir() && !aheadHeadBlock.getCollisionShape(this.mob.level(), aheadHeadPos).isEmpty();
-        
-        // Also check current position for blocks above
-        BlockPos currentHeadPos = mobPos.above(1);
-        BlockState currentHeadBlock = this.mob.level().getBlockState(currentHeadPos);
-        boolean hasBlockAbove = !currentHeadBlock.isAir() && !currentHeadBlock.getCollisionShape(this.mob.level(), currentHeadPos).isEmpty();
+        boolean hasBlockAhead = hasLowCeiling(aheadPos);
+        boolean hasBlockAbove = hasLowCeiling(mobPos);
         
         return hasBlockAhead || hasBlockAbove;
     }

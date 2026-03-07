@@ -29,6 +29,6 @@ public class CraftingRestrictionEvents {
     
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        // Restrictions disabled: do nothing.
+        // Restrictions disabled: they do nothing.
     }
 }

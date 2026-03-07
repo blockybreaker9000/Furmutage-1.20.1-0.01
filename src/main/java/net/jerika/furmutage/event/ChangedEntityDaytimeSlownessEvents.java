@@ -26,12 +26,12 @@ public class ChangedEntityDaytimeSlownessEvents {
     private static final String EXCLUDED_EXOSKELETON = "changed:exoskeleton";
     private static final long NIGHT_START = 13000;
     private static final long NIGHT_END = 23000;
-    private static final int TORCH_LIGHT_THRESHOLD = 10;
-    private static final int CHECK_INTERVAL = 60;
-    /** Speed applied when Changed mob is in light (instead of slowness potion). */
+    private static final int TORCH_LIGHT_THRESHOLD = 1;
+    private static final int CHECK_INTERVAL = 1;
+    /** Speed applied when Changed mob is in light  */
     private static final double SPEED_IN_LIGHT = 0.6D;
     /** Speed applied when it's night and the Changed mob is not in light. */
-    private static final double SPEED_AT_NIGHT = 1.1D;
+    private static final double SPEED_AT_NIGHT = 1.0D;
 
     /** Stores original MOVEMENT_SPEED base value per entity so we can restore when they leave light. */
     private static final Map<UUID, Double> storedSpeedWhenInLight = new ConcurrentHashMap<>();

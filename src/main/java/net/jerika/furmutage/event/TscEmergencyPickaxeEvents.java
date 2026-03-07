@@ -1,6 +1,7 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.furmutage;
+import net.jerika.furmutage.config.ModCommonConfig;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,6 +19,9 @@ public class TscEmergencyPickaxeEvents {
     @SubscribeEvent
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getLevel().isClientSide()) {
+            return;
+        }
+        if (!ModCommonConfig.ENABLE_ORE_PROGRESSION.get()) {
             return;
         }
 

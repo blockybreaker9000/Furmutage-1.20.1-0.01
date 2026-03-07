@@ -8,6 +8,12 @@ public class ModCommonConfig {
     
     public static final ForgeConfigSpec.BooleanValue DISABLE_VANILLA_STRUCTURES;
     
+    /** When true: Furmutage ore progression is active. When false (default): vanilla tool rules. */
+    public static final ForgeConfigSpec.BooleanValue ENABLE_ORE_PROGRESSION;
+    
+    /** When true (default): Changed entities can see through up to 5 blocks. When false: normal line of sight. */
+    public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_SEE_THROUGH_WALLS;
+    
     // Mob spawn control options
     public static final ForgeConfigSpec.BooleanValue ENABLE_ZOMBIE_SPAWN;
     public static final ForgeConfigSpec.BooleanValue ENABLE_SKELETON_SPAWN;
@@ -36,6 +42,20 @@ public class ModCommonConfig {
                         "Pack makers can set this to true only if they want to disable vanilla structures.")
                 .define("disableVanillaStructures", false);
         
+        BUILDER.pop();
+        
+        BUILDER.push("Ore Progression");
+        ENABLE_ORE_PROGRESSION = BUILDER
+                .comment("When true: Furmutage ore progression is active (iron needs TSC Emergency pickaxe, gold needs Roselight pickaxe, diamond needs gold pickaxe).",
+                        "When false (DEFAULT): vanilla tool rules apply and no ore hint overlay is shown.")
+                .define("enableOreProgression", false);
+        BUILDER.pop();
+        
+        BUILDER.push("Changed / Latex Entities");
+        ENABLE_CHANGED_SEE_THROUGH_WALLS = BUILDER
+                .comment("When true (DEFAULT): Changed/latex entities can see targets through up to 5 blocks of walls.",
+                        "When false: they use normal line of sight and cannot see through solid blocks.")
+                .define("enableChangedSeeThroughWalls", true);
         BUILDER.pop();
         
         BUILDER.push("Mob Spawn Control");

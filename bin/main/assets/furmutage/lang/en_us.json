@@ -272,5 +272,9 @@
   "container.furmutage.eugenics_crafting": "TSC Eugenics Crafting",
   "container.furmutage.eugenics_smeltery": "Eugenics Smeltery Oven",
 
+  "furmutage.tool_hint.iron_ore": "Only a TSC Emergency pickaxe can break this",
+  "furmutage.tool_hint.gold_ore": "You'll need a Roselight pickaxe to break this",
+  "furmutage.tool_hint.diamond_ore": "You'll need a gold pickaxe to break this",
+
   "creativetab.furmutage": "FurMutage Items And Entities"
 }

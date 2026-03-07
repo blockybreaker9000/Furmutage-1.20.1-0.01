@@ -1,5 +1,6 @@
 package net.jerika.furmutage.mixins;
 
+import net.jerika.furmutage.config.ModCommonConfig;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -20,6 +21,9 @@ public class ForgeHooksGoldIronPickaxeMixin {
 
     @Inject(method = "isCorrectToolForDrops(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/player/Player;)Z", at = @At("HEAD"), cancellable = true, remap = false)
     private static void furmutage$goldIronPickaxeToolCheck(BlockState state, Player player, CallbackInfoReturnable<Boolean> cir) {
+        if (!ModCommonConfig.ENABLE_ORE_PROGRESSION.get()) {
+            return;
+        }
         ItemStack tool = player.getMainHandItem();
 
         // Gold pickaxe is correct for diamond ore/block
