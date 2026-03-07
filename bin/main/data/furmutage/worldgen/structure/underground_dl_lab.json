@@ -1,0 +1,8 @@
+{
+  "type": "changed:decayed_lab",
+  "biomes": "#minecraft:is_overworld",
+  "step": "underground_structures",
+  "spawn_overrides": {},
+  "piece": "changed:office_area1",
+  "loot_table": "changed:chests/decayed_lab_dl"
+}
