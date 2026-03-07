@@ -11,9 +11,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Custom behavior for grab entities:
- * - latex_shark_feral: When it successfully attacks something, it "grabs" the target by making it ride the shark.
+ * - latex_shark_feral: When it successfully attacks something, it "grabs" the target by making it ride the shark
+ *   after a short delay (GRAB_DELAY_TICKS).
  * - While grabbed, the target stays mounted on the entity.
  * - Once the entity reaches half of its maximum health, it ejects all passengers.
  *
@@ -21,6 +25,9 @@ import net.minecraftforge.registries.ForgeRegistries;
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LatexSharkGrabEvents {
+
+    /** Delay in ticks before the grab is applied after a successful attack (300 = 15 seconds). */
+    private static final int GRAB_DELAY_TICKS = 300;
 
     private static final ResourceLocation LATEX_SHARK_FERAL_ID =
             new ResourceLocation("changed", "latex_shark_feral");
@@ -36,9 +43,22 @@ public class LatexSharkGrabEvents {
         return isLatexSharkFeral(entity);
     }
 
+    /** Shark -> (target to grab, ticks remaining until grab). */
+    private static final Map<LivingEntity, PendingGrab> pendingGrabs = new HashMap<>();
+
+    private static final class PendingGrab {
+        final LivingEntity target;
+        int ticksRemaining;
+
+        PendingGrab(LivingEntity target, int ticksRemaining) {
+            this.target = target;
+            this.ticksRemaining = ticksRemaining;
+        }
+    }
+
     /**
      * When a grab entity (latex_shark_feral) successfully attacks a target,
-     * make the target ride the entity (simulating a grab / bite). The entity keeps hitting the grabbed target as normal.
+     * schedule a grab after GRAB_DELAY_TICKS. The actual grab is applied in onSharkTick.
      */
     @SubscribeEvent
     public static void onLivingAttack(LivingAttackEvent event) {
@@ -61,14 +81,14 @@ public class LatexSharkGrabEvents {
             return;
         }
 
-        // Start riding: target becomes a passenger of the entity
-        // 'true' forces the mount even if target is already riding something else
-        target.startRiding(grabEntity, true);
+        // Schedule grab after delay (replaces any existing pending grab for this shark)
+        pendingGrabs.put(grabEntity, new PendingGrab(target, GRAB_DELAY_TICKS));
     }
 
     /**
      * Each tick, if a grab entity (latex_shark_feral) is carrying a passenger
      * and its health drops to half or below, eject all passengers (release the grabbed entity).
+     * Also processes pending grabs: after GRAB_DELAY_TICKS, applies the grab.
      */
     @SubscribeEvent
     public static void onSharkTick(LivingEvent.LivingTickEvent event) {
@@ -83,6 +103,24 @@ public class LatexSharkGrabEvents {
         }
 
         LivingEntity grabEntity = entity;
+
+        // Clean up pending grabs for sharks that are no longer valid
+        pendingGrabs.entrySet().removeIf(e -> !e.getKey().isAlive() || !e.getValue().target.isAlive());
+
+        // Process pending grab for this shark
+        PendingGrab pending = pendingGrabs.get(grabEntity);
+        if (pending != null) {
+            if (!grabEntity.isAlive() || !pending.target.isAlive()
+                    || grabEntity.isVehicle() || pending.target.isPassenger()) {
+                pendingGrabs.remove(grabEntity);
+            } else {
+                pending.ticksRemaining--;
+                if (pending.ticksRemaining <= 0) {
+                    pendingGrabs.remove(grabEntity);
+                    pending.target.startRiding(grabEntity, true);
+                }
+            }
+        }
 
         if (!grabEntity.isVehicle()) {
             return; // Not carrying anyone
