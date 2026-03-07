@@ -1,8 +1,16 @@
 {
-  "type": "changed:decayed_lab",
+  "type": "minecraft:jigsaw",
   "biomes": "#minecraft:is_overworld",
   "step": "underground_structures",
   "spawn_overrides": {},
-  "piece": "changed:office_area1",
-  "loot_table": "changed:chests/decayed_lab_dl"
+  "terrain_adaptation": "none",
+  "start_pool": "furmutage:underground_dl_lab",
+  "size": 1,
+  "start_height": {
+    "type": "minecraft:uniform",
+    "min_inclusive": { "absolute": 0 },
+    "max_inclusive": { "absolute": 20 }
+  },
+  "max_distance_from_center": 16,
+  "use_expansion_hack": false
 }
