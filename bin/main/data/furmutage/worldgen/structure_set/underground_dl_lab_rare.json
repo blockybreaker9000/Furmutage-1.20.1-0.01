@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "changed:underground_dl_lab1",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spread_type": "linear",
+    "spacing": 44,
+    "separation": 12,
+    "salt": 19004521
+  }
+}

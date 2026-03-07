@@ -21,6 +21,11 @@ public class VanillaStructureDisableEvents {
     
     private static final Set<ResourceLocation> VANILLA_STRUCTURE_SETS = new HashSet<>();
     
+    /** Exposed for FilteredStructureSetLookup when config disables vanilla structures. */
+    public static Set<ResourceLocation> getVanillaStructureSetIds() {
+        return VANILLA_STRUCTURE_SETS;
+    }
+    
     static {
         // Add all vanilla structure sets
         VANILLA_STRUCTURE_SETS.add(new ResourceLocation("minecraft:villages"));
@@ -46,36 +51,33 @@ public class VanillaStructureDisableEvents {
     
     @SubscribeEvent
     public static void onWorldLoad(LevelEvent.Load event) {
-        if (!ModCommonConfig.DISABLE_VANILLA_STRUCTURES.get()) {
-            return;
-        }
-        
         if (!(event.getLevel() instanceof ServerLevel serverLevel)) {
             return;
         }
-        
-        // The datapack JSON files in minecraft namespace will override vanilla structure sets
-        // with empty structure lists, effectively disabling them
+        if (!ModCommonConfig.DISABLE_VANILLA_STRUCTURES.get()) {
+            // Vanilla structures are enabled (no overrides) - they generate normally
+            return;
+        }
+        // When config is true: our mixin (ChunkGeneratorMixin) filters out vanilla structure sets
+        // so they do not generate. No need to modify registry here.
         Registry<StructureSet> structureSetRegistry = serverLevel.registryAccess().registry(Registries.STRUCTURE_SET).orElse(null);
         if (structureSetRegistry != null) {
-            int disabledCount = 0;
+            int count = 0;
             for (ResourceLocation structureSetId : VANILLA_STRUCTURE_SETS) {
                 ResourceKey<StructureSet> key = ResourceKey.create(Registries.STRUCTURE_SET, structureSetId);
                 if (structureSetRegistry.containsKey(key)) {
-                    StructureSet structureSet = structureSetRegistry.get(key);
-                    if (structureSet != null && structureSet.structures().isEmpty()) {
-                        disabledCount++;
-                    }
+                    count++;
                 }
             }
-            furmutage.LOGGER.info("Vanilla structures are disabled via config. Disabled " + disabledCount + " structure sets.");
+            furmutage.LOGGER.info("Vanilla structures disabled via config (affects " + count + " structure sets).");
         }
     }
     
     @SubscribeEvent
     public static void onConfigLoad(ModConfigEvent.Loading event) {
         if (event.getConfig().getModId().equals(furmutage.MOD_ID)) {
-            furmutage.LOGGER.info("Vanilla structures disabled: " + ModCommonConfig.DISABLE_VANILLA_STRUCTURES.get());
+            boolean disabled = ModCommonConfig.DISABLE_VANILLA_STRUCTURES.get();
+            furmutage.LOGGER.info("Vanilla structures: " + (disabled ? "disabled" : "enabled (generate normally)"));
         }
     }
 }

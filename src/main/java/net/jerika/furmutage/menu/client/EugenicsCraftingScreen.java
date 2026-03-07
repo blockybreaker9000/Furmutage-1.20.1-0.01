@@ -31,7 +31,7 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
     private boolean bookOpen = false;
     private List<EugenicsCraftingRecipe> eugenicsRecipes = Collections.emptyList();
     private EugenicsCraftingRecipe selectedRecipe = null;
-    private static final int RECIPES_PER_PAGE = 36;
+    private static final int RECIPES_PER_PAGE = 32;
     private int currentPage = 0;
 
     public EugenicsCraftingScreen(EugenicsCraftingMenu menu, Inventory playerInventory, Component title) {

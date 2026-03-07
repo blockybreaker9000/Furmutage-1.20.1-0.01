@@ -31,7 +31,8 @@ public class ModCommonConfig {
         BUILDER.push("World Generation Config");
         
         DISABLE_VANILLA_STRUCTURES = BUILDER
-                .comment("Set to true to disable all vanilla structures (villages, strongholds, dungeons, etc.)")
+                .comment("When true: vanilla structure generation is disabled (villages, strongholds, monuments, etc.).",
+                        "When false: vanilla structures generate normally. Pack makers can set this to false to allow vanilla structures in their pack.")
                 .define("disableVanillaStructures", false);
         
         BUILDER.pop();
