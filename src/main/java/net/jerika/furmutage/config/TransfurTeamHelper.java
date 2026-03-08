@@ -21,6 +21,15 @@ public final class TransfurTeamHelper {
 
     /** Not transfurred or form not in lists → neither team targets the player. */
     public static final int TEAM_NONE = 0;
+    /** True if the player is currently transfurred (any latex form). Use to skip AI that should only target humans. */
+    public static boolean isPlayerTransfurred(Player player) {
+        if (player == null) return false;
+        try {
+            return TransfurVariant.getEntityVariant(player) != null;
+        } catch (Throwable t) {
+            return false;
+        }
+    }
     /** Player transfurred as a form in WHITE_FORMS → dark team will target. */
     public static final int TEAM_WHITE = 1;
     /** Player transfurred as a form in DARK_FORMS → white team will target. */

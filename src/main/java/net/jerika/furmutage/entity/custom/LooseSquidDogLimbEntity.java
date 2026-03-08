@@ -35,6 +35,8 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
     private static final int TICKS_WITHOUT_TARGET_TO_TELEPORT = 600; // 30 seconds
     private static final int DISMOUNT_PLAYER_RANGE = 5;
     private static final int CEILING_SCAN_HEIGHT = 16;
+    /** Ceiling must be at least this many blocks above the entity to hang; never hang from low ceilings. */
+    private static final int MIN_CEILING_HEIGHT = 5;
 
     public LooseSquidDogLimbEntity(EntityType<? extends LooseSquidDogLimbEntity> type, Level level) {
         super(type, level);
@@ -71,8 +73,12 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
             }
             int ticksWithoutTarget = tickCount - lastTargetTime;
 
-            // Dismount: if hanging and a player is within 5 blocks below, drop down
-            if (isHanging()) {
+            // Dismount immediately when we have a target (chasing something)
+            if (isHanging() && getTarget() != null) {
+                dismountFromCeiling();
+            }
+            // While hanging: if no target and player below in range, drop down
+            else if (isHanging()) {
                 Player playerBelow = findPlayerBelow(DISMOUNT_PLAYER_RANGE);
                 if (playerBelow != null) {
                     dismountFromCeiling();
@@ -83,8 +89,10 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
                 }
             } else {
                 this.setNoGravity(false);
-                // Teleport onto roof: no target for 30 sec and blocks above → move to ceiling
-                if (ticksWithoutTarget >= TICKS_WITHOUT_TARGET_TO_TELEPORT && hasBlocksAbove()) {
+                // Teleport to ceiling only when: no target for 30 sec, not pathfinding (not chasing/wandering), and ceiling is 5+ blocks high
+                boolean idleNoTarget = ticksWithoutTarget >= TICKS_WITHOUT_TARGET_TO_TELEPORT;
+                boolean notPathfinding = !this.getNavigation().isInProgress();
+                if (idleNoTarget && notPathfinding && hasCeilingHighEnough()) {
                     BlockPos ceiling = findCeilingAbove();
                     if (ceiling != null) {
                         teleportToCeiling(ceiling);
@@ -96,9 +104,10 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
 
     private int lastTargetTime = 0;
 
-    private boolean hasBlocksAbove() {
+    /** True if there is a solid ceiling at least MIN_CEILING_HEIGHT blocks above (so we only hang from high roofs). */
+    private boolean hasCeilingHighEnough() {
         BlockPos pos = blockPosition();
-        for (int i = 1; i <= CEILING_SCAN_HEIGHT; i++) {
+        for (int i = MIN_CEILING_HEIGHT; i <= CEILING_SCAN_HEIGHT; i++) {
             BlockState state = level().getBlockState(pos.above(i));
             if (!state.isAir() && state.isSolidRender(level(), pos.above(i))) {
                 return true;
@@ -107,9 +116,10 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
         return false;
     }
 
+    /** Finds a ceiling block that is at least MIN_CEILING_HEIGHT blocks above; never returns a low ceiling. */
     private BlockPos findCeilingAbove() {
         BlockPos pos = blockPosition();
-        for (int i = 1; i <= CEILING_SCAN_HEIGHT; i++) {
+        for (int i = MIN_CEILING_HEIGHT; i <= CEILING_SCAN_HEIGHT; i++) {
             BlockPos check = pos.above(i);
             BlockState state = level().getBlockState(check);
             if (!state.isAir() && state.isSolidRender(level(), check)) {
@@ -180,7 +190,7 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
         attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(48.0D);
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(8.0D);
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(4.0D);
-        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.9D);
+        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.6D);
         attributes.getInstance(Attributes.ATTACK_KNOCKBACK).setBaseValue(0.8D);
     }
 
@@ -225,6 +235,7 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
     }
 
     public static boolean checkLooseSquidDogLimbSpawnRules(EntityType<LooseSquidDogLimbEntity> entityType, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, RandomSource random) {
+        // Allow spawn egg and /summon; only restrict natural world spawns
         if (reason != MobSpawnType.NATURAL) {
             return true;
         }

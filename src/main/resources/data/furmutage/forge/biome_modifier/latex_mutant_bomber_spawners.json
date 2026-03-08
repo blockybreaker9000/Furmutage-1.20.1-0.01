@@ -2,7 +2,11 @@
   "type": "forge:add_spawns",
   "biomes": "#minecraft:is_overworld",
   "spawners": [
-    { "type": "furmutage:latex_mutant_bomber", "weight": 2, "minCount": 1, "maxCount": 1 }
+    {
+      "type": "furmutage:latex_mutant_bomber",
+      "weight": 50,
+      "minCount": 1,
+      "maxCount": 2
+    }
   ]
 }
-

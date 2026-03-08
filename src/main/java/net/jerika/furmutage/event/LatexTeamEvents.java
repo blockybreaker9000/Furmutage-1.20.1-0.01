@@ -148,6 +148,7 @@ public class LatexTeamEvents {
     /** Per-mob tick logic for team targeting and attacking. Isolated so one bad entity doesn't crash the server. */
     private static void processTeamMobTick(Mob mob, String mobType, int mobTeam) {
             LivingEntity currentTarget = mob.getTarget();
+            // Always clear same-team target every tick (e.g. Creeper/bomber sets player target every tick; we must clear it so white-team bomber doesn't attack white-transfurred player)
             if (currentTarget != null && currentTarget.isAlive() && isSameTeam(mob, currentTarget) && !LatexTeamConfig.isSameTeamHostile()) {
                 mob.setTarget(null);
                 mob.setLastHurtByMob(null);
@@ -169,9 +170,9 @@ public class LatexTeamEvents {
         }
         double followRangeSq = followRange * followRange;
         
-        // Only target attacker if they're on the opposite team OR if they're a player who attacked us (pigmen-style: any player who hits gets targeted)
+        // Only target attacker if they're on the opposite team OR untransfurred player who attacked (don't target same-team e.g. white-transfurred player vs bomber)
         boolean shouldTargetAttacker = attacker != null && attacker.isAlive() && attacker.distanceToSqr(mob) <= followRangeSq
-                && (areOnDifferentTeams(mob, attacker) || attacker instanceof Player);
+                && (areOnDifferentTeams(mob, attacker) || (attacker instanceof Player && !isSameTeam(mob, attacker)));
         if (shouldTargetAttacker && attacker != null) {
             if (currentTarget != attacker) {
                 mob.setTarget(attacker);

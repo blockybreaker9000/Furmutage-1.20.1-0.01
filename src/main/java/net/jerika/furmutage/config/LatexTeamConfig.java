@@ -294,10 +294,9 @@ public class LatexTeamConfig {
         relationsLoaded = true;
     }
 
-    /** When false (default), teammates never attack each other. Set true in JSON to allow same-team hostility. */
+    /** Same-team members are always passive towards each other (config option ignored). */
     public static boolean isSameTeamHostile() {
-        if (!relationsLoaded) loadRelations();
-        return sameTeamHostile;
+        return false;
     }
 
     /** When true (default), white and dark teams are hostile. Set false in JSON to make them passive. */
