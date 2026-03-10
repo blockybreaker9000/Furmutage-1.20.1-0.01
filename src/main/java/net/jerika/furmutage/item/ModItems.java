@@ -248,6 +248,16 @@ public class ModItems {
     public static final RegistryObject<Item> THUNDERIUMBARBBAT = ITEMS.register("thunderium_barb_bat", ThunderiumBarbBat::new);
     public static final RegistryObject<Item> THUNDERIUMTHORNBAT = ITEMS.register("thunderium_thorn_bat", ThunderiumThornBat::new);
 
+    // Thunderium armor set (GeckoLib geo armor)
+    public static final RegistryObject<Item> THUNDERIUM_HELMET = ITEMS.register("thunderium_helmet",
+            () -> new net.jerika.furmutage.item.custom.armor.ThunderiumArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.HELMET, new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_CHESTPLATE = ITEMS.register("thunderium_chestplate",
+            () -> new net.jerika.furmutage.item.custom.armor.ThunderiumArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.CHESTPLATE, new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_LEGGINGS = ITEMS.register("thunderium_leggings",
+            () -> new net.jerika.furmutage.item.custom.armor.ThunderiumArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.LEGGINGS, new Item.Properties()));
+    public static final RegistryObject<Item> THUNDERIUM_BOOTS = ITEMS.register("thunderium_boots",
+            () -> new net.jerika.furmutage.item.custom.armor.ThunderiumArmorItem(TSCModArmorMaterials.THUNDERIUM_INGOT, ArmorItem.Type.BOOTS, new Item.Properties()));
+
 
     public static final RegistryObject<Item> ROSELIGHT_PIC = ITEMS.register("roselight_pic",
             () -> new PickaxeItem(ModToolTiers.ROSELIGHT, -1, -2, new Item.Properties().durability(800)));

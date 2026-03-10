@@ -70,6 +70,13 @@ public class modcreativemodetabs {
 
 
 
+                        output.accept(ModItems.THUNDERIUM_HELMET.get());
+                        output.accept(ModItems.THUNDERIUM_CHESTPLATE.get());
+                        output.accept(ModItems.THUNDERIUM_LEGGINGS.get());
+                        output.accept(ModItems.THUNDERIUM_BOOTS.get());
+
+
+
                         output.accept(ModItems.DARK_COATED_TSC_PLASTIC_BAR.get());
                         output.accept(ModItems.ROSELIGHT.get());
                         output.accept(ModItems.RAW_ROSELIGHT_NUGGET.get());

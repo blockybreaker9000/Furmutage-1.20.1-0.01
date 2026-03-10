@@ -186,6 +186,12 @@ repositories {
         url "https://cursemaven.com"
     }
 
+    // GeckoLib for animated/geo models
+    maven {
+        name = "GeckoLib"
+        url "https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/"
+    }
+
     maven {
         name = "TheIllusiveC4"
         url = "https://maven.theillusivec4.top/"
@@ -261,6 +267,9 @@ dependencies {
     // Using file dependency for local JAR (won't try to find mapped versions)
     // Uncomment when JAR is placed in libs/lostcities/
     // implementation fg.deobf(files("libs/lostcities/lostcities-1.20-7.4.11.jar"))
+
+    // GeckoLib for animated/geo models (armor, entities, items)
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-1.20.1:4.4.2")
 
     // Mod dependencies from CurseForge instance
     // These mods are already compiled jars - they will be loaded at runtime from run/mods/ automatically
