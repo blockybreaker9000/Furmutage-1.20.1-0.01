@@ -23,10 +23,10 @@ public class ModWoodTypes {
     );
 
     private static WoodType register(String name, BlockSetType setType, SoundType soundType) {
-        // Use namespaced ID so textures resolve under our modid.
-        String fullName = "furmutage:" + name;
+        // Use the plain wood type name (like vanilla "spruce") so the
+        // sign/hanging-sign renderers and sheets can look up materials correctly.
         WoodType woodType = new WoodType(
-                fullName,
+                name,
                 setType,
                 soundType,
                 soundType,

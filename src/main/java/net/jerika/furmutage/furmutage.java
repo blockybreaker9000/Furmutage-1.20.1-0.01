@@ -14,10 +14,14 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.config.ModConfig;
 import java.util.Map;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.Collections;
 
 import net.jerika.furmutage.entity.client.renderer.LatexBacteriaRenderer;
 import net.jerika.furmutage.entity.client.renderer.LatexExoMutantRenderer;
@@ -126,6 +130,50 @@ public class furmutage {
                 }
             } catch (Exception e) {
                 LOGGER.error("Failed to register stripping interaction for tainted logs", e);
+            }
+
+            // Ensure vanilla sign block entity type also recognizes tainted sign blocks
+            try {
+                BlockEntityType<?> signType = net.minecraftforge.registries.ForgeRegistries.BLOCK_ENTITY_TYPES
+                        .getValue(new ResourceLocation("minecraft", "sign"));
+                if (signType != null) {
+                    java.lang.reflect.Field validBlocksField = BlockEntityType.class.getDeclaredField("validBlocks");
+                    validBlocksField.setAccessible(true);
+                    @SuppressWarnings("unchecked")
+                    Set<Block> existingValid = (Set<Block>) validBlocksField.get(signType);
+                    Set<Block> extendedValid = new HashSet<>(existingValid);
+                    extendedValid.add(ModBlocks.TAINTED_WHITE_SIGN.get());
+                    extendedValid.add(ModBlocks.TAINTED_WHITE_WALL_SIGN.get());
+                    extendedValid.add(ModBlocks.TAINTED_DARK_SIGN.get());
+                    extendedValid.add(ModBlocks.TAINTED_DARK_WALL_SIGN.get());
+                    validBlocksField.set(signType, Collections.unmodifiableSet(extendedValid));
+                } else {
+                    LOGGER.warn("minecraft:sign BlockEntityType not found; tainted signs may not render correctly.");
+                }
+            } catch (Exception e) {
+                LOGGER.error("Failed to extend validBlocks for minecraft:sign BlockEntityType", e);
+            }
+
+            // Ensure vanilla hanging sign block entity type also recognizes tainted hanging sign blocks
+            try {
+                BlockEntityType<?> hangingSignType = net.minecraftforge.registries.ForgeRegistries.BLOCK_ENTITY_TYPES
+                        .getValue(new ResourceLocation("minecraft", "hanging_sign"));
+                if (hangingSignType != null) {
+                    java.lang.reflect.Field validBlocksField = BlockEntityType.class.getDeclaredField("validBlocks");
+                    validBlocksField.setAccessible(true);
+                    @SuppressWarnings("unchecked")
+                    Set<Block> existingValidHanging = (Set<Block>) validBlocksField.get(hangingSignType);
+                    Set<Block> extendedValidHanging = new HashSet<>(existingValidHanging);
+                    extendedValidHanging.add(ModBlocks.TAINTED_WHITE_SIGN.get());
+                    extendedValidHanging.add(ModBlocks.TAINTED_WHITE_WALL_HANGING_SIGN.get());
+                    extendedValidHanging.add(ModBlocks.TAINTED_DARK_SIGN.get());
+                    extendedValidHanging.add(ModBlocks.TAINTED_DARK_WALL_HANGING_SIGN.get());
+                    validBlocksField.set(hangingSignType, Collections.unmodifiableSet(extendedValidHanging));
+                } else {
+                    LOGGER.warn("minecraft:hanging_sign BlockEntityType not found; tainted hanging signs may not render correctly.");
+                }
+            } catch (Exception e) {
+                LOGGER.error("Failed to extend validBlocks for minecraft:hanging_sign BlockEntityType", e);
             }
             
             // Register spawn placement for DeepSlateLatexSquidDog
@@ -256,12 +304,12 @@ public class furmutage {
                 Sheets.HANGING_SIGN_MATERIALS.put(
                         ModWoodTypes.TAINTED_WHITE,
                         new Material(Sheets.SIGN_SHEET,
-                                new ResourceLocation(MOD_ID, "entity/signs/tainted_white"))
+                                new ResourceLocation(MOD_ID, "entity/signs/hanging/tainted_white"))
                 );
                 Sheets.HANGING_SIGN_MATERIALS.put(
                         ModWoodTypes.TAINTED_DARK,
                         new Material(Sheets.SIGN_SHEET,
-                                new ResourceLocation(MOD_ID, "entity/signs/tainted_dark"))
+                                new ResourceLocation(MOD_ID, "entity/signs/hanging/tainted_dark"))
                 );
             });
             
@@ -337,6 +385,8 @@ public class furmutage {
             EntityRenderers.register(ModEntities.PURE_WHITE_LATEX_CRAWLER.get(), PureWhiteLatexCrawlerRenderer::new);
             EntityRenderers.register(ModEntities.TAINTED_WHITE_BOAT.get(), net.jerika.furmutage.entity.client.renderer.TaintedWhiteBoatRenderer::new);
             EntityRenderers.register(ModEntities.TAINTED_DARK_BOAT.get(), net.jerika.furmutage.entity.client.renderer.TaintedDarkBoatRenderer::new);
+            EntityRenderers.register(ModEntities.TAINTED_WHITE_CHEST_BOAT.get(), net.jerika.furmutage.entity.client.renderer.TaintedWhiteChestBoatRenderer::new);
+            EntityRenderers.register(ModEntities.TAINTED_DARK_CHEST_BOAT.get(), net.jerika.furmutage.entity.client.renderer.TaintedDarkChestBoatRenderer::new);
 
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());

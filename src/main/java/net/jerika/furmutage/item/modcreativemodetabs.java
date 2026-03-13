@@ -210,11 +210,10 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_WHITE_DOOR.get());
                         output.accept(ModBlocks.TAINTED_WHITE_TRAPDOOR.get());
                         output.accept(ModItems.TAINTED_WHITE_SIGN.get());
-                        output.accept(ModItems.TAINTED_WHITE_HANGING_SIGN.get());
                         output.accept(ModItems.TAINTED_WHITE_BOAT.get());
+                        output.accept(ModItems.TAINTED_WHITE_CHEST_BOAT.get());
                         output.accept(ModBlocks.TAINTED_WHITE_BUTTON.get());
                         output.accept(ModBlocks.TAINTED_WHITE_PRESSURE_PLATE.get());
-                        output.accept(ModBlocks.TAINTED_WHITE_LADDER.get());
                         output.accept(ModBlocks.TAINTED_WHITE_LEAF.get());
                         output.accept(ModBlocks.TAINTED_WHITE_SAPLING.get());
                         output.accept(ModBlocks.TAINTED_WHITE_VINE.get());
@@ -239,11 +238,10 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_DARK_DOOR.get());
                         output.accept(ModBlocks.TAINTED_DARK_TRAPDOOR.get());
                         output.accept(ModItems.TAINTED_DARK_SIGN.get());
-                        output.accept(ModItems.TAINTED_DARK_HANGING_SIGN.get());
                         output.accept(ModItems.TAINTED_DARK_BOAT.get());
+                        output.accept(ModItems.TAINTED_DARK_CHEST_BOAT.get());
                         output.accept(ModBlocks.TAINTED_DARK_BUTTON.get());
                         output.accept(ModBlocks.TAINTED_DARK_PRESSURE_PLATE.get());
-                        output.accept(ModBlocks.TAINTED_DARK_LADDER.get());
                         output.accept(ModBlocks.TAINTED_DARK_LEAF.get());
                         output.accept(ModBlocks.TAINTED_DARK_SAPLING.get());
                         output.accept(ModBlocks.TAINTED_DARK_VINE.get());

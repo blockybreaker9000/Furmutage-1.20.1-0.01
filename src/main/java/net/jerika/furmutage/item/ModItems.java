@@ -424,20 +424,27 @@ public class ModItems {
     public static final RegistryObject<Item> TAINTED_WHITE_SIGN = ITEMS.register("tainted_white_sign",
             () -> new SignItem(new Item.Properties().stacksTo(16),
                     ModBlocks.TAINTED_WHITE_SIGN.get(), ModBlocks.TAINTED_WHITE_WALL_SIGN.get()));
-    public static final RegistryObject<Item> TAINTED_WHITE_HANGING_SIGN = ITEMS.register("tainted_white_hanging_sign",
-            () -> new HangingSignItem(ModBlocks.TAINTED_WHITE_HANGING_SIGN.get(),
-                    ModBlocks.TAINTED_WHITE_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> TAINTED_DARK_SIGN = ITEMS.register("tainted_dark_sign",
             () -> new SignItem(new Item.Properties().stacksTo(16),
                     ModBlocks.TAINTED_DARK_SIGN.get(), ModBlocks.TAINTED_DARK_WALL_SIGN.get()));
+
+    // Tainted hanging signs
+    public static final RegistryObject<Item> TAINTED_WHITE_HANGING_SIGN = ITEMS.register("tainted_white_hanging_sign",
+            () -> new HangingSignItem(ModBlocks.TAINTED_WHITE_SIGN.get(), ModBlocks.TAINTED_WHITE_WALL_HANGING_SIGN.get(),
+                    new Item.Properties().stacksTo(16)));
     public static final RegistryObject<Item> TAINTED_DARK_HANGING_SIGN = ITEMS.register("tainted_dark_hanging_sign",
-            () -> new HangingSignItem(ModBlocks.TAINTED_DARK_HANGING_SIGN.get(),
-                    ModBlocks.TAINTED_DARK_WALL_HANGING_SIGN.get(), new Item.Properties().stacksTo(16)));
+            () -> new HangingSignItem(ModBlocks.TAINTED_DARK_SIGN.get(), ModBlocks.TAINTED_DARK_WALL_HANGING_SIGN.get(),
+                    new Item.Properties().stacksTo(16)));
 
     public static final RegistryObject<Item> TAINTED_WHITE_BOAT = ITEMS.register("tainted_white_boat",
             () -> new net.jerika.furmutage.item.custom.TaintedBoatItem(() -> ModEntities.TAINTED_WHITE_BOAT.get(), new Item.Properties().stacksTo(1)));
     public static final RegistryObject<Item> TAINTED_DARK_BOAT = ITEMS.register("tainted_dark_boat",
             () -> new net.jerika.furmutage.item.custom.TaintedBoatItem(() -> ModEntities.TAINTED_DARK_BOAT.get(), new Item.Properties().stacksTo(1)));
+
+    public static final RegistryObject<Item> TAINTED_WHITE_CHEST_BOAT = ITEMS.register("tainted_white_chest_boat",
+            () -> new net.jerika.furmutage.item.custom.TaintedBoatItem(() -> ModEntities.TAINTED_WHITE_CHEST_BOAT.get(), new Item.Properties().stacksTo(1)));
+    public static final RegistryObject<Item> TAINTED_DARK_CHEST_BOAT = ITEMS.register("tainted_dark_chest_boat",
+            () -> new net.jerika.furmutage.item.custom.TaintedBoatItem(() -> ModEntities.TAINTED_DARK_CHEST_BOAT.get(), new Item.Properties().stacksTo(1)));
 
     public static final RegistryObject<Item> TAINTED_RED_ROSE_APPLE = ITEMS.register("tainted_red_rose_apple",
             () -> new TaintedRedRoseAppleItem(new Item.Properties().food(new FoodProperties.Builder()

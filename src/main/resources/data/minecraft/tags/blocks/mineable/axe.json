@@ -11,7 +11,6 @@
     "furmutage:tainted_white_trapdoor",
     "furmutage:tainted_white_button",
     "furmutage:tainted_white_pressure_plate",
-    "furmutage:tainted_white_ladder",
     "furmutage:tainted_dark_log",
     "furmutage:stripped_tainted_dark_log",
     "furmutage:tainted_dark_planks",
@@ -23,7 +22,6 @@
     "furmutage:tainted_dark_trapdoor",
     "furmutage:tainted_dark_button",
     "furmutage:tainted_dark_pressure_plate",
-    "furmutage:furmutage:tainted_dark_pressure_plate,",
-    "furmutage:tainted_dark_ladder"
+    "furmutage:furmutage:tainted_dark_pressure_plate,"
   ]
 }

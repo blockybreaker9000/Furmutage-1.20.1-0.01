@@ -43,6 +43,8 @@ import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
 import net.jerika.furmutage.entity.vehicle.TaintedWhiteBoatEntity;
 import net.jerika.furmutage.entity.vehicle.TaintedDarkBoatEntity;
+import net.jerika.furmutage.entity.vehicle.TaintedWhiteChestBoatEntity;
+import net.jerika.furmutage.entity.vehicle.TaintedDarkChestBoatEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -314,6 +316,20 @@ public class ModEntities {
                     .sized(1.375f, 0.5625f)
                     .clientTrackingRange(10)
                     .build("tainted_dark_boat"));
+
+    public static final RegistryObject<EntityType<TaintedWhiteChestBoatEntity>> TAINTED_WHITE_CHEST_BOAT =
+            ENTITY_TYPES.register("tainted_white_chest_boat", () -> EntityType.Builder.<TaintedWhiteChestBoatEntity>of(
+                    TaintedWhiteChestBoatEntity::new, MobCategory.MISC)
+                    .sized(1.375f, 0.5625f)
+                    .clientTrackingRange(10)
+                    .build("tainted_white_chest_boat"));
+
+    public static final RegistryObject<EntityType<TaintedDarkChestBoatEntity>> TAINTED_DARK_CHEST_BOAT =
+            ENTITY_TYPES.register("tainted_dark_chest_boat", () -> EntityType.Builder.<TaintedDarkChestBoatEntity>of(
+                    TaintedDarkChestBoatEntity::new, MobCategory.MISC)
+                    .sized(1.375f, 0.5625f)
+                    .clientTrackingRange(10)
+                    .build("tainted_dark_chest_boat"));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);

@@ -67,9 +67,6 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_WHITE_WALL_SIGN = BLOCKS.register("tainted_white_wall_sign",
             () -> new WallSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_SIGN),
                     ModWoodTypes.TAINTED_WHITE));
-    public static final RegistryObject<Block> TAINTED_WHITE_HANGING_SIGN = registerBlockNoItem("tainted_white_hanging_sign",
-            () -> new HangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_HANGING_SIGN),
-                    ModWoodTypes.TAINTED_WHITE));
     public static final RegistryObject<Block> TAINTED_WHITE_WALL_HANGING_SIGN = BLOCKS.register("tainted_white_wall_hanging_sign",
             () -> new WallHangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_HANGING_SIGN),
                     ModWoodTypes.TAINTED_WHITE));
@@ -80,8 +77,6 @@ public class ModBlocks {
             () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING,
                     BlockBehaviour.Properties.copy(Blocks.OAK_PRESSURE_PLATE).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
-    public static final RegistryObject<Block> TAINTED_WHITE_LADDER = registerBlock("tainted_white_ladder",
-            () -> new LadderBlock(BlockBehaviour.Properties.copy(Blocks.LADDER).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_LEAF = registerBlock("tainted_white_leaf",
             () -> new TaintedWhiteLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> TAINTED_WHITE_SAPLING = registerBlock("tainted_white_sapling",
@@ -122,9 +117,6 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_DARK_WALL_SIGN = BLOCKS.register("tainted_dark_wall_sign",
             () -> new WallSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_SIGN),
                     ModWoodTypes.TAINTED_DARK));
-    public static final RegistryObject<Block> TAINTED_DARK_HANGING_SIGN = registerBlockNoItem("tainted_dark_hanging_sign",
-            () -> new HangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_HANGING_SIGN),
-                    ModWoodTypes.TAINTED_DARK));
     public static final RegistryObject<Block> TAINTED_DARK_WALL_HANGING_SIGN = BLOCKS.register("tainted_dark_wall_hanging_sign",
             () -> new WallHangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_HANGING_SIGN),
                     ModWoodTypes.TAINTED_DARK));
@@ -135,8 +127,6 @@ public class ModBlocks {
             () -> new PressurePlateBlock(PressurePlateBlock.Sensitivity.EVERYTHING,
                     BlockBehaviour.Properties.copy(Blocks.OAK_PRESSURE_PLATE).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
-    public static final RegistryObject<Block> TAINTED_DARK_LADDER = registerBlock("tainted_dark_ladder",
-            () -> new LadderBlock(BlockBehaviour.Properties.copy(Blocks.LADDER).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_DARK_LEAF = registerBlock("tainted_dark_leaf",
             () -> new TaintedDarkLeavesBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LEAVES)));
     public static final RegistryObject<Block> TAINTED_DARK_GRASS = registerBlock("tainted_dark_grass",

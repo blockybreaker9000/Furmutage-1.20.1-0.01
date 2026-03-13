@@ -1,6 +1,8 @@
 {
+  "parent": "minecraft:block/template_wall_sign",
   "textures": {
-    "particle": "furmutage:block/tainted_white_planks"
+    "particle": "furmutage:block/tainted_white_planks",
+    "texture": "furmutage:block/tainted_white_planks"
   }
 }
 
