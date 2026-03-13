@@ -175,6 +175,12 @@
   "block.furmutage.tainted_white_log": "White Latex Tainted Log",
   "block.furmutage.stripped_tainted_white_log": "Stripped White Latex Tainted Log",
   "block.furmutage.tainted_white_planks": "White Latex Tainted Planks",
+  "block.furmutage.tainted_white_slab": "White Latex Tainted Slab",
+  "block.furmutage.tainted_white_stairs": "White Latex Tainted Stairs",
+  "block.furmutage.tainted_white_door": "White Latex Tainted Door",
+  "block.furmutage.tainted_white_trapdoor": "White Latex Tainted Trapdoor",
+  "block.furmutage.tainted_white_button": "White Latex Tainted Button",
+  "block.furmutage.tainted_white_pressure_plate": "White Latex Tainted Pressure Plate",
   "block.furmutage.tainted_white_sapling": "White Latex Tainted Sapling",
   "block.furmutage.tainted_white_leaf": "White Latex Tainted Leaf",
   "block.furmutage.tainted_white_vine": "White Latex Tainted Vine",
@@ -190,6 +196,9 @@
   "block.furmutage.tainted_white_drip_mushroom": "Tainted White Drippy Mushroom",
   "block.furmutage.thunderium_crystal_shards": "Glass Thunderium Shards",
 
+
+  "block.furmutage.tainted_dark_sign": "Tainted Dark Sign",
+  "block.furmutage.tainted_dark_hanging_sign": "Tainted Dark Hanging Sign",
   "block.furmutage.tainted_dark_grass": "Dark Latex Tainted Grass",
   "block.furmutage.tainted_dark_dirt": "Dark Latex Tainted Dirt",
   "block.furmutage.tainted_dark_grass_foliage": "Dark Latex Tainted Foliage",
@@ -199,6 +208,12 @@
   "block.furmutage.tainted_dark_log": "Dark Latex Tainted Log",
   "block.furmutage.stripped_tainted_dark_log": "Stripped Dark Latex Tainted Log",
   "block.furmutage.tainted_dark_planks": "Dark Latex Tainted Planks",
+  "block.furmutage.tainted_dark_slab": "Dark Latex Tainted Slab",
+  "block.furmutage.tainted_dark_stairs": "Dark Latex Tainted Stairs",
+  "block.furmutage.tainted_dark_door": "Dark Latex Tainted Door",
+  "block.furmutage.tainted_dark_trapdoor": "Dark Latex Tainted Trapdoor",
+  "block.furmutage.tainted_dark_button": "Dark Latex Tainted Button",
+  "block.furmutage.tainted_dark_pressure_plate": "Dark Latex Tainted Pressure Plate",
   "block.furmutage.tainted_dark_sapling": "Dark Latex Tainted Sapling",
   "block.furmutage.tainted_dark_leaf": "Dark Latex Tainted Leaf",
   "block.furmutage.tainted_dark_vine": "Dark Latex Tainted Vine",
@@ -237,6 +252,7 @@
   "entity.furmutage.tainted_dark_chest_boat": "Tainted Dark Chest Boat",
 
 
+
   "item.furmutage.latex_blood_worm_mutant_spawn_egg": "Latex Blood Worm Mutant Spawn Egg",
   "item.furmutage.deep_cave_hypno_cat_spawn_egg": "Deep Cave Hypno Cat Spawn Egg",
   "item.furmutage.deepslate_latex_squid_dog_spawn_egg": "DeepSlate Latex Squid Dog Spawn Egg",
@@ -273,8 +289,10 @@
   "item.furmutage.tainted_dark_hanging_sign": "Tainted Dark Hanging Sign",
   "item.furmutage.tainted_white_boat": "Tainted White Boat",
   "item.furmutage.tainted_dark_boat": "Tainted Dark Boat",
-  "item.furmutage.tainted_white_chest_boat": "Tainted White Chest Boat",
+  "item.furmutage.tainted_dark_sign": "Tainted Dark Sign",
+  "item.furmutage.tainted_dark_hanging_sign": "Tainted Dark Hanging Sign",
   "item.furmutage.tainted_dark_chest_boat": "Tainted Dark Chest Boat",
+  "item.furmutage.tainted_white_chest_boat": "Tainted White Chest Boat",
 
 
 

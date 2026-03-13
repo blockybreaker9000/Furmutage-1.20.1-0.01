@@ -1,0 +1,8 @@
+{
+  "parent": "item/generated",
+  "textures": {
+    "layer0": "furmutage:item/pure_white_latex_crawler_spawn_egg"
+  }
+}
+
+
