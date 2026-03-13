@@ -15,6 +15,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
+import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -343,6 +344,38 @@ public class LatexTeamEvents {
                         nearbyMob.setLastHurtByMob(attacker);
                     }
                 }
+            }
+        }
+    }
+
+    /**
+     * Prevent any latex team mob from ever acquiring a same-team target in the first place.
+     * This fixes 1-tick "flicker" targeting where vanilla AI briefly sets a player as target
+     * before our tick logic clears it (e.g. bomber + mutant family vs same-team transfurred player).
+     */
+    @SubscribeEvent
+    public static void onLivingChangeTarget(LivingChangeTargetEvent event) {
+        if (!(event.getEntity() instanceof Mob mob)) {
+            return;
+        }
+        LivingEntity newTarget = event.getNewTarget();
+        if (newTarget == null || !newTarget.isAlive()) {
+            return;
+        }
+
+        // Only care about entities that participate in latex team logic
+        String mobTypeId = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
+        if (!LatexTeamConfig.isEntityInTeam(mobTypeId)) {
+            return;
+        }
+
+        // If same-team hostility is disabled, block acquiring same-team targets entirely
+        if (!LatexTeamConfig.isSameTeamHostile() && isSameTeam(mob, newTarget)) {
+            event.setCanceled(true);
+            // If something already set this target, clear it so AI immediately drops aggro
+            if (mob.getTarget() == newTarget) {
+                mob.setTarget(null);
+                mob.setLastHurtByMob(null);
             }
         }
     }

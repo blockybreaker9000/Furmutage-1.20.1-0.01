@@ -1,5 +1,6 @@
 package net.jerika.furmutage.block.custom;
 
+import net.jerika.furmutage.block.ModWoodTypes;
 import net.jerika.furmutage.furmutage;
 import net.jerika.furmutage.item.ModItems;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -9,6 +10,7 @@ import net.jerika.furmutage.worldgen.tree.TaintedWhiteTreeGrower;
 import net.jerika.furmutage.worldgen.tree.TaintedDarkTreeGrower;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -59,6 +61,18 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_WHITE_TRAPDOOR = registerBlock("tainted_white_trapdoor",
             () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_TRAPDOOR).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_WHITE_SIGN = registerBlockNoItem("tainted_white_sign",
+            () -> new StandingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SIGN),
+                    ModWoodTypes.TAINTED_WHITE));
+    public static final RegistryObject<Block> TAINTED_WHITE_WALL_SIGN = BLOCKS.register("tainted_white_wall_sign",
+            () -> new WallSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_SIGN),
+                    ModWoodTypes.TAINTED_WHITE));
+    public static final RegistryObject<Block> TAINTED_WHITE_HANGING_SIGN = registerBlockNoItem("tainted_white_hanging_sign",
+            () -> new HangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_HANGING_SIGN),
+                    ModWoodTypes.TAINTED_WHITE));
+    public static final RegistryObject<Block> TAINTED_WHITE_WALL_HANGING_SIGN = BLOCKS.register("tainted_white_wall_hanging_sign",
+            () -> new WallHangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_HANGING_SIGN),
+                    ModWoodTypes.TAINTED_WHITE));
     public static final RegistryObject<Block> TAINTED_WHITE_BUTTON = registerBlock("tainted_white_button",
             () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.OAK_BUTTON).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.BlockSetType.OAK, 30, true));
@@ -102,6 +116,18 @@ public class ModBlocks {
     public static final RegistryObject<Block> TAINTED_DARK_TRAPDOOR = registerBlock("tainted_dark_trapdoor",
             () -> new TrapDoorBlock(BlockBehaviour.Properties.copy(Blocks.OAK_TRAPDOOR).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.BlockSetType.OAK));
+    public static final RegistryObject<Block> TAINTED_DARK_SIGN = registerBlockNoItem("tainted_dark_sign",
+            () -> new StandingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_SIGN),
+                    ModWoodTypes.TAINTED_DARK));
+    public static final RegistryObject<Block> TAINTED_DARK_WALL_SIGN = BLOCKS.register("tainted_dark_wall_sign",
+            () -> new WallSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_SIGN),
+                    ModWoodTypes.TAINTED_DARK));
+    public static final RegistryObject<Block> TAINTED_DARK_HANGING_SIGN = registerBlockNoItem("tainted_dark_hanging_sign",
+            () -> new HangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_HANGING_SIGN),
+                    ModWoodTypes.TAINTED_DARK));
+    public static final RegistryObject<Block> TAINTED_DARK_WALL_HANGING_SIGN = BLOCKS.register("tainted_dark_wall_hanging_sign",
+            () -> new WallHangingSignBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WALL_HANGING_SIGN),
+                    ModWoodTypes.TAINTED_DARK));
     public static final RegistryObject<Block> TAINTED_DARK_BUTTON = registerBlock("tainted_dark_button",
             () -> new ButtonBlock(BlockBehaviour.Properties.copy(Blocks.OAK_BUTTON).requiresCorrectToolForDrops(),
                     net.minecraft.world.level.block.state.properties.BlockSetType.OAK, 30, true));
@@ -206,6 +232,11 @@ public class ModBlocks {
         RegistryObject<T> toReturn = BLOCKS.register(name, block);
         registerBlockItem(name, toReturn);
         return toReturn;
+    }
+
+    /** Registers a block without registering a block item (e.g. for signs that use SignItem). */
+    private static <T extends Block> RegistryObject<T> registerBlockNoItem(String name, Supplier<T> block) {
+        return BLOCKS.register(name, block);
     }
 
     private static <T extends Block> RegistryObject<Item> registerBlockItem(String name, RegistryObject<T> block) {

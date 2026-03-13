@@ -4,11 +4,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class TaintedWhiteLogBlock extends RotatedPillarBlock {
     public TaintedWhiteLogBlock(BlockBehaviour.Properties properties) {
@@ -17,14 +16,14 @@ public class TaintedWhiteLogBlock extends RotatedPillarBlock {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // Spread to nearby logs, planks, and leaves - faster than grass and sand
+        // Spread to nearby logs, planks, stairs, and slabs (wood)
         if (random.nextInt(4) < 3) { // 75% chance per random tick (faster than grass/sand at 50%)
             spreadToNearbyBlocks(level, pos, random);
         }
     }
 
     /**
-     * Spreads taint to nearby logs, planks (woods), and leaves.
+     * Spreads taint to nearby logs, planks, wooden stairs, and wooden slabs; does not convert leaves or existing stripped tainted logs.
      */
     private void spreadToNearbyBlocks(ServerLevel level, BlockPos pos, RandomSource random) {
         // Check blocks around the log (horizontal and below)
@@ -36,8 +35,8 @@ public class TaintedWhiteLogBlock extends RotatedPillarBlock {
                     BlockPos checkPos = pos.offset(x, y, z);
                     BlockState checkState = level.getBlockState(checkPos);
                     
-                    // Convert vanilla logs to tainted white log, or ensure other tainted white logs are converted
-                    if (checkState.is(Blocks.OAK_LOG) || checkState.is(Blocks.BIRCH_LOG) || 
+                    // Convert only vanilla logs to tainted white log (never convert stripped tainted — they stay stripped)
+                    if (checkState.is(Blocks.OAK_LOG) || checkState.is(Blocks.BIRCH_LOG) ||
                         checkState.is(Blocks.SPRUCE_LOG) || checkState.is(Blocks.JUNGLE_LOG) ||
                         checkState.is(Blocks.ACACIA_LOG) || checkState.is(Blocks.DARK_OAK_LOG) ||
                         checkState.is(Blocks.MANGROVE_LOG) || checkState.is(Blocks.CHERRY_LOG) ||
@@ -46,8 +45,7 @@ public class TaintedWhiteLogBlock extends RotatedPillarBlock {
                         checkState.is(Blocks.STRIPPED_SPRUCE_LOG) || checkState.is(Blocks.STRIPPED_JUNGLE_LOG) ||
                         checkState.is(Blocks.STRIPPED_ACACIA_LOG) || checkState.is(Blocks.STRIPPED_DARK_OAK_LOG) ||
                         checkState.is(Blocks.STRIPPED_MANGROVE_LOG) || checkState.is(Blocks.STRIPPED_CHERRY_LOG) ||
-                        checkState.is(Blocks.STRIPPED_CRIMSON_STEM) || checkState.is(Blocks.STRIPPED_WARPED_STEM) ||
-                        checkState.is(ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get())) {
+                        checkState.is(Blocks.STRIPPED_CRIMSON_STEM) || checkState.is(Blocks.STRIPPED_WARPED_STEM)) {
                         level.setBlock(checkPos, ModBlocks.TAINTED_WHITE_LOG.get().defaultBlockState(), 3);
                         return; // Only convert one block per tick to prevent lag
                     }
@@ -58,17 +56,35 @@ public class TaintedWhiteLogBlock extends RotatedPillarBlock {
                         checkState.is(Blocks.MANGROVE_PLANKS) || checkState.is(Blocks.CHERRY_PLANKS) ||
                         checkState.is(Blocks.CRIMSON_PLANKS) || checkState.is(Blocks.WARPED_PLANKS)) {
                         level.setBlock(checkPos, ModBlocks.TAINTED_WHITE_PLANKS.get().defaultBlockState(), 3);
-                        return; // Only convert one block per tick to prevent lag
+                        return;
                     }
-                    // Convert vanilla leaves to tainted white leaves
-                    else if (checkState.is(Blocks.OAK_LEAVES) || checkState.is(Blocks.BIRCH_LEAVES) ||
-                        checkState.is(Blocks.SPRUCE_LEAVES) || checkState.is(Blocks.JUNGLE_LEAVES) ||
-                        checkState.is(Blocks.ACACIA_LEAVES) || checkState.is(Blocks.DARK_OAK_LEAVES) ||
-                        checkState.is(Blocks.MANGROVE_LEAVES) || checkState.is(Blocks.CHERRY_LEAVES) ||
-                        checkState.is(Blocks.AZALEA_LEAVES) || checkState.is(Blocks.FLOWERING_AZALEA_LEAVES) ||
-                        checkState.is(Blocks.NETHER_WART_BLOCK) || checkState.is(Blocks.WARPED_WART_BLOCK)) {
-                        level.setBlock(checkPos, ModBlocks.TAINTED_WHITE_LEAF.get().defaultBlockState(), 3);
-                        return; // Only convert one block per tick to prevent lag
+                    // Convert vanilla wooden stairs to tainted white stairs (preserve facing, half, shape)
+                    else if (checkState.is(Blocks.OAK_STAIRS) || checkState.is(Blocks.SPRUCE_STAIRS) ||
+                        checkState.is(Blocks.BIRCH_STAIRS) || checkState.is(Blocks.JUNGLE_STAIRS) ||
+                        checkState.is(Blocks.ACACIA_STAIRS) || checkState.is(Blocks.DARK_OAK_STAIRS) ||
+                        checkState.is(Blocks.MANGROVE_STAIRS) || checkState.is(Blocks.CHERRY_STAIRS) ||
+                        checkState.is(Blocks.CRIMSON_STAIRS) || checkState.is(Blocks.WARPED_STAIRS)) {
+                        BlockState newState = ModBlocks.TAINTED_WHITE_STAIRS.get().defaultBlockState();
+                        if (checkState.hasProperty(BlockStateProperties.HORIZONTAL_FACING))
+                            newState = newState.setValue(BlockStateProperties.HORIZONTAL_FACING, checkState.getValue(BlockStateProperties.HORIZONTAL_FACING));
+                        if (checkState.hasProperty(BlockStateProperties.HALF))
+                            newState = newState.setValue(BlockStateProperties.HALF, checkState.getValue(BlockStateProperties.HALF));
+                        if (checkState.hasProperty(BlockStateProperties.STAIRS_SHAPE))
+                            newState = newState.setValue(BlockStateProperties.STAIRS_SHAPE, checkState.getValue(BlockStateProperties.STAIRS_SHAPE));
+                        level.setBlock(checkPos, newState, 3);
+                        return;
+                    }
+                    // Convert vanilla wooden slabs to tainted white slab (preserve slab type)
+                    else if (checkState.is(Blocks.OAK_SLAB) || checkState.is(Blocks.SPRUCE_SLAB) ||
+                        checkState.is(Blocks.BIRCH_SLAB) || checkState.is(Blocks.JUNGLE_SLAB) ||
+                        checkState.is(Blocks.ACACIA_SLAB) || checkState.is(Blocks.DARK_OAK_SLAB) ||
+                        checkState.is(Blocks.MANGROVE_SLAB) || checkState.is(Blocks.CHERRY_SLAB) ||
+                        checkState.is(Blocks.CRIMSON_SLAB) || checkState.is(Blocks.WARPED_SLAB)) {
+                        BlockState newState = ModBlocks.TAINTED_WHITE_SLAB.get().defaultBlockState();
+                        if (checkState.hasProperty(BlockStateProperties.SLAB_TYPE))
+                            newState = newState.setValue(BlockStateProperties.SLAB_TYPE, checkState.getValue(BlockStateProperties.SLAB_TYPE));
+                        level.setBlock(checkPos, newState, 3);
+                        return;
                     }
                 }
             }

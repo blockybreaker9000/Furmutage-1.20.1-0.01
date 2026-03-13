@@ -41,6 +41,8 @@ import net.jerika.furmutage.entity.custom.PureWhiteLatexCrawlerEntity;
 import net.jerika.furmutage.entity.custom.LatexHumanFleshEntity;
 import net.jerika.furmutage.entity.projectiles.*;
 import net.jerika.furmutage.entity.custom.WitheredLatexPuddingEntity;
+import net.jerika.furmutage.entity.vehicle.TaintedWhiteBoatEntity;
+import net.jerika.furmutage.entity.vehicle.TaintedDarkBoatEntity;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
@@ -298,6 +300,20 @@ public class ModEntities {
                     .clientTrackingRange(4)
                     .updateInterval(10)
                     .build("empty_can_projectile"));
+
+    public static final RegistryObject<EntityType<TaintedWhiteBoatEntity>> TAINTED_WHITE_BOAT =
+            ENTITY_TYPES.register("tainted_white_boat", () -> EntityType.Builder.<TaintedWhiteBoatEntity>of(
+                    TaintedWhiteBoatEntity::new, MobCategory.MISC)
+                    .sized(1.375f, 0.5625f)
+                    .clientTrackingRange(10)
+                    .build("tainted_white_boat"));
+
+    public static final RegistryObject<EntityType<TaintedDarkBoatEntity>> TAINTED_DARK_BOAT =
+            ENTITY_TYPES.register("tainted_dark_boat", () -> EntityType.Builder.<TaintedDarkBoatEntity>of(
+                    TaintedDarkBoatEntity::new, MobCategory.MISC)
+                    .sized(1.375f, 0.5625f)
+                    .clientTrackingRange(10)
+                    .build("tainted_dark_boat"));
 
     public static void register(IEventBus eventBus) {
         ENTITY_TYPES.register(eventBus);

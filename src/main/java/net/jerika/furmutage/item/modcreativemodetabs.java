@@ -89,7 +89,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.ROSELIGHT_JADE.get());
                         output.accept(ModItems.ROSELIGHT_DIAMOND.get());
 
-                        // Digested drops
+
                         output.accept(ModItems.WHITE_DIGESTED_GUNPOWDER.get());
                         output.accept(ModItems.DARK_DIGESTED_GUNPOWDER.get());
                         output.accept(ModItems.WHITE_DIGESTED_ROTTEN_FLESH.get());
@@ -209,6 +209,9 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_WHITE_FENCE_GATE.get());
                         output.accept(ModBlocks.TAINTED_WHITE_DOOR.get());
                         output.accept(ModBlocks.TAINTED_WHITE_TRAPDOOR.get());
+                        output.accept(ModItems.TAINTED_WHITE_SIGN.get());
+                        output.accept(ModItems.TAINTED_WHITE_HANGING_SIGN.get());
+                        output.accept(ModItems.TAINTED_WHITE_BOAT.get());
                         output.accept(ModBlocks.TAINTED_WHITE_BUTTON.get());
                         output.accept(ModBlocks.TAINTED_WHITE_PRESSURE_PLATE.get());
                         output.accept(ModBlocks.TAINTED_WHITE_LADDER.get());
@@ -235,6 +238,9 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_DARK_FENCE_GATE.get());
                         output.accept(ModBlocks.TAINTED_DARK_DOOR.get());
                         output.accept(ModBlocks.TAINTED_DARK_TRAPDOOR.get());
+                        output.accept(ModItems.TAINTED_DARK_SIGN.get());
+                        output.accept(ModItems.TAINTED_DARK_HANGING_SIGN.get());
+                        output.accept(ModItems.TAINTED_DARK_BOAT.get());
                         output.accept(ModBlocks.TAINTED_DARK_BUTTON.get());
                         output.accept(ModBlocks.TAINTED_DARK_PRESSURE_PLATE.get());
                         output.accept(ModBlocks.TAINTED_DARK_LADDER.get());

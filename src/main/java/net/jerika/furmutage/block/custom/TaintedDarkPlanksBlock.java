@@ -7,6 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 public class TaintedDarkPlanksBlock extends Block {
     public TaintedDarkPlanksBlock(BlockBehaviour.Properties properties) {
@@ -15,66 +16,57 @@ public class TaintedDarkPlanksBlock extends Block {
 
     @Override
     public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        // Spread to nearby sand, dirt, and grass blocks - faster than grass and sand
-        if (random.nextInt(4) < 3) { // 75% chance per random tick (faster than grass/sand at 50%)
+        // Spread only to nearby planks
+        if (random.nextInt(4) < 3) { // 75% chance per random tick
             spreadToNearbyBlocks(level, pos, random);
         }
-
     }
+
     /**
-     * Spreads taint to nearby planks, sand, dirt, and grass blocks.
+     * Spreads taint only to nearby planks, wooden stairs, and wooden slabs.
      */
     private void spreadToNearbyBlocks(ServerLevel level, BlockPos pos, RandomSource random) {
-        // Check blocks around the planks (horizontal and below)
         for (int x = -2; x <= 2; x++) {
             for (int y = -2; y <= 1; y++) {
                 for (int z = -2; z <= 2; z++) {
-                    if (x == 0 && y == 0 && z == 0) continue; // Skip self
-                    
+                    if (x == 0 && y == 0 && z == 0) continue;
+
                     BlockPos checkPos = pos.offset(x, y, z);
                     BlockState checkState = level.getBlockState(checkPos);
-                    
-                    // Convert vanilla planks to tainted dark planks
+
                     if (checkState.is(Blocks.OAK_PLANKS) || checkState.is(Blocks.BIRCH_PLANKS) ||
                         checkState.is(Blocks.SPRUCE_PLANKS) || checkState.is(Blocks.JUNGLE_PLANKS) ||
                         checkState.is(Blocks.ACACIA_PLANKS) || checkState.is(Blocks.DARK_OAK_PLANKS) ||
                         checkState.is(Blocks.MANGROVE_PLANKS) || checkState.is(Blocks.CHERRY_PLANKS) ||
                         checkState.is(Blocks.CRIMSON_PLANKS) || checkState.is(Blocks.WARPED_PLANKS)) {
                         level.setBlock(checkPos, ModBlocks.TAINTED_DARK_PLANKS.get().defaultBlockState(), 3);
+                        return;
                     }
-                    // Convert vanilla logs to tainted dark log
-                    else if (checkState.is(Blocks.OAK_LOG) || checkState.is(Blocks.BIRCH_LOG) || 
-                        checkState.is(Blocks.SPRUCE_LOG) || checkState.is(Blocks.JUNGLE_LOG) ||
-                        checkState.is(Blocks.ACACIA_LOG) || checkState.is(Blocks.DARK_OAK_LOG) ||
-                        checkState.is(Blocks.MANGROVE_LOG) || checkState.is(Blocks.CHERRY_LOG) ||
-                        checkState.is(Blocks.CRIMSON_STEM) || checkState.is(Blocks.WARPED_STEM) ||
-                        checkState.is(Blocks.STRIPPED_OAK_LOG) || checkState.is(Blocks.STRIPPED_BIRCH_LOG) ||
-                        checkState.is(Blocks.STRIPPED_SPRUCE_LOG) || checkState.is(Blocks.STRIPPED_JUNGLE_LOG) ||
-                        checkState.is(Blocks.STRIPPED_ACACIA_LOG) || checkState.is(Blocks.STRIPPED_DARK_OAK_LOG) ||
-                        checkState.is(Blocks.STRIPPED_MANGROVE_LOG) || checkState.is(Blocks.STRIPPED_CHERRY_LOG) ||
-                        checkState.is(Blocks.STRIPPED_CRIMSON_STEM) || checkState.is(Blocks.STRIPPED_WARPED_STEM)) {
-                        level.setBlock(checkPos, ModBlocks.TAINTED_DARK_LOG.get().defaultBlockState(), 3);
+                    if (checkState.is(Blocks.OAK_STAIRS) || checkState.is(Blocks.SPRUCE_STAIRS) ||
+                        checkState.is(Blocks.BIRCH_STAIRS) || checkState.is(Blocks.JUNGLE_STAIRS) ||
+                        checkState.is(Blocks.ACACIA_STAIRS) || checkState.is(Blocks.DARK_OAK_STAIRS) ||
+                        checkState.is(Blocks.MANGROVE_STAIRS) || checkState.is(Blocks.CHERRY_STAIRS) ||
+                        checkState.is(Blocks.CRIMSON_STAIRS) || checkState.is(Blocks.WARPED_STAIRS)) {
+                        BlockState newState = ModBlocks.TAINTED_DARK_STAIRS.get().defaultBlockState();
+                        if (checkState.hasProperty(BlockStateProperties.HORIZONTAL_FACING))
+                            newState = newState.setValue(BlockStateProperties.HORIZONTAL_FACING, checkState.getValue(BlockStateProperties.HORIZONTAL_FACING));
+                        if (checkState.hasProperty(BlockStateProperties.HALF))
+                            newState = newState.setValue(BlockStateProperties.HALF, checkState.getValue(BlockStateProperties.HALF));
+                        if (checkState.hasProperty(BlockStateProperties.STAIRS_SHAPE))
+                            newState = newState.setValue(BlockStateProperties.STAIRS_SHAPE, checkState.getValue(BlockStateProperties.STAIRS_SHAPE));
+                        level.setBlock(checkPos, newState, 3);
+                        return;
                     }
-                    // Convert vanilla leaves to tainted dark leaves
-                    else if (checkState.is(Blocks.OAK_LEAVES) || checkState.is(Blocks.BIRCH_LEAVES) ||
-                        checkState.is(Blocks.SPRUCE_LEAVES) || checkState.is(Blocks.JUNGLE_LEAVES) ||
-                        checkState.is(Blocks.ACACIA_LEAVES) || checkState.is(Blocks.DARK_OAK_LEAVES) ||
-                        checkState.is(Blocks.MANGROVE_LEAVES) || checkState.is(Blocks.CHERRY_LEAVES) ||
-                        checkState.is(Blocks.AZALEA_LEAVES) || checkState.is(Blocks.FLOWERING_AZALEA_LEAVES) ||
-                        checkState.is(Blocks.NETHER_WART_BLOCK) || checkState.is(Blocks.WARPED_WART_BLOCK)) {
-                        level.setBlock(checkPos, ModBlocks.TAINTED_DARK_LEAF.get().defaultBlockState(), 3);
-                    }
-                    // Convert grass blocks to tainted dark grass
-                    else if (checkState.is(Blocks.GRASS_BLOCK)) {
-                        level.setBlock(checkPos, ModBlocks.TAINTED_DARK_GRASS.get().defaultBlockState(), 3);
-                    }
-                    // Convert dirt to tainted dark dirt
-                    else if (checkState.is(Blocks.DIRT) || checkState.is(Blocks.COARSE_DIRT)) {
-                        level.setBlock(checkPos, ModBlocks.TAINTED_DARK_DIRT.get().defaultBlockState(), 3);
-                    }
-                    // Convert sand to tainted dark sand
-                    else if (checkState.is(Blocks.SAND) || checkState.is(Blocks.RED_SAND)) {
-                        level.setBlock(checkPos, ModBlocks.TAINTED_DARK_SAND.get().defaultBlockState(), 3);
+                    if (checkState.is(Blocks.OAK_SLAB) || checkState.is(Blocks.SPRUCE_SLAB) ||
+                        checkState.is(Blocks.BIRCH_SLAB) || checkState.is(Blocks.JUNGLE_SLAB) ||
+                        checkState.is(Blocks.ACACIA_SLAB) || checkState.is(Blocks.DARK_OAK_SLAB) ||
+                        checkState.is(Blocks.MANGROVE_SLAB) || checkState.is(Blocks.CHERRY_SLAB) ||
+                        checkState.is(Blocks.CRIMSON_SLAB) || checkState.is(Blocks.WARPED_SLAB)) {
+                        BlockState newState = ModBlocks.TAINTED_DARK_SLAB.get().defaultBlockState();
+                        if (checkState.hasProperty(BlockStateProperties.SLAB_TYPE))
+                            newState = newState.setValue(BlockStateProperties.SLAB_TYPE, checkState.getValue(BlockStateProperties.SLAB_TYPE));
+                        level.setBlock(checkPos, newState, 3);
+                        return;
                     }
                 }
             }

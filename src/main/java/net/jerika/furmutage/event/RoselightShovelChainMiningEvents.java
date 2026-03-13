@@ -24,7 +24,7 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class RoselightShovelChainMiningEvents {
     
-    private static final int MAX_CHAIN_BLOCKS = 64; // Maximum blocks to chain mine
+    private static final int MAX_CHAIN_BLOCKS = 2; // Double block vein mining: initial block + 1 connected
     private static final int MAX_DISTANCE = 32; // Maximum distance from initial block
     
     @SubscribeEvent

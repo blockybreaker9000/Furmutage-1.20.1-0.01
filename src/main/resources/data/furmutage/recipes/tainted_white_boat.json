@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "boat",
+  "pattern": [
+    "P P",
+    "PPP"
+  ],
+  "key": {
+    "P": {
+      "item": "furmutage:tainted_white_planks"
+    }
+  },
+  "result": {
+    "item": "furmutage:tainted_white_boat"
+  }
+}

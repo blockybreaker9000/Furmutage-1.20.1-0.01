@@ -46,8 +46,8 @@ public class PureWhiteLatexWolfStalkPlayerGoal extends Goal {
     /** Within this distance the wolf stands and runs away instead of crouch/walk. */
     private static final double RUN_AWAY_DISTANCE = 2.0D;
     /** Spooked (crouch/uncrouch + punch) only when player is MORE than this many blocks away.
-     * Within 15 blocks we never do spooked—we prioritize walking/running away instead. */
-    private static final double SPOOKED_BEHAVIOR_MIN_DISTANCE = 15.0D;
+     * Within 30 blocks we never do spooked—we prioritize walking/running away instead. */
+    private static final double SPOOKED_BEHAVIOR_MIN_DISTANCE = 30.0D;
     /** Ticks between crouch/uncrouch toggles when player is looking. */
     private static final int CROUCH_TOGGLE_INTERVAL = 5;
     /** Cone: player look dot with to-entity vector must be above this (cos ~45°). */

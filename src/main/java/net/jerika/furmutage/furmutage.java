@@ -2,12 +2,16 @@ package net.jerika.furmutage;
 
 import com.mojang.logging.LogUtils;
 import net.jerika.furmutage.block.custom.ModBlocks;
+import net.jerika.furmutage.block.ModWoodTypes;
 import net.jerika.furmutage.block.entity.ModBlockEntities;
 import net.jerika.furmutage.config.ModCommonConfig;
 import net.jerika.furmutage.entity.ModEntities;
 import net.jerika.furmutage.menu.ModMenuTypes;
 import net.jerika.furmutage.menu.client.EugenicsCraftingScreen;
 import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.Block;
 import net.minecraftforge.common.MinecraftForge;
@@ -236,6 +240,29 @@ public class furmutage {
             event.enqueueWork(() -> {
                 MenuScreens.register(ModMenuTypes.EUGENICS_CRAFTING_MENU.get(), EugenicsCraftingScreen::new);
                 MenuScreens.register(ModMenuTypes.EUGENICS_SMELTERY_MENU.get(), net.jerika.furmutage.menu.client.EugenicsSmelteryScreen::new);
+
+                // Map tainted WoodTypes to sign board textures so sign entities render correctly
+                Sheets.SIGN_MATERIALS.put(
+                        ModWoodTypes.TAINTED_WHITE,
+                        new Material(Sheets.SIGN_SHEET,
+                                new ResourceLocation(MOD_ID, "entity/signs/tainted_white"))
+                );
+                Sheets.SIGN_MATERIALS.put(
+                        ModWoodTypes.TAINTED_DARK,
+                        new Material(Sheets.SIGN_SHEET,
+                                new ResourceLocation(MOD_ID, "entity/signs/tainted_dark"))
+                );
+
+                Sheets.HANGING_SIGN_MATERIALS.put(
+                        ModWoodTypes.TAINTED_WHITE,
+                        new Material(Sheets.SIGN_SHEET,
+                                new ResourceLocation(MOD_ID, "entity/signs/tainted_white"))
+                );
+                Sheets.HANGING_SIGN_MATERIALS.put(
+                        ModWoodTypes.TAINTED_DARK,
+                        new Material(Sheets.SIGN_SHEET,
+                                new ResourceLocation(MOD_ID, "entity/signs/tainted_dark"))
+                );
             });
             
             EntityRenderers.register(ModEntities.MUGLING.get(), MuglingRenderer::new);
@@ -308,6 +335,8 @@ public class furmutage {
             EntityRenderers.register(ModEntities.LATEX_NETHER_MANTA_RAY_MALE.get(), net.jerika.furmutage.entity.client.renderer.LatexNetherMantaRayMaleRenderer::new);
             EntityRenderers.register(ModEntities.LATEX_HUMAN_FLESH.get(), net.jerika.furmutage.entity.client.renderer.LatexHumanFleshRenderer::new);
             EntityRenderers.register(ModEntities.PURE_WHITE_LATEX_CRAWLER.get(), PureWhiteLatexCrawlerRenderer::new);
+            EntityRenderers.register(ModEntities.TAINTED_WHITE_BOAT.get(), net.jerika.furmutage.entity.client.renderer.TaintedWhiteBoatRenderer::new);
+            EntityRenderers.register(ModEntities.TAINTED_DARK_BOAT.get(), net.jerika.furmutage.entity.client.renderer.TaintedDarkBoatRenderer::new);
 
             // Register render types for vine blocks (cutout rendering)
             ItemBlockRenderTypes.setRenderLayer(ModBlocks.TAINTED_WHITE_VINE.get(), RenderType.cutout());

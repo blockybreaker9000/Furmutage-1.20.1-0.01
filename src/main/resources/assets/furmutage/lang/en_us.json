@@ -179,6 +179,8 @@
   "block.furmutage.tainted_white_roselight_flower": "White Latex Tainted Roselight Flower",
   "block.furmutage.tainted_white_crystal_blue_flower": "White Latex Tainted Thunderium Flower",
   "block.furmutage.tainted_white_spotted_mushroom": "Tainted White Spotted Mushroom",
+  "block.furmutage.tainted_white_sign": "Tainted White Sign",
+  "block.furmutage.tainted_white_hanging_sign": "Tainted White Hanging Sign",
   "block.furmutage.tainted_white_reed": "Tainted White Reeds",
   "block.furmutage.tainted_white_drip_mushroom": "Tainted White Drippy Mushroom",
   "block.furmutage.thunderium_crystal_shards": "Glass Thunderium Shards",
@@ -216,6 +218,8 @@
   "entity.furmutage.latex_nether_manta_ray_male": "Latex Nether Manta Ray",
   "entity.furmutage.latex_human_flesh": "Latex Human Flesh",
   "entity.furmutage.pure_white_latex_crawler": "Pure White Latex Crawler",
+  "entity.furmutage.tainted_white_boat": "Tainted White Boat",
+  "entity.furmutage.tainted_dark_boat": "Tainted Dark Boat",
 
 
   "item.furmutage.latex_blood_worm_mutant_spawn_egg": "Latex Blood Worm Mutant Spawn Egg",
@@ -248,6 +252,12 @@
   "item.furmutage.dark_latex_llama_spawn_egg": "Dark Latex Llama Spawn Egg",
   "item.furmutage.dark_latex_squid_spawn_egg": "Dark Latex Squid Spawn Egg",
   "item.furmutage.dark_latex_dolphin_spawn_egg": "Dark Latex Dolphin Spawn Egg",
+  "item.furmutage.tainted_white_sign": "Tainted White Sign",
+  "item.furmutage.tainted_white_hanging_sign": "Tainted White Hanging Sign",
+  "item.furmutage.tainted_dark_sign": "Tainted Dark Sign",
+  "item.furmutage.tainted_dark_hanging_sign": "Tainted Dark Hanging Sign",
+  "item.furmutage.tainted_white_boat": "Tainted White Boat",
+  "item.furmutage.tainted_dark_boat": "Tainted Dark Boat",
 
 
 
