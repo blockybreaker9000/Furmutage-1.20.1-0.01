@@ -31,7 +31,7 @@ description="cool description"
 [[dependencies.furmutage]]
     modId="changed"
     mandatory=true
-    versionRange="[0.15.0,)"
+    versionRange="[0.15.1,)"
     ordering="AFTER"
     side="BOTH"
 
