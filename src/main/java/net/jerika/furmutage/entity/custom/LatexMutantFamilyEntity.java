@@ -46,8 +46,7 @@ public class LatexMutantFamilyEntity extends Monster {
     }
 
 
-
-
+    private int targetSoundCooldownTicks = 0;
     private static final EntityDataAccessor<Boolean> MUTANT_FAMILY_ATTACK =
             SynchedEntityData.defineId(LatexMutantFamilyEntity.class, EntityDataSerializers.BOOLEAN);
 
@@ -64,6 +63,9 @@ public class LatexMutantFamilyEntity extends Monster {
         if (this.level().isClientSide()) {
             setupAnimationStates();
         } else {
+            if (targetSoundCooldownTicks > 0) {
+                targetSoundCooldownTicks--;
+            }
             if (this.tickCount % 5 == 0) {
                 destroyNearbyLeaves();
             }
@@ -218,9 +220,20 @@ public class LatexMutantFamilyEntity extends Monster {
     public void setTarget(@Nullable LivingEntity pTarget) {
         LivingEntity previousTarget = this.getTarget();
         super.setTarget(pTarget);
-        if (!this.level().isClientSide() && pTarget != null && previousTarget == null) {
-            this.level().playSound(null, this.getX(), this.getY(), this.getZ(),
-                    ModSounds.LATEX_MUTANT_FAMILY_TARGETS.get(), this.getSoundSource(), 1.0f, 1.0f);
+        if (!this.level().isClientSide()
+                && pTarget != null
+                && previousTarget == null
+                && targetSoundCooldownTicks <= 0) {
+            this.level().playSound(
+                    null,
+                    this.getX(), this.getY(), this.getZ(),
+                    ModSounds.LATEX_MUTANT_FAMILY_TARGETS.get(),
+                    this.getSoundSource(),
+                    1.0f,
+                    1.0f
+            );
+            // Add a delay before the next possible target sound to avoid rapid spam
+            targetSoundCooldownTicks = 300; // 15 seconds at 20 tps
         }
     }
 

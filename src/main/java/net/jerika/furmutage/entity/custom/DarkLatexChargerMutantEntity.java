@@ -44,6 +44,8 @@ public class DarkLatexChargerMutantEntity extends Monster {
 
     public final AnimationState idleAnimationState = new AnimationState();
 
+    private int targetSoundCooldownTicks = 0;
+
     @Override
     public void tick() {
         super.tick();
@@ -51,6 +53,9 @@ public class DarkLatexChargerMutantEntity extends Monster {
         if (this.level().isClientSide()) {
             setupAnimationStates();
         } else {
+            if (targetSoundCooldownTicks > 0) {
+                targetSoundCooldownTicks--;
+            }
             if (this.tickCount % 5 == 0) {
                 destroyNearbyLeaves();
             }
@@ -82,7 +87,8 @@ public class DarkLatexChargerMutantEntity extends Monster {
 
         if (!this.level().isClientSide()
                 && pTarget != null
-                && previousTarget == null) {
+                && previousTarget == null
+                && targetSoundCooldownTicks <= 0) {
             this.level().playSound(
                     null,
                     this.getX(), this.getY(), this.getZ(),
@@ -91,6 +97,8 @@ public class DarkLatexChargerMutantEntity extends Monster {
                     1.0f,
                     1.0f
             );
+            // Add a delay before the next possible target sound to avoid rapid spam
+            targetSoundCooldownTicks = 300; // 15 seconds at 20 tps
         }
     }
 
