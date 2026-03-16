@@ -1,18 +1,16 @@
 {
-  "type": "furmutage:eugenics_crafting",
-  "category": "misc",
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
   "pattern": [
     "##",
     "##",
     "##"
   ],
   "key": {
-    "#": {
-      "item": "furmutage:tainted_white_planks"
-    }
+    "#": { "item": "furmutage:tainted_white_planks" }
   },
   "result": {
     "item": "furmutage:tainted_white_door",
-    "count": 2
+    "count": 3
   }
 }

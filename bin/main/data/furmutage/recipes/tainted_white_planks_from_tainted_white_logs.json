@@ -1,14 +1,9 @@
 {
-  "type": "furmutage:eugenics_crafting",
-  "category": "misc",
-  "pattern": [
-    "#"
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    { "item": "furmutage:tainted_white_log" }
   ],
-  "key": {
-    "#": {
-      "item": "furmutage:tainted_white_log"
-    }
-  },
   "result": {
     "item": "furmutage:tainted_white_planks",
     "count": 4

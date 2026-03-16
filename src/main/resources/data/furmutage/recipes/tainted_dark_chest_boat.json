@@ -1,21 +1,16 @@
 {
-  "type": "furmutage:eugenics_crafting",
-  "category": "misc",
+  "type": "minecraft:crafting_shaped",
+  "category": "transportation",
   "group": "chest_boat",
   "pattern": [
     "B",
     "C"
   ],
   "key": {
-    "B": {
-      "item": "furmutage:tainted_dark_boat"
-    },
-    "C": {
-      "item": "minecraft:chest"
-    }
+    "B": { "item": "furmutage:tainted_dark_boat" },
+    "C": { "item": "minecraft:chest" }
   },
   "result": {
     "item": "furmutage:tainted_dark_chest_boat"
   }
 }
-

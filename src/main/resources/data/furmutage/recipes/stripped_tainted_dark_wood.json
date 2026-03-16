@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "group": "bark",
+  "pattern": [
+    "LL",
+    "LL"
+  ],
+  "key": {
+    "L": { "item": "furmutage:stripped_tainted_dark_log" }
+  },
+  "result": {
+    "item": "furmutage:stripped_tainted_dark_wood",
+    "count": 3
+  }
+}

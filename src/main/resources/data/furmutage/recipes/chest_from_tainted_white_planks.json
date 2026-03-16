@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "pattern": [
+    "###",
+    "# #",
+    "###"
+  ],
+  "key": {
+    "#": { "item": "furmutage:tainted_white_planks" }
+  },
+  "result": {
+    "item": "minecraft:chest",
+    "count": 1
+  }
+}

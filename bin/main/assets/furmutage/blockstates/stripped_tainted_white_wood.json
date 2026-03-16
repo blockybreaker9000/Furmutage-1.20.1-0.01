@@ -1,0 +1,16 @@
+{
+  "variants": {
+    "axis=x": {
+      "model": "furmutage:block/stripped_tainted_white_wood_horizontal",
+      "x": 90,
+      "y": 90
+    },
+    "axis=y": {
+      "model": "furmutage:block/stripped_tainted_white_wood"
+    },
+    "axis=z": {
+      "model": "furmutage:block/stripped_tainted_white_wood_horizontal",
+      "x": 90
+    }
+  }
+}

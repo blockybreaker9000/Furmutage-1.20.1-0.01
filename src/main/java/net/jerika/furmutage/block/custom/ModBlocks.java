@@ -43,6 +43,10 @@ public class ModBlocks {
             () -> new TaintedWhiteLogBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).randomTicks().requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> STRIPPED_TAINTED_WHITE_LOG = registerBlock("stripped_tainted_white_log",
             () -> new TaintedWhiteLogBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_LOG).randomTicks().requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> TAINTED_WHITE_WOOD = registerBlock("tainted_white_wood",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> STRIPPED_TAINTED_WHITE_WOOD = registerBlock("stripped_tainted_white_wood",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_WOOD).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_PLANKS = registerBlock("tainted_white_planks",
             () -> new TaintedWhitePlanksBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).randomTicks().requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_WHITE_SLAB = registerBlock("tainted_white_slab",
@@ -93,6 +97,10 @@ public class ModBlocks {
             () -> new TaintedDarkLogBlock(BlockBehaviour.Properties.copy(Blocks.OAK_LOG).randomTicks().requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> STRIPPED_TAINTED_DARK_LOG = registerBlock("stripped_tainted_dark_log",
             () -> new TaintedDarkLogBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_LOG).randomTicks().requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> TAINTED_DARK_WOOD = registerBlock("tainted_dark_wood",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.OAK_WOOD).requiresCorrectToolForDrops()));
+    public static final RegistryObject<Block> STRIPPED_TAINTED_DARK_WOOD = registerBlock("stripped_tainted_dark_wood",
+            () -> new RotatedPillarBlock(BlockBehaviour.Properties.copy(Blocks.STRIPPED_OAK_WOOD).requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_DARK_PLANKS = registerBlock("tainted_dark_planks",
             () -> new TaintedDarkPlanksBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).randomTicks().requiresCorrectToolForDrops()));
     public static final RegistryObject<Block> TAINTED_DARK_SLAB = registerBlock("tainted_dark_slab",

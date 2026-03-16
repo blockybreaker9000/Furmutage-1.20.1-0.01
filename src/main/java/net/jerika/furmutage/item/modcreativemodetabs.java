@@ -202,6 +202,8 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_WHITE_SAND.get());
                         output.accept(ModBlocks.TAINTED_WHITE_LOG.get());
                         output.accept(ModBlocks.STRIPPED_TAINTED_WHITE_LOG.get());
+                        output.accept(ModBlocks.TAINTED_WHITE_WOOD.get());
+                        output.accept(ModBlocks.STRIPPED_TAINTED_WHITE_WOOD.get());
                         output.accept(ModBlocks.TAINTED_WHITE_PLANKS.get());
                         output.accept(ModBlocks.TAINTED_WHITE_SLAB.get());
                         output.accept(ModBlocks.TAINTED_WHITE_STAIRS.get());
@@ -230,6 +232,8 @@ public class modcreativemodetabs {
                         output.accept(ModBlocks.TAINTED_DARK_SAND.get());
                         output.accept(ModBlocks.TAINTED_DARK_LOG.get());
                         output.accept(ModBlocks.STRIPPED_TAINTED_DARK_LOG.get());
+                        output.accept(ModBlocks.TAINTED_DARK_WOOD.get());
+                        output.accept(ModBlocks.STRIPPED_TAINTED_DARK_WOOD.get());
                         output.accept(ModBlocks.TAINTED_DARK_PLANKS.get());
                         output.accept(ModBlocks.TAINTED_DARK_SLAB.get());
                         output.accept(ModBlocks.TAINTED_DARK_STAIRS.get());

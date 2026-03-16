@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "building",
+  "ingredients": [
+    { "item": "furmutage:stripped_tainted_white_log" }
+  ],
+  "result": {
+    "item": "furmutage:tainted_white_planks",
+    "count": 4
+  }
+}

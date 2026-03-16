@@ -1,17 +1,13 @@
 {
-  "type": "furmutage:eugenics_crafting",
-  "category": "misc",
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
   "pattern": [
     "#k#",
     "#k#"
   ],
   "key": {
-    "#": {
-      "item": "furmutage:tainted_white_planks"
-    },
-    "k": {
-      "item": "minecraft:stick"
-    }
+    "#": { "item": "furmutage:tainted_white_planks" },
+    "k": { "item": "minecraft:stick" }
   },
   "result": {
     "item": "furmutage:tainted_white_fence",
