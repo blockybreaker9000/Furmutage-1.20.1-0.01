@@ -1,5 +1,6 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "furmutage:eugenics_crafting",
+  "category": "misc",
   "group": "boat",
   "pattern": [
     "P P",

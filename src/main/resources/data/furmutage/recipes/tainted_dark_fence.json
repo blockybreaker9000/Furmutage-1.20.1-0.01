@@ -1,17 +1,20 @@
 {
   "type": "furmutage:eugenics_crafting",
   "category": "misc",
-  "group": "boat",
   "pattern": [
-    "P P",
-    "PPP"
+    "#k#",
+    "#k#"
   ],
   "key": {
-    "P": {
+    "#": {
       "item": "furmutage:tainted_dark_planks"
+    },
+    "k": {
+      "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "furmutage:tainted_dark_boat"
+    "item": "furmutage:tainted_dark_fence",
+    "count": 4
   }
 }

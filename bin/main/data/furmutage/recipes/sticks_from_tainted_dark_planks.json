@@ -1,13 +1,17 @@
 {
-  "type": "minecraft:crafting_shapeless",
+  "type": "furmutage:eugenics_crafting",
   "category": "misc",
-  "ingredients": [
-    {
-      "item": "furmutage:tainted_dark_log"
-    }
+  "pattern": [
+    "#",
+    "#"
   ],
+  "key": {
+    "#": {
+      "item": "furmutage:tainted_dark_planks"
+    }
+  },
   "result": {
-    "count": 4,
-    "item": "minecraft:sticks"
+    "item": "minecraft:sticks",
+    "count": 4
   }
 }

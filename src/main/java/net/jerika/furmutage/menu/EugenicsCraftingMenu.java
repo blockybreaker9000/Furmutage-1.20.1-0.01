@@ -8,7 +8,9 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
@@ -60,10 +62,18 @@ public class EugenicsCraftingMenu extends AbstractContainerMenu {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         ItemStack result = ItemStack.EMPTY;
 
-        // Only use Eugenics Crafting recipes; vanilla crafting table handles normal recipes
+        // Prefer Eugenics Crafting recipes
         Optional<CraftingRecipe> optional = level.getServer().getRecipeManager()
                 .getRecipeFor(ModRecipeTypes.EUGENICS_CRAFTING.get(), craftSlots, level)
                 .map(r -> (CraftingRecipe) r);
+
+        if (optional.isEmpty()) {
+            // Fall back to vanilla crafting recipes, but disallow "MISC" category here
+            optional = level.getServer().getRecipeManager()
+                    .getRecipeFor(RecipeType.CRAFTING, craftSlots, level)
+                    .map(r -> (CraftingRecipe) r)
+                    .filter(r -> r.category() != CraftingBookCategory.MISC);
+        }
 
         if (optional.isPresent()) {
             CraftingRecipe recipe = optional.get();

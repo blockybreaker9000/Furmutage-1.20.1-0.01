@@ -2,9 +2,8 @@
   "type": "furmutage:eugenics_crafting",
   "category": "misc",
   "pattern": [
-    "###",
-    "###",
-    " k "
+    "#k#",
+    "#k#"
   ],
   "key": {
     "#": {
@@ -15,7 +14,7 @@
     }
   },
   "result": {
-    "item": "furmutage:tainted_white_sign",
-    "count": 3
+    "item": "furmutage:tainted_white_fence",
+    "count": 4
   }
 }

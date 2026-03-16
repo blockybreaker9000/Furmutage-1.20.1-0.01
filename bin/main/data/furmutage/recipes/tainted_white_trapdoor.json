@@ -3,19 +3,15 @@
   "category": "misc",
   "pattern": [
     "###",
-    "###",
-    " k "
+    "###"
   ],
   "key": {
     "#": {
       "item": "furmutage:tainted_white_planks"
-    },
-    "k": {
-      "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "furmutage:tainted_white_sign",
-    "count": 3
+    "item": "furmutage:tainted_white_trapdoor",
+    "count": 2
   }
 }

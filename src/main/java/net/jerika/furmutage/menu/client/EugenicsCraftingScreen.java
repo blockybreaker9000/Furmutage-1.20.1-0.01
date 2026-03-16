@@ -254,11 +254,11 @@ public class EugenicsCraftingScreen extends AbstractContainerScreen<EugenicsCraf
                             int x = gridStartX + col * 18;
                             int y = gridStartY + row * 18;
 
-                            // Draw the item, then overlay a translucent layer to make it clearly "ghost"
-                            guiGraphics.renderItem(stack, x, y);
+                            // Render this ingredient as a semi-transparent "ghost" item (60% opacity)
                             RenderSystem.enableBlend();
-                            // ARGB: 0x80FFFFFF = 50% opaque white overlay
-                            guiGraphics.fill(x, y, x + 16, y + 16, 0x80FFFFFF);
+                            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.6F);
+                            guiGraphics.renderItem(stack, x, y);
+                            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
                             RenderSystem.disableBlend();
                         }
                     }

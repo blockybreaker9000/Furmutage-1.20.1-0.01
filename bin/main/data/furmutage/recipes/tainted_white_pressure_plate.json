@@ -2,20 +2,15 @@
   "type": "furmutage:eugenics_crafting",
   "category": "misc",
   "pattern": [
-    "###",
-    "###",
-    " k "
+    "##"
   ],
   "key": {
     "#": {
       "item": "furmutage:tainted_white_planks"
-    },
-    "k": {
-      "item": "minecraft:stick"
     }
   },
   "result": {
-    "item": "furmutage:tainted_white_sign",
-    "count": 3
+    "item": "furmutage:tainted_white_pressure_plate",
+    "count": 1
   }
 }
