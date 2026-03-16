@@ -8,6 +8,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.jerika.furmutage.block.custom.ModBlocks;
 import net.jerika.furmutage.furmutage;
+import net.jerika.furmutage.recipe.EugenicsCraftingRecipe;
 import net.jerika.furmutage.recipe.EugenicsSmeltingRecipe;
 import net.jerika.furmutage.recipe.ModRecipeTypes;
 import net.minecraft.client.Minecraft;
@@ -23,6 +24,9 @@ import net.minecraft.world.item.ItemStack;
 @JeiPlugin
 public class FurmutageJeiPlugin implements IModPlugin {
 
+    public static final RecipeType<EugenicsCraftingRecipe> EUGENICS_CRAFTING_TYPE =
+            RecipeType.create(furmutage.MOD_ID, "eugenics_crafting", EugenicsCraftingRecipe.class);
+
     public static final RecipeType<EugenicsSmeltingRecipe> EUGENICS_SMELTING_TYPE =
             RecipeType.create(furmutage.MOD_ID, "eugenics_smelting", EugenicsSmeltingRecipe.class);
 
@@ -34,7 +38,8 @@ public class FurmutageJeiPlugin implements IModPlugin {
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(
-                new EugenicsSmeltingCategory(registration.getJeiHelpers().getGuiHelper())
+                new EugenicsSmeltingCategory(registration.getJeiHelpers().getGuiHelper()),
+                new EugenicsCraftingCategory(registration.getJeiHelpers().getGuiHelper())
         );
     }
 
@@ -48,6 +53,9 @@ public class FurmutageJeiPlugin implements IModPlugin {
         var recipeManager = minecraft.level.getRecipeManager();
         var eugenicsSmeltingRecipes = recipeManager.getAllRecipesFor(ModRecipeTypes.EUGENICS_SMELTING.get());
         registration.addRecipes(EUGENICS_SMELTING_TYPE, eugenicsSmeltingRecipes);
+
+        var eugenicsCraftingRecipes = recipeManager.getAllRecipesFor(ModRecipeTypes.EUGENICS_CRAFTING.get());
+        registration.addRecipes(EUGENICS_CRAFTING_TYPE, eugenicsCraftingRecipes);
     }
 
     @Override
@@ -55,7 +63,8 @@ public class FurmutageJeiPlugin implements IModPlugin {
         // Eugenics Crafting Block acts as an extra crafting table (vanilla crafting recipes)
         registration.addRecipeCatalyst(
                 new ItemStack(ModBlocks.EUGENICS_CRAFTING_BLOCK.get()),
-                mezz.jei.api.constants.RecipeTypes.CRAFTING
+                mezz.jei.api.constants.RecipeTypes.CRAFTING,
+                EUGENICS_CRAFTING_TYPE
         );
 
         // Eugenics Smeltery Oven is the catalyst for Eugenics Smelting recipes

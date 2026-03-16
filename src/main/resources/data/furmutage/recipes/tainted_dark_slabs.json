@@ -2,8 +2,7 @@
   "type": "furmutage:eugenics_crafting",
   "category": "misc",
   "pattern": [
-    "#",
-    "#"
+    "###"
   ],
   "key": {
     "#": {
@@ -11,7 +10,7 @@
     }
   },
   "result": {
-    "item": "minecraft:sticks",
-    "count": 4
+    "item": "furmutage:tainted_dark_slab",
+    "count": 6
   }
 }

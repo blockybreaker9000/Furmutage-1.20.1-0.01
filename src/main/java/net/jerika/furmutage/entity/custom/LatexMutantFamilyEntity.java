@@ -186,12 +186,12 @@ public class LatexMutantFamilyEntity extends Monster {
 
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 400.0D)
+                .add(Attributes.MAX_HEALTH, 200.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.15D)
                 .add(Attributes.ARMOR_TOUGHNESS, 10.0D)
                 .add(Attributes.ATTACK_DAMAGE, 10.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 1.5D)
-                .add(Attributes.FOLLOW_RANGE, 60.0D)
+                .add(Attributes.FOLLOW_RANGE, 30.0D)
                 .add(Attributes.JUMP_STRENGTH, 5.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 10.0D);
     }

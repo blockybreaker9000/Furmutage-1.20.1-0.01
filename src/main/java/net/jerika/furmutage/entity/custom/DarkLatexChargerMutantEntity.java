@@ -155,7 +155,7 @@ public class DarkLatexChargerMutantEntity extends Monster {
 
     public static AttributeSupplier.Builder createMobAttributes() {
         return Monster.createLivingAttributes()
-                .add(Attributes.MAX_HEALTH, 380.0D)
+                .add(Attributes.MAX_HEALTH, 240.0D)
                 .add(Attributes.MOVEMENT_SPEED, 0.4D)
                 .add(Attributes.ARMOR_TOUGHNESS, 12.0D)
                 .add(Attributes.ATTACK_DAMAGE, 12.0D)

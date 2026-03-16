@@ -2,16 +2,16 @@
   "type": "furmutage:eugenics_crafting",
   "category": "misc",
   "pattern": [
-    "#",
-    "#"
+    "###",
+    "###"
   ],
   "key": {
     "#": {
-      "item": "furmutage:tainted_dark_planks"
+      "item": "furmutage:tainted_white_planks"
     }
   },
   "result": {
-    "item": "minecraft:sticks",
-    "count": 4
+    "item": "furmutage:tainted_white_trapdoor",
+    "count": 2
   }
 }
