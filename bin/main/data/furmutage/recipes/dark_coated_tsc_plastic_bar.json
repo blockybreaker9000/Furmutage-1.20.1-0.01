@@ -1,13 +1,18 @@
 {
   "type": "furmutage:eugenics_crafting",
   "category": "misc",
-  "ingredients": [
-    { "item": "furmutage:tsc_plastic_bar" },
-    { "item": "furmutage:roselight_nugget" },
-    { "item": "furmutage:roselight_glass_shard" },
-    { "item": "changed:latex_base" },
-    { "item": "furmutage:cooked_dark_latex_plastic_bowl" }
+  "pattern": [
+    "ABC",
+    "DE ",
+    "   "
   ],
+  "key": {
+    "A": { "item": "furmutage:tsc_plastic_bar" },
+    "B": { "item": "furmutage:roselight_nugget" },
+    "C": { "item": "furmutage:roselight_glass_shard" },
+    "D": { "item": "changed:latex_base" },
+    "E": { "item": "furmutage:cooked_dark_latex_plastic_bowl" }
+  },
   "result": {
     "item": "furmutage:dark_coated_tsc_plastic_bar",
     "count": 1
