@@ -28,8 +28,10 @@ public class ChangedEntityDaytimeSlownessEvents {
     private static final long NIGHT_END = 23000;
     private static final int TORCH_LIGHT_THRESHOLD = 1;
     private static final int CHECK_INTERVAL = 1;
-    /** Speed applied when Changed mob is in light  */
-    private static final double SPEED_IN_LIGHT = 0.6D;
+    /** Speed applied when Changed mob is in light during the day. */
+    private static final double SPEED_IN_DAYLIGHT = 0.6D;
+    /** Speed applied when it's night and the Changed mob is in torch light. */
+    private static final double SPEED_IN_NIGHT_LIGHT = 0.8D;
     /** Speed applied when it's night and the Changed mob is not in light. */
     private static final double SPEED_AT_NIGHT = 1.0D;
 
@@ -81,9 +83,10 @@ public class ChangedEntityDaytimeSlownessEvents {
             Double originalNight = storedSpeedAtNight.remove(entity.getUUID());
             double baseBeforeLight = originalNight != null ? originalNight : moveAttr.getBaseValue();
 
-            // Store original speed the first time we apply in-light speed, then set to SPEED_IN_LIGHT
+            // Store original speed the first time we apply in-light speed
             storedSpeedWhenInLight.putIfAbsent(entity.getUUID(), baseBeforeLight);
-            moveAttr.setBaseValue(SPEED_IN_LIGHT);
+            // Daytime light → 0.6, night torchlight → 0.8
+            moveAttr.setBaseValue(isDaytime ? SPEED_IN_DAYLIGHT : SPEED_IN_NIGHT_LIGHT);
         } else {
             // Not in light: if we previously slowed them in light, restore that original speed first
             Double originalInLight = storedSpeedWhenInLight.remove(entity.getUUID());
