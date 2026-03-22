@@ -1,6 +1,7 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.furmutage;
+import net.jerika.furmutage.config.ModCommonConfig;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -84,6 +85,10 @@ public class ChangedStalkerSneakEvents {
      */
     @SubscribeEvent
     public static void onChangedJoinWorld(EntityJoinLevelEvent event) {
+        if (!ModCommonConfig.ENABLE_CHANGED_LONG_RANGE_TARGETING.get()) {
+            return;
+        }
+
         Entity e = event.getEntity();
         if (!(e instanceof LivingEntity living)) {
             return;
