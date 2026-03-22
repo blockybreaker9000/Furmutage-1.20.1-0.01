@@ -2,6 +2,7 @@ package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
 import net.jerika.furmutage.ai.scary.PureWhiteLatexWolfStalkPlayerGoal;
+import net.jerika.furmutage.config.ModCommonConfig;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -129,12 +130,14 @@ public class ChangedEntitySwimEvents {
                 fastSwimEntities.add(livingEntity);
             }
             
-            // Set follow range to 80 blocks for Changed entities (except roomba)
-            if (entityId.startsWith("changed:") && !EXCLUDED_FOLLOW_RANGE_ENTITIES.contains(entityId)) {
+            // Optional config-driven follow-range override for Changed entities (except excluded).
+            if (ModCommonConfig.ENABLE_CHANGED_SWIM_FOLLOW_RANGE_OVERRIDE.get()
+                    && entityId.startsWith("changed:")
+                    && !EXCLUDED_FOLLOW_RANGE_ENTITIES.contains(entityId)) {
                 AttributeInstance followRange = livingEntity.getAttribute(Attributes.FOLLOW_RANGE);
                 if (followRange != null) {
-                    // Set the base value to 80 blocks
-                    followRange.setBaseValue(80.0D);
+                    // Keep this value only when the config is explicitly enabled.
+                    followRange.setBaseValue(16.0D);
                 }
             }
             // Note: X-ray vision is handled by EntitySensingXRayMixin
