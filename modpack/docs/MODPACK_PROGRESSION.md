@@ -1,5 +1,7 @@
 # Create + Immersive Engineering progression (suggested)
 
+**Item ID reference (early / mid / late):** see [`CREATE_AND_IE_ITEM_IDS.md`](CREATE_AND_IE_ITEM_IDS.md).
+
 Use **quests** (FTB Quests, etc.) or **advancements** to enforce order; these are **recipe ideas** only.
 
 ## Chapter 1 — Foundations

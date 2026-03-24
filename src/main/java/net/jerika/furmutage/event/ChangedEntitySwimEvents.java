@@ -71,7 +71,7 @@ public class ChangedEntitySwimEvents {
     );
 
     /** Rare chance (8%) for pure_white_latex_wolf to become a stalker that watches but does not attack unless provoked. */
-    private static final double PURE_WHITE_LATEX_WOLF_STALKER_CHANCE = 0.08D;
+    private static final double PURE_WHITE_LATEX_WOLF_STALKER_CHANCE = 0.008D;
     
     /** Clear static entity sets when a level unloads to avoid infinite "Saving world data" hang. */
     @SubscribeEvent
@@ -137,7 +137,7 @@ public class ChangedEntitySwimEvents {
                 AttributeInstance followRange = livingEntity.getAttribute(Attributes.FOLLOW_RANGE);
                 if (followRange != null) {
                     // Keep this value only when the config is explicitly enabled.
-                    followRange.setBaseValue(16.0D);
+                    followRange.setBaseValue(20.0D);
                 }
             }
             // Note: X-ray vision is handled by EntitySensingXRayMixin

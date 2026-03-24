@@ -1,0 +1,14 @@
+{
+  "materials": [
+    { "item": { "item": "create:brass_ingot" }, "count": 10 },
+    { "item": { "item": "create:andesite_alloy" }, "count": 8 },
+    { "item": { "item": "create:cogwheel" }, "count": 4 },
+    { "item": { "item": "furmutage:tsc_gears" }, "count": 6 },
+    { "item": { "item": "furmutage:tsc_plastic_bar" }, "count": 10 },
+    { "item": { "item": "immersiveengineering:plate_iron" }, "count": 8 }
+  ],
+  "result": {
+    "type": "gun",
+    "id": "tacz:uzi"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "materials": [
+    { "item": { "tag": "forge:nuggets/iron" }, "count": 24 },
+    { "item": { "item": "minecraft:gunpowder" }, "count": 8 },
+    { "item": { "item": "furmutage:tsc_plastic_bar" }, "count": 4 },
+    { "item": { "item": "create:andesite_alloy" }, "count": 4 },
+    { "item": { "item": "immersiveengineering:plate_copper" }, "count": 6 }
+  ],
+  "result": {
+    "type": "ammo",
+    "id": "tacz:9mm"
+  }
+}

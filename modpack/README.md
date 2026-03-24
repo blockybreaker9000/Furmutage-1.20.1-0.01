@@ -32,3 +32,7 @@ These files are **not** loaded by the Furmutage mod JAR. They are meant to be co
 If any item ID does not match your mod versions, edit the scripts (comments mark the spots).
 
 See `docs/MODPACK_PROGRESSION.md` for progression ideas between Create and IE.
+
+## TaCZ gun progression (Furmutage + Create + IE)
+
+See **`tacz_gunpack/README.md`** — copy `furmutage_tacz_progression` into your instance’s **`tacz`** folder (e.g. `...\Instances\Furmutage Survival Modpack\tacz\`).

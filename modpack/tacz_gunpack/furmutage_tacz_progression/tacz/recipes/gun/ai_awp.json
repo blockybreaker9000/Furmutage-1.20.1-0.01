@@ -1,0 +1,15 @@
+{
+  "materials": [
+    { "item": { "item": "immersiveengineering:heavy_engineering" }, "count": 6 },
+    { "item": { "item": "immersiveengineering:plate_steel" }, "count": 20 },
+    { "item": { "item": "create:precision_mechanism" }, "count": 4 },
+    { "item": { "item": "create:electron_tube" }, "count": 6 },
+    { "item": { "item": "furmutage:thunderium_ingot" }, "count": 8 },
+    { "item": { "item": "furmutage:thunderium_glass_gem" }, "count": 4 },
+    { "item": { "item": "minecraft:nether_star" }, "count": 1 }
+  ],
+  "result": {
+    "type": "gun",
+    "id": "tacz:ai_awp"
+  }
+}

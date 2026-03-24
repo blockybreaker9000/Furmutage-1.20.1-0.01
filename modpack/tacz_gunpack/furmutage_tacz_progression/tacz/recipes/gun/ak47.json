@@ -1,0 +1,13 @@
+{
+  "materials": [
+    { "item": { "item": "immersiveengineering:plate_steel" }, "count": 16 },
+    { "item": { "item": "immersiveengineering:electron_tube" }, "count": 6 },
+    { "item": { "item": "create:precision_mechanism" }, "count": 2 },
+    { "item": { "item": "furmutage:tsc_advanced_tech" }, "count": 4 },
+    { "item": { "item": "furmutage:reinforced_tsc_plastic_bar" }, "count": 8 }
+  ],
+  "result": {
+    "type": "gun",
+    "id": "tacz:ak47"
+  }
+}
