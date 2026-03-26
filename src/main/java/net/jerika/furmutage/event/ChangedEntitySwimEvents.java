@@ -131,7 +131,7 @@ public class ChangedEntitySwimEvents {
             }
             
             // Optional config-driven follow-range override for Changed entities (except excluded).
-            if (ModCommonConfig.ENABLE_CHANGED_SWIM_FOLLOW_RANGE_OVERRIDE.get()
+            if (ModCommonConfig.ENABLE_CHANGED_LONG_RANGE_TARGETING_AND_SWIM_FOLLOW_RANGE.get()
                     && entityId.startsWith("changed:")
                     && !EXCLUDED_FOLLOW_RANGE_ENTITIES.contains(entityId)) {
                 AttributeInstance followRange = livingEntity.getAttribute(Attributes.FOLLOW_RANGE);

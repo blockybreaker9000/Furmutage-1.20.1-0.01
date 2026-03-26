@@ -85,7 +85,7 @@ public class ChangedStalkerSneakEvents {
      */
     @SubscribeEvent
     public static void onChangedJoinWorld(EntityJoinLevelEvent event) {
-        if (!ModCommonConfig.ENABLE_CHANGED_LONG_RANGE_TARGETING.get()) {
+        if (!ModCommonConfig.ENABLE_CHANGED_LONG_RANGE_TARGETING_AND_SWIM_FOLLOW_RANGE.get()) {
             return;
         }
 

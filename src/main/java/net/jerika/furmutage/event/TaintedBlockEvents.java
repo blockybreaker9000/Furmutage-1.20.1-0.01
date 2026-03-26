@@ -99,7 +99,6 @@ public class TaintedBlockEvents {
                entity instanceof Sheep ||
                entity instanceof Rabbit ||
                entity instanceof Horse ||
-               entity instanceof Squid ||
                entity instanceof Llama ||
                entity instanceof Dolphin ||
                entity instanceof Goat;
@@ -332,9 +331,6 @@ public class TaintedBlockEvents {
                     } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
                         replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_HORSE.get());
                         wasReplaced = true;
-                    } else if (entity instanceof Squid && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSquidEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_SQUID.get());
-                        wasReplaced = true;
                     } else if (entity instanceof Llama && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexLlamaEntity)) {
                         replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.WHITE_LATEX_LLAMA.get());
                         wasReplaced = true;
@@ -385,9 +381,6 @@ public class TaintedBlockEvents {
                         wasReplaced = true;
                     } else if (entity instanceof Horse && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexHorseEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexHorseEntity)) {
                         replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_HORSE.get());
-                        wasReplaced = true;
-                    } else if (entity instanceof Squid && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexSquidEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexSquidEntity)) {
-                        replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_SQUID.get());
                         wasReplaced = true;
                     } else if (entity instanceof Llama && !(entity instanceof net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity) && !(entity instanceof net.jerika.furmutage.entity.custom.WhiteLatexLlamaEntity)) {
                         replaceEntityWithInfectedVariant(entity, serverLevel, ModEntities.DARK_LATEX_LLAMA.get());

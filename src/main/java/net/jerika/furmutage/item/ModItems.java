@@ -156,12 +156,12 @@ public class ModItems {
             () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(3)
                     .saturationMod(0.33333334f) // 1 saturation point
-                    .build())));
+                    .build()), 0.2F, 600, 0));
     public static final RegistryObject<Item> OPEN_CANNED_DOG_FOOD = ITEMS.register("open_canned_dog_food",
             () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(3)
                     .saturationMod(0.6666667f) // 2 saturation
-                    .build())));
+                    .build()), 0.2F, 600, 0));
     public static final RegistryObject<Item> OPEN_CANNED_BEANS = ITEMS.register("open_canned_beans",
             () -> new OpenCannedFoodItem(new Item.Properties().food(new FoodProperties.Builder()
                     .nutrition(4)
@@ -382,8 +382,6 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_RABBIT, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
     public static final RegistryObject<Item> WHITE_LATEX_HORSE_SPAWN_EGG = ITEMS.register("white_latex_horse_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_HORSE, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
-    public static final RegistryObject<Item> WHITE_LATEX_SQUID_SPAWN_EGG = ITEMS.register("white_latex_squid_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_SQUID, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
     public static final RegistryObject<Item> WHITE_LATEX_LLAMA_SPAWN_EGG = ITEMS.register("white_latex_llama_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.WHITE_LATEX_LLAMA, WHITE_LATEX_EGG_BASE, WHITE_LATEX_EGG_SPOTS, new Item.Properties()));
     public static final RegistryObject<Item> WHITE_LATEX_DOLPHIN_SPAWN_EGG = ITEMS.register("white_latex_dolphin_spawn_egg",
@@ -409,8 +407,6 @@ public class ModItems {
             () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_RABBIT, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
     public static final RegistryObject<Item> DARK_LATEX_HORSE_SPAWN_EGG = ITEMS.register("dark_latex_horse_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_HORSE, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
-    public static final RegistryObject<Item> DARK_LATEX_SQUID_SPAWN_EGG = ITEMS.register("dark_latex_squid_spawn_egg",
-            () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_SQUID, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
     public static final RegistryObject<Item> DARK_LATEX_LLAMA_SPAWN_EGG = ITEMS.register("dark_latex_llama_spawn_egg",
             () -> new ForgeSpawnEggItem(ModEntities.DARK_LATEX_LLAMA, DARK_LATEX_EGG_BASE, DARK_LATEX_EGG_SPOTS, new Item.Properties()));
     public static final RegistryObject<Item> DARK_LATEX_DOLPHIN_SPAWN_EGG = ITEMS.register("dark_latex_dolphin_spawn_egg",

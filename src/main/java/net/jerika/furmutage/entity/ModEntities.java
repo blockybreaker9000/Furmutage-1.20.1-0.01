@@ -15,7 +15,6 @@ import net.jerika.furmutage.entity.custom.WhiteLatexPigEntity;
 import net.jerika.furmutage.entity.custom.GiantPureWhiteLatexEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexRabbitEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexSheepEntity;
-import net.jerika.furmutage.entity.custom.WhiteLatexSquidEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexLlamaEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexDolphinEntity;
 import net.jerika.furmutage.entity.custom.WhiteLatexGoatEntity;
@@ -25,7 +24,6 @@ import net.jerika.furmutage.entity.custom.DarkLatexChickenEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexSheepEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexRabbitEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexHorseEntity;
-import net.jerika.furmutage.entity.custom.DarkLatexSquidEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexLlamaEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexDolphinEntity;
 import net.jerika.furmutage.entity.custom.DarkLatexChargerMutantEntity;
@@ -121,10 +119,6 @@ public class ModEntities {
             ENTITY_TYPES.register("white_latex_horse", () -> EntityType.Builder.of(WhiteLatexHorseEntity::new, MobCategory.CREATURE)
                     .sized(1.3964844f, 1.6f).build("white_latex_horse"));
     
-    public static final RegistryObject<EntityType<WhiteLatexSquidEntity>> WHITE_LATEX_SQUID =
-            ENTITY_TYPES.register("white_latex_squid", () -> EntityType.Builder.of(WhiteLatexSquidEntity::new, MobCategory.WATER_CREATURE)
-                    .sized(0.8f, 0.8f).build("white_latex_squid"));
-    
     public static final RegistryObject<EntityType<WhiteLatexLlamaEntity>> WHITE_LATEX_LLAMA =
             ENTITY_TYPES.register("white_latex_llama", () -> EntityType.Builder.of(WhiteLatexLlamaEntity::new, MobCategory.CREATURE)
                     .sized(0.9f, 1.87f).build("white_latex_llama"));
@@ -161,10 +155,6 @@ public class ModEntities {
     public static final RegistryObject<EntityType<DarkLatexHorseEntity>> DARK_LATEX_HORSE =
             ENTITY_TYPES.register("dark_latex_horse", () -> EntityType.Builder.of(DarkLatexHorseEntity::new, MobCategory.CREATURE)
                     .sized(1.3964844f, 1.6f).build("dark_latex_horse"));
-    
-    public static final RegistryObject<EntityType<DarkLatexSquidEntity>> DARK_LATEX_SQUID =
-            ENTITY_TYPES.register("dark_latex_squid", () -> EntityType.Builder.of(DarkLatexSquidEntity::new, MobCategory.WATER_CREATURE)
-                    .sized(0.8f, 0.8f).build("dark_latex_squid"));
     
     public static final RegistryObject<EntityType<DarkLatexLlamaEntity>> DARK_LATEX_LLAMA =
             ENTITY_TYPES.register("dark_latex_llama", () -> EntityType.Builder.of(DarkLatexLlamaEntity::new, MobCategory.CREATURE)

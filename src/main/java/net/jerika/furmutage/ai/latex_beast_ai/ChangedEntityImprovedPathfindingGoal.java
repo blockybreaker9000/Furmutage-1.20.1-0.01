@@ -10,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FenceBlock;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.VineBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
@@ -47,6 +48,12 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private static final int CRAWL_REENTER_COOLDOWN_TICKS = 100;
     /** Crawl speed multiplier for Changed/Furmutage entities (movement speed * this when crawling). */
     private static final double CRAWL_SPEED_MULTIPLIER = 0.5;
+
+    /**
+     * Night-only chance to allow jumping/climbing over fences and wall-type blocks.
+     * Only affects fence/wall obstacle logic (other obstacle handling remains unchanged).
+     */
+    private static final double NIGHT_FENCE_WALL_CLIMB_CHANCE = 0.25D;
 
     /** Cooldown after standing before we can enter crawl again (ticks). */
     private int crawlReenterCooldown = 0;
@@ -287,8 +294,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         if (isFence) {
             BlockState frontBlockAbove = this.mob.level().getBlockState(checkPos.above());
             boolean hasSpaceAbove = frontBlockAbove.isAir() || frontBlockAbove.getCollisionShape(this.mob.level(), checkPos.above()).isEmpty();
-            if (hasSpaceAbove) {
-                return true; // Fences are always jumpable if there's space above
+            if (hasSpaceAbove && this.mob.level().isNight() && this.mob.getRandom().nextDouble() < NIGHT_FENCE_WALL_CLIMB_CHANCE) {
+                return true; // Night-only, 25% chance to jump/climb fence
             }
         }
         
@@ -307,7 +314,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
             boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
             
             if (isSolid) {
-                wallHeight++;
+                // Only count wall-type blocks for this wall jump logic
+                wallHeight = isWallBlock(blockState) ? wallHeight + 1 : 0;
             } else {
                 // We've hit air, check if we have a valid wall height
                 if (wallHeight >= MIN_WALL_HEIGHT && wallHeight <= MAX_OBSTACLE_HEIGHT) {
@@ -328,8 +336,10 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
                     BlockState entityHeadBlock = this.mob.level().getBlockState(entityHeadPos);
                     boolean entityHasClearSpace = entityHeadBlock.isAir() || entityHeadBlock.getCollisionShape(this.mob.level(), entityHeadPos).isEmpty();
                     
-                    if (hasClearSpaceAbove && entityHasClearSpace) {
-                        return true; // Found a valid wall 2-5 blocks high that we can jump over
+                    if (hasClearSpaceAbove && entityHasClearSpace
+                            && this.mob.level().isNight()
+                            && this.mob.getRandom().nextDouble() < NIGHT_FENCE_WALL_CLIMB_CHANCE) {
+                        return true; // Night-only, 25% chance to jump/climb wall
                     }
                 }
                 // Reset wall height if we hit air before reaching minimum height
@@ -351,7 +361,8 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
                 boolean isSolid = !blockState.isAir() && !blockState.getCollisionShape(this.mob.level(), checkBlockPos).isEmpty();
                 
                 if (isSolid) {
-                    wallHeight++;
+                    // Only count wall-type blocks for this wall jump logic
+                    wallHeight = isWallBlock(blockState) ? wallHeight + 1 : 0;
                 } else {
                     if (wallHeight >= MIN_WALL_HEIGHT && wallHeight <= MAX_OBSTACLE_HEIGHT) {
                         // Check clear space above wall
@@ -369,8 +380,10 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
                         BlockState entityHeadBlock = this.mob.level().getBlockState(entityHeadPos);
                         boolean entityHasClearSpace = entityHeadBlock.isAir() || entityHeadBlock.getCollisionShape(this.mob.level(), entityHeadPos).isEmpty();
                         
-                        if (hasClearSpaceAbove && entityHasClearSpace) {
-                            return true;
+                        if (hasClearSpaceAbove && entityHasClearSpace
+                                && this.mob.level().isNight()
+                                && this.mob.getRandom().nextDouble() < NIGHT_FENCE_WALL_CLIMB_CHANCE) {
+                            return true; // Night-only, 25% chance to jump/climb wall
                         }
                     }
                     wallHeight = 0;
@@ -398,6 +411,14 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         // Check for common fence blocks by name (fallback)
         String blockName = block.getDescriptionId().toLowerCase();
         return blockName.contains("fence") && !blockName.contains("gate");
+    }
+
+    private boolean isWallBlock(BlockState state) {
+        if (state == null) {
+            return false;
+        }
+        // Vanilla wall-type blocks are in the WALLS tag; WallBlock covers modded walls that extend it.
+        return state.is(BlockTags.WALLS) || state.getBlock() instanceof WallBlock;
     }
 
     private boolean isGapAhead() {

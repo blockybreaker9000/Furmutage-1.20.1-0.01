@@ -69,7 +69,6 @@ public class ModEventBusEvents {
         event.put(ModEntities.WHITE_LATEX_SHEEP.get(), WhiteLatexSheepEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_RABBIT.get(), WhiteLatexRabbitEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_HORSE.get(), WhiteLatexHorseEntity.createAttributes().build());
-        event.put(ModEntities.WHITE_LATEX_SQUID.get(), WhiteLatexSquidEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_LLAMA.get(), WhiteLatexLlamaEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_DOLPHIN.get(), WhiteLatexDolphinEntity.createAttributes().build());
         event.put(ModEntities.WHITE_LATEX_GOAT.get(), WhiteLatexGoatEntity.createAttributes().build());
@@ -81,7 +80,6 @@ public class ModEventBusEvents {
         event.put(ModEntities.DARK_LATEX_SHEEP.get(), DarkLatexSheepEntity.createAttributes().build());
         event.put(ModEntities.DARK_LATEX_RABBIT.get(), DarkLatexRabbitEntity.createAttributes().build());
         event.put(ModEntities.DARK_LATEX_HORSE.get(), DarkLatexHorseEntity.createAttributes().build());
-        event.put(ModEntities.DARK_LATEX_SQUID.get(), DarkLatexSquidEntity.createAttributes().build());
         event.put(ModEntities.DARK_LATEX_LLAMA.get(), DarkLatexLlamaEntity.createAttributes().build());
         event.put(ModEntities.DARK_LATEX_DOLPHIN.get(), DarkLatexDolphinEntity.createAttributes().build());
         event.put(ModEntities.DARK_LATEX_GOAT.get(), DarkLatexGoatEntity.createAttributes().build());

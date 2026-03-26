@@ -133,7 +133,6 @@ public class modcreativemodetabs {
                         output.accept(ModItems.WHITE_LATEX_HORSE_SPAWN_EGG.get());
                         output.accept(ModItems.WHITE_LATEX_GOAT_SPAWN_EGG.get());
                         output.accept(ModItems.WHITE_LATEX_LLAMA_SPAWN_EGG.get());
-                        output.accept(ModItems.WHITE_LATEX_SQUID_SPAWN_EGG.get());
                         output.accept(ModItems.WHITE_LATEX_DOLPHIN_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_COW_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_PIG_SPAWN_EGG.get());
@@ -144,7 +143,6 @@ public class modcreativemodetabs {
                         output.accept(ModItems.DARK_LATEX_GOAT_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_CHARGER_MUTANT_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_LLAMA_SPAWN_EGG.get());
-                        output.accept(ModItems.DARK_LATEX_SQUID_SPAWN_EGG.get());
                         output.accept(ModItems.DARK_LATEX_DOLPHIN_SPAWN_EGG.get());
                         output.accept(ModItems.TSC_DRONE_SPAWN_EGG.get());
                         output.accept(ModItems.TSC_DRONE_BOSS_SPAWN_EGG.get());

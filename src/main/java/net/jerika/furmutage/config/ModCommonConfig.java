@@ -13,10 +13,14 @@ public class ModCommonConfig {
     
     /** When true (default): Changed entities can see through up to 5 blocks. When false: normal line of sight. */
     public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_SEE_THROUGH_WALLS;
-    /** When true: force Changed entities to have at least 30 FOLLOW_RANGE. When false (default): keep vanilla/modded range. */
-    public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_LONG_RANGE_TARGETING;
-    /** When true (default): ChangedEntitySwimEvents applies its follow-range override for Changed entities. When false: no override. */
-    public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_SWIM_FOLLOW_RANGE_OVERRIDE;
+    /**
+     * When true (default: false): apply both long-range targeting and swim follow-range tweaks
+     * for Changed entities.
+     *
+     * - Long-range targeting: force Changed entities to have at least 30 FOLLOW_RANGE.
+     * - Swim follow-range override: apply swim follow-range FOLLOW_RANGE adjustment (detection behavior).
+     */
+    public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_LONG_RANGE_TARGETING_AND_SWIM_FOLLOW_RANGE;
     
     // Mob spawn control options
     public static final ForgeConfigSpec.BooleanValue ENABLE_ZOMBIE_SPAWN;
@@ -60,14 +64,10 @@ public class ModCommonConfig {
                 .comment("When true: Changed/latex entities can see targets through up to 5 blocks of walls.",
                         "When false (DEFAULT): they use normal line of sight and cannot see through solid blocks.")
                 .define("enableChangedSeeThroughWalls", false);
-        ENABLE_CHANGED_LONG_RANGE_TARGETING = BUILDER
-                .comment("When true: Changed entities are forced to at least 30 follow range (spotting from farther away).",
-                        "When false (DEFAULT): no forced follow range increase is applied.")
-                .define("enableChangedLongRangeTargeting", false);
-        ENABLE_CHANGED_SWIM_FOLLOW_RANGE_OVERRIDE = BUILDER
-                .comment("When true (DEFAULT): ChangedEntitySwimEvents sets Changed entities' follow range to 20 (detection range).",
-                        "When false: ChangedEntitySwimEvents does not modify follow range.")
-                .define("enableChangedSwimFollowRangeOverride", true);
+        ENABLE_CHANGED_LONG_RANGE_TARGETING_AND_SWIM_FOLLOW_RANGE = BUILDER
+                .comment("When true: enable both long-range targeting and swim follow-range adjustments for Changed entities.",
+                        "When false (DEFAULT): no forced follow-range tuning is applied.")
+                .define("enableChangedLongRangeTargetingAndSwimFollowRange", false);
         BUILDER.pop();
         
         BUILDER.push("Mob Spawn Control");
