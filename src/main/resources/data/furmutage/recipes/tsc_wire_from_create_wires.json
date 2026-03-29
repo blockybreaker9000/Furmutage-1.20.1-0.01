@@ -3,13 +3,13 @@
   "group": "tsc_wire",
   "ingredients": [
     {
-      "item": "createadditions:gold_wire"
+      "item": "createaddition:gold_wire"
     },
     {
-      "item": "createadditions:copper_wire"
+      "item": "createaddition:copper_wire"
     },
     {
-      "item": "createadditions:copper_wire"
+      "item": "createaddition:copper_wire"
     }
   ],
   "result": {
