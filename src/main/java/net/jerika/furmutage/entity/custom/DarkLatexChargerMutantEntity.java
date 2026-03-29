@@ -168,7 +168,7 @@ public class DarkLatexChargerMutantEntity extends Monster {
                 .add(Attributes.ARMOR_TOUGHNESS, 12.0D)
                 .add(Attributes.ATTACK_DAMAGE, 12.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 2.0D)
-                .add(Attributes.FOLLOW_RANGE, 80.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
                 .add(Attributes.JUMP_STRENGTH, 5.0D)
                 .add(Attributes.KNOCKBACK_RESISTANCE, 10.0D);
     }

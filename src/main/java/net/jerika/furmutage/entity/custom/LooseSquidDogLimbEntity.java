@@ -187,7 +187,7 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
     protected void setAttributes(AttributeMap attributes) {
         super.setAttributes(attributes);
         AttributePresets.catLike(attributes);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(48.0D);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(8.0D);
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(4.0D);
         attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.6D);

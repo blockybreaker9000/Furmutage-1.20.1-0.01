@@ -222,7 +222,7 @@ public class DeepSlateLatexSquidDog extends AbstractLatexSquidDog {
     @Override
     protected void setAttributes(AttributeMap attributes) {
         super.setAttributes(attributes);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue (10.0D); // Much longer follow range for persistent targeting
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue (16.0D); // Much longer follow range for persistent targeting
         attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.5);
         attributes.getInstance(ForgeMod.SWIM_SPEED.get()).setBaseValue(0.5);
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(15);

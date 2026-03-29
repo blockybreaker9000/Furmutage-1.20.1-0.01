@@ -93,7 +93,7 @@ public class LatexExoMutantEntity extends ChangedEntity {
                 .add(Attributes.ARMOR_TOUGHNESS, 5.0D)
                 .add(Attributes.ATTACK_DAMAGE, 8.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.FOLLOW_RANGE, 60.0D)
+                .add(Attributes.FOLLOW_RANGE, 16.0D)
                 .add(Attributes.JUMP_STRENGTH, 2.0D); // High jump capability
     }
 

@@ -79,7 +79,7 @@ public class PureWhiteLatexCrawlerEntity extends ChangedEntity {
         // Pretty slow movement, roughly "slowness 3" feel
         attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.18D);
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(32.0D);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
     }
 
     @Override

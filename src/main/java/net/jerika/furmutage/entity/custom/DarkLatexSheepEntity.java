@@ -49,7 +49,7 @@ public class DarkLatexSheepEntity extends Sheep {
                 .add(Attributes.MOVEMENT_SPEED, 0.25D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.FOLLOW_RANGE, 60.0D);
+                .add(Attributes.FOLLOW_RANGE, 16.0D);
     }
 
     @Override

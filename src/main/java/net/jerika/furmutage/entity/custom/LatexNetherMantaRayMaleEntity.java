@@ -47,7 +47,7 @@ public class LatexNetherMantaRayMaleEntity extends ChangedEntity {
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(15.0D);
         attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.6D);
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(5.0D);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(32.0D);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(16.0D);
     }
 
     public static AttributeSupplier.Builder createAttributes() {

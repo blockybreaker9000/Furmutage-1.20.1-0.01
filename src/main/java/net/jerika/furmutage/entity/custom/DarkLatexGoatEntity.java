@@ -44,7 +44,7 @@ public class DarkLatexGoatEntity extends Goat {
                 .add(Attributes.MOVEMENT_SPEED, 0.28D)
                 .add(Attributes.ATTACK_DAMAGE, 3.0D)
                 .add(Attributes.ATTACK_KNOCKBACK, 0.0D)
-                .add(Attributes.FOLLOW_RANGE, 60.0D);
+                .add(Attributes.FOLLOW_RANGE, 16.0D);
     }
 
     @Override

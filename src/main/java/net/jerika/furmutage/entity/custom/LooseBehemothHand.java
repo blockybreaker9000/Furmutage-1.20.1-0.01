@@ -59,7 +59,7 @@ public class LooseBehemothHand extends ChangedEntity implements GenderedEntity {
     protected void setAttributes(AttributeMap attributes) {
         super.setAttributes(attributes);
         AttributePresets.catLike(attributes);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(32.0D);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(30.0D);
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(6.0D);
         attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.75D);

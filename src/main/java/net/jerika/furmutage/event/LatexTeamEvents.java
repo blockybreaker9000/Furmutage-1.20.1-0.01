@@ -33,7 +33,16 @@ public class LatexTeamEvents {
     private static final Set<Mob> teamEntities = java.util.Collections.newSetFromMap(new WeakHashMap<>());
     private static final int TARGET_CHECK_INTERVAL = 20; // Check every 20 ticks (1 second)
     private static final int ATTACK_COOLDOWN = 20; // Attack every 20 ticks (1 second)
-    private static final double HORDE_RADIUS = 32.0D; // 32 block radius for horde aggro (like zombie pigmen)
+    /**
+     * When a team mob is hurt, only teammates within this distance (blocks) of the <em>victim</em>
+     * are given aggro on the attacker ({@link #onLivingAttack}).
+     */
+    private static final double LATEX_HORDE_AGGRO_RADIUS = 10.0D;
+    /**
+     * When the attacker is a player, team AI will only keep / acquire them as {@code lastHurtByMob}
+     * target within this horizontal distance (blocks). Other entities use {@link Attributes#FOLLOW_RANGE}.
+     */
+    private static final double LATEX_PLAYER_HURT_AGGRO_RANGE_SQ = 10.0D * 10.0D;
     private static int serverTickCounter = 0;
 
     /** Effective team for targeting: 0 = human/unknown, 1 = white, 2 = dark. Players use transfur form from Changed. */
@@ -113,6 +122,14 @@ public class LatexTeamEvents {
         var m = target.getClass().getMethod(methodName);
         m.setAccessible(true);
         return m.invoke(target);
+    }
+
+    /**
+     * Block raycast line of sight (vanilla). Does not use {@code Mob#getSensing().hasLineOfSight},
+     * which is mixed in for optional Changed x-ray vision.
+     */
+    private static boolean hasVanillaLineOfSight(Mob mob, LivingEntity target) {
+        return target != null && target.isAlive() && mob.hasLineOfSight(target);
     }
 
     /** True only when both are on opposite teams (white vs dark). Not hostile to players or other mobs. */
@@ -256,10 +273,12 @@ public class LatexTeamEvents {
             followRange = 42.0;
         }
         double followRangeSq = followRange * followRange;
-        
+        double attackerMaxRangeSq = attacker instanceof Player ? LATEX_PLAYER_HURT_AGGRO_RANGE_SQ : followRangeSq;
+
         // Only target attacker if they're on the opposite team OR untransfurred player who attacked (don't target same-team e.g. white-transfurred player vs bomber)
-        boolean shouldTargetAttacker = attacker != null && attacker.isAlive() && attacker.distanceToSqr(mob) <= followRangeSq
+        boolean shouldTargetAttacker = attacker != null && attacker.isAlive() && attacker.distanceToSqr(mob) <= attackerMaxRangeSq
                 && attacker != tamedOwner
+                && hasVanillaLineOfSight(mob, attacker)
                 && (areOnDifferentTeams(mob, attacker) || (attacker instanceof Player && !isSameTeam(mob, attacker)));
         if (shouldTargetAttacker && attacker != null) {
             if (currentTarget != attacker) {
@@ -273,8 +292,8 @@ public class LatexTeamEvents {
             }
         } else {
             // No attacker or attacker is out of range - use team-based targeting
-            boolean needsNewTarget = (currentTarget == null || !currentTarget.isAlive() || 
-                    !areOnDifferentTeams(mob, currentTarget));
+            boolean needsNewTarget = (currentTarget == null || !currentTarget.isAlive() ||
+                    !areOnDifferentTeams(mob, currentTarget) || !hasVanillaLineOfSight(mob, currentTarget));
             
             // Find new target if needed
             if (needsNewTarget) {
@@ -289,6 +308,7 @@ public class LatexTeamEvents {
                     if (!entity.isAlive() || entity == mob) continue;
                     if (tamedOwner != null && entity == tamedOwner) continue;
                     if (!areOnDifferentTeams(mob, entity)) continue;
+                    if (!hasVanillaLineOfSight(mob, entity)) continue;
                     double distanceSq = mob.distanceToSqr(entity);
                     if (distanceSq < nearestDistance) {
                         nearestDistance = distanceSq;
@@ -317,7 +337,7 @@ public class LatexTeamEvents {
         
         // Attack if target is close enough (either attacker or team enemy)
         currentTarget = mob.getTarget();
-        if (currentTarget != null && currentTarget.isAlive()) {
+        if (currentTarget != null && currentTarget.isAlive() && hasVanillaLineOfSight(mob, currentTarget)) {
             
             double distanceSq = mob.distanceToSqr(currentTarget);
             double attackReach = (mob.getBbWidth() + currentTarget.getBbWidth()) * 1.5;
@@ -344,8 +364,8 @@ public class LatexTeamEvents {
     }
     
     /**
-     * Zombie pigman-style horde behavior: when a team entity is attacked,
-     * nearby teammates within 32 blocks also become hostile to the attacker.
+     * When a team mob is hurt, teammates within {@value #LATEX_HORDE_AGGRO_RADIUS} blocks of the
+     * <em>victim</em> (and with line of sight to the attacker) get aggro.
      */
     @SubscribeEvent
     public static void onLivingAttack(LivingAttackEvent event) {
@@ -404,10 +424,10 @@ public class LatexTeamEvents {
         boolean attackerIsValidForHorde = attackerTeam != attackedTeam || attackerTeam == 0;
         if (attackedEntity.level() instanceof ServerLevel serverLevel && attackedTeam != 0
                 && attacker != null && attacker.isAlive() && attackerIsValidForHorde) {
-            double hordeRadiusSq = HORDE_RADIUS * HORDE_RADIUS;
-            
-            // Search for nearby teammates
-            AABB searchArea = attackedEntity.getBoundingBox().inflate(HORDE_RADIUS, HORDE_RADIUS / 2, HORDE_RADIUS);
+            double hordeRadiusSq = LATEX_HORDE_AGGRO_RADIUS * LATEX_HORDE_AGGRO_RADIUS;
+
+            // Search for nearby teammates (distance from the entity that was hit, not from the attacker)
+            AABB searchArea = attackedEntity.getBoundingBox().inflate(LATEX_HORDE_AGGRO_RADIUS, LATEX_HORDE_AGGRO_RADIUS / 2, LATEX_HORDE_AGGRO_RADIUS);
             for (LivingEntity nearbyEntity : serverLevel.getEntitiesOfClass(
                     LivingEntity.class, searchArea, entity -> {
                         if (!(entity instanceof Mob mob) || !mob.isAlive() || mob == attackedEntity) {
@@ -426,7 +446,7 @@ public class LatexTeamEvents {
                     double distanceSq = attackedEntity.distanceToSqr(nearbyMob);
                     
                     // Check if within horde radius
-                    if (distanceSq <= hordeRadiusSq) {
+                    if (distanceSq <= hordeRadiusSq && hasVanillaLineOfSight(nearbyMob, attacker)) {
                         // Make the nearby teammate hostile to the attacker (opposite team only)
                         nearbyMob.setTarget(attacker);
                         nearbyMob.setLastHurtByMob(attacker);
@@ -461,6 +481,16 @@ public class LatexTeamEvents {
         if (!LatexTeamConfig.isSameTeamHostile() && isSameTeam(mob, newTarget)) {
             event.setCanceled(true);
             // If something already set this target, clear it so AI immediately drops aggro
+            if (mob.getTarget() == newTarget) {
+                mob.setTarget(null);
+                mob.setLastHurtByMob(null);
+            }
+            return;
+        }
+
+        // No x-ray: block vanilla/goal targets through walls (uses vanilla raycast, not Sensing mixin)
+        if (!isSameTeam(mob, newTarget) && !hasVanillaLineOfSight(mob, newTarget)) {
+            event.setCanceled(true);
             if (mob.getTarget() == newTarget) {
                 mob.setTarget(null);
                 mob.setLastHurtByMob(null);

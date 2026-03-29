@@ -137,7 +137,7 @@ public class ChangedEntitySwimEvents {
                 AttributeInstance followRange = livingEntity.getAttribute(Attributes.FOLLOW_RANGE);
                 if (followRange != null) {
                     // Keep this value only when the config is explicitly enabled.
-                    followRange.setBaseValue(20.0D);
+                    followRange.setBaseValue(10.0D);
                 }
             }
             // Note: X-ray vision is handled by EntitySensingXRayMixin

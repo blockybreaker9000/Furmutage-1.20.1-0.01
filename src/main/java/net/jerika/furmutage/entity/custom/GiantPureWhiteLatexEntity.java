@@ -20,8 +20,6 @@ import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
-import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -107,7 +105,7 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50.0D);
         attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.5D);
         attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(2.0D);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(16.0D);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -138,11 +136,7 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
     }
 
     /**
-     * Natural spawn rules:
-     * - Underground only (Y from 10 down to -64)
-     * - Not in worldgen regions (avoid structure gen)
-     * - Dark enough (similar to monsters)
-     * - At least 10 blocks of clear vertical space above the spawn position so the giant can fit.
+     * Natural spawning is disabled; spawn egg and {@code /summon} still work.
      */
     public static boolean checkGiantPureWhiteLatexSpawnRules(EntityType<GiantPureWhiteLatexEntity> entityType,
                                                              ServerLevelAccessor world,
@@ -150,41 +144,9 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
                                                              BlockPos pos,
                                                              RandomSource random) {
         if (reason != MobSpawnType.NATURAL) {
-            return true; // allow eggs/commands
+            return true;
         }
-        if (world instanceof WorldGenRegion) {
-            return false;
-        }
-        int y = pos.getY();
-        if (y > -20 || y < -64) {
-            return false; // deep underground only
-        }
-
-        // Must not be exposed to sky and must be dark
-        if (world.getBrightness(LightLayer.SKY, pos) > random.nextInt(50)) {
-            return false;
-        }
-        if (world.getBrightness(LightLayer.BLOCK, pos) > 0) {
-            return false;
-        }
-
-        // Require at least 10 blocks of clear vertical space (cave must be 10 blocks or higher)
-        int clear = 0;
-        for (int dy = 1; dy <= 12; dy++) {
-            BlockPos check = pos.above(dy);
-            BlockState state = world.getBlockState(check);
-            if (state.isAir() || state.getCollisionShape(world, check).isEmpty()) {
-                clear++;
-            } else {
-                break;
-            }
-        }
-        if (clear < 10) {
-            return false;
-        }
-
-        // Use standard monster rules for final checks (valid spawn floor, etc.)
-        return net.minecraft.world.entity.monster.Monster.checkMonsterSpawnRules(entityType, world, reason, pos, random);
+        return false;
     }
 
 }
