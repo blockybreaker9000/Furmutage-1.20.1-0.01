@@ -10,10 +10,10 @@
       "item": "create:precision_mechanism"
     },
     "G": {
-      "item": "createadditions:electrum_wire"
+      "item": "createaddition:electrum_wire"
     },
     "H": {
-      "item": "createadditions:testla_coil"
+      "item": "createaddition:testla_coil"
     },
     "M": {
       "item": "furmutage:tsc_advanced_tech"

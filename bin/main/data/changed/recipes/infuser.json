@@ -10,7 +10,7 @@
       "item": "create:sturdy_sheet"
     },
     "S": {
-      "item": "createadditions:electrum_wire"
+      "item": "createaddition:electrum_wire"
     },
     "P": {
       "item": "create:copper_sheet"
