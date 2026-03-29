@@ -10,13 +10,13 @@
       "item": "create:precision_mechanism"
     },
     "G": {
-      "item": "immersiveengineering:heavy_engineering"
+      "item": "create:transmitter"
     },
     "M": {
       "item": "minecraft:ecto_shard"
     },
     "C": {
-      "item": "immersiveengineering:capacitor_hv"
+      "item": "create.shadow_steel"
     }
   },
   "result": {

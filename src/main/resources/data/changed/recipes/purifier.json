@@ -7,19 +7,19 @@
   ],
   "key": {
     "F": {
-      "item": "minecraft:furnace"
+      "item": "create:zinc_ingot"
     },
     "S": {
-      "item": "changed:syringe"
+      "item": "create:copper_sheet"
     },
     "D": {
-      "item": "minecraft:diamond"
+      "item": "create:brass_block"
     },
     "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "create:brass_ingot"
     },
     "P": {
-      "item": "minecraft:piston"
+      "item": "create:transmitter"
     }
   },
   "result": {
