@@ -70,7 +70,7 @@
               "add": false
             }
           ],
-          "name": "changed:syringe"
+          "name": "furmutage:tainted_white_flesh"
         },
         {
           "type": "minecraft:item",
@@ -160,47 +160,6 @@
             }
           ],
           "name": "changed:benign_shorts"
-        }
-      ]
-    },
-    {
-      "rolls": {
-        "type": "minecraft:uniform",
-        "min": 0.0,
-        "max": 2.0
-      },
-      "bonus_rolls": 0.0,
-      "entries": [
-        {
-          "type": "minecraft:item",
-          "functions": [
-            {
-              "function": "changed:random_variant",
-              "variants": [
-                "changed:form_beifeng",
-                "changed:form_crystal_wolf",
-                "changed:form_crystal_wolf_horned",
-                "changed:form_dark_dragon",
-                "changed:form_latex_yufeng"
-              ]
-            },
-            {
-              "function": "minecraft:set_count",
-              "count": {
-                "type": "minecraft:uniform",
-                "min": 0.0,
-                "max": 1.0
-              },
-              "add": false
-            }
-          ],
-          "name": "changed:latex_syringe"
-        }
-      ],
-      "conditions": [
-        {
-          "condition": "minecraft:random_chance",
-          "chance": 0.34
         }
       ]
     }

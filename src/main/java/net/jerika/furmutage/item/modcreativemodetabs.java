@@ -93,6 +93,7 @@ public class modcreativemodetabs {
                         output.accept(ModItems.WHITE_DIGESTED_GUNPOWDER.get());
                         output.accept(ModItems.DARK_DIGESTED_GUNPOWDER.get());
                         output.accept(ModItems.WHITE_DIGESTED_ROTTEN_FLESH.get());
+                        output.accept(ModItems.TAINTED_WHITE_FLESH.get());
                         output.accept(ModItems.DARK_DIGESTED_ROTTEN_FLESH.get());
                         output.accept(ModItems.WHITE_DIGESTED_BONES.get());
                         output.accept(ModItems.DARK_DIGESTED_BONES.get());

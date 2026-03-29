@@ -6,6 +6,9 @@
     },
     {
       "item": "changed:wolf_crystal_fragment"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "form": "changed:form_crystal_wolf"

@@ -6,6 +6,9 @@
     },
     {
       "item": "changed:tiger_gas_canister"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "form": "changed:form_gas_tiger"

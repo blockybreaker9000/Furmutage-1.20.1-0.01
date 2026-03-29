@@ -18,6 +18,9 @@
     },
     {
       "item": "minecraft:cod"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "gendered": true,

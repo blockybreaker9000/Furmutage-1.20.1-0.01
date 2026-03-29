@@ -7,16 +7,16 @@
   ],
   "key": {
     "#": {
-      "item": "furmutage:roselight_block"
+      "item": "create:precision_mechanism"
     },
     "G": {
-      "item": "furmutage:thunderium_block"
+      "item": "immersiveengineering:heavy_engineering"
     },
     "M": {
-      "item": "furmutage:tsc_advanced_tech"
+      "item": "minecraft:ecto_shard"
     },
     "C": {
-      "item": "furmutage:tsc_gears"
+      "item": "immersiveengineering:capacitor_hv"
     }
   },
   "result": {

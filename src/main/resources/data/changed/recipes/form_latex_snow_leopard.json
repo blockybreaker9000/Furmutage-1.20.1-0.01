@@ -15,6 +15,9 @@
     },
     {
       "item": "minecraft:snowball"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "gendered": true,

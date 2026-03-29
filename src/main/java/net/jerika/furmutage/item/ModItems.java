@@ -279,6 +279,8 @@ public class ModItems {
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> WHITE_DIGESTED_ROTTEN_FLESH = ITEMS.register("white_digested_rotten_flesh",
             () -> new Item(new Item.Properties()));
+    public static final RegistryObject<Item> TAINTED_WHITE_FLESH = ITEMS.register("tainted_white_flesh",
+            () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> DARK_DIGESTED_ROTTEN_FLESH = ITEMS.register("dark_digested_rotten_flesh",
             () -> new Item(new Item.Properties()));
     public static final RegistryObject<Item> WHITE_DIGESTED_BONES = ITEMS.register("white_digested_bones",

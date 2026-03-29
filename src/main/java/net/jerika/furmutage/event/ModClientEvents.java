@@ -23,17 +23,14 @@ import org.jetbrains.annotations.Nullable;
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ModClientEvents {
     private static long lastNightSoundTime = -1;
-    private static long lastMorningChimeTime = -1;
-    private static long previousDayTime = -1;
     private static final long NIGHT_SOUND_INTERVAL = 9000; // Rare ambient pacing
     private static final long NIGHT_START_DELAY = 1000; // Delay before regular ambient sounds can play (after night starts)
     private static final float NIGHT_SOUND_CHANCE = 0.08f; // Chance when interval is met
     private static final int NIGHT_SOUND_MIN_DISTANCE = 14;
     private static final int NIGHT_SOUND_MAX_DISTANCE = 28;
-    private static long lastDuskNightChimeCycle = -1L;
     /** One random distant night ambient ({@link #playRandomNightSound}) at midnight (18000) per day cycle. */
     private static long lastMidnightRandomNightSoundCycle = -1L;
-    /** After loading a world or changing dimension, suppress dusk chime and midnight night sound for this many client ticks. */
+    /** After loading a world or changing dimension, suppress midnight night ambient for this many client ticks. */
     private static final int NIGHT_CHIME_JOIN_MUTE_TICKS = 2000;
     private static int nightChimeJoinMuteTicksLeft = 0;
     @Nullable
@@ -63,7 +60,7 @@ public class ModClientEvents {
                 nightChimeJoinMuteLevelRef = mc.level;
                 nightChimeJoinMuteTicksLeft = NIGHT_CHIME_JOIN_MUTE_TICKS;
             }
-            boolean muteNightChimes = nightChimeJoinMuteTicksLeft > 0;
+            boolean muteNightAmbientOnJoin = nightChimeJoinMuteTicksLeft > 0;
             if (nightChimeJoinMuteTicksLeft > 0) {
                 nightChimeJoinMuteTicksLeft--;
             }
@@ -71,18 +68,9 @@ public class ModClientEvents {
             long dayTime = level.getDayTime() % 24000; // Get time of day (0-24000)
             long dayCycle = level.getDayTime() / 24000;
 
-            // Dusk: NIGHT_CHIME once when night starts (~13000)
-            if (dayTime >= 13000 && dayTime < 13100) {
-                if (!muteNightChimes && lastDuskNightChimeCycle != dayCycle) {
-                    level.playLocalSound(player.getX(), player.getY(), player.getZ(),
-                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.125f, 1.0f, false);
-                    lastDuskNightChimeCycle = dayCycle;
-                }
-            }
-
-            // Midnight: random distant night ambient (not the dusk NIGHT_CHIME)
+            // Midnight: random distant night ambient
             if (dayTime >= 18000 && dayTime < 18100) {
-                if (!muteNightChimes && lastMidnightRandomNightSoundCycle != dayCycle) {
+                if (!muteNightAmbientOnJoin && lastMidnightRandomNightSoundCycle != dayCycle) {
                     playRandomNightSound(level, player);
                     lastMidnightRandomNightSoundCycle = dayCycle;
                     lastNightSoundTime = dayTime;
@@ -90,7 +78,7 @@ public class ModClientEvents {
             }
             
             // Night ambient sounds (between 13000 and 23000 ticks, which is 6:30 PM to 5:30 AM)
-            // Delay after dusk chime; surface darkness only for distant ambients (no tick-threshold “forced” chime)
+            // Brief delay after night starts; surface darkness only for distant ambients
             if (dayTime >= (13000 + NIGHT_START_DELAY) && dayTime < 23000) {
                 boolean inSurfaceDarkness = isPlayerInDarkness(level, player);
 
@@ -112,23 +100,6 @@ public class ModClientEvents {
                 }
             }
 
-            // Morning chime (only at exactly 0 ticks, which is 6:00 AM)
-            // Check if we just crossed from night to exactly 0, or if we're at exactly 0
-            boolean justCrossedDawn = previousDayTime > 23000 && dayTime == 23000;
-            if (dayTime == 23000 || justCrossedDawn) {
-                // Only play once per day cycle
-                if (lastMorningChimeTime != dayCycle) {
-                    // Play chime at exactly dawn (time 0)
-                    // Client-side local only (no server-wide broadcast)
-                    level.playLocalSound(player.getX(), player.getY(), player.getZ(),
-                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.1f, 1.0f, false);
-                    lastMorningChimeTime = dayCycle;
-                }
-            }
-
-            // Update previous day time for wrap-around detection
-            previousDayTime = dayTime;
-            
             // Handle tainted grass biome music (white and dark)
             handleTaintedGrassMusic(mc, player, level);
         }

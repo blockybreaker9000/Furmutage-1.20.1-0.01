@@ -12,6 +12,9 @@
     },
     {
       "item": "minecraft:cod"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "form": "changed:form_latex_siamese_cat"

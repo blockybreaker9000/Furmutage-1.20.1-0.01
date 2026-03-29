@@ -15,6 +15,9 @@
     },
     {
       "item": "minecraft:cobweb"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "form": "changed:form_latex_stiger"

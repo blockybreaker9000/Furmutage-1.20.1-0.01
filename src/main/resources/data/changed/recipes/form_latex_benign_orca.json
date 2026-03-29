@@ -12,6 +12,9 @@
     },
     {
       "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "furmutage:dark_coated_tsc_plastic_bar"
     }
   ],
   "form": "changed:form_latex_benign_orca"

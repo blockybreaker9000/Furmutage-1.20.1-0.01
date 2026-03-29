@@ -12,6 +12,9 @@
     },
     {
       "item": "minecraft:rotten_flesh"
+    },
+    {
+      "item": "furmutage:dark_coated_tsc_plastic_bar"
     }
   ],
   "form": "changed:form_dark_latex_wolf_partial"

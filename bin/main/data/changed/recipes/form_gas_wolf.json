@@ -6,6 +6,9 @@
     },
     {
       "item": "changed:wolf_gas_canister"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "gendered": true,

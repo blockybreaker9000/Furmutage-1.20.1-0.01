@@ -15,6 +15,9 @@
     },
     {
       "item": "minecraft:tropical_fish_bucket"
+    },
+    {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     }
   ],
   "gendered": true,
