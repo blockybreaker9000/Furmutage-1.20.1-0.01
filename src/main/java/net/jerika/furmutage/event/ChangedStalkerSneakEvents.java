@@ -4,7 +4,6 @@ import net.jerika.furmutage.furmutage;
 import net.jerika.furmutage.config.ModCommonConfig;
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -14,6 +13,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -27,9 +27,11 @@ import net.minecraftforge.registries.RegistryObject;
  * that cannot currently see them (off-screen).
  *
  * - Applies to any entity whose registry namespace is "changed" and is a Mob.
+ * - Also applies to {@code furmutage:loose_behemoth_hand} and {@code furmutage:loose_squid_dog_limb} at night only:
+ *     same stalk rules, crouch pose, and movement speed base set to 0.6.
  * - If the entity has a player target AND is NOT on that player's screen:
  *     * Sets pose to CROUCHING
- *     * Reduces movement speed to a fraction of its original base value
+ *     * For Changed: reduces movement speed to a fraction of its original base value
  * - When the player can see them again (on-screen) or there is no valid target:
  *     * Restores original movement speed
  *     * Sets pose back to STANDING
@@ -77,11 +79,18 @@ public class ChangedStalkerSneakEvents {
         ModSounds.LATEX_HELLO_19,
         ModSounds.LATEX_HELLO_20
     };
-    private static final double MIN_FOLLOW_RANGE = 30.0D;
+    private static final double MIN_FOLLOW_RANGE = 16.0D;
+
+    private static final String LOOSE_BEHEMOTH_HAND_ID = "furmutage:loose_behemoth_hand";
+    private static final String LOOSE_SQUID_DOG_LIMB_ID = "furmutage:loose_squid_dog_limb";
+    /** Movement speed base while crouch-stalking toward the player (night only for loose Furmutage mobs). */
+    private static final double LOOSE_STALKER_NIGHT_SPEED = 0.6D;
+    private static final long NIGHT_START = 13000L;
+    private static final long NIGHT_END = 23000L;
 
     /**
-     * Ensure Changed entities can see/track their targets from at least 30 blocks away
-     * by bumping their FOLLOW_RANGE attribute when they join the world.
+     * When the common-config toggle is on: ensure Changed entities have at least this
+     * {@code FOLLOW_RANGE} (blocks) when they join the world if their base was lower.
      */
     @SubscribeEvent
     public static void onChangedJoinWorld(EntityJoinLevelEvent event) {
@@ -117,23 +126,15 @@ public class ChangedStalkerSneakEvents {
             return;
         }
 
-        if (!isChangedEntity(entity)) {
+        boolean isChanged = isChangedEntity(entity);
+        boolean isLooseStalker = isLooseStalkingMob(entity);
+        if (!isChanged && !isLooseStalker) {
             return;
         }
 
         // Only care about mobs that can have an attack target
         if (!(entity instanceof Mob mob)) {
             return;
-        }
-
-        // Stalker pure_white_latex_wolf: do not attack players unless provoked (hurt by them)
-        ResourceLocation typeKey = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
-        if (typeKey != null && "changed:pure_white_latex_wolf".equals(typeKey.toString())
-                && mob.getPersistentData().getBoolean("furmutage_stalker_wolf")) {
-            LivingEntity target = mob.getTarget();
-            if (target instanceof Player && mob.getLastHurtByMob() != target) {
-                mob.setTarget(null);
-            }
         }
 
         AttributeInstance moveAttr = entity.getAttribute(Attributes.MOVEMENT_SPEED);
@@ -169,8 +170,12 @@ public class ChangedStalkerSneakEvents {
             shouldSneak = !seenNow && enoughTimeSinceSeen;
         }
 
+        if (isLooseStalker) {
+            shouldSneak = shouldSneak && isNight(entity.level());
+        }
+
         // When crouched and following: rarely play latex_hello (1 of 20 variants)
-        if (shouldSneak && wasSneaking && target != null) {
+        if (isChanged && shouldSneak && wasSneaking && target != null) {
             long now = entity.level().getGameTime();
             long lastHello = data.getLong(TAG_LAST_LATEX_HELLO_TICK);
             if (now - lastHello >= LATEX_HELLO_COOLDOWN_TICKS && entity.getRandom().nextDouble() < LATEX_HELLO_CHANCE) {
@@ -189,9 +194,13 @@ public class ChangedStalkerSneakEvents {
                 data.putDouble(TAG_ORIG_SPEED, moveAttr.getBaseValue());
             }
 
-            double base = data.getDouble(TAG_ORIG_SPEED);
-            // Base sneaking speed: 50% of original
-            moveAttr.setBaseValue(base * 0.50D);
+            if (isLooseStalker) {
+                moveAttr.setBaseValue(LOOSE_STALKER_NIGHT_SPEED);
+            } else {
+                double base = data.getDouble(TAG_ORIG_SPEED);
+                // Base sneaking speed: 50% of original
+                moveAttr.setBaseValue(base * 0.50D);
+            }
             entity.setPose(Pose.CROUCHING);
 
             data.putBoolean(TAG_SNEAKING, true);
@@ -208,7 +217,9 @@ public class ChangedStalkerSneakEvents {
 
             // Play jumpscare sound only for the target player that activated the AI, once per 5 minutes, and only if within 6 blocks
             LivingEntity currentTarget = mob.getTarget();
-            if (currentTarget instanceof ServerPlayer serverPlayer && data.getBoolean(TAG_AI_ACTIVATED)) {
+            if (!isLooseStalker
+                    && currentTarget instanceof ServerPlayer serverPlayer
+                    && data.getBoolean(TAG_AI_ACTIVATED)) {
                 if (entity.distanceTo(serverPlayer) <= JUMPSCARE_MAX_DISTANCE) {
                     long now = entity.level().getGameTime();
                     long lastPlayed = serverPlayer.getPersistentData().getLong(PLAYER_TAG_LAST_JUMPSCARE);
@@ -234,6 +245,20 @@ public class ChangedStalkerSneakEvents {
     private static boolean isChangedEntity(Entity entity) {
         var type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
         return type != null && "changed".equals(type.getNamespace());
+    }
+
+    private static boolean isLooseStalkingMob(Entity entity) {
+        var key = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType());
+        if (key == null) {
+            return false;
+        }
+        String id = key.toString();
+        return LOOSE_BEHEMOTH_HAND_ID.equals(id) || LOOSE_SQUID_DOG_LIMB_ID.equals(id);
+    }
+
+    private static boolean isNight(Level level) {
+        long dayTime = level.getDayTime() % 24000L;
+        return dayTime >= NIGHT_START && dayTime < NIGHT_END;
     }
 
     /**

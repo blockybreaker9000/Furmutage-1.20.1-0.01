@@ -1,7 +1,6 @@
 package net.jerika.furmutage.event;
 
 import net.jerika.furmutage.ai.latex_beast_ai.ChangedEntityImprovedPathfindingGoal;
-import net.jerika.furmutage.ai.scary.PureWhiteLatexWolfStalkPlayerGoal;
 import net.jerika.furmutage.config.ModCommonConfig;
 import net.jerika.furmutage.furmutage;
 import net.minecraft.resources.ResourceLocation;
@@ -70,9 +69,6 @@ public class ChangedEntitySwimEvents {
             "changed:exoskeleton"
     );
 
-    /** Rare chance (8%) for pure_white_latex_wolf to become a stalker that watches but does not attack unless provoked. */
-    private static final double PURE_WHITE_LATEX_WOLF_STALKER_CHANCE = 0.008D;
-    
     /** Clear static entity sets when a level unloads to avoid infinite "Saving world data" hang. */
     @SubscribeEvent
     public static void onLevelUnload(LevelEvent.Unload event) {
@@ -117,12 +113,6 @@ public class ChangedEntitySwimEvents {
                     improvedPathfindingEntities.add(pathfinderMob);
                 }
 
-                // Rare chance: pure_white_latex_wolf gets stalking behavior (sneak, watch player, no attack unless provoked)
-                if ("changed:pure_white_latex_wolf".equals(entityId) && livingEntity instanceof PathfinderMob wolfMob
-                        && wolfMob.getRandom().nextDouble() < PURE_WHITE_LATEX_WOLF_STALKER_CHANCE) {
-                    wolfMob.getPersistentData().putBoolean("furmutage_stalker_wolf", true);
-                    wolfMob.goalSelector.addGoal(1, new PureWhiteLatexWolfStalkPlayerGoal(wolfMob));
-                }
             }
             
             // Check if it's a Furmutage mod entity and not excluded
@@ -136,8 +126,8 @@ public class ChangedEntitySwimEvents {
                     && !EXCLUDED_FOLLOW_RANGE_ENTITIES.contains(entityId)) {
                 AttributeInstance followRange = livingEntity.getAttribute(Attributes.FOLLOW_RANGE);
                 if (followRange != null) {
-                    // Keep this value only when the config is explicitly enabled.
-                    followRange.setBaseValue(10.0D);
+                    // Fixed follow/detection range when the config is explicitly enabled.
+                    followRange.setBaseValue(16.0D);
                 }
             }
             // Note: X-ray vision is handled by EntitySensingXRayMixin

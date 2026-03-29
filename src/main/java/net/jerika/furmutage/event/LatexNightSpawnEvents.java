@@ -19,8 +19,8 @@ import java.util.Set;
 
 /**
  * Registers spawn placements for certain Changed latex entities so they spawn at night
- * and in dark caves (up to 30 blocks below sea level). Also ensures they have AI enabled
- * when they spawn (fixes frozen entities).
+ * on the surface (when dark) and in dark underground caves at any depth during the day.
+ * Also ensures they have AI enabled when they spawn (fixes frozen entities).
  */
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LatexNightSpawnEvents {
@@ -42,7 +42,6 @@ public class LatexNightSpawnEvents {
 
     private static final long NIGHT_START = 13000;
     private static final long NIGHT_END = 23000;
-    private static final int MAX_CAVE_DEPTH_Y = 34;
 
     public static void registerSpawnPlacements() {
         for (String entityId : NIGHT_OR_DARK_ENTITY_IDS) {
@@ -70,8 +69,8 @@ public class LatexNightSpawnEvents {
     }
 
     /**
-     * Spawn at night anywhere, or in dark areas (caves) up to 30 blocks below sea level.
-     * Uses same dark/block checks as monster spawning.
+     * Night: dim surface or underground (low block + sky light at the spawn block).
+     * Day: only true underground — no open sky above the spawn space, monster-like darkness.
      */
     private static <T extends Mob> boolean checkLatexNightSpawnRules(EntityType<T> type, ServerLevelAccessor level, MobSpawnType reason, BlockPos pos, RandomSource random) {
         if (reason != MobSpawnType.NATURAL) {
@@ -82,17 +81,15 @@ public class LatexNightSpawnEvents {
         }
         long dayTime = level.getLevelData().getDayTime() % 24000;
         boolean isNight = dayTime >= NIGHT_START && dayTime < NIGHT_END;
-        if (isNight) {
-            int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
-            int skyLight = level.getBrightness(LightLayer.SKY, pos);
-            return blockLight <= 7 && skyLight <= 7;
-        }
-        int y = pos.getY();
-        if (y < MAX_CAVE_DEPTH_Y) {
-            return false;
-        }
         int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
         int skyLight = level.getBrightness(LightLayer.SKY, pos);
+        if (isNight) {
+            return blockLight <= 7 && skyLight <= 7;
+        }
+        // Daytime: dark caves at any depth (not under open sky)
+        if (level.canSeeSky(pos.above())) {
+            return false;
+        }
         return blockLight <= 0 && skyLight <= 7;
     }
 

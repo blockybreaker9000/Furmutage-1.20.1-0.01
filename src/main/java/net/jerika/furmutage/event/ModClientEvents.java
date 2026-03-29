@@ -31,9 +31,9 @@ public class ModClientEvents {
     private static final int NIGHT_SOUND_MIN_DISTANCE = 14;
     private static final int NIGHT_SOUND_MAX_DISTANCE = 28;
     private static long lastDuskNightChimeCycle = -1L;
-    /** NIGHT_CHIME once at Minecraft midnight (18000) per day cycle. */
-    private static long lastMidnightNightChimeCycle = -1L;
-    /** After loading a world or changing dimension, suppress dusk/midnight chimes for this many client ticks. */
+    /** One random distant night ambient ({@link #playRandomNightSound}) at midnight (18000) per day cycle. */
+    private static long lastMidnightRandomNightSoundCycle = -1L;
+    /** After loading a world or changing dimension, suppress dusk chime and midnight night sound for this many client ticks. */
     private static final int NIGHT_CHIME_JOIN_MUTE_TICKS = 2000;
     private static int nightChimeJoinMuteTicksLeft = 0;
     @Nullable
@@ -75,17 +75,17 @@ public class ModClientEvents {
             if (dayTime >= 13000 && dayTime < 13100) {
                 if (!muteNightChimes && lastDuskNightChimeCycle != dayCycle) {
                     level.playLocalSound(player.getX(), player.getY(), player.getZ(),
-                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.25f, 1.0f, false);
+                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.125f, 1.0f, false);
                     lastDuskNightChimeCycle = dayCycle;
                 }
             }
 
-            // Midnight: NIGHT_CHIME once at 18000 (no daytime / morning)
+            // Midnight: random distant night ambient (not the dusk NIGHT_CHIME)
             if (dayTime >= 18000 && dayTime < 18100) {
-                if (!muteNightChimes && lastMidnightNightChimeCycle != dayCycle) {
-                    level.playLocalSound(player.getX(), player.getY(), player.getZ(),
-                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.25f, 1.0f, false);
-                    lastMidnightNightChimeCycle = dayCycle;
+                if (!muteNightChimes && lastMidnightRandomNightSoundCycle != dayCycle) {
+                    playRandomNightSound(level, player);
+                    lastMidnightRandomNightSoundCycle = dayCycle;
+                    lastNightSoundTime = dayTime;
                 }
             }
             
@@ -121,7 +121,7 @@ public class ModClientEvents {
                     // Play chime at exactly dawn (time 0)
                     // Client-side local only (no server-wide broadcast)
                     level.playLocalSound(player.getX(), player.getY(), player.getZ(),
-                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.2f, 1.0f, false);
+                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.1f, 1.0f, false);
                     lastMorningChimeTime = dayCycle;
                 }
             }

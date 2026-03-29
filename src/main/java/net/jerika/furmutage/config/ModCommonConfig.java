@@ -14,11 +14,11 @@ public class ModCommonConfig {
     /** When false (default): normal line of sight — walls block vision. When true: Changed/latex mobs can see through up to 5 blocks. */
     public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_SEE_THROUGH_WALLS;
     /**
-     * When true (default: false): apply both long-range targeting and swim follow-range tweaks
-     * for Changed entities.
+     * When true (default: false): apply follow-range tuning for Changed entities (16 blocks).
      *
-     * - Long-range targeting: force Changed entities to have at least 30 FOLLOW_RANGE.
-     * - Swim follow-range override: apply swim follow-range FOLLOW_RANGE adjustment (detection behavior).
+     * - On join: clamp {@code FOLLOW_RANGE} to 16 for most {@code changed:} mobs (see {@code ChangedEntitySwimEvents}).
+     * - Also: ensure at least 16 {@code FOLLOW_RANGE} for other Changed entities that join with a lower base
+     *   ({@code ChangedStalkerSneakEvents}).
      */
     public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_LONG_RANGE_TARGETING_AND_SWIM_FOLLOW_RANGE;
     
@@ -66,7 +66,7 @@ public class ModCommonConfig {
                         "true: they can see targets through up to 5 blocks of walls.")
                 .define("enableChangedSeeThroughWalls", false);
         ENABLE_CHANGED_LONG_RANGE_TARGETING_AND_SWIM_FOLLOW_RANGE = BUILDER
-                .comment("When true: enable both long-range targeting and swim follow-range adjustments for Changed entities.",
+                .comment("When true: set Changed mob FOLLOW_RANGE to 16 blocks (detection / targeting distance).",
                         "When false (DEFAULT): no forced follow-range tuning is applied.")
                 .define("enableChangedLongRangeTargetingAndSwimFollowRange", false);
         BUILDER.pop();

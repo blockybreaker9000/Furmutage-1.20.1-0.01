@@ -136,7 +136,7 @@ public class SpookyFollowPlayerGoal extends Goal {
 
         // Play spooky sounds occasionally
         if (this.soundCooldown <= 0 && this.entity.getRandom().nextInt(100) < 3) {
-            this.entity.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 0.5F, 0.5F + this.entity.getRandom().nextFloat() * 0.5F);
+            this.entity.playSound(SoundEvents.AMETHYST_BLOCK_CHIME, 0.25F, 0.5F + this.entity.getRandom().nextFloat() * 0.5F);
             this.soundCooldown = 200 + this.entity.getRandom().nextInt(200); // 10-20 seconds
         }
 

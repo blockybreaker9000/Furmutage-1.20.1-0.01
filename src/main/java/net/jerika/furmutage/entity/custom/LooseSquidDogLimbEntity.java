@@ -1,32 +1,33 @@
 package net.jerika.furmutage.entity.custom;
 
-import net.ltxprogrammer.changed.entity.*;
-import net.ltxprogrammer.changed.entity.AttributePresets;
-import net.ltxprogrammer.changed.entity.TransfurCause;
-import net.ltxprogrammer.changed.util.Color3;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.ai.goal.*;
+import net.minecraft.world.entity.ai.goal.FloatGoal;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
+import net.minecraft.world.entity.ai.goal.OpenDoorGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.WaterAvoidingRandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.util.GoalUtils;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.phys.Vec3;
 
-public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEntity {
+public class LooseSquidDogLimbEntity extends Monster {
 
     public final AnimationState idleAnimationState = new AnimationState();
     public final AnimationState walkAnimationState = new AnimationState();
@@ -51,7 +52,7 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
 
     @Override
     public boolean causeFallDamage(float distance, float multiplier, DamageSource source) {
-        return false; // Tentacle ignores fall damage
+        return false;
     }
 
     /** Returns true when there is a solid block directly above the entity (ceiling to hang from). */
@@ -73,12 +74,9 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
             }
             int ticksWithoutTarget = tickCount - lastTargetTime;
 
-            // Dismount immediately when we have a target (chasing something)
             if (isHanging() && getTarget() != null) {
                 dismountFromCeiling();
-            }
-            // While hanging: if no target and player below in range, drop down
-            else if (isHanging()) {
+            } else if (isHanging()) {
                 Player playerBelow = findPlayerBelow(DISMOUNT_PLAYER_RANGE);
                 if (playerBelow != null) {
                     dismountFromCeiling();
@@ -89,7 +87,6 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
                 }
             } else {
                 this.setNoGravity(false);
-                // Teleport to ceiling only when: no target for 30 sec, not pathfinding (not chasing/wandering), and ceiling is 5+ blocks high
                 boolean idleNoTarget = ticksWithoutTarget >= TICKS_WITHOUT_TARGET_TO_TELEPORT;
                 boolean notPathfinding = !this.getNavigation().isInProgress();
                 if (idleNoTarget && notPathfinding && hasCeilingHighEnough()) {
@@ -104,7 +101,6 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
 
     private int lastTargetTime = 0;
 
-    /** True if there is a solid ceiling at least MIN_CEILING_HEIGHT blocks above (so we only hang from high roofs). */
     private boolean hasCeilingHighEnough() {
         BlockPos pos = blockPosition();
         for (int i = MIN_CEILING_HEIGHT; i <= CEILING_SCAN_HEIGHT; i++) {
@@ -116,7 +112,6 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
         return false;
     }
 
-    /** Finds a ceiling block that is at least MIN_CEILING_HEIGHT blocks above; never returns a low ceiling. */
     private BlockPos findCeilingAbove() {
         BlockPos pos = blockPosition();
         for (int i = MIN_CEILING_HEIGHT; i <= CEILING_SCAN_HEIGHT; i++) {
@@ -184,22 +179,10 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
     }
 
     @Override
-    protected void setAttributes(AttributeMap attributes) {
-        super.setAttributes(attributes);
-        AttributePresets.catLike(attributes);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
-        attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(8.0D);
-        attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(4.0D);
-        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.6D);
-        attributes.getInstance(Attributes.ATTACK_KNOCKBACK).setBaseValue(0.8D);
-    }
-
-    @Override
     protected void registerGoals() {
-        super.registerGoals();
-        // Hyper aggressive: melee attack first
-        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.2D, true));
-        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.9D));
+        this.goalSelector.addGoal(0, new FloatGoal(this));
+        this.goalSelector.addGoal(1, new MeleeAttackGoal(this, 1.0D, true));
+        this.goalSelector.addGoal(2, new WaterAvoidingRandomStrollGoal(this, 0.75D));
         if (GoalUtils.hasGroundPathNavigation(this)) {
             this.goalSelector.addGoal(3, new OpenDoorGoal(this, true));
         }
@@ -210,32 +193,16 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
         this.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(this, Player.class, 10, true, false, null));
     }
 
-    @Override
-    public int getTicksRequiredToFreeze() {
-        return 200;
-    }
-
-    @Override
-    public Gender getGender() {
-        return Gender.MALE;
-    }
-
-    @Override
-    public TransfurMode getTransfurMode() {
-        return TransfurMode.REPLICATION;
-    }
-
-    @Override
-    public Color3 getTransfurColor(TransfurCause cause) {
-        return Color3.getColor("#dddddd");
-    }
-
     public static AttributeSupplier.Builder createAttributes() {
-        return ChangedEntity.createLatexAttributes();
+        return Monster.createMobAttributes()
+                .add(Attributes.MAX_HEALTH, 8.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.25D)
+                .add(Attributes.ATTACK_DAMAGE, 4.0D)
+                .add(Attributes.FOLLOW_RANGE, 10.0D)
+                .add(Attributes.ATTACK_KNOCKBACK, 0.0D);
     }
 
     public static boolean checkLooseSquidDogLimbSpawnRules(EntityType<LooseSquidDogLimbEntity> entityType, ServerLevelAccessor world, MobSpawnType reason, BlockPos pos, RandomSource random) {
-        // Allow spawn egg and /summon; only restrict natural world spawns
         if (reason != MobSpawnType.NATURAL) {
             return true;
         }
@@ -252,6 +219,6 @@ public class LooseSquidDogLimbEntity extends ChangedEntity implements GenderedEn
         if (world.getBrightness(LightLayer.BLOCK, pos) > 2) {
             return false;
         }
-        return net.minecraft.world.entity.monster.Monster.checkMonsterSpawnRules(entityType, world, reason, pos, random);
+        return Monster.checkMonsterSpawnRules(entityType, world, reason, pos, random);
     }
 }
