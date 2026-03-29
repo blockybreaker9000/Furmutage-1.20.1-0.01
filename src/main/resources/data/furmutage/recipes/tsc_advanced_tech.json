@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "DMD",
+    "WEB"
+  ],
+  "key": {
+    "D": {
+      "item": "changed:compact_disc"
+    },
+    "M": {
+      "item": "createadditions:electric_motor"
+    },
+    "W": {
+      "item": "furmutage:white_coated_tsc_plastic_bar"
+    },
+    "E": {
+      "item": "createadditions:electrum_wire"
+    },
+    "B": {
+      "item": "furmutage:dark_coated_tsc_plastic_bar"
+    }
+  },
+  "result": {
+    "item": "furmutage:tsc_advanced_tech",
+    "count": 1
+  }
+}

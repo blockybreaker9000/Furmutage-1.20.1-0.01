@@ -2,7 +2,7 @@
   "type": "minecraft:crafting_shaped",
   "pattern": [
     "#G#",
-    "MGC",
+    "MHC",
     "#G#"
   ],
   "key": {
@@ -10,13 +10,16 @@
       "item": "create:precision_mechanism"
     },
     "G": {
-      "item": "create:transmitter"
+      "item": "createadditions:electrum_wire"
+    },
+    "H": {
+      "item": "createadditions:testla_coil"
     },
     "M": {
-      "item": "minecraft:ecto_shard"
+      "item": "furmutage:tsc_advanced_tech"
     },
     "C": {
-      "item": "create.shadow_steel"
+      "item": "create:flywheel"
     }
   },
   "result": {

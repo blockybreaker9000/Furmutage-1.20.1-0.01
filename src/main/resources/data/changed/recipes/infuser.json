@@ -7,22 +7,22 @@
   ],
   "key": {
     "C": {
-      "item": "minecraft:crafting_table"
+      "item": "create:sturdy_sheet"
     },
     "S": {
-      "item": "changed:syringe"
+      "item": "createadditions:electrum_wire"
     },
     "P": {
-      "item": "minecraft:piston"
+      "item": "create:copper_sheet"
     },
     "I": {
-      "item": "minecraft:iron_ingot"
+      "item": "furmutage:white_coated_tsc_plastic_bar"
     },
     "G": {
-      "item": "minecraft:glass_pane"
+      "item": "create:railway_casing"
     },
     "R": {
-      "item": "minecraft:redstone"
+      "item": "furmutage:dark_coated_tsc_plastic_bar"
     }
   },
   "result": {

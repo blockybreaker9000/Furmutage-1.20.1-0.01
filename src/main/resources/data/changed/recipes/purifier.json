@@ -16,10 +16,10 @@
       "item": "create:brass_block"
     },
     "I": {
-      "item": "create:brass_ingot"
+      "item": "furmutage:tsc_wire"
     },
     "P": {
-      "item": "create:transmitter"
+      "item": "createadditions:electrum_wire"
     }
   },
   "result": {

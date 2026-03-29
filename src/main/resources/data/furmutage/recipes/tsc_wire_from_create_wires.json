@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "tsc_wire",
+  "ingredients": [
+    {
+      "item": "createadditions:gold_wire"
+    },
+    {
+      "item": "createadditions:copper_wire"
+    },
+    {
+      "item": "createadditions:copper_wire"
+    }
+  ],
+  "result": {
+    "item": "furmutage:tsc_wire",
+    "count": 1
+  }
+}
