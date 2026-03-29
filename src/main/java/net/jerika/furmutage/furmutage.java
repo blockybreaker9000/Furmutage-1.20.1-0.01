@@ -177,6 +177,7 @@ public class furmutage {
             // Register spawn placement for DeepSlateLatexSquidDog
             net.minecraft.world.entity.SpawnPlacements.register(
                 ModEntities.DEEPSLATE_LATEX_SQUID_DOG.get(),
+                // Natural spawns should be water-based (entity rules also require water).
                 net.minecraft.world.entity.SpawnPlacements.Type.IN_WATER,
                 net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                 net.jerika.furmutage.entity.custom.DeepSlateLatexSquidDog::checkDeepSlateSpawnRules

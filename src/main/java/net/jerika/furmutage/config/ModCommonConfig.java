@@ -11,7 +11,7 @@ public class ModCommonConfig {
     /** When true: Furmutage ore progression is active. When false (default): vanilla tool rules. */
     public static final ForgeConfigSpec.BooleanValue ENABLE_ORE_PROGRESSION;
     
-    /** When true (default): Changed entities can see through up to 5 blocks. When false: normal line of sight. */
+    /** When false (default): normal line of sight — walls block vision. When true: Changed/latex mobs can see through up to 5 blocks. */
     public static final ForgeConfigSpec.BooleanValue ENABLE_CHANGED_SEE_THROUGH_WALLS;
     /**
      * When true (default: false): apply both long-range targeting and swim follow-range tweaks
@@ -61,8 +61,9 @@ public class ModCommonConfig {
         
         BUILDER.push("Changed / Latex Entities");
         ENABLE_CHANGED_SEE_THROUGH_WALLS = BUILDER
-                .comment("When true: Changed/latex entities can see targets through up to 5 blocks of walls.",
-                        "When false (DEFAULT): they use normal line of sight and cannot see through solid blocks.")
+                .comment("Wall vision for Changed/latex mobs (Entity line-of-sight checks).",
+                        "false (DEFAULT): normal line of sight — solid blocks block vision.",
+                        "true: they can see targets through up to 5 blocks of walls.")
                 .define("enableChangedSeeThroughWalls", false);
         ENABLE_CHANGED_LONG_RANGE_TARGETING_AND_SWIM_FOLLOW_RANGE = BUILDER
                 .comment("When true: enable both long-range targeting and swim follow-range adjustments for Changed entities.",

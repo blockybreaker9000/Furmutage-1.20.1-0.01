@@ -4,7 +4,7 @@
   "spawners": [
     {
       "type": "furmutage:loose_behemoth_hand",
-      "weight": 8,
+      "weight": 4,
       "minCount": 1,
       "maxCount": 2
     }

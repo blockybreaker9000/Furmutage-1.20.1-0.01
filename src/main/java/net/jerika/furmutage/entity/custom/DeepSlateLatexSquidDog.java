@@ -22,6 +22,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.MeleeAttackGoal;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.common.ForgeMod;
 
 public class DeepSlateLatexSquidDog extends AbstractLatexSquidDog {
     private static final EntityDataAccessor<Byte> DATA_FLAGS_ID = SynchedEntityData.defineId(DeepSlateLatexSquidDog.class, EntityDataSerializers.BYTE);
@@ -217,12 +219,19 @@ public class DeepSlateLatexSquidDog extends AbstractLatexSquidDog {
         else
             return true;
     }
+    @Override
+    protected void setAttributes(AttributeMap attributes) {
+        super.setAttributes(attributes);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue (10.0D); // Much longer follow range for persistent targeting
+        attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.5);
+        attributes.getInstance(ForgeMod.SWIM_SPEED.get()).setBaseValue(0.5);
+        attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(15);
+    }
 
     public static AttributeSupplier.Builder createAttributes() {
-        return ChangedEntity.createLatexAttributes()
-                .add(Attributes.FOLLOW_RANGE, 30.0D) // Much longer follow range for persistent targeting
-                .add(Attributes.ATTACK_DAMAGE, 2.0D)
-                .add(Attributes.MOVEMENT_SPEED, 0.0D);
+        // Keep identical base attribute set to other latex entities.
+        // DeepSlateLatexSquidDog#setAttributes will override the concrete values.
+        return ChangedEntity.createLatexAttributes();
     }
 
     // Spawn rules that allow non-natural spawning (spawn eggs, /summon)

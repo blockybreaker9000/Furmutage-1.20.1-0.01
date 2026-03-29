@@ -4,7 +4,7 @@
   "spawners": [
     {
       "type": "furmutage:deep_cave_hypno_cat",
-      "weight": 6,
+      "weight": 3,
       "minCount": 1,
       "maxCount": 5
     }

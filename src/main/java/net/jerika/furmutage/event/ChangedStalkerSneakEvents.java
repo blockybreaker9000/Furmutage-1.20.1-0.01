@@ -176,7 +176,8 @@ public class ChangedStalkerSneakEvents {
             if (now - lastHello >= LATEX_HELLO_COOLDOWN_TICKS && entity.getRandom().nextDouble() < LATEX_HELLO_CHANCE) {
                 var sound = LATEX_HELLO_SOUNDS[entity.getRandom().nextInt(LATEX_HELLO_SOUNDS.length)].get();
                 if (sound != null) {
-                    entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), sound, SoundSource.HOSTILE, 0.8F, 0.9F + entity.getRandom().nextFloat() * 0.2F);
+                    // Subtler latex hello
+                    entity.level().playSound(null, entity.getX(), entity.getY(), entity.getZ(), sound, SoundSource.HOSTILE, 0.4F, 0.9F + entity.getRandom().nextFloat() * 0.2F);
                     data.putLong(TAG_LAST_LATEX_HELLO_TICK, now);
                 }
             }

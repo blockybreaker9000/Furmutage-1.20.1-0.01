@@ -248,8 +248,8 @@ public class DeepCaveHypnoCat extends ChangedEntity implements GenderedEntity {
                     this.getX(), this.getY(), this.getZ(),
                     ModSounds.DEEP_HYPNO_CAT_STARE.get(),
                     SoundSource.HOSTILE,
-                    1.0F,
-                    1.0F
+                    0.2F,
+                    0.2F
             );
 
             // Apply Poison I for 10 seconds when using the hypno ability on a player

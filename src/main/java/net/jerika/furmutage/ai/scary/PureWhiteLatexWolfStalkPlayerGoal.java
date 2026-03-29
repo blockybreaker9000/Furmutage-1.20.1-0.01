@@ -98,7 +98,8 @@ public class PureWhiteLatexWolfStalkPlayerGoal extends Goal {
         if (now - data.getLong(TAG_LAST_STALKER_HELLO) >= LATEX_HELLO_COOLDOWN_TICKS) {
             var sound = LATEX_HELLO_SOUNDS[mob.getRandom().nextInt(LATEX_HELLO_SOUNDS.length)].get();
             if (sound != null) {
-                mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(), sound, SoundSource.HOSTILE, 0.8F, 0.9F + mob.getRandom().nextFloat() * 0.2F);
+                // Subtler latex hello
+                mob.level().playSound(null, mob.getX(), mob.getY(), mob.getZ(), sound, SoundSource.HOSTILE, 0.4F, 0.9F + mob.getRandom().nextFloat() * 0.2F);
                 data.putLong(TAG_LAST_STALKER_HELLO, now);
             }
         }

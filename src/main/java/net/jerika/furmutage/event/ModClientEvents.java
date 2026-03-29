@@ -12,22 +12,33 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.LightLayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ModClientEvents {
     private static long lastNightSoundTime = -1;
     private static long lastMorningChimeTime = -1;
-    private static long lastMidnightChimeTime = -1;
-    private static long lastNightChimeTime = -1; // Track when night chime was played
     private static long previousDayTime = -1;
-    private static final long NIGHT_SOUND_INTERVAL = 6000; // Play every 5 minutes (in ticks)
+    private static final long NIGHT_SOUND_INTERVAL = 9000; // Rare ambient pacing
     private static final long NIGHT_START_DELAY = 1000; // Delay before regular ambient sounds can play (after night starts)
-    
+    private static final float NIGHT_SOUND_CHANCE = 0.08f; // Chance when interval is met
+    private static final int NIGHT_SOUND_MIN_DISTANCE = 14;
+    private static final int NIGHT_SOUND_MAX_DISTANCE = 28;
+    private static long lastDuskNightChimeCycle = -1L;
+    /** NIGHT_CHIME once at Minecraft midnight (18000) per day cycle. */
+    private static long lastMidnightNightChimeCycle = -1L;
+    /** After loading a world or changing dimension, suppress dusk/midnight chimes for this many client ticks. */
+    private static final int NIGHT_CHIME_JOIN_MUTE_TICKS = 2000;
+    private static int nightChimeJoinMuteTicksLeft = 0;
+    @Nullable
+    private static Level nightChimeJoinMuteLevelRef = null;
+
     // Tainted grass biome music (white and dark)
     private static boolean wasOnTaintedGrass = false;
     private static boolean wasOnTaintedWhiteGrass = false; // Track which type was playing
@@ -48,47 +59,56 @@ public class ModClientEvents {
         Level level = player.level();
 
         if (level.isClientSide) {
+            if (mc.level != nightChimeJoinMuteLevelRef) {
+                nightChimeJoinMuteLevelRef = mc.level;
+                nightChimeJoinMuteTicksLeft = NIGHT_CHIME_JOIN_MUTE_TICKS;
+            }
+            boolean muteNightChimes = nightChimeJoinMuteTicksLeft > 0;
+            if (nightChimeJoinMuteTicksLeft > 0) {
+                nightChimeJoinMuteTicksLeft--;
+            }
+
             long dayTime = level.getDayTime() % 24000; // Get time of day (0-24000)
             long dayCycle = level.getDayTime() / 24000;
-            
-            // Night chime at the start of night (around 13000 ticks, which is 6:30 PM)
+
+            // Dusk: NIGHT_CHIME once when night starts (~13000)
             if (dayTime >= 13000 && dayTime < 13100) {
-                // Only play once per day cycle when night starts
-                if (lastNightChimeTime != dayCycle) {
-                    level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
-                    lastNightChimeTime = dayCycle;
+                if (!muteNightChimes && lastDuskNightChimeCycle != dayCycle) {
+                    level.playLocalSound(player.getX(), player.getY(), player.getZ(),
+                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.25f, 1.0f, false);
+                    lastDuskNightChimeCycle = dayCycle;
+                }
+            }
+
+            // Midnight: NIGHT_CHIME once at 18000 (no daytime / morning)
+            if (dayTime >= 18000 && dayTime < 18100) {
+                if (!muteNightChimes && lastMidnightNightChimeCycle != dayCycle) {
+                    level.playLocalSound(player.getX(), player.getY(), player.getZ(),
+                            ModSounds.NIGHT_CHIME.get(), SoundSource.AMBIENT, 0.25f, 1.0f, false);
+                    lastMidnightNightChimeCycle = dayCycle;
                 }
             }
             
             // Night ambient sounds (between 13000 and 23000 ticks, which is 6:30 PM to 5:30 AM)
-            // But only after a delay from night start (to avoid playing at the same time as night chime)
+            // Delay after dusk chime; surface darkness only for distant ambients (no tick-threshold “forced” chime)
             if (dayTime >= (13000 + NIGHT_START_DELAY) && dayTime < 23000) {
+                boolean inSurfaceDarkness = isPlayerInDarkness(level, player);
+
                 // Check if enough time has passed since last night sound
                 if (lastNightSoundTime == -1 || (dayTime - lastNightSoundTime) >= NIGHT_SOUND_INTERVAL || 
                     (dayTime < lastNightSoundTime && (dayTime + 24000 - lastNightSoundTime) >= NIGHT_SOUND_INTERVAL)) {
                     
-                    // Random chance to play (30% chance each tick when interval is met)
-                    if (level.random.nextFloat() < 0.3f) {
+                    // Surface-night ambient: only when the player is in darkness.
+                    if (inSurfaceDarkness && level.random.nextFloat() < NIGHT_SOUND_CHANCE) {
                         playRandomNightSound(level, player);
                         lastNightSoundTime = dayTime;
                     }
                 }
+
             } else {
                 // Reset when not in nighttime
                 if (dayTime < 13000) {
                     lastNightSoundTime = -1;
-                }
-            }
-
-            // Midnight chime (at 18000 ticks, which is 12:00 AM)
-            if (dayTime >= 18000 && dayTime < 18100) {
-                // Only play once per day cycle
-                if (lastMidnightChimeTime != dayCycle) {
-                    // Play chime at midnight
-                    level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                            ModSounds.NIGHT_AMBIENT_2.get(), SoundSource.AMBIENT, 0.5f, 1.0f);
-                    lastMidnightChimeTime = dayCycle;
                 }
             }
 
@@ -99,8 +119,9 @@ public class ModClientEvents {
                 // Only play once per day cycle
                 if (lastMorningChimeTime != dayCycle) {
                     // Play chime at exactly dawn (time 0)
-                    level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.4f, 1.0f);
+                    // Client-side local only (no server-wide broadcast)
+                    level.playLocalSound(player.getX(), player.getY(), player.getZ(),
+                            ModSounds.MORNING_CHIME.get(), SoundSource.AMBIENT, 0.2f, 1.0f, false);
                     lastMorningChimeTime = dayCycle;
                 }
             }
@@ -297,9 +318,22 @@ public class ModClientEvents {
                 break;
         }
         
-        // Play sound at player location with ambient volume
-        level.playSound(player, player.getX(), player.getY(), player.getZ(),
-                soundToPlay, SoundSource.AMBIENT, 0.3f, 1.0f);
+        // Play like cave ambience: pick a distant random spot around the player.
+        int distance = NIGHT_SOUND_MIN_DISTANCE + level.random.nextInt(NIGHT_SOUND_MAX_DISTANCE - NIGHT_SOUND_MIN_DISTANCE + 1);
+        double angle = level.random.nextDouble() * (Math.PI * 2.0);
+        double sx = player.getX() + Math.cos(angle) * distance;
+        double sz = player.getZ() + Math.sin(angle) * distance;
+        double sy = player.getY() + (level.random.nextInt(7) - 3); // slight vertical drift
+
+        level.playLocalSound(sx, sy, sz, soundToPlay, SoundSource.AMBIENT, 0.125f, 1.0f, false);
+    }
+
+    private static boolean isPlayerInDarkness(Level level, LocalPlayer player) {
+        BlockPos pos = player.blockPosition();
+        int blockLight = level.getBrightness(LightLayer.BLOCK, pos);
+        int skyLight = level.getBrightness(LightLayer.SKY, pos);
+        boolean isSurfaceNight = level.canSeeSky(pos.above());
+        return isSurfaceNight && blockLight <= 2 && skyLight <= 7;
     }
 }
 

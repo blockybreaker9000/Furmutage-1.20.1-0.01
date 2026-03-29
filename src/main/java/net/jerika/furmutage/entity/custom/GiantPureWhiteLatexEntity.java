@@ -21,6 +21,7 @@ import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -105,8 +106,8 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         super.setAttributes(attributes);
         attributes.getInstance(Attributes.MAX_HEALTH).setBaseValue(50.0D);
         attributes.getInstance(Attributes.MOVEMENT_SPEED).setBaseValue(0.5D);
-        attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(3.0D);
-        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(80.0D);
+        attributes.getInstance(Attributes.ATTACK_DAMAGE).setBaseValue(2.0D);
+        attributes.getInstance(Attributes.FOLLOW_RANGE).setBaseValue(10.0D);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -124,6 +125,18 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         return ModSounds.LATEX_BEAST_ROAR.get();
     }
 
+    @Override
+    protected float getSoundVolume() {
+        // Make the giant roar more subtle
+        return super.getSoundVolume() * 0.5f;
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        // Play ambient roar less frequently
+        return super.getAmbientSoundInterval() / 2;
+    }
+
     /**
      * Natural spawn rules:
      * - Underground only (Y from 10 down to -64)
@@ -139,7 +152,9 @@ public class GiantPureWhiteLatexEntity extends ChangedEntity {
         if (reason != MobSpawnType.NATURAL) {
             return true; // allow eggs/commands
         }
-
+        if (world instanceof WorldGenRegion) {
+            return false;
+        }
         int y = pos.getY();
         if (y > -20 || y < -64) {
             return false; // deep underground only

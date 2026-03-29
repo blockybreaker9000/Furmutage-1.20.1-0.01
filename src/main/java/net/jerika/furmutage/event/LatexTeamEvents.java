@@ -3,6 +3,7 @@ package net.jerika.furmutage.event;
 import net.jerika.furmutage.config.LatexTeamConfig;
 import net.jerika.furmutage.config.TransfurTeamHelper;
 import net.jerika.furmutage.furmutage;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,6 +25,8 @@ import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.Set;
 import java.util.WeakHashMap;
+import net.minecraft.world.entity.TamableAnimal;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = furmutage.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class LatexTeamEvents {
@@ -38,7 +41,78 @@ public class LatexTeamEvents {
         if (entity == null) return 0;
         if (entity instanceof Player player) return TransfurTeamHelper.getPlayerTransfurTeam(player);
         String type = ForgeRegistries.ENTITY_TYPES.getKey(entity.getType()).toString();
+        // Dark latex wolf pup is always excluded from dark-team logic.
+        if ("changed:dark_latex_wolf_pup".equals(type)) {
+            return 0;
+        }
+        // If a player tames one of the dark wolves, it should NOT be treated
+        // as a dark-team member anymore.
+        if ("changed:dark_latex_wolf_male".equals(type)
+                || "changed:dark_latex_wolf_female".equals(type)) {
+            if (isOwnedByPlayer(entity)) {
+                return 0;
+            }
+        }
         return LatexTeamConfig.getTeamForEntity(type);
+    }
+
+    /**
+     * Changed wolves may not always extend TamableAnimal directly, so detect ownership
+     * using multiple strategies (direct API + reflective owner/tame methods + NBT owner UUID).
+     */
+    private static boolean isOwnedByPlayer(LivingEntity entity) {
+        if (entity == null) return false;
+
+        // Vanilla/Forge tamable path
+        if (entity instanceof TamableAnimal tamable) {
+            if (tamable.isTame() && tamable.getOwner() instanceof Player) {
+                return true;
+            }
+        }
+
+        // Reflective API path used by some modded entities
+        try {
+            Object owner = invokeNoArg(entity, "getOwner");
+            if (owner instanceof Player) return true;
+        } catch (Throwable ignored) { }
+
+        boolean tameFlag = false;
+        try {
+            Object isTame = invokeNoArg(entity, "isTame");
+            if (isTame instanceof Boolean b && b) tameFlag = true;
+        } catch (Throwable ignored) { }
+        try {
+            Object isTamed = invokeNoArg(entity, "isTamed");
+            if (isTamed instanceof Boolean b && b) tameFlag = true;
+        } catch (Throwable ignored) { }
+
+        try {
+            Object ownerUuid = invokeNoArg(entity, "getOwnerUUID");
+            if (ownerUuid instanceof UUID) return true;
+        } catch (Throwable ignored) { }
+        try {
+            Object ownerUuid = invokeNoArg(entity, "getOwnerId");
+            if (ownerUuid instanceof UUID) return true;
+        } catch (Throwable ignored) { }
+
+        // Last-resort: persisted owner NBT keys common to tameable mobs
+        try {
+            CompoundTag nbt = entity.serializeNBT();
+            if (nbt.hasUUID("Owner") || nbt.hasUUID("OwnerUUID")) {
+                return true;
+            }
+            if (tameFlag && (nbt.contains("Owner") || nbt.contains("OwnerUUID"))) {
+                return true;
+            }
+        } catch (Throwable ignored) { }
+
+        return false;
+    }
+
+    private static Object invokeNoArg(Object target, String methodName) throws Exception {
+        var m = target.getClass().getMethod(methodName);
+        m.setAccessible(true);
+        return m.invoke(target);
     }
 
     /** True only when both are on opposite teams (white vs dark). Not hostile to players or other mobs. */
@@ -97,8 +171,10 @@ public class LatexTeamEvents {
             String entityType = ForgeRegistries.ENTITY_TYPES.getKey(mob.getType()).toString();
             
             if (LatexTeamConfig.isEntityInTeam(entityType)) {
-                if (teamEntities.add(mob)) {
-                    int team = LatexTeamConfig.getTeamForEntity(entityType);
+                // Don't track if the mob is a tamed dark wolf (we want it to behave as non-team).
+                int team = getEffectiveTeam(mob);
+                if (team != 0) teamEntities.add(mob);
+                if (team != 0) {
                     String teamName = team == 1 ? "White Latex" : "Dark Latex";
                     furmutage.LOGGER.debug("[LatexTeamEvents] Registered {} ({})", entityType, teamName);
                 }
@@ -133,7 +209,12 @@ public class LatexTeamEvents {
                 teamEntities.remove(mob);
                 continue;
             }
-            int mobTeam = LatexTeamConfig.getTeamForEntity(mobType);
+
+            int mobTeam = getEffectiveTeam(mob);
+            if (mobTeam == 0) {
+                teamEntities.remove(mob);
+                continue;
+            }
 
             try {
                 processTeamMobTick(mob, mobType, mobTeam);
@@ -148,6 +229,11 @@ public class LatexTeamEvents {
 
     /** Per-mob tick logic for team targeting and attacking. Isolated so one bad entity doesn't crash the server. */
     private static void processTeamMobTick(Mob mob, String mobType, int mobTeam) {
+            Player tamedOwner = null;
+            if (mob instanceof TamableAnimal tamable && tamable.getOwner() instanceof Player owner) {
+                tamedOwner = owner;
+            }
+
             LivingEntity currentTarget = mob.getTarget();
             // Always clear same-team target every tick (e.g. Creeper/bomber sets player target every tick; we must clear it so white-team bomber doesn't attack white-transfurred player)
             if (currentTarget != null && currentTarget.isAlive() && isSameTeam(mob, currentTarget) && !LatexTeamConfig.isSameTeamHostile()) {
@@ -173,6 +259,7 @@ public class LatexTeamEvents {
         
         // Only target attacker if they're on the opposite team OR untransfurred player who attacked (don't target same-team e.g. white-transfurred player vs bomber)
         boolean shouldTargetAttacker = attacker != null && attacker.isAlive() && attacker.distanceToSqr(mob) <= followRangeSq
+                && attacker != tamedOwner
                 && (areOnDifferentTeams(mob, attacker) || (attacker instanceof Player && !isSameTeam(mob, attacker)));
         if (shouldTargetAttacker && attacker != null) {
             if (currentTarget != attacker) {
@@ -200,6 +287,7 @@ public class LatexTeamEvents {
                         LivingEntity.class, 
                         mob.getBoundingBox().inflate(range, range / 2, range))) {
                     if (!entity.isAlive() || entity == mob) continue;
+                    if (tamedOwner != null && entity == tamedOwner) continue;
                     if (!areOnDifferentTeams(mob, entity)) continue;
                     double distanceSq = mob.distanceToSqr(entity);
                     if (distanceSq < nearestDistance) {
@@ -330,7 +418,7 @@ public class LatexTeamEvents {
                             return false;
                         }
                         // Only aggro teammates on the same team
-                        int nearbyTeam = LatexTeamConfig.getTeamForEntity(nearbyType);
+                        int nearbyTeam = getEffectiveTeam(entity);
                         return nearbyTeam == attackedTeam;
                     })) {
                 

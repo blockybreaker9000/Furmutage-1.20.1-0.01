@@ -1,6 +1,7 @@
 package net.jerika.furmutage.ai.latex_beast_ai;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import java.util.EnumSet;
 
@@ -50,10 +52,11 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
     private static final double CRAWL_SPEED_MULTIPLIER = 0.5;
 
     /**
-     * Night-only chance to allow jumping/climbing over fences and wall-type blocks.
-     * Only affects fence/wall obstacle logic (other obstacle handling remains unchanged).
+     * Night-only roll for fence/wall climb attempts (1.0 = always when eligible).
+     * Only {@code changed:behemoth_head}; other entities keep generic obstacle logic only.
      */
-    private static final double NIGHT_FENCE_WALL_CLIMB_CHANCE = 0.25D;
+    private static final double NIGHT_FENCE_WALL_CLIMB_CHANCE = 1.0D;
+    private static final String NIGHT_FENCE_WALL_CLIMB_ENTITY_ID = "changed:behemoth_head";
 
     /** Cooldown after standing before we can enter crawl again (ticks). */
     private int crawlReenterCooldown = 0;
@@ -294,8 +297,9 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         if (isFence) {
             BlockState frontBlockAbove = this.mob.level().getBlockState(checkPos.above());
             boolean hasSpaceAbove = frontBlockAbove.isAir() || frontBlockAbove.getCollisionShape(this.mob.level(), checkPos.above()).isEmpty();
-            if (hasSpaceAbove && this.mob.level().isNight() && this.mob.getRandom().nextDouble() < NIGHT_FENCE_WALL_CLIMB_CHANCE) {
-                return true; // Night-only, 25% chance to jump/climb fence
+            if (allowsNightFenceWallClimb() && hasSpaceAbove && this.mob.level().isNight()
+                    && this.mob.getRandom().nextDouble() < NIGHT_FENCE_WALL_CLIMB_CHANCE) {
+                return true; // Night-only (behemoth_head): always attempt fence climb when valid
             }
         }
         
@@ -336,10 +340,10 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
                     BlockState entityHeadBlock = this.mob.level().getBlockState(entityHeadPos);
                     boolean entityHasClearSpace = entityHeadBlock.isAir() || entityHeadBlock.getCollisionShape(this.mob.level(), entityHeadPos).isEmpty();
                     
-                    if (hasClearSpaceAbove && entityHasClearSpace
+                    if (allowsNightFenceWallClimb() && hasClearSpaceAbove && entityHasClearSpace
                             && this.mob.level().isNight()
                             && this.mob.getRandom().nextDouble() < NIGHT_FENCE_WALL_CLIMB_CHANCE) {
-                        return true; // Night-only, 25% chance to jump/climb wall
+                        return true; // Night-only (behemoth_head): always attempt wall climb when valid
                     }
                 }
                 // Reset wall height if we hit air before reaching minimum height
@@ -380,10 +384,10 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
                         BlockState entityHeadBlock = this.mob.level().getBlockState(entityHeadPos);
                         boolean entityHasClearSpace = entityHeadBlock.isAir() || entityHeadBlock.getCollisionShape(this.mob.level(), entityHeadPos).isEmpty();
                         
-                        if (hasClearSpaceAbove && entityHasClearSpace
+                        if (allowsNightFenceWallClimb() && hasClearSpaceAbove && entityHasClearSpace
                                 && this.mob.level().isNight()
                                 && this.mob.getRandom().nextDouble() < NIGHT_FENCE_WALL_CLIMB_CHANCE) {
-                            return true; // Night-only, 25% chance to jump/climb wall
+                            return true; // Night-only (behemoth_head): always attempt wall climb when valid
                         }
                     }
                     wallHeight = 0;
@@ -393,7 +397,12 @@ public class ChangedEntityImprovedPathfindingGoal extends Goal {
         
         return false;
     }
-    
+
+    private boolean allowsNightFenceWallClimb() {
+        ResourceLocation id = ForgeRegistries.ENTITY_TYPES.getKey(this.mob.getType());
+        return id != null && NIGHT_FENCE_WALL_CLIMB_ENTITY_ID.equals(id.toString());
+    }
+
     private boolean isFenceBlock(BlockState state) {
         // Check if block is a fence by checking block type or tags
         Block block = state.getBlock();

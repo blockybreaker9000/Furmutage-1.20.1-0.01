@@ -2,6 +2,7 @@ package net.jerika.furmutage.entity.custom;
 
 import net.jerika.furmutage.sound.ModSounds;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -91,7 +92,9 @@ public class LatexMutantBomberEntity extends Creeper {
         if (reason != MobSpawnType.NATURAL) {
             return true; // allow eggs/commands
         }
-
+        if (level instanceof WorldGenRegion) {
+            return false;
+        }
         // Don't spawn in water or with water directly above
         if (level.getFluidState(pos).is(FluidTags.WATER) || level.getFluidState(pos.above()).is(FluidTags.WATER)) {
             return false;
@@ -116,6 +119,18 @@ public class LatexMutantBomberEntity extends Creeper {
     @Override
     protected SoundEvent getAmbientSound() {
         return ModSounds.LATEX_MUTANT_BOMBER_AMBIENT.get();
+    }
+
+    @Override
+    protected float getSoundVolume() {
+        // Make the bomber's ambient more subtle
+        return super.getSoundVolume() * 0.5f;
+    }
+
+    @Override
+    public int getAmbientSoundInterval() {
+        // Play bomber ambient less frequently
+        return super.getAmbientSoundInterval() / 2;
     }
 
     @Nullable

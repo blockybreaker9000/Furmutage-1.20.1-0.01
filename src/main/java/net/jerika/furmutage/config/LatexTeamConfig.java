@@ -212,7 +212,6 @@ public class LatexTeamConfig {
             "changed:dark_latex_wolf_male",
             "changed:dark_latex_wolf_female",
             "changed:dark_latex_wolf_partial",
-            "changed:dark_latex_wolf_pup",
             "changed:dark_latex_yufeng",
             "changed:latex_benign_wolf",
             "changed:phage_latex_wolf_female",
